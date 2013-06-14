@@ -49,9 +49,6 @@ USE_I18N = False
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "199dea65-51c5-4ded-9b3d-eb95f22878bb4b9286f0-db7f-4dda-8b1b-8a32faa6aee9f8cd3ea6-cdee-48ef-a813-042d4b1b3e68"
 
-# Para que haja compartilhamento de sessions...
-SESSION_COOKIE_DOMAIN = 'trustsign.ciopartner.com.br'
-
 # Tuple of IP addresses, as strings, that:
 #   * See debug comments, when DEBUG is true
 #   * Receive x-headers
@@ -200,3 +197,17 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+ENVIRONMENT = os.getenv('TRUSTSIGN_ENVIRONMENT', 'DEV')
+if ENVIRONMENT == 'DEV':
+    DEBUG = True
+    # Para que haja compartilhamento de sessions...
+    SESSION_COOKIE_DOMAIN = 'localhost'
+elif ENVIRONMENT == 'QAS':
+    DEBUG = True
+    # Para que haja compartilhamento de sessions...
+    SESSION_COOKIE_DOMAIN = 'ciopartner.com.br'
+elif ENVIRONMENT == 'PRD':
+    DEBUG = False
+    # Para que haja compartilhamento de sessions...
+    SESSION_COOKIE_DOMAIN = 'trustsign.com.br'
