@@ -50,7 +50,7 @@ USE_I18N = False
 SECRET_KEY = "199dea65-51c5-4ded-9b3d-eb95f22878bb4b9286f0-db7f-4dda-8b1b-8a32faa6aee9f8cd3ea6-cdee-48ef-a813-042d4b1b3e68"
 
 # Para que haja compartilhamento de sessions...
-# SESSION_COOKIE_DOMAIN = 'trustdev.com.br'
+SESSION_COOKIE_DOMAIN = 'trustsign.ciopartner.com.br'
 
 # Tuple of IP addresses, as strings, that:
 #   * See debug comments, when DEBUG is true
@@ -117,13 +117,15 @@ LOGGING = {
 #############
 
 # DATABASE_ROUTERS = ['routers.UserSessionRouter']
+import os
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
     "common": {
         # Add "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
         "ENGINE": "django.db.backends.sqlite3",
         # DB name or path to database file if using sqlite3.
-        "NAME": "../common.db",
+        "NAME": PROJECT_ROOT+"/common.db",
         # Not used with sqlite3.
         "USER": "",
         # Not used with sqlite3.

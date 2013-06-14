@@ -12,7 +12,7 @@ ecommerce/manage.py collectstatic --noinput
 # Try to kill me!
 kill $(cat /tmp/trustsign-ecommerce.pid)
 
-./ecommerce/manage.py runfcgi socket=/tmp/trustsign-ecommerce.sock pidfile=/tmp/trustsign-ecommerce.pid maxrequests=4
+./ecommerce/manage.py runfcgi socket=/tmp/trustsign-ecommerce.sock pidfile=/tmp/trustsign-ecommerce.pid maxrequests=2
 
 chmod g+w /tmp/trustsign-ecommerce.sock
 chgrp www-data /tmp/trustsign-ecommerce.sock
