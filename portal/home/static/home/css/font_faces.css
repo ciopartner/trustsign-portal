@@ -1,0 +1,39 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+
+@font-face{
+	font-family: 'RobotoCondensed-Regular';
+	src: url('/static/home/css/fonts/RobotoCondensed-Regular.ttf');
+}
+
+@font-face{
+	font-family: 'RobotoCondensed-Bold';
+	src:url('/static/home/css/fonts/RobotoCondensed-Bold.ttf');
+}
+
+@font-face{
+	font-family: 'RobotoCondensed-Light';
+	src:url('/static/home/css/fonts/RobotoCondensed-Light.ttf');
+}
+
+@font-face{
+	font-family: 'RobotoCondensed-Italic';
+	src:url('/static/home/css/fonts/RobotoCondensed-Italic.ttf');
+}
+
+@font-face{
+	font-family: 'RobotoCondensed-LightItalicr';
+	src:url('/static/home/css/fonts/RobotoCondensed-LightItalic.ttf');
+}
+
+@font-face{
+	font-family: 'RobotoCondensed-BoldItalic';
+	src:url('/static/home/css/fonts/RobotoCondensed-BoldItalic.ttf');
+}
+
+
+
+
+

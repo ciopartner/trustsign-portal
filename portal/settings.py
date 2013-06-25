@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     #"mezzanine.accounts",
     #"mezzanine.mobile",
+    "home",
     "products",
 
     'django_extensions',

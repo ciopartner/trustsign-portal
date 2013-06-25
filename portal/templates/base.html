@@ -32,7 +32,7 @@
             {% endif %}
         {% endifinstalled %}
         {% block extra_css %}
-            <link href="{% static "trustsign/css/font_faces.css" %}" rel="stylesheet">
+            <link href="{% static "home/css/font_faces.css" %}" rel="stylesheet">
 
             <link rel="apple-touch-icon-precomposed" sizes="144x144"
                   href="assets/ico/apple-touch-icon-144-precomposed.png">
@@ -43,7 +43,7 @@
             <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
             <link rel="shortcut icon" href="assets/ico/favicon.png">
 
-            <link rel="stylesheet" href="{% static "trustsign/css/style.css" %}">
+            <link rel="stylesheet" href="{% static "home/css/style.css" %}">
         {% endblock %}
     {% endcompress %}
 
@@ -82,43 +82,41 @@
     <h1>{% block title %}{% endblock %}</h1>
 
     {% block breadcrumb %}
-    <ul class="breadcrumb">
-        {% spaceless %}
-            {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
-        {% endspaceless %}
-    </ul>
+        <ul class="breadcrumb">
+            {% spaceless %}
+                {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
+            {% endspaceless %}
+        </ul>
     {% endblock %}
 
 </div>
 
 <div class="container">
-    {% block one_row %}
-    {% endblock %}
     <div class="row">
-
-        <div class="span2 left">
-            {% block left_panel %}
-                <div class="panel tree">{% page_menu "pages/menus/tree.html" %}</div>
-            {% endblock %}
-        </div>
-
-        <div class="span7 middle">
-            {% block main %}{% endblock %}
-        </div>
-
-        <div class="span3 right">
-            {% nevercache %}
-                {% include "includes/user_panel.html" %}
-            {% endnevercache %}
-            <div class="panel">
-                {% block right_panel %}
-                    {% ifinstalled mezzanine.twitter %}
-                        {% include "twitter/tweets.html" %}
-                    {% endifinstalled %}
+        {% block one_row %}
+            <div class="span2 left">
+                {% block left_panel %}
+                    <div class="panel tree">{% page_menu "pages/menus/tree.html" %}</div>
                 {% endblock %}
             </div>
-        </div>
 
+            <div class="span7 middle">
+                {% block main %}{% endblock %}
+            </div>
+
+            <div class="span3 right">
+                {% nevercache %}
+                    {% include "includes/user_panel.html" %}
+                {% endnevercache %}
+                <div class="panel">
+                    {% block right_panel %}
+                        {% ifinstalled mezzanine.twitter %}
+                            {% include "twitter/tweets.html" %}
+                        {% endifinstalled %}
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
     </div>
 </div>
 
