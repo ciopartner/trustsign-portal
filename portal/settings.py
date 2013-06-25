@@ -78,6 +78,8 @@ BLOG_USE_FEATURED_IMAGE = True
 # INSTALLED_APPS setting.
 USE_SOUTH = True
 
+# Change default slug method
+SLUGIFY = 'django.template.defaultfilters.slugify'
 
 ########################
 # MAIN DJANGO SETTINGS #
@@ -167,6 +169,9 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     #"mezzanine.accounts",
     #"mezzanine.mobile",
+    "products",
+
+    'django_extensions',
 )
 
 # List of processors used by RequestContext to populate the context.
