@@ -1,17 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{#{% block meta_title %}{% trans "Home" %}{% endblock %}#}
-{#{% block title %}{% trans "Home" %}{% endblock %}#}
+{% block meta_title %}{% trans "Home" %}{% endblock %}
 
-{% block left_panel %}
-{% endblock %}
 {% block breadcrumb %}
 {% endblock %}
 
 {% block one_row %}
     <div class="span12 left">
-        {% include 'trustsign/home/1-slider.html' %}
-        {% include 'trustsign/home/2-social.html' %}
+        {% include 'includes/home/1-slider.html' %}
+        {% include 'includes/home/2-social.html' %}
     </div>
 {% endblock %}

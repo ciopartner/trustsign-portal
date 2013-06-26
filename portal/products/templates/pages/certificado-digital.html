@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block headers %}
+    <header>
+        {% include 'includes/1-header-logo.html' %}
+        {% include 'includes/2-header-atendimento.html' %}
+    </header>
+{% endblock %}
+
+{% block title %}
+    {% editable page.title %}
+        {{ page.title }}
+    {% endeditable %}
+{% endblock %}
+
+{% block one_row %}
+    <div class="span12 left">
+        {{ page.content }}
+        {% editable page.richtextpage.content %}
+            {{ page.richtextpage.content|richtext_filter|safe }}
+        {% endeditable %}
+
+        {% for p in page.children.all.order_by %}
+            {# Hardcoded Product Separator #}
+            {% if p.title == 'S/MIME' %}
+                <p>Envie e-mails codificados para que apenas o destinatário possa ver</p>
+            {% endif %}
+            {% if p.title == 'JRE' %}
+                <p>Moribunduns aliquos pietem piú</p>
+            {% endif %}
+
+            {% editable p.title %}
+                {{ p.title }}<br>
+            {% endeditable %}
+            {% editable p.product.youtube_title %}
+                {{ p.product.youtube_title }}<br><br>
+            {% endeditable %}
+        {% endfor %}
+    </div>
+{% endblock %}

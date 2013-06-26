@@ -169,8 +169,8 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     #"mezzanine.accounts",
     #"mezzanine.mobile",
-    "home",
     "products",
+    "home",
 
     'django_extensions',
 )
@@ -268,3 +268,6 @@ except ImportError:
 else:
     set_dynamic_settings(globals())
 
+
+### CIO PARTNER INTRODUCED SETTINGS
+UPDATE_SLUG = True

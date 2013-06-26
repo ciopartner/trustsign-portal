@@ -54,19 +54,21 @@
         {% block extra_js %}{% endblock %}
     {% endcompress %}
     <!--[if lt IE 9]>
-<script src="{% static "js/html5shiv.js" %}"></script>
-<![endif]-->
+        <script src="{% static "js/html5shiv.js" %}"></script>
+    <![endif]-->
 
     {% block extra_head %}{% endblock %}
 
 </head>
 <body id="{% block body_id %}body{% endblock %}">
 
-<header>
-    {% include 'trustsign/1-header-logo.html' %}
-    {% include 'trustsign/2-header-atendimento.html' %}
-    {% include 'trustsign/3-header-produtos.html' %}
-</header>
+{% block headers %}
+    <header>
+        {% include 'includes/1-header-logo.html' %}
+        {% include 'includes/2-header-atendimento.html' %}
+        {% include 'includes/3-header-produtos.html' %}
+    </header>
+{% endblock %}
 
 <div class="container">
 
@@ -78,9 +80,6 @@
         {% endfor %}
     {% endnevercache %}
 
-
-    <h1>{% block title %}{% endblock %}</h1>
-
     {% block breadcrumb %}
         <ul class="breadcrumb">
             {% spaceless %}
@@ -89,6 +88,7 @@
         </ul>
     {% endblock %}
 
+    <h1>{% block title %}{% endblock %}</h1>
 </div>
 
 <div class="container">
@@ -120,27 +120,8 @@
     </div>
 </div>
 
-{#<footer>#}
-{#    <div class="container">#}
-{#        {% page_menu "pages/menus/footer.html" %}#}
-{#        <p>#}
-{#            {% trans "Powered by" %}#}
-{#            <a href="http://mezzanine.jupo.org">Mezzanine</a>{% ifinstalled cartridge.shop %},#}
-{#            <a href="http://cartridge.jupo.org">Cartridge</a>{% endifinstalled %}#}
-{#            {% trans "and" %}#}
-{#            <a href="http://www.djangoproject.com">Django</a>#}
-{#            <span class="separator">|</span>#}
-{#            {% trans "Theme by" %} <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>#}
-{#            {% ifinstalled mezzanine.mobile %}#}
-{#                <span class="separator">|</span>#}
-{#                <a href="{% url "set_device" "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>#}
-{#            {% endifinstalled %}#}
-{#        </p>#}
-{#    </div>#}
-{#</footer>#}
-
-{% include "trustsign/5-footer.html" %}
-{#{% include "includes/footer_scripts.html" %}#}
+{% include "includes/5-footer.html" %}
+{% editable_loader %}
 </body>
 
 {#{% compress js %}#}
