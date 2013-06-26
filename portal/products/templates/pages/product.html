@@ -42,12 +42,21 @@
 
     {{ page.product.tab_title }}<br><br>
 
-    {% for tab in page.product.tabs.all %}
-        {{ tab.tab_title }}<br>
-        {{ tab.tab_short_description }}<br>
-        {{ tab.tab_description }}<br><br>
+    {# Esquema de Abas #}
+    <ul class="nav nav-tabs">
+        {% for tab in page.product.tabs.all %}
+            <li><a href="#{{ tab.tab_title|slugify }}" data-toggle="tab">{{ tab.tab_title }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content">
+        {% for tab in page.product.tabs.all %}
+            <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ tab.tab_title|slugify }}">
+                {{ tab.tab_short_description }}<br>
+                {{ tab.tab_description }}
+            </div>
+        {% endfor %}
+    </div>
 
-    {% endfor %}
 
     </div>
 {% endblock %}
