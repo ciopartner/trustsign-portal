@@ -16,10 +16,7 @@
 {% endmetablock %}{% endblock %}
 
 {% block headers %}
-    <header>
-        {% include 'includes/1-header-logo.html' %}
-        {% include 'includes/2-header-atendimento.html' %}
-    </header>
+    {{ block.super }}
 {% endblock %}
 
 {% block title %}
@@ -30,27 +27,23 @@
 
 {% block one_row %}
     <div class="span12 left">
+        {# YOUTUBE VIDEO #}
+        <iframe width="560" height="315" src="http://www.youtube.com/embed/9bZkp7q19f0" frameborder="0" allowfullscreen></iframe>
+
+        {# O QUE FAZ NOSSA DIFERENÇA #}
+
+        {# PRINCIPAIS CLIENTES #}
+
+        {% include 'includes/6-customers.html' %}
+
+        {# LINKEDIN E FACEBOOK #}
+
+        {% include 'includes/7-social.html' %}
+
         {{ page.content }}
         {% editable page.richtextpage.content %}
             {{ page.richtextpage.content|richtext_filter|safe }}
         {% endeditable %}
 
-        {% for p in page.children.all.order_by %}
-            {# Hardcoded Product Separator #}
-            {% if p.title == 'S/MIME' %}
-                <p>Envie e-mails codificados para que apenas o destinatário possa ver</p>
-            {% endif %}
-            {% if p.title == 'JRE' %}
-                <p>Moribunduns aliquos pietem piú</p>
-            {% endif %}
-
-            {% editable p.title %}
-                <a href="/{{ p.get_slug }}">
-                {{ p.title }}</a><br>
-            {% endeditable %}
-            {% editable p.product.youtube_title %}
-                {{ p.product.youtube_title }}<br><br>
-            {% endeditable %}
-        {% endfor %}
     </div>
 {% endblock %}
