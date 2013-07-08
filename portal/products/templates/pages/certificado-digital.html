@@ -24,33 +24,103 @@
 
 {% block title %}
     {% editable page.title %}
-        {{ page.title }}
+        <h1>{{ page.title }}</h1>
     {% endeditable %}
 {% endblock %}
 
 {% block one_row %}
-    <div class="span12 left">
-        {{ page.content }}
-        {% editable page.richtextpage.content %}
-            {{ page.richtextpage.content|richtext_filter|safe }}
-        {% endeditable %}
+    <section class="container productbgw">
+        <section class="featurette tlrp15">
+            <section class="row-fluid">
+                <aside class="span6 all-body-text1">
+                    <article class="tblrp510">
+                        <div>
+                            <h2>
+                                Mostre aos seus clientes o quanto seu site e</br>seguro e anumente confianca e receita
+                            </h2>
+                            {% for p in page.children.all.order_by %}
+                                {% if forloop.counter < 7 %}
+                                    {# Hardcoded Product Separator #}
+                                    {% if p.title == 'S/MIME' %}
+                                        <h2>Envie e-mails codificados para que apenas o destinatário possa ver</h2>
+                                    {% endif %}
+                                    {% if p.title == 'JRE' %}
+                                        <h2>Moribunduns aliquos pietem piú</h2>
+                                    {% endif %}
+                                    {% editable p.title %}
+                                        <a href="/{{ p.get_slug }}">
+                                            <h3>{{ p.title }}</h3></a><br>
+                                    {% endeditable %}
+                                    {% editable p.product.youtube_title %}
+                                        <p class="all-body-text5 borderp bp10">
+                                            {{ p.product.youtube_title }}
+                                        </p>
+                                    {% endeditable %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </article>
+                </aside>
 
-        {% for p in page.children.all.order_by %}
-            {# Hardcoded Product Separator #}
-            {% if p.title == 'S/MIME' %}
-                <p>Envie e-mails codificados para que apenas o destinatário possa ver</p>
-            {% endif %}
-            {% if p.title == 'JRE' %}
-                <p>Moribunduns aliquos pietem piú</p>
-            {% endif %}
+                <aside class="span6 all-body-text1">
+                    <div>
+                        {% for p in page.children.all.order_by %}
+                            {% if forloop.counter >= 7 %}
+                                {# Hardcoded Product Separator #}
+                                {% if p.title == 'S/MIME' %}
+                                    <h2>Envie e-mails codificados para que apenas o destinatário possa ver</h2>
+                                {% endif %}
+                                {% if p.title == 'JRE' %}
+                                    <h2>Moribunduns aliquos pietem piú</h2>
+                                {% endif %}
+                                {% editable p.title %}
+                                    <a href="/{{ p.get_slug }}">
+                                        <h3>{{ p.title }}</h3></a><br>
+                                {% endeditable %}
+                                {% editable p.product.youtube_title %}
+                                    <p class="all-body-text5 borderp bp10">
+                                        {{ p.product.youtube_title }}
+                                    </p>
+                                {% endeditable %}
+                            {% endif %}
+                        {% endfor %}
+                        <div class="buttons">
+                            <button class="btn btn-large" type="button" style="width:360px;">Veja as diferencas
+                                entre os
+                                certificados
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+        </section>
+    </section>
 
-            {% editable p.title %}
-                <a href="/{{ p.get_slug }}">
-                {{ p.title }}</a><br>
-            {% endeditable %}
-            {% editable p.product.youtube_title %}
-                {{ p.product.youtube_title }}<br><br>
-            {% endeditable %}
-        {% endfor %}
-    </div>
+
+
+    {#    <div class="span12 left">#}
+    {#        <h2>#}
+    {#            {% editable page.richtextpage.content %}#}
+    {#                {{ page.richtextpage.content|richtext_filter|safe }}#}
+    {#            {% endeditable %}#}
+    {#        </h2>#}
+    {##}
+    {#        {% for p in page.children.all.order_by %}#}
+    {# Hardcoded Product Separator #}
+    {#            {% if p.title == 'S/MIME' %}#}
+    {#                <h2>Envie e-mails codificados para que apenas o destinatário possa ver</h2>#}
+    {#            {% endif %}#}
+    {#            {% if p.title == 'JRE' %}#}
+    {#                <h2>Moribunduns aliquos pietem piú</h2>#}
+    {#            {% endif %}#}
+    {##}
+    {#            {% editable p.title %}#}
+    {#                <a href="/{{ p.get_slug }}">#}
+    {#                    <h3>{{ p.title }}</h3></a><br>#}
+    {#            {% endeditable %}#}
+    {#            {% editable p.product.youtube_title %}#}
+    {#                {{ p.product.youtube_title }}<br><br>#}
+    {#            {% endeditable %}#}
+    {#        {% endfor %}#}
+    {#    </div>#}
 {% endblock %}

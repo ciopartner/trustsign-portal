@@ -1,9 +1,9 @@
 {% load pages_tags mezzanine_tags staticfiles %}
 
-<section class="container" style="background-color:#F7F7F7;">
+<section class="container" style="background-color:#FFFFFF;">
     <section class="featurette" style="padding-bottom:0;">
         <section class="row">
-            <aside class="span4">
+            <aside class="span4 logomedia">
                 <a href="/"><img src="{% static "home/img/icons/mainlogo.png" %}" class="mainlogo"/></a>
             </aside>
             <aside class="span8 header1" style="">
@@ -12,17 +12,23 @@
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
                         <li class="activa"><a href="/a-trustsign" class="limeh100x">A TRUSTSIGN</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
-                        <li><a href="/blog" class="limeh100x">BLOG</a></li>
+                        <li class="activa"><a href="/blog" class="limeh100x">BLOG</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
                         <li class="activoverfl"><a href="#" class="limeh100x">ENTRAR</a>
 
-                            <div class="foty"
-                                 style=" position:absolute; display:none; height:100px; width:200px; background:#F00;">
-                                LOGIN FORM
-                            </div>
+                        <div class="foty ensign">
+                            <form class="customsininput">
+                                <div><input type="text" placeholder="CNPJ"></div>
+                                <div><input type="text" placeholder="Senha"></div>
+                                <div>
+                                    Esqueceu a senha?
+                                    <button type="submit" class="btn pull-right">Entrar</button>
+                                </div>
+                            </form>
+                        </div>
                         </li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
-                        <li><a href="#" class="limeh100x dobold disabled">CARRINHO <i class="icon-shopping-cart"></i></a></li>
+                        <li class="activa"><a href="#" class="limeh100x dobold disabled">CARRINHO <i class="icon-shopping-cart"></i></a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
                         <li>
                             <form action="" class="navbar-search pull-left limeh100x">

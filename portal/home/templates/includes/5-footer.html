@@ -1,57 +1,49 @@
-{% load pages_tags mezzanine_tags staticfiles  %}
+{% load pages_tags mezzanine_tags staticfiles %}
 
-<footer class="margin-top">
-    <section class="container" style="background-color:#F7F7F7;">
+<footer class="tbm250" style="background-color:#F7F7F7; display:block; padding-bottom:30px; margin-bottom:0;">
+    <section class="container productbgn">
         <section class="featurette tbm5">
-            <section class="row footer-title">
-                    <aside class="span6">
-                          	  <p class="borderf"><b class="bg-footer font-normal lrp105">SOLUÇÕES</b></p>
-                              <p class="child-mar5 lrp10">
-                                    <a href="#" class="carsol"><b>&rsaquo;</b> Certicado Digital</a>
-                                    <a href="#" class="carsol"><b>&rsaquo;</b> PKI</a>
-                                    <a href="#" class="carsol"><b>&rsaquo;</b> Site + Seguro</a>
-                                    <a href="#" class="carsol"><b>&rsaquo;</b> Site Monitorado</a>
-                              </p>
-                    </aside>
-                
-                
-                    <aside class="span5 offset1">
-                        <p class="borderf"><b class="bg-footer font-normal lrp105">TRUSTSIGN NAS REDES</b></p>
-                        
-                         <p class="child-mar5 lrp10">
-                           <a href="#"><img src="{% static "home/img/icons/linkedin.png" %}"/></a>
-                            <a href="#" class=""><img src="{% static "home/img/icons/facebook.png" %}"/></a>
-                        </p>
-                    </aside>
-            </section>
-        </section>
-        
-        
-        <section class="row footer-title">
-            <aside class="span6">
-                  <p class="borderf"><b class="bg-footer font-normal lrp105">FORMAS DE PAGAMENTO</b></p>
+            <section class="row footer-title ">
+                <aside class="span3 footer-item-icon footer-info-links">
+                    <p class="footer-item-text">SOLUÇÕES</p>
+                    <a href="{% static "/certificado-digital" %}" class="carsol"><b>&rsaquo;</b> Certicado Digital</a><br>
+                    <a href="{% static "/pki" %}" class="carsol"><b>&rsaquo;</b> PKI</a><br>
+                    <a href="{% static "/site-seguro" %}" class="carsol"><b>&rsaquo;</b> Site + Seguro</a><br>
+                    <a href="{% static "/site-monitorado" %}" class="carsol"><b>&rsaquo;</b> Site Monitorado</a>
+                </aside>
 
-                  <p class="child-mar5 lrp10">
-                        <a href="#" class=""><img src="{% static "home/img/icons/card-visa.png" %}"/></a>
-                        <a href="#" class=""><img src="{% static "home/img/icons/master-card.png" %}"/></a>
-                        <a href="#" class=""><img src="{% static "home/img/icons/ex-card.png" %}"/></a>
-                        <a href="#" class=""><img src="{% static "home/img/icons/club-card.png" %}"/></a>
-                        <a href="#" class=""><img src="{% static "home/img/icons/aura-icon.png" %}"/></a>
-                        <a href="#" class=""><img src="{% static "home/img/icons/hypercard.png" %}"/></a>
-                        <a href="#" class=""><img src="{% static "home/img/icons/u-card.png" %}"/></a>
-                  </p>
-            </aside>
-            <aside class="span5 offset1">
-                   <p class="borderf"><b class="bg-footer font-normal lrp105">SEGURANÇA</b></p>
+                <aside class="span3 footer-item-icon">
+                    <p class="footer-item-text">FORMAS DE PAGAMENTO</p>
+                    <a href="#"><img src="{% static "home/img/icons/card-visa.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/master-card.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/ex-card.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/club-card.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/aura-icon.png" %}"/></a><br>
+                    <a href="#" class=""><img src="{% static "home/img/icons/hypercard.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/u-card.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/line-bar.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/itau-icon.png" %}"/></a>
+                    <a href="#" class=""><img src="{% static "home/img/icons/s-icon.png" %}"/></a>
+                </aside>
 
-                   <p class="child-mar5 lrp10">
+                <aside class="span3 footer-item-icon">
+                    <p class="footer-item-text">SEGURANÇA</p>
+                    <p class="child-mar5 lrp10">
                         <a href="#"><img src="{% static "home/img/icons/seguranca-1.png" %}"/></a>
                         <a href="#" class=""><img src="{% static "home/img/icons/seguranca-2.png" %}"/></a>
                         <a href="#" class=""><img src="{% static "home/img/icons/seguranca-3.png" %}"/></a>
                         <a href="#" class=""><img src="{% static "home/img/icons/seguranca-4.png" %}"/></a>
-                  </p>
-            </aside>
-            
+                    </p>
+                </aside>
+
+                <aside class="span3 footer-item-icon">
+                    <p class="footer-item-text">ACOMPANHE A<br> TRUSTSIGN NAS REDES</p>
+                    <p>
+                        <a href="#"><img src="{% static "home/img/icons/linkedin.png" %}"/></a>
+                        <a href="#" class=""><img src="{% static "home/img/icons/facebook.png" %}"/></a>
+                    </p>
+                </aside>
+            </section>
         </section>
     </section>
 </footer>
