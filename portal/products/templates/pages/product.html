@@ -31,28 +31,43 @@
 {% block one_row %}
     <div class="span12 left">
     {% editable page.product.youtube_title %}
-        {{ page.product.youtube_title }}<br>
+        <h2>{{ page.product.youtube_title }}</h2>
     {% endeditable %}
 
     {% editable page.product.youtube_url %}
-        <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="{{ page.product.youtube_url }}" frameborder="0" allowFullScreen></iframe>
+        <div style="text-align: center;">
+            <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="{{ page.product.youtube_url }}" frameborder="0" allowFullScreen></iframe>
+        </div>
     {% endeditable %}
 
     <br><br>
 
+    {% editable page.product.tab_title %}
     {{ page.product.tab_title }}<br><br>
+    {% endeditable %}
 
     {# Esquema de Abas #}
     <ul class="nav nav-tabs">
         {% for tab in page.product.tabs.all %}
-            <li><a href="#{{ tab.tab_title|slugify }}" data-toggle="tab">{{ tab.tab_title }}</a></li>
+            <li>
+            {% editable tab.tab_title %}
+                <a href="#{{ tab.tab_title|slugify }}" data-toggle="tab">
+                {{ tab.tab_title }}
+            </a>
+            {% endeditable %}
+            </li>
         {% endfor %}
     </ul>
     <div class="tab-content">
         {% for tab in page.product.tabs.all %}
             <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ tab.tab_title|slugify }}">
-                {{ tab.tab_short_description }}<br>
+                {% editable tab.tab_short_description %}
+                {{ tab.tab_short_description }}
+                {% endeditable %}
+                <br>
+                {% editable tab.tab_description %}
                 {{ tab.tab_description }}
+                {% endeditable %}
             </div>
         {% endfor %}
     </div>
