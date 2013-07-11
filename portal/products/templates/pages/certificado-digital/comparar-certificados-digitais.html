@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags staticfiles %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link href="{% static "products/css/comparar.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block headers %}
+    <header>
+        {% include 'includes/1-header-logo.html' %}
+        {% include 'includes/2-header-atendimento.html' %}
+    </header>
+{% endblock %}
+
+{% block title %}
+    {% editable page.title %}
+        <h1>{{ page.title }}</h1>
+    {% endeditable %}
+{% endblock %}
+
+{% block one_row %}
+    <section class="container productbgw">
+    {% editable page.richtextpage.content %}
+    {{ page.richtextpage.content|safe }}
+    {% endeditable %}
+    </section>
+{% endblock %}

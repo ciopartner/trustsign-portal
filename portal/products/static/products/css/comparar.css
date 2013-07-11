@@ -1,0 +1,361 @@
+table.taxttab > thead > tr > th{
+	font-family:RobotoCondensed-Regular;
+	color:#FFF;
+	font-size:150%;
+	vertical-align:middle;
+	text-align:center;
+	line-height:100%;
+	padding-top:30px;
+	padding-bottom:30px;
+}
+
+table.taxttab > thead > tr > th:nth-child(1){
+	font-size:110%;
+	text-align:left;
+	background-image: -webkit-linear-gradient(bottom, rgba(50,50,50,1), rgba(35,35,35,1));
+	background-image: -moz-linear-gradient(bottom, rgba(50,50,50,1), rgba(35,35,35,1));
+	background-image: -o-linear-gradient(bottom, rgba(50,50,50,1), rgba(35,35,35,1));
+	background-image: -ms-linear-gradient(bottom, rgba(50,50,50,1), rgba(35,35,35,1));
+	background-image: linear-gradient(to top, rgba(50,50,50,1), rgba(35,35,35,1));
+}
+
+table.taxttab > thead > tr > th:nth-child(2){
+	background-image: -webkit-linear-gradient(bottom, rgba(116,116,116,1), rgba(100,100,100,1));
+	background-image: -moz-linear-gradient(bottom, rgba(116,116,116,1), rgba(100,100,100,1));
+	background-image: -o-linear-gradient(bottom, rgba(116,116,116,1), rgba(100,100,100,1));
+	background-image: -ms-linear-gradient(bottom, rgba(116,116,116,1), rgba(100,100,100,1));
+	background-image: linear-gradient(to top, rgba(116,116,116,1), rgba(100,100,100,1));
+}
+
+table.taxttab > thead > tr > th:nth-child(3){
+	background-image: -webkit-linear-gradient(bottom, rgba(168,168,168,1), rgba(150,150,150,1));
+	background-image: -moz-linear-gradient(bottom, rgba(168,168,168,1), rgba(150,150,150,1));
+	background-image: -o-linear-gradient(bottom, rgba(168,168,168,1), rgba(150,150,150,1));
+	background-image: -ms-linear-gradient(bottom, rgba(168,168,168,1), rgba(150,150,150,1));
+	background-image: linear-gradient(to top, rgba(168,168,168,1), rgba(150,150,150,1));
+}
+
+table.taxttab > thead > tr > th:nth-child(4){
+	background-image: -webkit-linear-gradient(bottom, rgba(215,215,215,1), rgba(200,200,200,1));
+	background-image: -moz-linear-gradient(bottom, rgba(215,215,215,1), rgba(200,200,200,1));
+	background-image: -o-linear-gradient(bottom, rgba(215,215,215,1), rgba(200,200,200,1));
+	background-image: -ms-linear-gradient(bottom, rgba(215,215,215,1), rgba(200,200,200,1));
+	background-image: linear-gradient(to top, rgba(215,215,215,1), rgba(200,200,200,1));
+}
+
+/*//////ssl table start here//////*/
+
+.as-text1{
+	font-family:RobotoCondensed-Bold;
+	color:#4B4B4B;
+	font-size:135%;
+	line-height:100%;
+	}
+
+.as-text2{
+	font-family:RobotoCondensed-Bold;
+	color:#929299;
+	font-size:98%;
+	line-height:110%;
+}
+
+.as-text3{
+	font-family:RobotoCondensed-Bold;
+	color:#4B4B4B;
+	font-size:105%;
+	line-height:100%;
+}
+
+.ssl-text1{
+	font-family:RobotoCondensed-Bold;
+	color:#035A9C;
+	font-size:120%;
+	line-height:100%;
+	padding-right:10px;
+}
+
+.ssl-text2{
+	font-family:RobotoCondensed-Regular;
+	color:#4B4B4B;
+	font-size:80%;
+	line-height:100%;
+	padding-left:10px;
+	font-weight:normal;
+}
+
+.ssl-text3{
+	font-family:RobotoCondensed-Regular;
+	color:#4B4B4B;
+	font-size:200%;
+	line-height:100%;
+	letter-spacing:-1px;
+
+}
+
+.ssl-hover-text3{
+	font-family:RobotoCondensed-Regular;
+	color:#5D5D5D;
+	font-size:130%;
+	line-height:100%;
+}
+
+.ssl-hover-aside{
+	background-color:#CCC;
+	height:280px;
+}
+.ssl-hover-bac{
+	background-color:#E2E2E2;
+	padding:20px;
+}
+.vidsec{
+    width:80%;
+	padding:10px;
+	margin:auto;
+	margin:auto;
+}
+.videoas1{
+	background-color:#CCC;
+	width:90%;
+	float:left;
+	margin:auto;
+}
+.videoas2{
+	background-color:inherit;
+	width:10%;
+	float:left;
+	margin:auto;
+}
+aside.videoas2 > ul{
+	margin:0;
+	padding:0;
+}
+
+aside.videoas2 > ul > li{
+	list-style:none;
+	text-align:center;
+}
+
+table.ssltab > thead > tr > th{
+	font-family:RobotoCondensed-Regular;
+	color:#FFF;
+	font-size:150%;
+	vertical-align:middle;
+	text-align:center;
+	line-height:50%;
+	padding-top:30px;
+	padding-bottom:30px;
+}
+
+table.ssltab > thead > tr > th > p:nth-child(1){
+	font-size:65%;
+}
+
+table.ssltab > thead > tr > th:nth-child(1){
+	color:#FFF;
+	font-size:125%;
+	text-align:left;
+	line-height:120%;
+	background-image: -webkit-linear-gradient(bottom, rgba(42,42,41,1), rgba(97,97,97,1));
+	background-image: -moz-linear-gradient(bottom, rgba(42,42,41,1), rgba(97,97,97,1));
+	background-image: -o-linear-gradient(bottom, rgba(42,42,41,1), rgba(97,97,97,1));
+	background-image: -ms-linear-gradient(bottom, rgba(42,42,41,1), rgba(97,97,97,1));
+	background-image: linear-gradient(to top, rgba(42,42,41,1), rgba(97,97,97,1));
+}
+
+table.ssltab > thead > tr > th:nth-child(2){
+	background-image: -webkit-linear-gradient(bottom,rgba(1,84,151,1),rgba(49,116,171,1));
+	background-image: -moz-linear-gradient(bottom, rgba(1,84,151,1),rgba(49,116,171,1));
+	background-image: -o-linear-gradient(bottom, rgba(1,84,151,1),rgba(49,116,171,1));
+	background-image: -ms-linear-gradient(bottom, rgba(1,84,151,1),rgba(49,116,171,1));
+	background-image: linear-gradient(to top, rgba(1,84,151,1),rgba(49,116,171,1));
+}
+
+table.ssltab > thead > tr > th:nth-child(3){
+	background-image: -webkit-linear-gradient(bottom, rgba(53,118,174,1), rgba(91,143,190,1));
+	background-image: -moz-linear-gradient(bottom, rgba(53,118,174,1), rgba(91,143,190,1));
+	background-image: -o-linear-gradient(bottom, rgba(53,118,174,1), rgba(91,143,190,1));
+	background-image: -ms-linear-gradient(bottom, rgba(53,118,174,1), rgba(91,143,190,1));
+	background-image: linear-gradient(to top, rgba(53,118,174,1), rgba(91,143,190,1));
+}
+
+
+table.ssltab > thead > tr > th:nth-child(4){
+	background-image: -webkit-linear-gradient(bottom, rgba(114,194,219,1), rgba(153,210,227,1));
+	background-image: -moz-linear-gradient(bottom, rgba(114,194,219,1), rgba(153,210,227,1));
+	background-image: -o-linear-gradient(bottom, rgba(114,194,219,1), rgba(153,210,227,1));
+	background-image: -ms-linear-gradient(bottom, rgba(114,194,219,1), rgba(153,210,227,1));
+	background-image: linear-gradient(to top, rgba(114,194,219,1), rgba(153,210,227,1));
+}
+
+table.ssltab > thead > tr > th:nth-child(5){
+	background-image: -webkit-linear-gradient(bottom, rgba(96,159,138,1), rgba(125,176,158,1));
+	background-image: -moz-linear-gradient(bottom, rgba(96,159,138,1), rgba(125,176,158,1));
+	background-image: -o-linear-gradient(bottom, rgba(96,159,138,1), rgba(125,176,158,1));
+	background-image: -ms-linear-gradient(bottom, rgba(96,159,138,1), rgba(125,176,158,1));
+	background-image: linear-gradient(to top, rgba(96,159,138,1), rgba(125,176,158,1));
+}
+
+tr.lasttab > td{
+	font-family:RobotoCondensed-Regular;
+	color: #666;
+	font-size:150%;
+	vertical-align:middle;
+	line-height:100%;
+	padding-top:30px;
+	padding-bottom:30px;
+}
+
+tr.lasttab > td:nth-child(1){
+	font-size:100%;
+}
+
+tr.lasttab > td:nth-child(2){
+	text-align:center;
+	color:#000;
+	font-size:100%;
+	background-image: -webkit-linear-gradient(bottom, rgba(204,220,233,1), rgba(204,222,235,1));
+	background-image: -moz-linear-gradient(bottom, rgba(204,220,233,1), rgba(204,222,235,1));
+	background-image: -o-linear-gradient(bottom, rgba(204,220,233,1), rgba(204,222,235,1));
+	background-image: -ms-linear-gradient(bottom, rgba(204,220,233,1), rgba(204,222,235,1));
+	background-image: linear-gradient(to top, rgba(204,220,233,1), rgba(204,222,235,1));
+
+}
+
+tr.lasttab > td:nth-child(3){
+	text-align:center;
+	color:#000;
+	font-size:100%;
+	background-image: -webkit-linear-gradient(bottom, rgba(215,225,237,1), rgba(215,227,239,1));
+	background-image: -moz-linear-gradient(bottom, rgba(215,225,237,1), rgba(215,227,239,1));
+	background-image: -o-linear-gradient(bottom, rgba(215,225,237,1), rgba(215,227,239,1));
+	background-image: -ms-linear-gradient(bottom, rgba(215,225,237,1), rgba(215,227,239,1));
+	background-image: linear-gradient(to top, rgba(215,225,237,1), rgba(215,227,239,1));
+}
+
+tr.lasttab > td:nth-child(4){
+	text-align:center;
+	color:#000;
+	font-size:100%;
+	background-image: -webkit-linear-gradient(bottom, rgba(228,241,246,1), rgba(228,243,248,1));
+	background-image: -moz-linear-gradient(bottom, rgba(228,241,246,1), rgba(228,243,248,1));
+	background-image: -o-linear-gradient(bottom, rgba(228,241,246,1), rgba(228,243,248,1));
+	background-image: -ms-linear-gradient(bottom, rgba(228,241,246,1), rgba(228,243,248,1));
+	background-image: linear-gradient(to top, rgba(228,241,246,1), rgba(228,243,248,1));
+}
+
+tr.lasttab > td:nth-child(5){
+	text-align:center;
+	color:#000;
+	font-size:100%;
+	background-image: -webkit-linear-gradient(bottom, rgba(224,234,230,1), rgba(224,236,232,1));
+	background-image: -moz-linear-gradient(bottom, rgba(224,234,230,1), rgba(224,236,232,1));
+	background-image: -o-linear-gradient(bottom, rgba(224,234,230,1), rgba(224,236,232,1));
+	background-image: -ms-linear-gradient(bottom, rgba(224,234,230,1), rgba(224,236,232,1));
+	background-image: linear-gradient(to top, rgba(224,234,230,1), rgba(224,236,232,1));
+}
+
+aside.bac-colort > div:nth-child(1){
+	height:150px;}
+
+aside.bac-coloro > div:nth-child(1){
+	height:150px;}
+
+.bac-coloro{
+	background-color:#F7F7F7;
+	text-align:center;
+	width:20%;
+	float:left;
+}
+.bac-colort{
+	background-color:#F0F0F0;
+	text-align:center;
+	width:20%;
+	float:left;
+}
+
+.ovel-text{
+	font-family:RobotoCondensed-Regular;
+	color:#4B4B4B;
+	font-size:130%;
+	line-height:130%;
+}
+
+.url-text{
+	font-family:RobotoCondensed-Bold;
+	color:#B8B8B8;
+	font-size:83%;
+	line-height:100%;
+}
+
+tbody > tr:nth-child(even){
+	background-color:#F5F5F5;
+}
+
+.tdbls{
+	border-left:#DADEE3 1px solid;
+}
+
+.sslright{
+	background:url(../images/icons/aa.png) 50% 50% no-repeat;
+}
+.sslwrong{
+	background:url(../images/icons/bb.png) 50% 50% no-repeat;
+}
+
+.tdbrs{
+	border-right:#DADEE3 1px solid;
+}
+.tdblrs{
+	border-left:#DADEE3 1px solid;
+	border-right:#DADEE3 1px solid;
+}
+
+.tdblrbs{
+	border-left:#DADEE3 1px solid;
+	border-right:#DADEE3 1px solid;
+	border-bottom:hidden;
+}
+
+.bordowns{
+	border-bottom:#DADEE3 1px solid;
+}
+.bbs{
+	background-color:#FFF;
+	border-bottom:#DADEE3 1px solid;
+	border-top:hidden;
+}
+
+.bbts{
+	background-color:#FFF;
+	border-bottom:#DADEE3 1px solid;
+}
+
+.sslcolor{
+	background-color:#F0F0F0;
+	width:100%
+}
+
+.minidrop{
+	text-align:right;
+	margin-top:10px;
+	margin-right:30px;
+}
+.subp{
+	font-size:280%;
+}
+.subm{
+	font-size:30%;
+	vertical-align: middle;
+}
+.superu{
+	font-size:26%;
+	vertical-align: top;
+	margin-left:3px;
+ }
+.subd{
+	font-size:24%;
+	margin-left:-29px;
+	vertical-align: middle;
+ }
+
+/*//////ssl table closed here//////*/

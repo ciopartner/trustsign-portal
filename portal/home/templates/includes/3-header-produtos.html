@@ -5,18 +5,40 @@
         <section class="row">
             <aside class="span2">
                 <a href='/site-seguro/'>
-                    <div class="tbm2"><img src="{% static "home/img/icons/green-lock.png" %}"/></div>
+                    <div class="tbm2"><img src="{% static "home/img/icons/green-lock.png" %}" style="height: 30px;" /></div>
                     <div class="tbm2 header3-title-text">SITE + SEGURO</div>
                 </a>
-
                 <div class="tbm2 header3-body-text">ANÁLISES DIÁRIAS QUE DETECTAM OS PONTOS VULNERÁVEIS</div>
+            </aside>
 
-                <!--   start Site + Seguro-->
-                <section class="featurette hdmgmenu">
+            <aside class="span2">
+                <a href='/site-monitorado/'>
+                    <div class="tbm2"><img src="{% static "home/img/icons/h-3-2nd.png" %}" style="height: 30px;" /></div>
+                    <div class="tbm2 header3-title-text">SITE MONITORADO</div>
+                </a>
+                <div class="tbm2 header3-body-text">ADMINISTRE AS VISITAS E TENTATIVAS DE INVASÕES</div>
+            </aside>
+
+            <aside class="span2">
+                <a href='/pki/'>
+                    <div class="tbm2"><img src="{% static "home/img/icons/pki-icon.png" %}" style="height: 30px;" /></div>
+                    <div class="tbm2 header3-title-text">PKI</div>
+                </a>
+                <div class="tbm2 header3-body-text">GERENCIAMENTO TOTAL E EFETIVO DE CERTIFICADOS DIGITAIS</div>
+            </aside>
+
+            <aside class="span2 terg-hdmgmenu">
+                <a href='/certificado-digital/'>
+                    <div class="tbm2"><img src="{% static "home/img/icons/digital-icon.png" %}" style="height: 30px;" /></div>
+                    <div class="tbm2 header3-title-text">CERTIFICADO DIGITAL</div>
+                </a>
+                <div class="tbm2 header3-body-text">GERE MAIS RECEITA COM SITE AUTÊNTICO</div>
+                <!--   start Certificado Digital -->
+                <section class="featurette hdmgmenu" style="margin-left:-600px;">
                     <section class="row">
                         <aside class="span8 all-body-text1">
                             <div class="site-body-text tblrp10" style="background-color:#F2F2F2;">
-                                Mostre aos seus clientes o quanto seu site é seguro</br> e aumente a confiança e receita
+                                Mostre aos seus clientes mais segurança e controle. Gere confiabilidade e aumento de receita
                             </div>
 
 
@@ -24,39 +46,27 @@
                                 <aside class="span4">
                                     <article class="tblrp510">
 
-                                        <p><b>SSL</b></p>
+                                        <a href="/certificado-digital/ssl"><b>SSL</b></a>
+                                        <p class="all-body-text5">Autenticidade, Criptografia de Dados e Confiabilidade</p>
 
-                                        <p class="all-body-text5">Autenticidade e Confiabilidade</br>para seu
-                                            negocio</p>
+                                        <a href="/certificado-digital/ev-extended-validation-ssl"><b>EV (Extended Validation SSM)</b></a>
+                                        <p class="all-body-text5">Exiba a barra verde no navegador do site com o maior nível de segurança e validação do mercado</p>
 
-                                        <p><b>EV (Extended Validation SSM)</b></p>
-
-                                        <p class="all-body-text5">Percepção e Nível de Segurança</br>Maior para seu
-                                            negócio</p>
-
-                                        <p class=""><b>EV MDC</b></p>
-
-                                        <p class="all-body-text5">Am tortor odio aliquet ac malesuada</br>id luctus ac
-                                            diam</p>
+                                        <a href="/certificado-digital/ev-mdc"><b>EV MDC</b></a>
+                                        <p class="all-body-text5">Garanta a segurança do EV SSL certificando até 100 domínios com um único o MDC</p>
                                     </article>
                                 </aside>
 
                                 <aside class="span4">
                                     <article class="tblrp510">
-                                        <p class=""><b>SAN SSL</b></p>
+                                        <a href="/certificado-digital/san-ssl"><b>SAN SSL</b></a>
+                                        <p class="all-body-text5">Garanta a segurança do SSL, certificando vários FQDNs (endereços de internet, intranet e IP's adicionais) inclusive em ambiente Exchange</p>
 
-                                        <p class="all-body-text5">Ideal para proteger diversos FQDNs</br>de uma única
-                                            vez</p>
+                                        <a href="/certificado-digital/mdc"><b>MDC</b></a>
+                                        <p class="all-body-text5">Garanta a segurança do SSL, certificando múltiplos DOMÍNIOS com um único certificado MDC</p>
 
-                                        <p class=""><b>MDC</b></p>
-
-                                        <p class="all-body-text5">Certifique Multiplos Domínios</br>internos no mesmo
-                                            servidor</p>
-
-                                        <p class=""><b>Wildcard</b></p>
-
-                                        <p class="all-body-text5">Certifique Infinitos subdomínios,com</br>um único
-                                            certificado</p>
+                                        <a href="/certificado-digital/wildcard"><b>Wildcard</b></a>
+                                        <p class="all-body-text5">Garanta a segurança do SSL, certificando infinitos SUB-DOMÍNIOS com um único certificado Wildcard</p>
                                     </article>
                                 </aside>
 
@@ -64,7 +74,7 @@
 
 
                             <div class="tblrp10" style="background-color:#F2F2F2;">
-                                <p class="all-body-text3 tbm2">DUVIDAS?</p>
+                                <p class="all-body-text3 tbm2">DÚVIDAS?</p>
 
                                 <p class="all-body-text4 tbm2">Não sabe a diferença entre os certificados?
                                     <button class="btn btn-large" type="button">Descubra agora!</button>
@@ -77,75 +87,36 @@
 
                         <aside class="span4 all-body-text1">
                             <p class="site-body-text tblrp10" style="background-color:#F2F2F2;">
-                                Envie e-mails codificados para que apenas o destinatário possa ver
+                                E-mails assinados digitalmente
                             </p>
 
-                            <p class="lrp10"><b>S/MM</b></p>
-
-                            <p class="all-body-text5 lrp10">Autenticidade e Assinatura de e-mails</p>
-
+                            <a href="/certificado-digital/s-mime" class="tblrp10"><b>S/MIME</b></a>
+                            <p class="all-body-text5 lrp10">Criptografe mensagens de e-mail e garanta que apenas os destinatários tenham acesso ao conteúdo</p>
 
                             <p class="site-body-text tblrp10" style="background-color:#F2F2F2;">
-                                In eu ante et tortor ullamcorper cgestas id vitae libero
+                                Maior segurança em downloads com assinatura de códigos
                             </p>
 
+                            <a href="/certificado-digital/jre" class="tblrp10"><b>JRE</b></a>
+                            <p class="all-body-text5 lrp10">Mais confiabilidade em downloads de códigos JAVA</p>
 
-                            <p class="lrp10"><b>JRE</b></p>
-
-                            <p class="all-body-text5 lrp10">Para servidores baseados em java que permitem executar</br>
-                                aplicações sem erros beneficiando usuários finais</p>
-
-                            <p class="lrp10"><b>EV MDC</b></p>
-
-                            <p class="all-body-text5 lrp10">Determina a procedência do software que é instalado</br>no
-                                computador</p>
-
-
+                            <a href="/certificado-digital/code-signing" class="tblrp10"><b>Code Signing</b></a>
+                            <p class="all-body-text5 lrp10">Mais confiabilidade em downloads de diversos códigos</p>
                         </aside>
-
-
                     </section>
                 </section>
-
-                <!--   end Site + Seguro-->
+                <!--   end Certificado Digital -->
             </aside>
 
             <aside class="span2">
-                <a href='/site-monitorado/'>
-                    <div class="tbm2"><img src="{% static "home/img/icons/h-3-2nd.png" %}"/></div>
-                    <div class="tbm2 header3-title-text">SITE MONITORADO</div>
-                </a>
-
-                <div class="tbm2 header3-body-text">ADMINISTRE AS VISITAS E TENTATIVAS DE INVASÕES</div>
-            </aside>
-
-            <aside class="span2">
-                <a href='/pki/'>
-                    <div class="tbm2"><img src="{% static "home/img/icons/pki-icon.png" %}"/></div>
-                    <div class="tbm2 header3-title-text">PKI</div>
-                </a>
-
-                <div class="tbm2 header3-body-text">GERENCIAMENTO TOTAL E EFETIVO DE CERTIFICADOS DIGITAIS</div>
-            </aside>
-
-            <aside class="span2 terg-hdmgmenu">
-                <a href='/certificado-digital/'>
-                    <div class="tbm2"><img src="{% static "home/img/icons/digital-icon.png" %}"/></div>
-                    <div class="tbm2 header3-title-text">CERTIFICADO DIGITAL</div>
-                </a>
-
-                <div class="tbm2 header3-body-text">GERE MAIS RECEITA COM SITE AUTÊNTICO</div>
-            </aside>
-
-            <aside class="span2">
-                <div class="tbm2"><img src="{% static "home/img/icons/h-3-5 th.png" %}"/></div>
+                <div class="tbm2"><img src="{% static "home/img/icons/h-3-5 th.png" %}" style="height: 30px;" /></div>
                 <div class="tbm2 header3-title-text coloroff">SOLUÇÃO</div>
                 <div class="tbm2 header3-body-text">DESCUBRA A MELHOR SOLUÇÃO PARA SEU NEGÓCIO</div>
             </aside>
 
             <aside class="span2 header3-t-h sort-menu-parent">
-                <div class="tbm2"><img src="{% static "home/img/icons/h-3-6 th.png" %}"/></div>
-                <div class="tbm2 header3-title-text coloroff">SUPORTE</div>
+                <div class="tbm2"><img src="{% static "home/img/icons/h-3-6 th.png" %}" style="height: 30px;" /></div>
+                <div class="tbm2 header3-title-text">SUPORTE</div>
                 <div class="tbm2 header3-body-text">TUTORIAL, WIKI E FERRAMENTAS PARA CERTIFICADOS DIGITAIS</div>
                 <div class="sortmune">
                     <ul>

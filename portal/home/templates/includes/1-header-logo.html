@@ -17,11 +17,11 @@
                         <li class="activoverfl"><a href="#" class="limeh100x">ENTRAR</a>
 
                         <div class="foty ensign">
-                            <form class="customsininput">
-                                <div><input type="text" placeholder="CNPJ"></div>
-                                <div><input type="text" placeholder="Senha"></div>
+                            <form class="customsininput" id="login-form" method="post" action="/admin/">
+                                <div><input id="id_username" name="username" type="text" placeholder="CNPJ"></div>
+                                <div><input id="id_password" name="password" type="password" placeholder="Senha"></div>
                                 <div>
-                                    Esqueceu a senha?
+                                    <a href="/password_forgotten">Esqueceu a senha?</a>
                                     <button type="submit" class="btn pull-right">Entrar</button>
                                 </div>
                             </form>
@@ -30,9 +30,19 @@
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
                         <li class="activa"><a href="#" class="limeh100x dobold disabled">CARRINHO <i class="icon-shopping-cart"></i></a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
-                        <li>
+                        <li id=div_searchba>
+{#                            <div class="pull-left limeh100x searchareain" style="overflow-y:hidden;">#}
+{#                            <form action="" class="navbar-search pull-left limeh100x">#}
+{#                                <div class="tmpsearch productbgn headbutton" style="width: 0px; opacity: 1; z-index: 10; padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">#}
+{#                                    <input id="appendedInputButton" class="spfox1" width="350" type="text" style="margin-top:20px;"></input>#}
+{#                                    <button class="btn spfox2" style="margin-top:10px; margin-left:-6px;" type="button"><i class="icon-search"></i></button>#}
+{#                                </div>#}
+{#                                <i class="icon-search searchareain2" style="margin-top:10px;"></i>#}
+{#                            </form>#}
+{#                            </div>#}
+
                             <form action="" class="navbar-search pull-left limeh100x">
-                                <!--<input type="text" placeholder="Search" class="search-query span2">-->
+                                <input id="searchbar" type="text" placeholder="Search" class="search-query">
                                 <!--<button type="submit" class="btn">Search</button>-->
                                 &nbsp;&nbsp;<i class="icon-search" style="margin-top:5px;"></i>&nbsp;&nbsp;
                             </form>

@@ -12,7 +12,7 @@ body {padding-top:0;}
 h1 {
     font-family: RobotoCondensed-Regular;
     color: rgb(0, 82, 149);
-    font-size: 200%;
+    font-size: 160%;
     line-height: 100%;
     letter-spacing: -1px;
     margin-top: 10px;
@@ -30,6 +30,7 @@ h2 {
 h3 {
     font-family: RobotoCondensed-Regular;
     color: rgb(51, 51, 51);
+    font-size: 140%;
     font-weight: normal;
     margin-top: 30px;
 }
@@ -41,6 +42,21 @@ body {
     line-height: 100%;
 }
 
+/* Magic for the search bar */
+#div_searchbar,
+#searchbar {
+    width: 0%;
+}
+#div_searchbar:hover,
+#searchbar:hover {
+    width: 60%;
+}
+.tmpsearch{
+	padding-top:0;
+	background:#FFF;
+	height:100%;
+	/*border-bottom:#666 1px solid;*/
+}
 
 /*padding and margin started*/
 
@@ -395,8 +411,8 @@ body {
 }
 
 .header3-t-h{
-	padding-top:10px;
-	padding-bottom:10px;
+	padding-top:0px;
+	padding-bottom:0px;
 	height:105px;
 	background:#FFF;
 }
@@ -575,10 +591,19 @@ body {
 
 }
 
+.header2-area > aside:hover{
+	background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
+	background-image: -moz-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
+	background-image: -o-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
+	background-image: -ms-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
+	background-image: linear-gradient(to top, rgba(0,0,0,.1), rgba(255,255,255,.1));
+
+}
+
 .header2-text{
 	font-family:RobotoCondensed-Regular;
 	color:#000;
-	font-size:110%;
+	font-size:100%;
 	line-height:100%;
 }
 
@@ -701,7 +726,7 @@ body {
 
 .all-body-text5{
 	font-family:RobotoCondensed-Regular;
-	color: #666;
+	color: #9a9a9a;
 	font-size:110%;
 	line-height:100%;
 }
