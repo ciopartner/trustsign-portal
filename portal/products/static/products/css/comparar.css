@@ -359,3 +359,100 @@ tbody > tr:nth-child(even){
  }
 
 /*//////ssl table closed here//////*/
+
+.tab-text{
+	font-family:RobotoCondensed-Regular;
+	color:#C4C4CE;
+	font-size:120%;
+	line-height:100%;
+	}
+
+.bordown{
+	border-bottom:#DADEE3 2px solid;
+}
+.bb{
+	background-color:#FFF;
+	border-bottom:#DADEE3 2px solid;
+	border-top:hidden;
+}
+
+.bbt{
+	background-color:#FFF;
+	border-bottom:#DADEE3 2px solid;
+}
+
+.tabbut{
+	color:#FFF;
+	background-color:#B96318;
+	font-family:RobotoCondensed-Regular;
+	-webkit-box-shadow: 2px 3px 8px rgba(0,0,0,.4);
+	-moz-box-shadow: 2px 3px 8px rgba(0,0,0,.4);
+	box-shadow: 2px 3px 8px rgba(0,0,0,.4);
+	border: solid 1px #fff;
+	background-image: -webkit-linear-gradient(bottom, rgba(180,95,21,1), rgba(205,119,44,1));
+	background-image: -moz-linear-gradient(bottom, rgba(180,95,21,1), rgba(205,119,44,1));
+	background-image: -o-linear-gradient(bottom, rgba(180,95,21,1), rgba(205,119,44,1));
+	background-image: -ms-linear-gradient(bottom, rgba(180,95,21,1), rgba(205,119,44,1));
+	background-image: linear-gradient(to top, rgba(180,95,21,1), rgba(205,119,44,1));
+}
+
+.tabbut:hover{
+	background-color: rgba(205,119,44,1);
+	-webkit-box-shadow: 1px 2px 4px rgba(0,0,0,.4);
+	-moz-box-shadow: 1px 2px 4px rgba(0,0,0,.4);
+	box-shadow: 1px 2px 4px rgba(0,0,0,.4);
+	border: solid 1px #fff;
+	background-image: -webkit-linear-gradient(bottom, rgba(205,119,44,1), rgba(180,95,21,1));
+	background-image: -moz-linear-gradient(bottom, rgba(205,119,44,1), rgba(180,95,21,1));
+	background-image: -o-linear-gradient(bottom, rgba(205,119,44,1), rgba(180,95,21,1));
+	background-image: -ms-linear-gradient(bottom, rgba(205,119,44,1), rgba(180,95,21,1));
+	background-image: linear-gradient(to top, rgba(205,119,44,1), rgba(180,95,21,1));
+}
+
+tbody.bor-tb > tr:nth-child(odd){
+	background-color:#FFF;
+	border-top:hidden;
+	border-bottom:hidden;
+}
+
+tbody.bor-tb > tr:nth-child(even){
+	background-color:#EEEEEE;
+	border-top:hidden;
+	border-bottom:hidden;
+}
+
+tbody.bor-tb > tr:last-child{
+	background-color:#F7F7F7;
+	border-top:hidden;
+	border-bottom:#DADEE3 2px solid;
+}
+
+tbody.bor-tb > tr td:last-child{
+	font-family:RobotoCondensed-Regular;
+	background:#FFF;
+	text-align:center;
+}
+
+tbody.bor-tb > tr:last-child td:last-child{
+	border-bottom:hidden;
+}
+
+.tdbl{
+	border-left:#DADEE3 2px solid;
+}
+
+.tdbr{
+	border-right:#DADEE3 2px solid;
+}
+.tdblr{
+	border-left:#DADEE3 2px solid;
+	border-right:#DADEE3 2px solid;
+}
+
+.tdblrb{
+	border-left:#DADEE3 2px solid;
+	border-right:#DADEE3 2px solid;
+	border-bottom:hidden;
+}
+
+/*//////comprar table closed here//////*/
