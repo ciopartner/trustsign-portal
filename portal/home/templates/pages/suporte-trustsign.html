@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block headers %}
+    {{ block.super }}
+{% endblock %}
+
+{% block title %}
+    {% editable page.title %}
+        {{ page.title }}
+    {% endeditable %}
+{% endblock %}
+
+{% block one_row %}
+    <div class="span12 left">
+        {% editable page.richtextpage.content %}
+            {{ page.richtextpage.content|richtext_filter|safe }}
+        {% endeditable %}
+
+        <table style='margin-top:200px;'>
+            <thead>
+            <tr>
+                <th><b>Tutoriais em vídeo</b><br>Aprenda como instalar e configurar serviços de forma simples</th>
+                <th><b>Ferramentas</b><br>SSL Checker, CSR Decoder, Certificade Key Matcher e SSL Converter</th>
+                <th><b>Wiki TrustSign</b><br>Tenha acesso a todo material de suporte da TrustSign, com as perguntas e
+                    respostas mais frequentes
+                </th>
+                <th><b>Downloads documentos TrustSign (acesso mediante a cadastro)</b><br>
+                    <b>1. Conheça mais sobre as vulnerabilidades web</b></br>
+                    <a href="http://www.trustsign.com.br/blog/?p=360">Entenda quais são as principais vulnerabilidades que podem trazer riscos</a><br><br>
+                    <b>2. Dicas de como manter o website + seguro</b></br>
+                    <a href="http://www.trustsign.com.br/blog/?p=266">Entenda quais são as principais ações para manter seu site mais seguro</a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

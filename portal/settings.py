@@ -70,6 +70,9 @@
 #     ),
 # )
 
+# Setting to identify a user profile
+AUTH_PROFILE_MODULE = "home.TrustSignProfile"
+
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 BLOG_USE_FEATURED_IMAGE = True

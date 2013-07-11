@@ -15,3 +15,10 @@ from mezzanine.pages.models import Page
 # class Book(models.Model):
 #     author = models.ForeignKey("Author")
 #     cover = models.ImageField(upload_to="authors")
+
+
+class TrustSignProfile(models.Model):
+    user = models.OneToOneField("auth.User")
+    date_of_birth = models.DateField()
+    bio = models.TextField()
+    tagline = models.TextField()

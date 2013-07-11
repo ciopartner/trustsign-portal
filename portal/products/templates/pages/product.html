@@ -1,18 +1,23 @@
 {% extends "base.html" %}
-{% load mezzanine_tags keyword_tags %}
+{% load mezzanine_tags keyword_tags staticfiles %}
 
 {% block meta_title %}{{ page.meta_title }}{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
-{% keywords_for page as keywords %}
-{% for keyword in keywords %}
-    {% if not forloop.first %}, {% endif %}
-    {{ keyword }}
-{% endfor %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
 {% endmetablock %}{% endblock %}
 
+{% block extra_css %}
+    {{ block.super }}
+    <link href="{% static "products/css/comparar.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block meta_description %}{% metablock %}
-{{ page.description }}
+    {{ page.description }}
 {% endmetablock %}{% endblock %}
 
 {% block headers %}
@@ -30,48 +35,52 @@
 
 {% block one_row %}
     <div class="span12 left">
-    {% editable page.product.youtube_title %}
-        <h2>{{ page.product.youtube_title }}</h2>
-    {% endeditable %}
+        {% editable page.product.youtube_title %}
+            <h2>{{ page.product.youtube_title }}</h2>
+        {% endeditable %}
 
-    {% editable page.product.youtube_url %}
-        <div style="text-align: center;">
-            <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="{{ page.product.youtube_url }}" frameborder="0" allowFullScreen></iframe>
-        </div>
-    {% endeditable %}
-
-    <br><br>
-
-    {% editable page.product.tab_title %}
-    {{ page.product.tab_title }}<br><br>
-    {% endeditable %}
-
-    {# Esquema de Abas #}
-    <ul class="nav nav-tabs">
-        {% for tab in page.product.tabs.all %}
-            <li>
-            {% editable tab.tab_title %}
-                <a href="#{{ tab.tab_title|slugify }}" data-toggle="tab">
-                {{ tab.tab_title }}
-            </a>
-            {% endeditable %}
-            </li>
-        {% endfor %}
-    </ul>
-    <div class="tab-content">
-        {% for tab in page.product.tabs.all %}
-            <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ tab.tab_title|slugify }}">
-                {% editable tab.tab_short_description %}
-                {{ tab.tab_short_description }}
-                {% endeditable %}
-                <br>
-                {% editable tab.tab_description %}
-                {{ tab.tab_description }}
-                {% endeditable %}
+        {% editable page.product.youtube_url %}
+            <div style="text-align: center;">
+                <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390"
+                        src="{{ page.product.youtube_url }}" frameborder="0" allowFullScreen></iframe>
             </div>
-        {% endfor %}
+        {% endeditable %}
+
+        <br><br>
+
+        {% editable page.product.tab_title %}
+            {{ page.product.tab_title }}<br><br>
+        {% endeditable %}
+
+        {# Esquema de Abas #}
+        <ul class="nav nav-tabs">
+            {% for tab in page.product.tabs.all %}
+                <li>
+                    {% editable tab.tab_title %}
+                        <a href="#{{ tab.tab_title|slugify }}" data-toggle="tab">
+                            {{ tab.tab_title }}
+                        </a>
+                    {% endeditable %}
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for tab in page.product.tabs.all %}
+                <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ tab.tab_title|slugify }}">
+                    {% editable tab.tab_short_description %}
+                        {{ tab.tab_short_description }}
+                    {% endeditable %}
+                    <br>
+                    {% editable tab.tab_description %}
+                        {{ tab.tab_description }}
+                    {% endeditable %}
+                </div>
+            {% endfor %}
+        </div>
+
+    {# Inclusão da tabela de comparação de certificados #}
+    <div style="margin-top:100px;">
+        {% include "includes/comparacao-de-certificados.html" %}
     </div>
-
-
     </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% load pages_tags mezzanine_tags staticfiles %}
+{% load pages_tags mezzanine_tags staticfiles i18n future %}
 
 <section class="container" style="background-color:#FFFFFF;">
     <section class="featurette" style="padding-bottom:0;">
@@ -41,9 +41,8 @@
 {#                            </form>#}
 {#                            </div>#}
 
-                            <form action="" class="navbar-search pull-left limeh100x">
-                                <input id="searchbar" type="text" placeholder="Search" class="search-query">
-                                <!--<button type="submit" class="btn">Search</button>-->
+                            <form action="{% url "search" %}" class="navbar-search pull-left limeh100x">
+                                <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
                                 &nbsp;&nbsp;<i class="icon-search" style="margin-top:5px;"></i>&nbsp;&nbsp;
                             </form>
                         </li>
