@@ -19,6 +19,6 @@ from mezzanine.pages.models import Page
 
 class TrustSignProfile(models.Model):
     user = models.OneToOneField("auth.User")
-    date_of_birth = models.DateField()
-    bio = models.TextField()
-    tagline = models.TextField()
+    date_of_birth = models.DateField(blank=True)
+    bio = models.TextField(blank=True)
+    tagline = models.TextField(blank=True)

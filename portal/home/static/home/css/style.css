@@ -12,7 +12,7 @@ body {padding-top:0;}
 h1 {
     font-family: RobotoCondensed-Regular;
     color: rgb(0, 82, 149);
-    font-size: 160%;
+    font-size: 180%;
     line-height: 100%;
     letter-spacing: -1px;
     margin-top: 10px;
@@ -24,38 +24,31 @@ h2 {
     color: rgb(34, 125, 94);
     font-size: 130%;
     line-height: 100%;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 h3 {
     font-family: RobotoCondensed-Regular;
     color: rgb(51, 51, 51);
-    font-size: 140%;
+    font-size: 120%;
     font-weight: normal;
-    margin-top: 30px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.h1-complement {
+	font-family: RobotoCondensed-Light;
+	color: #aaa;
+	font-size:80%;
+	line-height:100%;
+	padding-left:10px;
+	font-weight:normal;
 }
 
 body {
     font-family: RobotoCondensed-Regular;
     color: rgb(102, 102, 102);
-    font-size: 110%;
     line-height: 100%;
-}
-
-/* Magic for the search bar */
-#div_searchbar,
-#searchbar {
-    width: 0%;
-}
-#div_searchbar:hover,
-#searchbar:hover {
-    width: 60%;
-}
-.tmpsearch{
-	padding-top:0;
-	background:#FFF;
-	height:100%;
-	/*border-bottom:#666 1px solid;*/
 }
 
 /*padding and margin started*/
@@ -539,6 +532,8 @@ body {
 	}
 
 
+
+
 /*-------productpage closed---------*/
 
 .mainlogo{
@@ -588,15 +583,6 @@ body {
 }
 
 .header1-hover{
-
-}
-
-.header2-area > aside:hover{
-	background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
-	background-image: -moz-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
-	background-image: -o-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
-	background-image: -ms-linear-gradient(bottom, rgba(0,0,0,.1), rgba(255,255,255,.1));
-	background-image: linear-gradient(to top, rgba(0,0,0,.1), rgba(255,255,255,.1));
 
 }
 
@@ -883,6 +869,13 @@ body {
 	background-color:#F7F7F7;
 }
 
+.tmpsearch{
+	padding-top:0;
+	background:#FFF;
+	height:100%;
+	/*border-bottom:#666 1px solid;*/
+}
+
 .buttons{
 	width:100%;
 	text-align:right;
@@ -973,10 +966,47 @@ body {
 
 
 /*custom footer closed*/
-	
-	
-	
-	
-	
-	
-	
+
+
+/* Start Product Tabs */
+.product-tabs{
+	text-align:center;
+	width:20%;
+	float:left;
+}
+.product-tabs:nth-child(odd){
+	background-color:#F7F7F7;
+}
+.product-tabs:nth-child(even){
+	background-color:#F0F0F0;
+}
+
+.product-tabs > h3{
+	font-family:RobotoCondensed-Bold;
+	color:#4B4B4B;
+	font-size:135%;
+	line-height:100%;
+    height: 60px;
+    padding: 10px 10px;
+}
+.product-tabs > h4{
+	font-family:RobotoCondensed-Regular;
+	color:#929299;
+	font-size:100%;
+	line-height:110%;
+    height: 40px;
+    padding: 0px 10px;
+}
+.product-tabs > .btn{
+    margin: 10px 10px;
+}
+.product-tabs-content{
+	background-color:#E2E2E2;
+	padding:20px;
+	font-family:RobotoCondensed-Regular;
+	color:#5D5D5D;
+	font-size:130%;
+	line-height:100%;
+}
+/* End Product Tabs*/
+

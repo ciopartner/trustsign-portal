@@ -16,35 +16,36 @@
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
                         <li class="activoverfl"><a href="#" class="limeh100x">ENTRAR</a>
 
-                        <div class="foty ensign">
-                            <form class="customsininput" id="login-form" method="post" action="/admin/">
-                                <div><input id="id_username" name="username" type="text" placeholder="CNPJ"></div>
-                                <div><input id="id_password" name="password" type="password" placeholder="Senha"></div>
-                                <div>
-                                    <a href="/password_forgotten">Esqueceu a senha?</a>
-                                    <button type="submit" class="btn pull-right">Entrar</button>
-                                </div>
-                            </form>
-                        </div>
+                            <div class="foty ensign">
+                                <form class="customsininput" id="login-form" method="post" action="/admin/">
+                                    <div><input id="id_username" name="username" type="text" placeholder="CNPJ"></div>
+                                    <div><input id="id_password" name="password" type="password" placeholder="Senha">
+                                    </div>
+                                    <div>
+                                        <a href="/password_forgotten">Esqueceu a senha?</a>
+                                        <button type="submit" class="btn pull-right">Entrar</button>
+                                    </div>
+                                </form>
+                            </div>
                         </li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
-                        <li class="activa"><a href="#" class="limeh100x dobold disabled">CARRINHO <i class="icon-shopping-cart"></i></a></li>
+                        <li class="activa" style="display:none;"><a href="#" class="limeh100x dobold disabled">CARRINHO <i
+                                class="icon-shopping-cart"></i></a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:120px;"></li>
-                        <li id=div_searchba>
-{#                            <div class="pull-left limeh100x searchareain" style="overflow-y:hidden;">#}
-{#                            <form action="" class="navbar-search pull-left limeh100x">#}
-{#                                <div class="tmpsearch productbgn headbutton" style="width: 0px; opacity: 1; z-index: 10; padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">#}
-{#                                    <input id="appendedInputButton" class="spfox1" width="350" type="text" style="margin-top:20px;"></input>#}
-{#                                    <button class="btn spfox2" style="margin-top:10px; margin-left:-6px;" type="button"><i class="icon-search"></i></button>#}
-{#                                </div>#}
-{#                                <i class="icon-search searchareain2" style="margin-top:10px;"></i>#}
-{#                            </form>#}
-{#                            </div>#}
-
-                            <form action="{% url "search" %}" class="navbar-search pull-left limeh100x">
-                                <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
-                                &nbsp;&nbsp;<i class="icon-search" style="margin-top:5px;"></i>&nbsp;&nbsp;
-                            </form>
+                        <li>
+                            <div class="pull-left limeh100x searchareain" style="overflow-y:hidden;">
+                                <div class="tmpsearch productbgn headbutton">
+                                    <form action="{% url "search" %}">
+                                        <input id="appendedInputButton" class="spfox1" type="text" width="350" name="q"
+                                               style="margin-top:20px;" placeholder="{% trans "Search" %}"
+                                               value="{{ request.REQUEST.q }}">
+                                        <button class="btn spfox2" type="button"
+                                                style="margin-top:10px; margin-left:-6px;">
+                                            <i class="icon-search"></i></button>
+                                    </form>
+                                </div>
+                                &nbsp;&nbsp;<i class="icon-search searchareain2" style="margin-top:10px;"></i>&nbsp;&nbsp;
+                            </div>
                         </li>
                     </ul>
                 </div>

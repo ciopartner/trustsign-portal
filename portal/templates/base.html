@@ -20,7 +20,7 @@
 
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
-        <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
+{#        <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">#}
         <link rel="stylesheet" href="{% static "css/bootstrap-responsive.css" %}">
         {% if LANGUAGE_BIDI %}
             <link rel="stylesheet" href="{% static "css/rtl.css" %}">
@@ -124,6 +124,7 @@
 
 {#{% compress js %}#}
     <script src="{% static "home/js/home.js" %}"></script>
+    <script src="{% static "home/js/custom.js" %}"></script>
 {#{% endcompress %}#}
 
 </html>

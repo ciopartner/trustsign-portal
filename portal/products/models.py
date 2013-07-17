@@ -25,6 +25,7 @@ class Product(Page):
     """
     This page is responsible for storing the Content of each Product Page
     """
+    subtitle = models.CharField('Subtitle', max_length=256, blank=True)
     youtube_title = models.CharField('YouTube Title', max_length=256)
     youtube_url = models.URLField('YouTube URL')
     tab_title = models.CharField('Tab Title', max_length=256)
