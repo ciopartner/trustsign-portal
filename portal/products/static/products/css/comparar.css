@@ -455,4 +455,8 @@ tbody.bor-tb > tr:last-child td:last-child{
 	border-bottom:hidden;
 }
 
+.mais_beneficios{
+    display: none;
+}
+
 /*//////comprar table closed here//////*/

@@ -8,6 +8,15 @@ body {padding-top:0;}
     background-color: #ffffff;
 }
 
+/* Overwriting bootstrap.css */
+.table td.center {
+    text-align: center;
+}
+.navbar .nav > li > a {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
 /* Overwriting h1, h2 and h3 to make the content easy */
 h1 {
     font-family: RobotoCondensed-Regular;
@@ -481,7 +490,7 @@ body {
 }
 
 .sortmune > ul > li{
-	background-color:#FFF;
+	background-color:#fbfbfb;
 	padding-bottom:10px;
 	padding-top:10px;
 	list-style:none;
@@ -509,6 +518,9 @@ body {
 
 /*-------productpage started---------*/
 
+.black_link a {
+    color: black;
+}
 
 .all-body-text1 > article{
 	margin-top:5px;
@@ -622,7 +634,7 @@ body {
 }
 
 .header3-body-text{
-	font-family:RobotoCondensed-Bold;
+	font-family:RobotoCondensed-Regular;
 	font-size:11px;
 	line-height:105%;
 
@@ -711,7 +723,7 @@ body {
 }
 
 .all-body-text5{
-	font-family:RobotoCondensed-Regular;
+	font-family:RobotoCondensed-Light;
 	color: #9a9a9a;
 	font-size:110%;
 	line-height:100%;
@@ -897,7 +909,7 @@ body {
 }
 
 .footer-title a[href].carsol{
-	font-family:RobotoCondensed-Bold;
+	font-family:RobotoCondensed-Regular;
 	font-size:78%;
 	color:#7B7B7B;
 }
@@ -970,9 +982,11 @@ body {
 
 /* Start Product Tabs */
 .product-tabs{
+    display:inline-block;
 	text-align:center;
-	width:20%;
+	width: calc(20% - 2px);
 	float:left;
+    margin-right: 2px;
 }
 .product-tabs:nth-child(odd){
 	background-color:#F7F7F7;
@@ -982,7 +996,7 @@ body {
 }
 
 .product-tabs > h3{
-	font-family:RobotoCondensed-Bold;
+	font-family:RobotoCondensed-Regular;
 	color:#4B4B4B;
 	font-size:135%;
 	line-height:100%;
@@ -1003,7 +1017,7 @@ body {
 .product-tabs-content{
 	background-color:#E2E2E2;
 	padding:20px;
-	font-family:RobotoCondensed-Regular;
+	font-family:RobotoCondensed-Light;
 	color:#5D5D5D;
 	font-size:130%;
 	line-height:100%;

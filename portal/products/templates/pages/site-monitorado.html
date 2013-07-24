@@ -24,6 +24,7 @@
     <header>
         {% include 'includes/1-header-logo.html' %}
         {% include 'includes/2-header-atendimento.html' %}
+        <br><br>
     </header>
 {% endblock %}
 
@@ -65,7 +66,7 @@
                     {% endeditable %}
                     {% editable tab.tab_short_description %}
                         <h4>{{ tab.tab_short_description }}</h4>
-                        <a class=btn href="#{{ tab.tab_title|slugify }}" data-toggle="tab">Entenda
+                        <a class="btn btn-large" style="color: #555;" href="#{{ tab.tab_title|slugify }}" data-toggle="tab">Entenda
                         </a>
                     {% endeditable %}
                 </aside>
