@@ -19,6 +19,7 @@
                             {# Retirar após o carrinho entrar no ar o style do div abaixo: #}
                             <div class="foty ensign" style="margin-left: -151px;">
                                 <form class="customsininput" id="login-form" method="post" action="/admin/">
+                                    {% csrf_token %}
                                     <div><input id="id_username" name="username" type="text" placeholder="CNPJ"></div>
                                     <div><input id="id_password" name="password" type="password" placeholder="Senha">
                                     </div>

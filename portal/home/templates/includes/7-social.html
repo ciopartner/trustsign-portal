@@ -1,1 +1,111 @@
-<h2>SOCIAL</h2>
+{% load i18n future mezzanine_tags blog_tags keyword_tags disqus_tags staticfiles pages_tags %}
+<!------------blog and tweeter area started here---------------->
+
+
+<section class="featurette homemain">
+    <p class="as-text1" style="text-align: center; margin: 20px;">ACOMPANHE A TRUSTSIGN NAS REDES</p>
+</section>
+
+<section class="featurette tlrp15">
+    <section class="row-fluid">
+        <aside class="span6">
+
+
+            <section class="tblrp510">
+                <h2>BLOGS</h2>
+                {% blog_recent_posts 3 as recent_posts %}
+                {% for blog_post in recent_posts %}
+                    <div class="margin-top" style="clear: both;">
+                        <a class="home-text3 lrp10" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
+
+                        <p class="home-text4 lrbp10">{{ blog_post.description_from_content | safe |truncatewords_html:40 }}<a href="
+                        {{ blog_post.get_absolute_url }}">[Leia mais]</a></p>
+
+                    </div>
+                {% endfor %}
+            </section>
+        </aside>
+
+
+        <aside class="span6">
+
+            <section class="tblrp510">
+                <div>
+                    <a href="#"><img src="images/icons/home-t.png" style="float:left; margin-right:10px;"></a>
+                    <a href="#"><img src="images/icons/home-s-t.png" style="float:right;"></a>
+
+                    <h2>TWEETS</h2>
+
+                </div>
+
+                {% include 'twitter/tweets.html' %}
+            </section>
+
+        </aside>
+    </section>
+</section>
+
+
+<!------------blog and tweeter area closed here---------------->
+
+
+<!------------youtube area closed here------------------------->
+
+
+<section class="featurette tblrp10" style="display: inline-block;">
+
+    <h2>YOUTUBE</h2>
+
+    <section class="span12" style="text-align:center;">
+        <section class="row ytube">
+
+            <aside class="span3" style="margin:15px;">
+                <div style="text-align: center;">
+                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
+                            height="100"
+                            src="//www.youtube.com/embed/pUBKwak7cpg" frameborder="0" allowFullScreen></iframe>
+                </div>
+
+                <p class="home-text4">Dicas de segurança para evitar crimes na internet</p>
+            </aside>
+
+            <aside class="span3" style="margin:15px;">
+                <div style="text-align: center;">
+                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
+                            height="100"
+                            src="//www.youtube.com/embed/pUBKwak7cpg" frameborder="0" allowFullScreen></iframe>
+                </div>
+
+                <p class="home-text4">Prêmio MPE Brasil Etapa SP</p>
+            </aside>
+
+
+            <aside class="span3" style="margin:15px;">
+                <div style="text-align: center;">
+                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
+                            height="100"
+                            src="//www.youtube.com/embed/pUBKwak7cpg" frameborder="0" allowFullScreen></iframe>
+                </div>
+
+                <p class="home-text4">Comprando pela Internet</p>
+            </aside>
+
+
+            <aside class="span3" style="margin:15px;">
+                <div style="text-align: center;">
+                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
+                            height="100"
+                            src="//www.youtube.com/embed/pUBKwak7cpg" frameborder="0" allowFullScreen></iframe>
+                </div>
+
+                <p class="home-text4">Entrevista de Ivo Machado para Record News</p>
+            </aside>
+
+        </section>
+    </section>
+
+</section>
+
+
+<!--------------youtube area closed here---------------------------------->
+

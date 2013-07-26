@@ -1,7 +1,12 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n staticfiles %}
 
 {% block meta_title %}{% trans "Home" %}{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link href="{% static "products/css/comparar.css" %}" rel="stylesheet">
+{% endblock %}
 
 {% block breadcrumb %}
 {% endblock %}
@@ -9,6 +14,7 @@
 {% block one_row %}
     <div class="span12 left">
         {% include 'home/1-slider.html' %}
+        {% include 'includes/8-voce-sabia.html' %}
         {% include 'includes/7-social.html' %}
         {% include 'includes/6-customers.html' %}
     </div>

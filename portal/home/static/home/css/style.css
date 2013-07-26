@@ -38,7 +38,7 @@ h2 {
 
 h3 {
     font-family: RobotoCondensed-Regular;
-    color: rgb(51, 51, 51);
+    color: #333333;
     font-size: 120%;
     font-weight: normal;
     margin-top: 0px;
@@ -47,7 +47,7 @@ h3 {
 
 .h1-complement {
 	font-family: RobotoCondensed-Light;
-	color: #aaa;
+	color: #aaaaaa;
 	font-size:80%;
 	line-height:100%;
 	padding-left:10px;
@@ -55,10 +55,16 @@ h3 {
 }
 
 body {
-    font-family: RobotoCondensed-Regular;
+    font-family: RobotoCondensed-Light;
     color: rgb(102, 102, 102);
     line-height: 100%;
 }
+
+/* START BLOG CONFIG */
+img.size-thumbnail{
+    float:left;
+}
+/* END BLOG CONFIG */
 
 /*padding and margin started*/
 
@@ -1024,3 +1030,81 @@ body {
 }
 /* End Product Tabs*/
 
+
+/*//////// principais clientes area start here//////////*/
+.principais-clientes {
+	position:relative;
+	margin:0;
+	padding:0;
+	width:100%;
+}
+
+.principais-clientes > li{
+	position:relative;
+	float:left;
+	list-style:none;
+	padding:0;
+	margin:0;
+	width:14.285714%;
+	display:inline-block;
+}
+
+
+.principais-clientes > li > div{
+	position:relative;
+	border-right:#DADEE3 1px solid;
+	/*height:80px;*/
+	display:block;
+	padding:5px;
+	line-height:80px;
+	text-align:center;
+	border-bottom:#DADEE3 1px solid;
+}
+
+
+.principais-clientes > li:nth-child(7n+7) > div{
+	border-right: none;
+}
+
+.principais-clientes > li:nth-last-child(-1n+7) > div{
+	border-bottom: none;
+}
+
+.principais-clientes > li > div a[href]{
+	margin:0;
+	padding:0;
+	overflow:hidden;
+}
+.principais-clientes > li > div img{
+
+
+}
+
+.home-cl{
+	padding-top:20px;
+	padding-bottom:20px;
+	padding-left:40px;
+	padding-right:40px;
+}
+/* principais clientes area closed here */
+
+
+/* home page started here */
+.home-text3{
+	font-family:'RobotoCondensed-Regular';
+	color: #333;
+	font-size:135%;
+	line-height:100%;
+	}
+
+
+.home-text4{
+	font-family:'RobotoCondensed-Regular';
+	color: #666;
+	font-size:110%;
+	line-height:115%;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+/* home page ended here */
