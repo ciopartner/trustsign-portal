@@ -1115,3 +1115,7 @@ img.size-thumbnail{
 .payment-icon img{
     width: 53px;
 }
+/* To hide image blogs in the home page */
+.home-text4 img{
+    display: none;
+}
