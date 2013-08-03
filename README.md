@@ -24,3 +24,7 @@ Executar uma vez para o portal e outra para o e-commerce
   - DEV
   - QAS
   - PRD
+
+6) Dependências:
+# apt-get install libncurses5-dev
+# apt-get install python-dev

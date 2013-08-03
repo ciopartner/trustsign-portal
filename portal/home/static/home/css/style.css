@@ -63,6 +63,7 @@ body {
 /* START BLOG CONFIG */
 img.size-thumbnail{
     float:left;
+    padding-right: 10px;
 }
 /* END BLOG CONFIG */
 
@@ -555,8 +556,8 @@ img.size-thumbnail{
 /*-------productpage closed---------*/
 
 .mainlogo{
-	height: 85px;
-	padding-top:15px;
+	height: 65px;
+	padding-top:20px;
 
 }
 
@@ -1099,12 +1100,18 @@ img.size-thumbnail{
 
 
 .home-text4{
-	font-family:'RobotoCondensed-Regular';
+	font-family:'RobotoCondensed-Light';
 	color: #666;
 	font-size:110%;
-	line-height:115%;
+	line-height:125%;
 	padding-top:10px;
 	padding-bottom:10px;
+    text-align:justify;
 }
 
 /* home page ended here */
+
+/* Style for payment methods */
+.payment-icon img{
+    width: 53px;
+}

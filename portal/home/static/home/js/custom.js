@@ -152,6 +152,7 @@ var header1search = function () {
             });
 
         }
+//            $('.searchareain img').hide();
 
         /*$("#left").click(function(){
          $(".block").animate({"left": "-=50px"}, "slow");
@@ -180,6 +181,7 @@ var header1search = function () {
                 $('.searchareain').parent().removeClass('bloksearch');
             });
         }
+            $('.searchareain img').show();
     });
 }
 

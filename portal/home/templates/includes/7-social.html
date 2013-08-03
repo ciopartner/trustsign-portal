@@ -6,36 +6,33 @@
     <p class="as-text1" style="text-align: center; margin: 20px;">ACOMPANHE A TRUSTSIGN NAS REDES</p>
 </section>
 
-<section class="featurette tlrp15">
+<section class="featurette">
     <section class="row-fluid">
-        <aside class="span6">
-
-
-            <section class="tblrp510">
-                <h2>BLOGS</h2>
+        <aside class="span6" style="padding-right: 30px;">
+            <section class="">
+                <div>
+                    <img src={% static "home/img/icons/blog.png" %} style="float:left; margin-right:10px;
+                    margin-top:-6px;">
+                    <h2>BLOG</h2>
+                </div>
                 {% blog_recent_posts 3 as recent_posts %}
                 {% for blog_post in recent_posts %}
                     <div class="margin-top" style="clear: both;">
-                        <a class="home-text3 lrp10" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-
-                        <p class="home-text4 lrbp10">{{ blog_post.description_from_content | safe |truncatewords_html:40 }}
-                        <a href="
-                        {{ blog_post.get_absolute_url }}">[Leia mais]</a></p>
-
+                        <a class="home-text3" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
+                        <span class="home-text4">{{ blog_post.description_from_content | safe |truncatewords_html:30 }}</span>
+                        <a href="{{ blog_post.get_absolute_url }}">[Leia mais]</a>
                     </div>
                 {% endfor %}
             </section>
         </aside>
 
 
-        <aside class="span6">
-
-            <section class="tblrp510">
+        <aside class="span6" style="padding-left: 30px;">
+            <section class="">
                 <div>
-                    <a href="#"><img src={% static "home/img/icons/twitter-t.png" %}
-                                             style="float:left; margin-right:10px; margin-top:-6px;"></a>
+                    <img src={% static "home/img/icons/twitter-t.png" %} style="float:left; margin-right:10px; margin-top:-6px;">
 
-{# Configurando o botão de seguir no twitter: #}
+                    {# Configurando o botão de seguir no twitter: #}
                     <style>
                         .twitter-btn {
                             font: normal normal normal 13px/26px 'Helvetica Neue', Arial, sans-serif;
@@ -87,7 +84,7 @@
                             white-space: nowrap;
                         }
                     </style>
-{# FIM - Configurando o botão de seguir no twitter: #}
+                    {# FIM - Configurando o botão de seguir no twitter: #}
 
                     <a target="_blank" class="twitter-btn pull-right" title="Siga @TrustSign no Twitter"
                        href="https://twitter.com/TrustSign">
@@ -113,7 +110,7 @@
 <!------------youtube area closed here------------------------->
 
 
-<section class="featurette tblrp10" style="display: inline-block;">
+<section class="featurette" style="display: inline-block; margin-top:20px;">
 
     <h2>YOUTUBE</h2>
 

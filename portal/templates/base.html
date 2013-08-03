@@ -20,8 +20,8 @@
 
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
-{#        <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">#}
-        <link rel="stylesheet" href="{% static "css/bootstrap-responsive.css" %}">
+        {#        <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">#}
+{#        <link rel="stylesheet" href="{% static "css/bootstrap-responsive.css" %}">#}
         {% if LANGUAGE_BIDI %}
             <link rel="stylesheet" href="{% static "css/rtl.css" %}">
         {% endif %}
@@ -61,16 +61,16 @@
 
 </head>
 <body id="{% block body_id %}body{% endblock %}">
+<div class="container" >
 
-{% block headers %}
-    <header>
-        {% include 'includes/1-header-logo.html' %}
-        {% include 'includes/2-header-atendimento.html' %}
-        {% include 'includes/3-header-produtos.html' %}
-    </header>
-{% endblock %}
+    {% block headers %}
+        <header>
+            {% include 'includes/1-header-logo.html' %}
+            {% include 'includes/2-header-atendimento.html' %}
+            {% include 'includes/3-header-produtos.html' %}
+        </header>
+    {% endblock %}
 
-<div class="container">
 
     {% nevercache %}
         {% for message in messages %}
@@ -123,8 +123,8 @@
 </body>
 
 {#{% compress js %}#}
-    <script src="{% static "home/js/home.js" %}"></script>
-    <script src="{% static "home/js/custom.js" %}"></script>
+<script src="{% static "home/js/home.js" %}"></script>
+<script src="{% static "home/js/custom.js" %}"></script>
 {#{% endcompress %}#}
 
 </html>
