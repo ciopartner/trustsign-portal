@@ -81,7 +81,7 @@
         {% endif %}
     {% endblock %}
 
-    {% rating_for blog_post %}
+{#    {% rating_for blog_post %}#}
 
     {% block blog_post_detail_sharebuttons %}
         {% set_short_url_for blog_post %}
@@ -123,8 +123,8 @@
         {% endif %}
     {% endblock %}
 
-    {% block blog_post_detail_comments %}
-        {% if blog_post.allow_comments %}{% comments_for blog_post %}{% endif %}
-    {% endblock %}
+{#    {% block blog_post_detail_comments %}#}
+{#        {% if blog_post.allow_comments %}{% comments_for blog_post %}{% endif %}#}
+{#    {% endblock %}#}
 
 {% endblock %}
