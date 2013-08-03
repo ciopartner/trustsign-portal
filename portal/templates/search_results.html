@@ -2,40 +2,41 @@
 
 {% load i18n future mezzanine_tags %}
 
-{% block meta_title %}{% trans "Search Results" %}{% endblock %}
-{% block title %}{% trans "Search Results" %}{% endblock %}
+{% block meta_title %}{% trans "Resultados da Busca" %}{% endblock %}
+{% block title %}{% trans "Resultados da Busca" %}{% endblock %}
 
 {% block breadcrumb_menu %}
-<li>
-    <a href="{% url "home" %}">{% trans "Home" %}</a>
-    <span class="divider">/</span>
-</li>
-<li class="active">{% trans "Search Results" %}</li>
+    <li>
+        <a href="{% url "home" %}">{% trans "Home" %}</a>
+        <span class="divider">/</span>
+    </li>
+    <li class="active">{% trans "Resultados da Busca" %}</li>
 {% endblock %}
 
-{% block main %}
+{% block one_row %}
+    <div class="lm30 tm30">
+    <p>
+        {% if results.paginator.count == 0 %}
+            {% blocktrans %}
+                Não foram encontrados resultados para sua busca por {{ query }}
+            {% endblocktrans %}
+        {% else %}
+            {% blocktrans with start=results.start_index end=results.end_index total=results.paginator.count %}
+                Mostrando {{ start }} a {{ end }} de {{ total }} resultados de acordo com sua busca por:
+                {{ query }}
+            {% endblocktrans %}
+        {% endif %}
+    </p>
 
-<p>
-{% if results.paginator.count == 0 %}
-{% blocktrans %}
-No results were found in {{ search_type }} matching your query: {{ query }}
-{% endblocktrans %}
-{% else %}
-{% blocktrans with start=results.start_index end=results.end_index total=results.paginator.count %}
-Showing {{ start }} to {{ end }} of {{ total }} results in {{ search_type }} matching your query: {{ query }}
-{% endblocktrans %}
-{% endif %}
-</p>
+    <div id="search-results">
+        {% for result in results.object_list %}
+            <h5>{{ forloop.counter0|add:results.start_index }})
+                <a href="{{ result.get_absolute_url }}">{{ result }}</a></h5>
+            <p>{{ result.description|truncatewords_html:20|safe }}</p>
+            <a href="{{ result.get_absolute_url }}">{% trans "leia mais" %}</a>
+        {% endfor %}
+    </div>
 
-<div id="search-results">
-    {% for result in results.object_list %}
-    <h5>{{ forloop.counter0|add:results.start_index }})
-        <a href="{{ result.get_absolute_url }}">{{ result }}</a></h5>
-    <p>{{ result.description|truncatewords_html:20|safe }}</p>
-    <a href="{{ result.get_absolute_url }}">{% trans "read more" %}</a>
-    {% endfor %}
+    {% pagination_for results %}
 </div>
-
-{% pagination_for results %}
-
 {% endblock %}
