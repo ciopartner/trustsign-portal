@@ -45,6 +45,7 @@
 
 {% block one_row %}
     <section class=span9>
+        {% block main %}{% endblock %}
         {% if tag or category or year or month or author %}
             {% block blog_post_list_filterinfo %}
                 <p>
@@ -94,8 +95,8 @@
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
-                        {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }}
-                            ago{% endblocktrans %}
+                        {#                        {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }}#}
+                        {#                            ago{% endblocktrans %}#}
                     </h6>
                 {% endeditable %}
             {% endblock %}
@@ -141,18 +142,20 @@
             {% endblock %}
         {% endfor %}
 
-        {% pagination_for blog_posts %}
+        {% if blog_posts %}
+            {% pagination_for blog_posts %}
+        {% endif %}
 
         {% if settings.COMMENTS_DISQUS_SHORTNAME %}
             {% include "generic/includes/disqus_counts.html" %}
         {% endif %}
     </section>
 
-{% block right_panel %}
-    <section class=span3>
-    {% include "blog/includes/filter_panel.html" %}
-    </section>
-{% endblock %}
+    {% block right_panel %}
+        <section class=span3>
+            {% include "blog/includes/filter_panel.html" %}
+        </section>
+    {% endblock %}
 
 {% endblock %}
 

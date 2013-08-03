@@ -14,37 +14,61 @@
 {#    {% endif %}#}
 {#{% endblock %}#}
 
+        <div class=well>
 {% block blog_categories %}
     {% blog_categories as categories %}
     {% if categories %}
-        <h3>{% trans "Categories" %}</h3>
-        <ul class="unstyled">
+        <ul class="nav nav-list">
+            <li class="nav-header">Categorias</li>
+            <li class="divider"></li>
             {% for category in categories %}
-                <li><a href="{% url "blog_post_list_category" category.slug %}"
-                        >{{ category }}</a> ({{ category.post_count }})
+                <li>
+                    <a href="{% url "blog_post_list_category" category.slug %}">
+                        {{ category }} ({{ category.post_count }})
+                    </a>
                 </li>
             {% endfor %}
         </ul>
+
+        {#        <h3>{% trans "Categories" %}</h3>#}
+        {#        <ul class="unstyled">#}
+        {#            {% for category in categories %}#}
+        {#                <li><a href="{% url "blog_post_list_category" category.slug %}"#}
+        {#                        >{{ category }}</a> ({{ category.post_count }})#}
+        {#                </li>#}
+        {#            {% endfor %}#}
+        {#        </ul>#}
     {% endif %}
 {% endblock %}
 
 {% block blog_months %}
     {% blog_months as months %}
     {% if months %}
-        <h3>{% trans "Blog Archive" %}</h3>
-        {% for month in months %}
-            {% ifchanged month.date.year %}
-                {% if not forloop.first %}</ul>{% endif %}
-                <h6>{{ month.date.year }}</h6>
-                <ul class="unstyled">
-            {% endifchanged %}
-            <li><a href="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}"
-                    >{{ month.date|date:"F" }}</a> ({{ month.post_count }})
-            </li>
-        {% endfor %}
-    </ul>
+{#        <h3>{% trans "Blog Archive" %}</h3>#}
+        <ul class="nav nav-list">
+            <li class="divider"></li>
+        <li class="nav-header">Arquivos do Blog</li>
+            <li class="divider"></li>
+        <select class=span2 onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}">
+            {% for month in months %}
+                <option value="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}">
+                    {{ month.date.year }} / {{ month.date|date:"F" }}
+                    ({{ month.post_count }})
+                </option>
+                {#                {% ifchanged month.date.year %}#}
+                {#                    {% if not forloop.first %}</ul>{% endif %}#}
+                {#                    <h6>{{ month.date.year }}</h6>#}
+                {#                    <ul class="unstyled">#}
+                {#                {% endifchanged %}#}
+                {#                <li><a href="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}"#}
+                {#                        >{{ month.date|date:"F" }}</a> ({{ month.post_count }})#}
+                {#                </li>#}
+            {% endfor %}
+        </select>
+        </ul>
     {% endif %}
 {% endblock %}
+        </div>
 
 {#{% block blog_keywords %}#}
 {#    {% keywords_for blog.blogpost as tags %}#}
