@@ -1,4 +1,4 @@
-{% extends "pages/page.html" %}
+{% extends "base.html" %}
 
 {% load mezzanine_tags %}
 
@@ -9,8 +9,9 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 </script>
 {% endblock %}
 
-{% block main %}
-{{ block.super }}
+{% block one_row %}
+{#{{ block.super }}#}
+    <div class="lm30">
 {% if request.GET.sent %}
     {% editable page.form.response %}
     {{ page.form.response|richtext_filter|safe }}
@@ -23,11 +24,11 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
     {% endwith %}
     <form method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
         {% fields_for form %}
-        <div class="form-actions">
-            <input class="btn btn-primary btn-large" type="submit" value="{{ page.form.button_text }}">
+        <div class="{# form-actions #}">
+            <input class="btn btn-large" type="submit" value="{{ page.form.button_text }}">
         </div>
     </form>
 {% endif %}
-
+</div>
 {% endblock %}
 
