@@ -1,3 +1,42 @@
 {% load pages_tags mezzanine_tags staticfiles %}
 
-<h2>SLIDER</h2>
+<div id="myCarousel" class="carousel slide" style="margin-left:-130px; margin-right:-130px;">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+{#        <li data-target="#myCarousel" data-slide-to="2"></li>#}
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+        <li data-target="#myCarousel" data-slide-to="4"></li>
+    </ol>
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+        <div class="active item">
+            <a href="/a-trustsign/">
+                <img src={% static "home/img/banners/banner_institucional.jpg" %}>
+            </a>
+        </div>
+        <div class="item">
+            <a href="/certificado-digital/">
+                <img src={% static "home/img/banners/banner_certificado.jpg" %}>
+            </a>
+        </div>
+{#        <div class="item">#}
+{#            <a href="/pki/">#}
+{#                <img src={% static "home/img/banners/banner_pki.jpg" %}>#}
+{#            </a>#}
+{#        </div>#}
+        <div class="item">
+            <a href="/site-seguro/">
+                <img src={% static "home/img/banners/banner_sitemaisseguro.jpg" %}>
+            </a>
+        </div>
+        <div class="item">
+            <a href="/site-monitorado/">
+                <img src={% static "home/img/banners/banner_sitemonitorado.jpg" %}>
+            </a>
+        </div>
+    </div>
+    <!-- Carousel nav -->
+    <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+    <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>
