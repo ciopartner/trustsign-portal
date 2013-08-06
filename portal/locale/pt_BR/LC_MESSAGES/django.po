@@ -1,0 +1,290 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-03 01:47-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: home/templates/includes/1-header-logo.html:43
+#: templates/includes/search_form.html:4
+msgid "Search"
+msgstr "Buscar"
+
+#: templates/index.html:4 templates/search_results.html:10
+#: templates/pages/menus/breadcrumb.html:4
+#: templates/pages/menus/breadcrumb.html:10
+#: templates/pages/menus/dropdown.html:10
+#: templates/pages/menus/footer_tree.html:11
+#: templates/pages/menus/mobile.html:10 templates/pages/menus/primary.html:8
+#: templates/pages/menus/tree.html:10
+msgid "Home"
+msgstr "Início"
+
+#: templates/search_results.html:5 templates/search_results.html.py:6
+#: templates/search_results.html:13
+msgid "Search Results"
+msgstr "Resultado da Busca"
+
+#: templates/search_results.html:20
+#, python-format
+msgid ""
+"\n"
+"                No results were found in %(search_type)s matching your "
+"query: %(query)s\n"
+"            "
+msgstr ""
+
+#: templates/search_results.html:24
+#, python-format
+msgid ""
+"\n"
+"                Showing %(start)s to %(end)s of %(total)s results in "
+"%(search_type)s matching your query:\n"
+"                %(query)s\n"
+"            "
+msgstr ""
+
+#: templates/search_results.html:36 templates/blog/blog_post_list.html:128
+#: templates/blog/blog_post_list_original.html:124
+msgid "read more"
+msgstr "leia mais"
+
+#: templates/blog/blog_post_detail.html:29
+#: templates/blog/blog_post_list.html:86
+#: templates/blog/blog_post_list_original.html:83
+msgid "Posted by"
+msgstr "Postado por"
+
+#: templates/blog/blog_post_detail.html:43
+#: templates/blog/blog_post_list.html:133
+#: templates/blog/blog_post_list_original.html:129
+#: templates/generic/includes/comments.html:3
+msgid "Comments"
+msgstr "Comentários"
+
+#: templates/blog/blog_post_detail.html:46
+#, python-format
+msgid ""
+"1 comment\n"
+"                        "
+msgid_plural "%(comments_count)s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/blog/blog_post_detail.html:75
+#: templates/blog/blog_post_list.html:120
+#: templates/blog/blog_post_list_original.html:116
+msgid "Tags"
+msgstr ""
+
+#: templates/blog/blog_post_detail.html:89
+msgid "Share on Twitter"
+msgstr "Compartilhar no Twitter"
+
+#: templates/blog/blog_post_detail.html:91
+msgid "Share on Facebook"
+msgstr "Compartilhar no Facebook"
+
+#: templates/blog/blog_post_detail.html:116
+msgid "Related posts"
+msgstr "Posts Relacionados"
+
+#: templates/blog/blog_post_list.html:4 templates/blog/blog_post_list.html:23
+#: templates/blog/blog_post_list_original.html:4
+#: templates/blog/blog_post_list_original.html:22
+msgid "Blog"
+msgstr "Blog"
+
+#: templates/blog/blog_post_list.html:33
+#: templates/blog/blog_post_list_original.html:31
+msgid "Tag:"
+msgstr "Tag:"
+
+#: templates/blog/blog_post_list.html:35
+#: templates/blog/blog_post_list_original.html:33
+msgid "Category:"
+msgstr "Categoria:"
+
+#: templates/blog/blog_post_list.html:39
+#: templates/blog/blog_post_list_original.html:37
+msgid "Author:"
+msgstr "Autor:"
+
+#: templates/blog/blog_post_list.html:53
+#: templates/blog/blog_post_list_original.html:50
+msgid "Viewing posts tagged"
+msgstr "Mostrando posts selecionados"
+
+#: templates/blog/blog_post_list.html:55
+#: templates/blog/blog_post_list_original.html:52
+msgid "Viewing posts for the category"
+msgstr "Mostrando posts para a categoria"
+
+#: templates/blog/blog_post_list.html:57
+#: templates/blog/blog_post_list_original.html:54
+msgid "Viewing posts from"
+msgstr "Mostrando posts de"
+
+#: templates/blog/blog_post_list.html:60
+#: templates/blog/blog_post_list_original.html:57
+msgid "Viewing posts by"
+msgstr "Mostrando posts por"
+
+#: templates/blog/blog_post_list.html:92
+#: templates/blog/blog_post_list_original.html:89
+msgid "in"
+msgstr "em"
+
+#: templates/blog/blog_post_list.html:137
+#, python-format
+msgid ""
+"1 comment\n"
+"                                "
+msgid_plural "%(comments_count)s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/blog/blog_post_list_original.html:95
+#: templates/generic/includes/comment.html:22
+#: templates/generic/includes/comment.html:53
+#: templates/generic/includes/comment.html:63
+#, python-format
+msgid "%(sometime)s ago"
+msgstr ""
+
+#: templates/blog/blog_post_list_original.html:133
+#, python-format
+msgid "1 comment"
+msgid_plural "%(comments_count)s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/email/comment_notification.html:6
+msgid "A new comment has been posted on"
+msgstr ""
+
+#: templates/email/comment_notification.html:10
+#, python-format
+msgid ""
+"\n"
+"    At %(submit_date)s %(user_name)s wrote:\n"
+"    "
+msgstr ""
+
+#: templates/email/comment_notification.txt:7
+#, python-format
+msgid ""
+"\n"
+"At %(submit_date)s %(user_name)s wrote:\n"
+msgstr ""
+
+#: templates/errors/404.html:6
+msgid "Page not found"
+msgstr "Página não encontrada"
+
+#: templates/errors/404.html:10
+msgid "The page you requested does not exist."
+msgstr "A página que você solicitou não existe"
+
+#: templates/errors/500.html:6
+msgid "Error"
+msgstr "Erro"
+
+#: templates/errors/500.html:10
+msgid "Sorry, an error occurred."
+msgstr "Desculpe, um erro ocorreu."
+
+#: templates/generic/includes/comment.html:25
+msgid "Link"
+msgstr "Link"
+
+#: templates/generic/includes/comment.html:26
+#: templates/generic/includes/comment.html:36
+msgid "Reply"
+msgstr "Responder"
+
+#: templates/generic/includes/comment.html:59
+msgid "Comment deleted"
+msgstr "Comentário excluído"
+
+#: templates/generic/includes/comment.html:61
+msgid "Comment awaiting approval"
+msgstr "Comentário aguardando aprovação"
+
+#: templates/generic/includes/comment.html:75
+msgid "There are currently no comments"
+msgstr ""
+
+#: templates/generic/includes/comments.html:17
+msgid "New Comment"
+msgstr ""
+
+#: templates/generic/includes/comments.html:25
+msgid "Comment"
+msgstr ""
+
+#: templates/generic/includes/rating.html:7
+msgid "Current rating"
+msgstr ""
+
+#: templates/generic/includes/rating.html:9
+msgid "Currently unrated"
+msgstr ""
+
+#: templates/generic/includes/rating.html:19
+msgid "Rate"
+msgstr ""
+
+#: templates/includes/editable_form.html:16
+msgid "Save"
+msgstr "Salvar"
+
+#: templates/includes/editable_form.html:17
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/includes/editable_form.html:25
+msgid "Edit"
+msgstr "Editar"
+
+#: templates/includes/editable_toolbar.html:7
+#: templates/includes/editable_toolbar.html:9
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/includes/editable_toolbar.html:11
+msgid "Log out"
+msgstr "Sair"
+
+#: templates/includes/pagination.html:8
+msgid "Page"
+msgstr "Página"
+
+#: templates/includes/pagination.html:8
+msgid "of"
+msgstr "de"
+
+#: templates/includes/search_form.html:11
+msgid "Everything"
+msgstr "Tudo"
+
+#: templates/includes/search_form.html:22
+msgid "Go"
+msgstr ""
+
+#: templates/pages/menus/admin.html:31
+msgid "Add"
+msgstr "Adicionar"

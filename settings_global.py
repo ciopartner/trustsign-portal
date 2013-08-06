@@ -75,6 +75,7 @@ STATICFILES_FINDERS = (
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+
 ###########
 # LOGGING #
 ###########
@@ -185,19 +186,6 @@ DATABASES = {
 #     "ADMIN_PASS": "", # Live admin user password
 # }
 
-
-##################
-# LOCAL SETTINGS #
-##################
-
-# Allow any settings to be defined in local_settings.py which should be
-# ignored in your version control system allowing for settings to be
-# defined per machine.
-try:
-    from local_settings import *
-except ImportError:
-    pass
-
 ENVIRONMENT = os.getenv('TRUSTSIGN_ENVIRONMENT', 'DEV')
 if ENVIRONMENT == 'DEV':
     DEBUG = True
@@ -211,3 +199,15 @@ elif ENVIRONMENT == 'PRD':
     DEBUG = False
     # Para que haja compartilhamento de sessions...
     SESSION_COOKIE_DOMAIN = 'trustsign.com.br'
+
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_settings import *
+except ImportError:
+    pass

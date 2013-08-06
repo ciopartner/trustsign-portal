@@ -98,6 +98,14 @@ SITE_ID = 1
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
+LANGUAGE_CODE = "pt_BR"
+LANGUAGES = (
+    ('pt', 'Português'),
+    ('en', 'English'),
+)
+LOCALE_PATHS = (
+    '/Users/reichert/workspace/trustsign-portal/portal/locale',
+)
 
 #########
 # PATHS #
@@ -202,6 +210,7 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.UpdateCacheMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",

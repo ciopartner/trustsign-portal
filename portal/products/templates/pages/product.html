@@ -47,7 +47,7 @@
         {% editable page.product.youtube_url %}
             <div style="text-align: center;">
                 <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390"
-                        src="{{ page.product.youtube_url }}" frameborder="0" allowFullScreen></iframe>
+                        src="{{ page.product.youtube_url }}?rel=0" frameborder="0" allowFullScreen></iframe>
             </div>
         {% endeditable %}
 
@@ -74,7 +74,7 @@
         </section>
         <div class="tab-content">
             {% for tab in page.product.tabs.all %}
-                <div class="tab-pane product-tabs-content" id="{{ tab.tab_title|slugify }}">
+                <div class="tab-pane product-tabs-content" id="{{ tab.tab_title|slugify }}" style="text-align: justify;">
                     {% editable tab.tab_description %}
                         {{ tab.tab_description }}
                     {% endeditable %}
