@@ -1,0 +1,71 @@
+.disabled{
+background:#fff;
+}
+
+.circle{
+background:#eee;
+height:30px;
+width:30px;
+border-radius:50%;
+float:left;
+}
+
+.line{
+margin-top:10px;
+height:5px;
+width:66px;
+background:#eee;
+float:left;
+}
+
+.hidden{
+visibility:hidden;
+}
+
+#myTab{
+border:none;
+}
+
+#myTab .tab-pane{
+margin-bottom:20px;
+}
+
+.question-buttons{
+margin-top:15px;
+}
+
+.question-buttons input{
+margin-right:15px;
+}
+#myTab > .active > a, .nav-tabs > .active > a:hover, .nav-tabs > .active > a:focus{
+
+    border-color: #fff;
+    background:#fff;
+}
+
+#myTab > li > a:hover{
+background:#fff;
+border-color:#fff;
+}
+
+#myTab li{
+
+}
+.wizard-active{
+
+background:#999;
+}
+
+.wizard-unactive{
+color:#eee;
+}
+
+
+.answer{
+margin-top:32px;
+text-align:center;
+}
+
+.question{
+text-align:center;
+}
