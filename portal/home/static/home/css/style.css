@@ -19,7 +19,7 @@ body {padding-top:0;}
 
 /* Overwriting h1, h2 and h3 to make the content easy */
 h1 {
-    font-family: RobotoCondensed-Regular;
+    font-family: "Lucida Sans Unicode";
     color: rgb(0, 82, 149);
     font-size: 180%;
     line-height: 100%;
@@ -28,7 +28,7 @@ h1 {
 }
 
 h2 {
-    font-family: RobotoCondensed-Regular;
+    font-family: "Lucida Sans Unicode";
     font-weight: normal;
     color: rgb(34, 125, 94);
     font-size: 130%;
@@ -37,7 +37,7 @@ h2 {
 }
 
 h3 {
-    font-family: RobotoCondensed-Regular;
+    font-family: "Lucida Sans Unicode";
     color: #333333;
     font-size: 120%;
     font-weight: normal;
@@ -46,7 +46,7 @@ h3 {
 }
 
 .h1-complement {
-	font-family: RobotoCondensed-Light;
+	font-family: "Lucida Sans Unicode";
 	color: #aaaaaa;
 	font-size:80%;
 	line-height:100%;
@@ -55,7 +55,7 @@ h3 {
 }
 
 body {
-    font-family: RobotoCondensed-Light;
+    font-family: "Lucida Sans Unicode";
     color: rgb(102, 102, 102);
     line-height: 100%;
 }
@@ -514,7 +514,7 @@ img.size-thumbnail{
 }
 
 .sortmune > ul > li > p{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#666;
 	text-align:left;
 	line-height:110%;
@@ -582,17 +582,17 @@ img.size-thumbnail{
 }
 
 .header1{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #3677AF;
 }
 
 .header1-text li>a[href]{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	font-size:110%;
 	color: #3677AF;
 }
 .header1-text li>a[href].dobold{
-	font-family:RobotoCondensed-Bold;
+	font-family:"Lucida Sans Unicode";
 	color: #3677AF;
 }
 .header1-text li>a[href].dobold img{
@@ -609,7 +609,7 @@ img.size-thumbnail{
 }
 
 .header2-text{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#000;
 	font-size:100%;
 	line-height:100%;
@@ -632,19 +632,19 @@ img.size-thumbnail{
 }
 
 .header3-title-text{
-	font-family:RobotoCondensed-Bold;
+	font-family:"Lucida Sans Unicode";
 	font-size:13px;
 	color:#006442;
 }
 
 .header3-title-text.coloroff{
-	font-family:RobotoCondensed-Bold;
+	font-family:"Lucida Sans Unicode";
 	font-size:13px;
 	color:#CDCDCD;
 }
 
 .header3-body-text{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	font-size:11px;
 	line-height:105%;
 
@@ -655,28 +655,28 @@ img.size-thumbnail{
 /*custom site started*/
 
 .site-body-text{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#227D5E;
 	font-size:130%;
 	line-height:100%;
 }
 
 .site-body-text1{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#006442;
 	font-size:120%;
 	line-height:100%;
 }
 
 .site-body-text2{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#73D4F7;
 	font-size:110%;
 	line-height:100%;
 }
 
 .site-body-text3{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#005295;
 	font-size:200%;
 	line-height:100%;
@@ -685,40 +685,40 @@ img.size-thumbnail{
 }
 
 .site-body-text4{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#227D5E;
 	font-size:170%;
 	line-height:100%;
 }
 
 .main-body-text1{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#227D5E;
 	font-size:250%;
 	line-height:100%;
 }
 
 .main-body-text2{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#5D5D5D;
 	font-size:180%;
 	line-height:100%;
 }
 .all-body-text1{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #333;
 	font-weight:normal;
 }
 
 .all-body-text2{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#006442;
 	font-weight:normal;
 }
 
 
 .all-body-text3{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#006442;
 	font-size:130%;
 	line-height:100%;
@@ -726,14 +726,14 @@ img.size-thumbnail{
 
 
 .all-body-text4{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#333;
 	font-size:120%;
 	line-height:100%;
 }
 
 .all-body-text5{
-	font-family:RobotoCondensed-Light;
+	font-family:"Lucida Sans Unicode";
 	color: #9a9a9a;
 	font-size:110%;
 	line-height:100%;
@@ -743,7 +743,7 @@ img.size-thumbnail{
 
 /*comprar form stared*/
 .taxtf{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #FFF;
 	font-size:110%;
 	line-height:100%;
@@ -752,7 +752,7 @@ img.size-thumbnail{
 }
 
 .taxtf1{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #FFF;
 	background-color:#787878;
 	font-size:150%;
@@ -761,7 +761,7 @@ img.size-thumbnail{
 }
 
 .taxtf2{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #FFF;
 	background-color:#A7A7A7;
 	font-size:150%;
@@ -770,7 +770,7 @@ img.size-thumbnail{
 }
 
 .taxtf3{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#FFF;
 	background-color:#D4D4D4;
 	font-size:150%;
@@ -778,7 +778,7 @@ img.size-thumbnail{
 	line-height:100%;
 }
 .taxtf4{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#FFF;
 	background-color:#0C5C9C;
 	font-size:150%;
@@ -787,7 +787,7 @@ img.size-thumbnail{
 }
 
 .taxtf5{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #FFF;
 	background-color:#5088B9;
 	font-size:150%;
@@ -796,7 +796,7 @@ img.size-thumbnail{
 }
 
 .taxtf6{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #FFF;
 	background-color:#7AC6DD;
 	font-size:150%;
@@ -805,7 +805,7 @@ img.size-thumbnail{
 }
 
 .taxtf7{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color: #FFF;
 	background-color:#62A18C;
 	font-size:150%;
@@ -813,7 +813,7 @@ img.size-thumbnail{
 	line-height:100%;
 }
 .tab-text{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#C4C4CE;
 	font-size:120%;
 	line-height:100%;
@@ -860,21 +860,21 @@ img.size-thumbnail{
 /*EXCELENCIA custom text goes here*/
 
 .as-text1{
-	font-family:RobotoCondensed-Bold;
+	font-family:"Lucida Sans Unicode";
 	color:#5D5D5D;
 	font-size:135%;
 	line-height:100%;
 	}
 
 .as-text2{
-	font-family:RobotoCondensed-Bold;
+	font-family:"Lucida Sans Unicode";
 	color:#929299;
 	font-size:98%;
 	line-height:110%;
 }
 
 .as-text3{
-	font-family:RobotoCondensed-Bold;
+	font-family:"Lucida Sans Unicode";
 	color:#5D5D5D;
 	font-size:95%;
 	line-height:100%;
@@ -913,13 +913,13 @@ img.size-thumbnail{
 
 
 .footer-title{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	font-size:150%;
 	color:#006442;
 }
 
 .footer-title a[href].carsol{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	font-size:78%;
 	color:#7B7B7B;
 }
@@ -942,7 +942,7 @@ img.size-thumbnail{
 }
 
 .footer-item-text{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#227D5E;
 	font-size:90%;
 	line-height:100%;
@@ -1006,7 +1006,7 @@ img.size-thumbnail{
 }
 
 .product-tabs > h3{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#4B4B4B;
 	font-size:135%;
 	line-height:100%;
@@ -1014,7 +1014,7 @@ img.size-thumbnail{
     padding: 10px 10px;
 }
 .product-tabs > h4{
-	font-family:RobotoCondensed-Regular;
+	font-family:"Lucida Sans Unicode";
 	color:#929299;
 	font-size:100%;
 	line-height:110%;
@@ -1027,7 +1027,7 @@ img.size-thumbnail{
 .product-tabs-content{
 	background-color:#E2E2E2;
 	padding:20px;
-	font-family:RobotoCondensed-Light;
+	font-family:"Lucida Sans Unicode";
 	color:#5D5D5D;
 	font-size:130%;
 	line-height:100%;
@@ -1095,7 +1095,7 @@ img.size-thumbnail{
 
 /* home page started here */
 .home-text3{
-	font-family:'RobotoCondensed-Regular';
+	font-family:'"Lucida Sans Unicode"';
 	color: #333;
 	font-size:135%;
 	line-height:100%;
@@ -1103,7 +1103,7 @@ img.size-thumbnail{
 
 
 .home-text4{
-	font-family:'RobotoCondensed-Light';
+	font-family:'"Lucida Sans Unicode"';
 	color: #666;
 	font-size:110%;
 	line-height:125%;
