@@ -1126,7 +1126,7 @@ img.size-thumbnail{
 
 /* Sprite */
 
-.icon-arroba, .icon-laptop, .icon-microphone, .icon-reciever, .icon-search, .icon-h-3-5th, .icon-h-3-6th, .icon-h-3-2nd,
+.icon-arroba, .icon-laptop, .icon-microphone, .icon-reciever, .icon-lupa, .icon-h-3-5th, .icon-h-3-6th, .icon-h-3-2nd,
 .icon-green-lock, .icon-digital, .icon-pki{
 	background: url(../img/icons/sprites.png) no-repeat;
 }
@@ -1151,7 +1151,7 @@ img.size-thumbnail{
     width: 26px;
     height: 29px;
 }
-.icon-search{
+.icon-lupa{
     background-position: -199px 0;
     width: 32px;
     height: 31px;
