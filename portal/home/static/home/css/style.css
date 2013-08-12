@@ -459,6 +459,8 @@ img.size-thumbnail{
 	background:#FFF;
 	text-align:left;
 	z-index:5000;
+    margin-left: -480px;
+    width: 940px;
 }
 
 .hdmgmenu aside > section article > div{
