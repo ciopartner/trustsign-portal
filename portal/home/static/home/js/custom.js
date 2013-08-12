@@ -37,17 +37,6 @@ $('.activoverfl*').mouseleave(function (e) {
 });
 
 
-$('.terg-hdmgmenu').mouseover(function () {
-    //$(this).addClass('activoverfl2');
-    $('.hdmgmenu').fadeIn(0);
-});
-
-$('.terg-hdmgmenu*').mouseleave(function (e) {
-    $('.hdmgmenu').fadeOut(0);
-    //$('.activoverfl').removeClass('activoverfl2');
-});
-
-
 /*$(document).dblclick(function(){
  $('#fgq').height();
  });*/
@@ -257,12 +246,10 @@ $(window).resize(function (event) {
 
 /////////////////////// header search closed ////////////////////
 
-setmegamenupos();
 setsortmenupos();
 header1navicontrol();
 //searchcontroling();
 $(window).resize(function () {
-    setmegamenupos();
     setsortmenupos();
     header1navicontrol();
     //searchcontroling();

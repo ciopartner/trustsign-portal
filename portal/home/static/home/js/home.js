@@ -16,7 +16,7 @@
         $('.hdmgmenu').fadeIn(0);
     });
 
-    $('.terg-hdmgmenu*').mouseleave(function (e) {
+    $('.terg-hdmgmenu').mouseleave(function (e) {
         $('.hdmgmenu').fadeOut(0);
         //$('.activoverfl').removeClass('activoverfl2');
     });
