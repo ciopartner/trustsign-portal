@@ -103,9 +103,6 @@ LANGUAGES = (
     ('pt', 'Português'),
     ('en', 'English'),
 )
-LOCALE_PATHS = (
-    '/Users/reichert/workspace/trustsign-portal/portal/locale',
-)
 
 #########
 # PATHS #
@@ -118,6 +115,10 @@ import sys
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT_PARENT = os.path.dirname(PROJECT_ROOT)
 sys.path.insert(0, PROJECT_ROOT_PARENT)
+
+LOCALE_PATHS = (
+    os.path.join(PROJECT_ROOT, 'locale'),
+)
 
 # Name of the directory for the project.
 PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]

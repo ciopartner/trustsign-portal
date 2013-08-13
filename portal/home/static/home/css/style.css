@@ -459,6 +459,8 @@ img.size-thumbnail{
 	background:#FFF;
 	text-align:left;
 	z-index:5000;
+    margin-left: -480px;
+    width: 940px;
 }
 
 .hdmgmenu aside > section article > div{
@@ -1122,4 +1124,68 @@ img.size-thumbnail{
 /* To hide image blogs in the home page */
 .home-text4 img{
     display: none;
+}
+
+
+/* Sprite */
+
+.icon-arroba, .icon-laptop, .icon-microphone, .icon-reciever, .icon-lupa, .icon-h-3-5th, .icon-h-3-6th, .icon-h-3-2nd,
+.icon-green-lock, .icon-digital, .icon-pki{
+	background: url(../img/icons/sprites.png) no-repeat;
+}
+
+.icon-arroba{
+    background-position: 0 -1px;
+    width: 28px;
+    height: 28px;
+}
+.icon-laptop{
+    background-position: -39px -1px;
+    width: 46px;
+    height: 32px;
+}
+.icon-microphone{
+    background-position: -100px 0;
+    width: 36px;
+    height: 34px;
+}
+.icon-reciever{
+    background-position: -151px 0;
+    width: 26px;
+    height: 29px;
+}
+.icon-lupa{
+    background-position: -199px 0;
+    width: 32px;
+    height: 31px;
+}
+.icon-h-3-2nd{
+    background-position: -110px -55px;
+	width: 33px;
+	height: 30px;
+}
+.icon-h-3-5th{
+    background-position: -249px 0;
+	width: 22px;
+	height: 30px;
+}
+.icon-h-3-6th{
+    background-position: -284px 0;
+	width: 52px;
+	height: 30px;
+}
+.icon-green-lock{
+    background-position: -1px -54px;
+    width: 23px;
+    height: 30px;
+}
+.icon-digital{
+    background-position: -57px -53px;
+	width: 28px;
+	height: 30px;
+}
+.icon-pki{
+    background-position: -155px -55px;
+	width: 39px;
+	height: 30px;
 }
