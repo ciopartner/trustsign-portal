@@ -4,6 +4,7 @@ from django.contrib import admin
 from mezzanine.pages.admin import PageAdmin
 from .models import Product
 from .models import TabContent
+from .models import Question,FAQPage 
 
 
 class TabsInline(admin.StackedInline):
@@ -17,4 +18,13 @@ class ProductAdmin(PageAdmin):
     # filter_horizontal = ('tabs',)
     inlines = [TabsInline]
 
+
+class QuestionAdminInline(admin.TabularInline):
+    model = Question
+
+class FAQPageAdmin(PageAdmin):
+    inlines = (QuestionAdminInline, )
+
+
 admin.site.register(Product, ProductAdmin)
+admin.site.register(FAQPage, FAQPageAdmin)

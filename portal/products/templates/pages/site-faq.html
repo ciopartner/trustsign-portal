@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags staticfiles %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link href="{% static "products/css/comparar.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block headers %}
+    <header>
+        {% include 'includes/1-header-logo.html' %}
+        {% include 'includes/2-header-atendimento.html' %}
+        {% include 'includes/3-header-produtos.html' %}
+        <br><br>
+    </header>
+{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+{% block one_row %}
+    <div class="span12 left">
+<h1>{%editable page.faqpage.title%}{%endeditable%}</h1>
+<div class="container">
+<div class="row">
+<div class="accordion" id="accordion2">
+
+{%for question in page.faqpage.questions.all%}
+
+{%editable question.question question.answer%}
+<div class="accordion-group">
+<div class="accordion-heading">
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">
+{{question.question}}
+
+</a>
+</div>
+<div id="collapse{{forloop.counter}}" class="accordion-body collapse {%if forloop.counter == 1%} in {%endif%}">
+<div class="accordion-inner">
+{{question.answer}}
+
+</div> <!--- accordion-inner-->
+</div><!-- accordion-body-->
+</div><!--accordion-group-->
+
+{%endeditable%}
+{%endfor%}
+</div><!--accordion ends-->
+</div>
+</div>
+</div>
+{% endblock %}

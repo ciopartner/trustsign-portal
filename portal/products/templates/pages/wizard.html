@@ -1,0 +1,242 @@
+   {% extends "base.html" %}
+{% load mezzanine_tags keyword_tags staticfiles %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link href="{% static "products/css/wizard.css" %}" rel="stylesheet">
+{% endblock %}
+
+{%block extra_js%}
+   {{block.super}}
+    <script src="{% static "products/js/wizard.js" %}" > </script>
+{%endblock%}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block headers %}
+    <header>
+        {% include 'includes/1-header-logo.html' %}
+        {% include 'includes/2-header-atendimento.html' %}
+        {% include 'includes/3-header-produtos.html' %}
+        <br><br>
+    </header>
+{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+{%block one_row%}
+    <div class="span12 left">
+<h1>{%editable page.title%}{%endeditable%}</h1>
+<div class="container">
+<div class="row">
+ 
+<ul class="nav nav-tabs" id="myTab">
+    <li class="active" id="question-1"><a href="#step-1" data-toggle="tab">Do you have a website?</a> <div class="line hidden"></div><div class="wizard-active circle"></div><div class="wizard-active line"></div><div class="answer"></div></li>
+    <li><a href="#step-2" class="hidden" data-toggle="tab">Is it an e-commerce?</a><div class="line"></div><div class="circle"></div><div class="line"></div><div class="answer"></div></li>
+    <li><a href="#step-3" class="hidden" data-toggle="tab">Is it an webmail?</a><div class="line"></div><div class="circle"></div><div class="line"></div><div class="answer"></div></li>
+    <li><a  href="#step-4" class="hidden" data-toggle="tab">Is it an web application?</a><div class="line"></div><div class="circle"></div><div class="line"></div><div class="answer"></div></li>
+    <li><a  href="#step-5" class="hidden" data-toggle="tab">Will it be code signature?</a><div class="line"></div><div class="circle"></div><div class="line"></div><div class="answer"></div></li>
+    <li><a href="#finish" class="hidden" data-toggle="tab">Finish</a><div class="line"></div><div class="circle"></div></div><div class="answer"></div></li>
+    </ul>
+     
+    <div class="tab-content">
+    <div class="tab-pane active" id="step-1">
+<div class="question" data-answer-yes="#step-2" data-answer-yes-type="tab" data-answer-no-type="tab" data-answer-no="#step-5">
+<h1>Do you already have a website?</h1>
+<div class="question-buttons">
+<input type="button" class="answer-button btn" value="yes"/>
+<input type="button" class="answer-button btn" value="no"/>
+</div>
+</div>
+<div class="result" id="result-1">
+</div>
+
+
+
+ </div>
+    <div class="tab-pane" id="step-2">
+<div class="question" data-answer-yes="#result-2" data-answer-yes-type="result" data-answer-no-type="tab" data-answer-no="#step-3">
+<h1>Is it an e-commerce website?</h1>
+<div class="question-buttons">
+<input type="button" class="btn answer-button" value="yes"/>
+<input type="button" class="btn answer-button" value="no"/>
+</div>
+</div>
+
+<div class="result" id="result-2">
+<h2> Here goes some nice loooking heading</h2>
+<div class="span4">
+<div class="span4">
+<h2>sas sasasa sasa</h2>
+</div>
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+</div>
+
+<div class="span4">
+<div class="span4">
+<h2>sas sasasa sasa</h2>
+</div>
+
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+
+
+</div>
+
+</div>
+</div>
+    <div class="tab-pane" id="step-3">
+<div class="question" data-answer-yes="#result-3" data-answer-yes-type="result" data-answer-no-type="tab"  data-answer-no="#step-4">
+<h1>Is it a webmail?</h1>
+<div class="question-buttons">
+<input type="button" class="btn answer-button" value="yes"/>
+<input type="button" class="btn answer-button" value="no"/>
+</div>
+</div>
+<div id="result-3" class="result">
+
+<h2> Here goes some nice loooking heading</h2>
+
+<div class="span4">
+<div class="span4">
+<h2>sas sasasa sasa</h2>
+</div>
+
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+
+
+
+
+</div>
+
+<div class="span4">
+<div class="span4">
+<h2>sas sasasa sasa</h2>
+</div>
+
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+
+<div class="span4">
+<h3>saasas </h3>
+<p>sasaas sasa as
+sasasasasa
+sasa</p>
+<a href="#" class="btn">SSL</a>
+</div>
+
+
+</div>
+
+
+
+</div>
+
+</div>
+    <div class="tab-pane" id="step-4">
+
+<div class="question" data-answer-yes="#result-4" data-answer-yes-type="result" data-answer-no-type="question" data-answer-no-dependent="#question-1" data-answer-no="dependent">
+
+<h1>Is it a web application?</h1>
+<div class="question-buttons">
+<input type="button" class="btn answer-button" value="yes"/>
+<input type="button" class="btn answer-button" value="no"/>
+</div>
+
+
+</div>
+<div id="result-4" class="result">
+Sow the link - sSSL, ev, mdc, ev mdc etc.
+</div>
+
+</div>
+    <div class="tab-pane" id="step-5">
+<div class="question" data-answer-yes="#result-5" data-answer-yes-type="result" data-answer-no-type="tab"  data-answer-no="#finish">
+<h1>Will it be code signature?</h1>
+<div class="question-buttons">
+<input type="button" class="btn answer-button" value="yes"/>
+<input type="button" class="btn answer-button" value="no"/>
+</div>
+
+</div>
+<div id="result-5" class="result">
+show link - jre, code signing 
+</div>
+
+
+</div>
+
+
+    <div class="tab-pane" id="finish">
+
+
+</div>
+
+
+
+
+    </div>
+     
+</div>
+</div>
+
+</div>
+{%endblock%}
