@@ -23,13 +23,13 @@ h1 {
     color: rgb(0, 82, 149);
     font-size: 170%;
     line-height: 100%;
-    letter-spacing: -2px;
+    letter-spacing: 0px;
     margin-top: 10px;
 }
 
 h2 {
     font-family:Tahoma, Geneva, sans-serif;
-    font-weight: normal;
+    font-weight: bold;
     color: rgb(34, 125, 94);
     font-size: 130%;
     line-height: 100%;
@@ -633,6 +633,7 @@ img.size-thumbnail{
 
 .header3-title-text{
 	font-family:Tahoma, Geneva, sans-serif;
+    font-weight: bold;
 	font-size:13px;
 	color:#006442;
 }

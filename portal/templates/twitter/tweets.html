@@ -10,7 +10,7 @@
             <li class="clearfix">
 {#                <img src="{{ tweet.profile_image_url }}" alt="" style="float:left;">#}
 
-                <h2><a href="http://twitter.com/{{ tweet.user_name }}">@{{ tweet.user_name }}</a>
+                <h2 style="font-weight: normal;"><a href="http://twitter.com/{{ tweet.user_name }}">@{{ tweet.user_name }}</a>
                     {% if tweet.user_name != tweet.full_name %}<span class="name">@{{ tweet.full_name }}
                         </span>{% endif %}
                     {% if tweet.is_retweet %}
