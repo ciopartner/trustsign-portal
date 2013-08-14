@@ -1,0 +1,12 @@
+<div class="tab-pane" id="tab-csr-decoder">
+    <form action="" method="POST" >
+        <table>
+            {{ form_csr_decoder }}
+            <tr><td colspan="2"><input type="submit"/></td></tr>
+        </table>
+        {% csrf_token %}
+    </form>
+    {% if resultado and operacao == 'csr-decoder' %}
+        <div>Resultado:<br> {{ resultado }}</div>
+    {% endif %}
+</div>

@@ -1,0 +1,14 @@
+<div class="tab-pane active" id="tab-ssl-checker">
+    <form action="" method="POST">
+        <table>
+            {{ form_ssl_checker }}
+            <tr><td colspan="2"><input type="submit"/></td></tr>
+        </table>
+        {% csrf_token %}
+    </form>
+
+    {% if resultado and operacao == 'ssl-checker' %}
+        <p>{{ form_ssl_checker.url.value }} resolve para {{ resultado.server_ip }}</p>
+        <p>Tipo do servidor: {{ resultado.server_type }}</p>
+    {% endif %}
+</div>

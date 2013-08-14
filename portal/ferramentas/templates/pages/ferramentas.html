@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block title %}
+    {% editable page.title %}
+        {{ page.title }}
+    {% endeditable %}
+{% endblock %}
+
+{% block one_row %}
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-ssl-checker" data-toggle="tab">SSL Checker</a></li>
+            <li><a href="#tab-csr-decoder" data-toggle="tab">CSR Decoder</a></li>
+            <li><a href="#tab-certificated-key-matcher" data-toggle="tab">Certificated Key Matcher</a></li>
+            <li><a href="#tab-ssl-converter" data-toggle="tab">SSL Converter</a></li>
+        </ul>
+        <div class="tab-content">
+            {% include 'includes/tab-ssl-checker.html' %}
+            {% include 'includes/tab-csr-decoder.html' %}
+            {% include 'includes/tab-certificated-key-matcher.html' %}
+            {% include 'includes/tab-ssl-converter.html' %}
+        </div>
+    </div>
+{% endblock %}

@@ -185,6 +185,7 @@ INSTALLED_APPS = (
     'django_extensions',
 
     "home",
+    "ferramentas",
     "products",
 )
 
