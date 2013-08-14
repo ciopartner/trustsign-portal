@@ -1,5 +1,5 @@
 table.taxttab > thead > tr > th{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#FFF;
 	font-size:150%;
 	vertical-align:middle;
@@ -46,28 +46,28 @@ table.taxttab > thead > tr > th:nth-child(4){
 /*//////ssl table start here//////*/
 
 .as-text1{
-	font-family:RobotoCondensed-Bold;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
 	font-size:135%;
 	line-height:100%;
 	}
 
 .as-text2{
-	font-family:RobotoCondensed-Bold;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#929299;
 	font-size:98%;
 	line-height:110%;
 }
 
 .as-text3{
-	font-family:RobotoCondensed-Bold;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
 	font-size:105%;
 	line-height:100%;
 }
 
 .ssl-text1{
-	font-family:RobotoCondensed-Bold;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#035A9C;
 	font-size:120%;
 	line-height:100%;
@@ -75,7 +75,7 @@ table.taxttab > thead > tr > th:nth-child(4){
 }
 
 .ssl-text2{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
 	font-size:80%;
 	line-height:100%;
@@ -84,7 +84,7 @@ table.taxttab > thead > tr > th:nth-child(4){
 }
 
 .ssl-text3{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
 	font-size:200%;
 	line-height:100%;
@@ -93,7 +93,7 @@ table.taxttab > thead > tr > th:nth-child(4){
 }
 
 .ssl-hover-text3{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#5D5D5D;
 	font-size:130%;
 	line-height:100%;
@@ -136,7 +136,7 @@ aside.videoas2 > ul > li{
 }
 
 table.ssltab > thead > tr > th{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#FFF;
 	font-size:150%;
 	vertical-align:middle;
@@ -196,7 +196,7 @@ table.ssltab > thead > tr > th:nth-child(5){
 }
 
 tr.lasttab > td{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color: #666;
 	font-size:150%;
 	vertical-align:middle;
@@ -274,14 +274,14 @@ aside.bac-coloro > div:nth-child(1){
 }
 
 .ovel-text{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
 	font-size:130%;
 	line-height:130%;
 }
 
 .url-text{
-	font-family:RobotoCondensed-Bold;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#B8B8B8;
 	font-size:83%;
 	line-height:100%;
@@ -361,7 +361,7 @@ tbody > tr:nth-child(even){
 /*//////ssl table closed here//////*/
 
 .tab-text{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	color:#C4C4CE;
 	font-size:120%;
 	line-height:100%;
@@ -384,7 +384,7 @@ tbody > tr:nth-child(even){
 .tabbut{
 	color:#FFF;
 	background-color:#B96318;
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	-webkit-box-shadow: 2px 3px 8px rgba(0,0,0,.4);
 	-moz-box-shadow: 2px 3px 8px rgba(0,0,0,.4);
 	box-shadow: 2px 3px 8px rgba(0,0,0,.4);
@@ -428,7 +428,7 @@ tbody.bor-tb > tr:last-child{
 }
 
 tbody.bor-tb > tr td:last-child{
-	font-family:RobotoCondensed-Regular;
+	font-family:Tahoma, Geneva, sans-serif;
 	background:#FFF;
 	text-align:center;
 }
