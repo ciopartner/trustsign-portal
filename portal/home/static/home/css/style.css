@@ -255,7 +255,6 @@ img.size-thumbnail{
 	margin-top:20px;
 }
 
-
 /*padding and margin closed*/
 
 
@@ -1064,7 +1063,62 @@ img.size-thumbnail{
 /* End Product Tabs*/
 
 
+.nossa-diferenca {
+    margin:0 auto;
+	padding:0;
+	width:662px;
+}
+
+.nossa-diferenca >li{
+    float:left;
+	list-style:none;
+	padding:0;
+	margin:0;
+	width:220px;
+	display:inline-block;
+}
+
+.nossa-diferenca > li > div{
+	position:relative;
+	border-right:#DADEE3 1px solid;
+	/*height:80px;*/
+	display:block;
+	line-height:104px;
+	text-align:center;
+	border-bottom:#DADEE3 1px solid;
+}
+
+.nossa-diferenca > li:nth-child(3n+3) > div{
+	border-right: none;
+}
+
+.nossa-diferenca > li:nth-last-child(-1n+3) > div{
+	border-bottom: none;
+}
+
 /*//////// principais clientes area start here//////////*/
+.testimoniais{
+    width: 660px;
+    margin: 0 auto;
+}
+
+.testimoniais img{
+    float: left;
+}
+
+.testimoniais #carousel-testimoniais{
+    float: left;
+    width: 560px;
+}
+
+.testimoniais .item{
+    height: 100px;
+}
+
+.testimoniais .autor{
+    color: #999;
+}
+
 .principais-clientes {
 	position:relative;
 	margin:0;
@@ -1107,10 +1161,6 @@ img.size-thumbnail{
 	margin:0;
 	padding:0;
 	overflow:hidden;
-}
-.principais-clientes > li > div img{
-
-
 }
 
 .home-cl{
@@ -1221,4 +1271,13 @@ img.size-thumbnail{
     background-position: -155px -55px;
 	width: 39px;
 	height: 30px;
+}
+
+.div-linkedin{
+    float:left
+}
+
+.div-facebook{
+    float: left;
+    margin-top: 2px;
 }
