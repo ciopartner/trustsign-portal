@@ -15,7 +15,7 @@
                     margin-top:-6px;">
                     <h2>BLOG</h2>
                 </div>
-                {% blog_recent_posts 3 as recent_posts %}
+                {% blog_recent_posts 2 as recent_posts %}
                 {% for blog_post in recent_posts %}
                     <div class="margin-top" style="clear: both;">
                         <a class="home-text3" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
