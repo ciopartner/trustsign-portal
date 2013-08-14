@@ -621,6 +621,12 @@ img.size-thumbnail{
 
 }
 
+.header2-area aside{
+    height: 35px;
+    line-height: 30px;
+}
+
+
 .header2-text{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#000;

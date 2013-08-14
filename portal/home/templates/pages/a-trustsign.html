@@ -41,6 +41,15 @@
         {# LINKEDIN E FACEBOOK #}
         {% include 'includes/7-social.html' %}
 
+        <div class="div-linkedin">
+            <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+            <script type="IN/CompanyInsider" data-id="1010622" data-modules="innetwork,newhires,jobchanges"></script>
+        </div>
+        <div class="div-facebook">
+            <div class="fb-like-box" data-href="http://www.facebook.com/trustsign" data-width="300" data-height="278"
+                data-show-faces="true" data-colorscheme="light" data-stream="false" data-header="true" data-border-color="#292526"></div>
+        </div>
+
         {{ page.content }}
         {% editable page.richtextpage.content %}
             {{ page.richtextpage.content|richtext_filter|safe }}
