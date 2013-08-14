@@ -2,7 +2,11 @@
 
 /* Overwriting mezzanine.css */
 img {box-shadow:0 0 0;}
-body {padding-top:0;}
+
+body {
+    padding-top:0;
+}
+
 .breadcrumb {
     padding: 0px 0px;
     background-color: #ffffff;
@@ -98,6 +102,10 @@ img.size-thumbnail{
 
 .tm10{
 	margin-top:10px;
+}
+
+.tm20{
+	margin-top:20px;
 }
 
 .tm30{
@@ -636,8 +644,9 @@ img.size-thumbnail{
 .header3-title-text{
 	font-family:Tahoma, Geneva, sans-serif;
     font-weight: bold;
-	font-size:13px;
+	font-size: 85%;
 	color:#006442;
+    margin-top: 5px;
 }
 
 .header3-title-text.coloroff{
@@ -648,8 +657,9 @@ img.size-thumbnail{
 
 .header3-body-text{
 	font-family:Tahoma, Geneva, sans-serif;
-	font-size:11px;
-	line-height:105%;
+	font-size: 80%;
+	line-height:120%;
+    margin-top: 5px;
 
 }
 
@@ -660,7 +670,8 @@ img.size-thumbnail{
 .site-body-text{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#227D5E;
-	font-size:130%;
+	font-size:100%;
+    font-weight: bold;
 	line-height:100%;
 }
 
@@ -731,15 +742,24 @@ img.size-thumbnail{
 .all-body-text4{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#333;
-	font-size:120%;
+	font-size:110%;
 	line-height:100%;
 }
 
 .all-body-text5{
 	font-family:Tahoma, Geneva, sans-serif;
 	color: #9a9a9a;
-	font-size:110%;
-	line-height:100%;
+	font-size:100%;
+	line-height:120%;
+    margin-top: 5px;
+}
+
+.justified {
+    text-align: justify;
+}
+
+.line-height-140{
+    line-height:140%;
 }
 /*custom site closed*/
 
@@ -1011,8 +1031,8 @@ img.size-thumbnail{
 .product-tabs > h3{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
-	font-size:135%;
-	line-height:100%;
+	font-size:120%;
+    line-height: 140%;
     height: 60px;
     padding: 10px 10px;
 }
@@ -1020,8 +1040,9 @@ img.size-thumbnail{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#929299;
 	font-size:100%;
-	line-height:110%;
-    height: 40px;
+    font-weight: normal;
+	line-height: 140%;
+    height: 60px;
     padding: 0px 10px;
 }
 .product-tabs > .btn{
@@ -1032,8 +1053,8 @@ img.size-thumbnail{
 	padding:20px;
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#5D5D5D;
-	font-size:130%;
-	line-height:100%;
+	font-size:110%;
+	line-height:140%;
 }
 /* End Product Tabs*/
 
@@ -1122,8 +1143,14 @@ img.size-thumbnail{
     width: 53px;
 }
 /* To hide image blogs in the home page */
-.home-text4 img{
+.home-text4 img,
+.all-body-text5 img{
     display: none;
+}
+
+/* Home page - margin between blog title and blog content */
+.all-body-text5 p{
+    margin-top: 10px;
 }
 
 

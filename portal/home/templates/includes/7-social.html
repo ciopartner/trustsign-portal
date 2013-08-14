@@ -19,7 +19,7 @@
                 {% for blog_post in recent_posts %}
                     <div class="margin-top" style="clear: both;">
                         <a class="home-text3" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-                        <span class="home-text4">{{ blog_post.description_from_content | safe |truncatewords_html:30 }}</span>
+                        <span class="all-body-text5 line-height-140 justified">{{ blog_post.description_from_content | safe |truncatewords_html:24 }}</span>
                         <a href="{{ blog_post.get_absolute_url }}">[Leia mais]</a>
                     </div>
                 {% endfor %}
