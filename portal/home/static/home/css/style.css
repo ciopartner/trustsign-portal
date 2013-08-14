@@ -629,12 +629,17 @@ img.size-thumbnail{
 	text-align:center;
 	line-height:100%;
 }
-.header2-text .span3 img{
-	vertical-align: middle;
+.header2-text .span3{
+	margin-left: 11px;
+    text-align: left;
 }
 
 .header2-text-hover{
 
+}
+
+.header2-text .atendimento-email{
+    width: 230px;
 }
 
 .fiximh img{
@@ -1159,6 +1164,7 @@ img.size-thumbnail{
 .icon-arroba, .icon-laptop, .icon-microphone, .icon-reciever, .icon-lupa, .icon-h-3-5th, .icon-h-3-6th, .icon-h-3-2nd,
 .icon-green-lock, .icon-digital, .icon-pki{
 	background: url(../img/icons/sprites.png) no-repeat;
+    vertical-align: middle;
 }
 
 .icon-arroba{
