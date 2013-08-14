@@ -910,6 +910,11 @@ img.size-thumbnail{
 
 /*Custom product page start here*/
 
+.certificado-digital h2{
+    background: #f2f2f2;
+    padding: 10px;
+}
+
 .productbgw{
 	background-color:#FFF;
 }
