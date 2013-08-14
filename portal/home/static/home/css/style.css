@@ -1233,9 +1233,9 @@ img.size-thumbnail{
 }
 
 .icon-arroba{
-    background-position: 0 -1px;
-    width: 28px;
-    height: 28px;
+    background: url(../img/icons/arroba.png) no-repeat;
+    width: 30px;
+    height: 30px;
 }
 .icon-laptop{
     background-position: -39px -1px;
@@ -1243,9 +1243,9 @@ img.size-thumbnail{
     height: 32px;
 }
 .icon-microphone{
-    background-position: -100px 0;
-    width: 36px;
-    height: 34px;
+    background: url(../img/icons/fone.png) no-repeat;
+    width: 30px;
+    height: 30px;
 }
 .icon-reciever{
     background-position: -151px 0;
