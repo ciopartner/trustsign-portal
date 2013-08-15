@@ -36,19 +36,11 @@
                                     class="icon-shopping-cart"></i></a></li>
 {#                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>#}
                         <li>
-                            <div class="pull-left limeh100x searchareain" style="overflow-y:hidden;">
-                                <div class="tmpsearch productbgn headbutton">
-                                    <form action="{% url "search" %}">
-                                        <input id="appendedInputButton" class="spfox1" type="text" width="350" name="q"
-                                               style="margin-top:20px;" placeholder="{% trans "Search" %}"
-                                               value="{{ request.REQUEST.q }}">
-                                        <button class="btn spfox2" type="button"
-                                                style="margin-top:10px; margin-left:-6px;">
-                                            <i class="icon-search"></i></button>
-                                    </form>
-                                </div>
-                                <div style="vertical-align: middle" class="icon-lupa"></div>
-                            </div>
+                            <form action="{% url "search" %}" class="search">
+                                <input id="appendedInputButton" class="span2" type="text" width="350" name="q"
+                                       placeholder="{% trans "Search" %}" value="{{ request.REQUEST.q }}">
+                                <button class="btn spfox2" type="button"><i class="icon-search"></i></button>
+                            </form>
                         </li>
                     </ul>
                 </div>

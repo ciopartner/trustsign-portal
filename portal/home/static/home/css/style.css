@@ -539,6 +539,35 @@ img.size-thumbnail{
 
 /*-------Shortmenu Closed---------*/
 
+/*   Search   */
+.search{
+    line-height:100px;
+    margin: 0 5px;
+}
+
+.search input{
+    transition: width 0.5s;
+    -webkit-transition: width 0.5s;
+    width: 80px;
+    margin-top:8px;
+    padding-right: 45px;
+}
+
+.search input:focus{
+    width: 250px;
+}
+
+.search .btn{
+    border-radius: 0 4px 4px 0;
+    margin-top:-2px;
+    margin-left:-44px;
+    border: none;
+}
+
+
+
+
+
 /*-------productpage started---------*/
 
 .black_link a {
