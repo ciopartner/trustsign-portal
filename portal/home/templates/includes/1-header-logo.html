@@ -39,7 +39,7 @@
                             <form action="{% url "search" %}" class="search">
                                 <input id="appendedInputButton" class="span2" type="text" width="350" name="q"
                                        placeholder="{% trans "Search" %}" value="{{ request.REQUEST.q }}">
-                                <button class="btn spfox2" type="button"><i class="icon-search"></i></button>
+                                <button class="btn spfox2" type="button" onclick="submit()"><i class="icon-search"></i></button>
                             </form>
                         </li>
                     </ul>
