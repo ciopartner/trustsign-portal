@@ -120,53 +120,55 @@
 
             <aside class="span3" style="margin:5px;">
                 <div style="text-align: center;">
-                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
-                            height="100"
-                            src="//www.youtube.com/embed/u7jnNn2LP94?rel=0" frameborder="0" allowFullScreen></iframe>
-                </div>
+                    <a data-toggle="modal" href="#modal-video" onclick="abreVideo('http://www.youtube.com/embed/u7jnNn2LP94?rel=0&autoplay=1');">
+                        <img src="{% static "home/img/youtube/youtube-site-seguro.jpg" %}" alt="" width="180" height="100" />
+                        <p class="home-text4" style="text-align: center;">Conheça o Site + Seguro</p>
+                    </a>
 
-                <p class="home-text4" style="text-align: center;">Conheça o Site + Seguro</p>
+                </div>
 {#                <p class="home-text4">Comprando pela Internet</p>#}
             </aside>
 
             <aside class="span3" style="margin:5px;">
                 <div style="text-align: center;">
-                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
-                            height="100"
-                            src="//www.youtube.com/embed/pn7cncN4wuE?rel=0" frameborder="0" allowFullScreen></iframe>
+                    <a data-toggle="modal" href="#modal-video" onclick="abreVideo('http://www.youtube.com/embed/pn7cncN4wuE?rel=0&autoplay=1');">
+                        <img src="{% static "home/img/youtube/youtube-site-monitorado.jpg" %}" alt="" width="180" height="100" />
+                        <p class="home-text4" style="text-align: center;">Conheça o Site Monitorado</p>
+                    </a>
                 </div>
-
-                <p class="home-text4" style="text-align: center;">Conheça o Site Monitorado</p>
 {#                <p class="home-text4">Entrevista de Ivo Machado para Record News</p>#}
             </aside>
 
             <aside class="span3" style="margin:5px;">
                 <div style="text-align: center;">
-                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
-                            height="100"
-                            src="//www.youtube.com/embed/VAiWTiVAbP8?rel=0" frameborder="0" allowFullScreen></iframe>
+                    <a data-toggle="modal" href="#modal-video" onclick="abreVideo('http://www.youtube.com/embed/VAiWTiVAbP8?rel=0&autoplay=1');">
+                        <img src="{% static "home/img/youtube/youtube-ev-ssl.jpg" %}" alt="" width="180" height="100" />
+                        <p class="home-text4" style="text-align: center;">Conheça o certificado EV SSL</p>
+                    </a>
                 </div>
-
-                <p class="home-text4" style="text-align: center;">Conheça o certificado EV SSL</p>
 {#                <p class="home-text4">Prêmio MPE Brasil Etapa SP</p>#}
             </aside>
 
             <aside class="span3" style="margin:5px;">
                 <div style="text-align: center;">
-                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
-                            height="100"
-                            src="//www.youtube.com/embed/ELol4jktdmg?rel=0" frameborder="0" allowFullScreen></iframe>
+                    <a data-toggle="modal" href="#modal-video" onclick="abreVideo('http://www.youtube.com/embed/ELol4jktdmg?rel=0&autoplay=1');">
+                        <img src="{% static "home/img/youtube/youtube-ssl.jpg" %}" alt="" width="180" height="100" />
+                        <p class="home-text4" style="text-align: center;">Conheça o certificado SSL</p>
+                    </a>
                 </div>
-
-                <p class="home-text4" style="text-align: center;">Conheça o certificado SSL</p>
 {#                <p class="home-text4">Dicas de segurança para evitar crimes na internet</p>#}
             </aside>
-
         </section>
+
+        <div id="modal-video" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="windowTitleLabel" aria-hidden="true">
+            <div class="modal-body">
+                <iframe src="" width="560" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+            </div>
+        </div>
+
     </section>
 
 </section>
-
 
 <!--------------youtube area closed here---------------------------------->
 

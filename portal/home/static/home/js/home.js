@@ -22,3 +22,7 @@
     });
 
 }).call(this);
+
+function abreVideo(link){
+    $('#modal-video').find('iframe').attr('src', link);
+}
