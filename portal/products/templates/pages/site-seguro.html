@@ -45,13 +45,15 @@
             <h2>{{ page.product.youtube_title }}</h2>
         {% endeditable %}
 
-        {% editable page.product.youtube_url %}
-            <div style="text-align: center;">
-                <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390"
-                        src="{{ page.product.youtube_url }}?rel=0" frameborder="0" allowFullScreen></iframe>
+        <div class="youtube-container">
+            {% editable page.product.youtube_url %}
+                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390"
+                            src="{{ page.product.youtube_url }}?rel=0" frameborder="0" allowFullScreen></iframe>
+            {% endeditable %}
+            <div class="product-sharebar">
+                {% include 'includes/sharebar.html' %}
             </div>
-        {% endeditable %}
-
+        </div>
         <br><br>
 
         {% editable page.product.tab_title %}
@@ -59,7 +61,7 @@
         {% endeditable %}
 
         {# Esquema de Abas #}
-        <section class="nav nav-tabs" style="display:inline-block; width:100%; margin-bottom: 0px;">
+        <section class="nav nav-tabs" style="display:inline-block; width:100%; margin-bottom: 0;">
             {% for tab in page.product.tabs.all %}
                 <aside class="product-tabs" style="">
                     {% editable tab.tab_title %}

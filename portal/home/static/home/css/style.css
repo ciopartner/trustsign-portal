@@ -919,6 +919,37 @@ img.size-thumbnail{
 }
 /*EXCELENCIA custom text end here*/
 
+.sharebar{
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    text-align: left;
+    width: 60px;
+}
+
+.sharebar .twitter{
+    margin-top: -18px;
+}
+
+.sharebar .pinterest{
+    margin-top: 10px;
+}
+
+.youtube-container{
+    margin: 0 auto;
+    width: 800px;
+    height: 390px;
+}
+
+.youtube-container .sharebar{
+    float:left;
+    margin: 35px 0 0 10px;
+}
+
+.youtube-container .youtube-player{
+    float:left;
+}
+
 /*Custom product page start here*/
 
 .certificado-digital h2{
