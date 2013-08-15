@@ -2,7 +2,11 @@
 
 /* Overwriting mezzanine.css */
 img {box-shadow:0 0 0;}
-body {padding-top:0;}
+
+body {
+    padding-top:0;
+}
+
 .breadcrumb {
     padding: 0px 0px;
     background-color: #ffffff;
@@ -100,6 +104,10 @@ img.size-thumbnail{
 	margin-top:10px;
 }
 
+.tm20{
+	margin-top:20px;
+}
+
 .tm30{
 	margin-top:30px;
 }
@@ -111,6 +119,10 @@ img.size-thumbnail{
 .tbm250{
 	margin-top:20px;
 	margin-bottom:150px;
+}
+
+.bm30{
+	margin-bottom:30px;
 }
 
 
@@ -246,7 +258,6 @@ img.size-thumbnail{
 .margin-top{
 	margin-top:20px;
 }
-
 
 /*padding and margin closed*/
 
@@ -610,6 +621,13 @@ img.size-thumbnail{
 
 }
 
+.header2-area aside{
+    height: 35px;
+    line-height: 30px;
+    padding: 10px 0;
+}
+
+
 .header2-text{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#000;
@@ -621,12 +639,17 @@ img.size-thumbnail{
 	text-align:center;
 	line-height:100%;
 }
-.header2-text .span3 img{
-	vertical-align: middle;
+.header2-text .span3{
+	margin-left: 11px;
+    text-align: left;
 }
 
 .header2-text-hover{
 
+}
+
+.header2-text .atendimento-email{
+    width: 230px;
 }
 
 .fiximh img{
@@ -636,8 +659,9 @@ img.size-thumbnail{
 .header3-title-text{
 	font-family:Tahoma, Geneva, sans-serif;
     font-weight: bold;
-	font-size:13px;
+	font-size: 85%;
 	color:#006442;
+    margin-top: 5px;
 }
 
 .header3-title-text.coloroff{
@@ -648,8 +672,9 @@ img.size-thumbnail{
 
 .header3-body-text{
 	font-family:Tahoma, Geneva, sans-serif;
-	font-size:11px;
-	line-height:105%;
+	font-size: 80%;
+	line-height:120%;
+    margin-top: 5px;
 
 }
 
@@ -660,7 +685,8 @@ img.size-thumbnail{
 .site-body-text{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#227D5E;
-	font-size:130%;
+	font-size:100%;
+    font-weight: bold;
 	line-height:100%;
 }
 
@@ -731,15 +757,24 @@ img.size-thumbnail{
 .all-body-text4{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#333;
-	font-size:120%;
+	font-size:110%;
 	line-height:100%;
 }
 
 .all-body-text5{
 	font-family:Tahoma, Geneva, sans-serif;
 	color: #9a9a9a;
-	font-size:110%;
-	line-height:100%;
+	font-size:100%;
+	line-height:120%;
+    margin-top: 5px;
+}
+
+.justified {
+    text-align: justify;
+}
+
+.line-height-140{
+    line-height:140%;
 }
 /*custom site closed*/
 
@@ -886,6 +921,11 @@ img.size-thumbnail{
 
 /*Custom product page start here*/
 
+.certificado-digital h2{
+    background: #f2f2f2;
+    padding: 10px;
+}
+
 .productbgw{
 	background-color:#FFF;
 }
@@ -1011,17 +1051,18 @@ img.size-thumbnail{
 .product-tabs > h3{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
-	font-size:135%;
-	line-height:100%;
-    height: 60px;
+	font-size:120%;
+    line-height: 140%;
+    height: 40px;
     padding: 10px 10px;
 }
 .product-tabs > h4{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#929299;
 	font-size:100%;
-	line-height:110%;
-    height: 40px;
+    font-weight: normal;
+	line-height: 140%;
+    height: 50px;
     padding: 0px 10px;
 }
 .product-tabs > .btn{
@@ -1032,13 +1073,68 @@ img.size-thumbnail{
 	padding:20px;
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#5D5D5D;
-	font-size:130%;
-	line-height:100%;
+	font-size:110%;
+	line-height:140%;
 }
 /* End Product Tabs*/
 
 
+.nossa-diferenca {
+    margin:0 auto;
+	padding:0;
+	width:662px;
+}
+
+.nossa-diferenca >li{
+    float:left;
+	list-style:none;
+	padding:0;
+	margin:0;
+	width:220px;
+	display:inline-block;
+}
+
+.nossa-diferenca > li > div{
+	position:relative;
+	border-right:#DADEE3 1px solid;
+	/*height:80px;*/
+	display:block;
+	line-height:104px;
+	text-align:center;
+	border-bottom:#DADEE3 1px solid;
+}
+
+.nossa-diferenca > li:nth-child(3n+3) > div{
+	border-right: none;
+}
+
+.nossa-diferenca > li:nth-last-child(-1n+3) > div{
+	border-bottom: none;
+}
+
 /*//////// principais clientes area start here//////////*/
+.testimoniais{
+    width: 660px;
+    margin: 0 auto;
+}
+
+.testimoniais img{
+    float: left;
+}
+
+.testimoniais #carousel-testimoniais{
+    float: left;
+    width: 560px;
+}
+
+.testimoniais .item{
+    height: 100px;
+}
+
+.testimoniais .autor{
+    color: #999;
+}
+
 .principais-clientes {
 	position:relative;
 	margin:0;
@@ -1082,10 +1178,6 @@ img.size-thumbnail{
 	padding:0;
 	overflow:hidden;
 }
-.principais-clientes > li > div img{
-
-
-}
 
 .home-cl{
 	padding-top:20px;
@@ -1122,8 +1214,14 @@ img.size-thumbnail{
     width: 53px;
 }
 /* To hide image blogs in the home page */
-.home-text4 img{
+.home-text4 img,
+.all-body-text5 img{
     display: none;
+}
+
+/* Home page - margin between blog title and blog content */
+.all-body-text5 p{
+    margin-top: 10px;
 }
 
 
@@ -1132,12 +1230,13 @@ img.size-thumbnail{
 .icon-arroba, .icon-laptop, .icon-microphone, .icon-reciever, .icon-lupa, .icon-h-3-5th, .icon-h-3-6th, .icon-h-3-2nd,
 .icon-green-lock, .icon-digital, .icon-pki{
 	background: url(../img/icons/sprites.png) no-repeat;
+    vertical-align: middle;
 }
 
 .icon-arroba{
-    background-position: 0 -1px;
-    width: 28px;
-    height: 28px;
+    background: url(../img/icons/arroba.png) no-repeat;
+    width: 30px;
+    height: 30px;
 }
 .icon-laptop{
     background-position: -39px -1px;
@@ -1145,9 +1244,9 @@ img.size-thumbnail{
     height: 32px;
 }
 .icon-microphone{
-    background-position: -100px 0;
-    width: 36px;
-    height: 34px;
+    background: url(../img/icons/fone.png) no-repeat;
+    width: 30px;
+    height: 30px;
 }
 .icon-reciever{
     background-position: -151px 0;
@@ -1188,4 +1287,13 @@ img.size-thumbnail{
     background-position: -155px -55px;
 	width: 39px;
 	height: 30px;
+}
+
+.div-linkedin{
+    float:left
+}
+
+.div-facebook{
+    float: left;
+    margin-top: 2px;
 }

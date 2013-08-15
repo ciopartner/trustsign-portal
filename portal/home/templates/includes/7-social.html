@@ -3,7 +3,7 @@
 
 
 <section class="featurette homemain">
-    <p class="as-text1" style="text-align: center; margin: 20px;">ACOMPANHE A TRUSTSIGN NAS REDES</p>
+    <p class="as-text1 tm30 bm30" style="text-align: center;">ACOMPANHE A TRUSTSIGN NAS REDES</p>
 </section>
 
 <section class="featurette">
@@ -11,15 +11,14 @@
         <aside class="span6" style="padding-right: 30px;">
             <section class="">
                 <div>
-                    <img src={% static "home/img/icons/blog.png" %} style="float:left; margin-right:10px;
-                    margin-top:-6px;">
+                    <img src="{% static "home/img/icons/blog.png" %}" style="float:left; margin-right:10px;margin-top:-6px;">
                     <h2>BLOG</h2>
                 </div>
-                {% blog_recent_posts 3 as recent_posts %}
+                {% blog_recent_posts 2 as recent_posts %}
                 {% for blog_post in recent_posts %}
                     <div class="margin-top" style="clear: both;">
                         <a class="home-text3" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-                        <span class="home-text4">{{ blog_post.description_from_content | safe |truncatewords_html:30 }}</span>
+                        <span class="all-body-text5 line-height-140 justified">{{ blog_post.description_from_content | safe |truncatewords_html:24 }}</span>
                         <a href="{{ blog_post.get_absolute_url }}">[Leia mais]</a>
                     </div>
                 {% endfor %}
@@ -30,7 +29,7 @@
         <aside class="span6" style="padding-left: 30px;">
             <section class="">
                 <div>
-                    <img src={% static "home/img/icons/twitter-t.png" %} style="float:left; margin-right:10px; margin-top:-6px;">
+                    <img src="{% static "home/img/icons/twitter-t.png" %}" style="float:left; margin-right:10px; margin-top:-6px;">
 
                     {# Configurando o botão de seguir no twitter: #}
                     <style>
@@ -112,8 +111,10 @@
 
 <section class="featurette" style="display: inline-block; margin-top:20px;">
 
-    <h2>YOUTUBE</h2>
-
+    <div>
+        <img src="{% static "home/img/icons/youtube.png" %}" style="float:left; margin-right:10px;margin-top:-6px;">
+        <h2>YOUTUBE</h2>
+    </div>
     <section class="span12" style="text-align:center;">
         <section class="row ytube">
 
@@ -121,11 +122,22 @@
                 <div style="text-align: center;">
                     <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
                             height="100"
-                            src="//www.youtube.com/embed/ELol4jktdmg?rel=0" frameborder="0" allowFullScreen></iframe>
+                            src="//www.youtube.com/embed/u7jnNn2LP94?rel=0" frameborder="0" allowFullScreen></iframe>
                 </div>
 
-                <p class="home-text4" style="text-align: center;">Conheça o certificado SSL</p>
-{#                <p class="home-text4">Dicas de segurança para evitar crimes na internet</p>#}
+                <p class="home-text4" style="text-align: center;">Conheça o Site + Seguro</p>
+{#                <p class="home-text4">Comprando pela Internet</p>#}
+            </aside>
+
+            <aside class="span3" style="margin:5px;">
+                <div style="text-align: center;">
+                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
+                            height="100"
+                            src="//www.youtube.com/embed/pn7cncN4wuE?rel=0" frameborder="0" allowFullScreen></iframe>
+                </div>
+
+                <p class="home-text4" style="text-align: center;">Conheça o Site Monitorado</p>
+{#                <p class="home-text4">Entrevista de Ivo Machado para Record News</p>#}
             </aside>
 
             <aside class="span3" style="margin:5px;">
@@ -139,28 +151,15 @@
 {#                <p class="home-text4">Prêmio MPE Brasil Etapa SP</p>#}
             </aside>
 
-
             <aside class="span3" style="margin:5px;">
                 <div style="text-align: center;">
                     <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
                             height="100"
-                            src="//www.youtube.com/embed/u7jnNn2LP94?rel=0" frameborder="0" allowFullScreen></iframe>
+                            src="//www.youtube.com/embed/ELol4jktdmg?rel=0" frameborder="0" allowFullScreen></iframe>
                 </div>
 
-                <p class="home-text4" style="text-align: center;">Conheça o Site + Seguro</p>
-{#                <p class="home-text4">Comprando pela Internet</p>#}
-            </aside>
-
-
-            <aside class="span3" style="margin:5px;">
-                <div style="text-align: center;">
-                    <iframe title="YouTube video player" class="youtube-player" type="text/html" width="180"
-                            height="100"
-                            src="//www.youtube.com/embed/pn7cncN4wuE?rel=0" frameborder="0" allowFullScreen></iframe>
-                </div>
-
-                <p class="home-text4" style="text-align: center;">Conheça o Site Monitorado</p>
-{#                <p class="home-text4">Entrevista de Ivo Machado para Record News</p>#}
+                <p class="home-text4" style="text-align: center;">Conheça o certificado SSL</p>
+{#                <p class="home-text4">Dicas de segurança para evitar crimes na internet</p>#}
             </aside>
 
         </section>
