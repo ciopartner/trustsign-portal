@@ -573,6 +573,18 @@ img.size-thumbnail{
     width:658px;
 }
 
+.modal-close{
+    background: url(../img/btn-fechar.png);
+    display: block;
+    width: 30px;
+    height: 30px;
+    right: -13px;
+    top: -13px;
+    position: absolute;
+    text-indent: -999em;
+    z-index: 2000;
+}
+
 
 
 
