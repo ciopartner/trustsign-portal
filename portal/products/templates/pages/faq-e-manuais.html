@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "pages/page.html" %}
 {% load mezzanine_tags keyword_tags staticfiles %}
 
 {% block meta_title %}{{ page.meta_title }}{% endblock %}
@@ -43,7 +43,7 @@
                     </div>
                     <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content {%if forloop.counter == 1%} in {%endif%}">
                         <div class="accordion-inner">
-                            {{question.answer|safe|linebreaksbr}}
+                            {{question.answer|linebreaksbr}}
                         </div>
                     </div>
                 </div>
