@@ -26,10 +26,11 @@
 {% endblock %}
 
 {% block one_row %}
-    <div class="span12 left">
+    <div class="span12 left institucional">
         {# YOUTUBE VIDEO #}
-        <div style="text-align: center;">
-            <iframe width="560" height="315" src="http://www.youtube.com/embed/L2iOcyJMAWg?rel=0" frameborder="0" allowfullscreen></iframe>
+        <div class="youtube-container">
+            <iframe width="560" height="315" class="youtube-player" src="http://www.youtube.com/embed/L2iOcyJMAWg?rel=0" frameborder="0" allowfullscreen></iframe>
+            {% include 'includes/sharebar.html' %}
         </div>
 
         {# O QUE FAZ NOSSA DIFERENÇA #}

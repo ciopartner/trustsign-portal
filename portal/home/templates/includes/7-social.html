@@ -161,8 +161,9 @@
         </section>
 
         <div id="modal-video" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="windowTitleLabel" aria-hidden="true">
-            <div class="modal-body">
-                <iframe src="" width="560" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+            <div class="modal-body youtube-container">
+                <iframe src="" class="youtube-player" width="560" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                {% include 'includes/sharebar.html' %}
             </div>
         </div>
 

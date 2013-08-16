@@ -84,6 +84,10 @@ img.size-thumbnail{
 	margin-left:5px;
 }
 
+.lm20{
+	margin-left:20px;
+}
+
 .lm30{
 	margin-left:30px;
 }
@@ -348,6 +352,12 @@ img.size-thumbnail{
 	border-right:1px solid #DDDDDD;
 }
 
+.content-base{
+    margin-left: 20px;
+    line-height: 140%;
+    font-size: 100%;
+}
+
 
 /*custom header started*/
 
@@ -566,7 +576,7 @@ img.size-thumbnail{
 /*    youtube home   */
 
 .modal{
-    width:600px;
+    width:658px;
 }
 
 
@@ -957,10 +967,14 @@ img.size-thumbnail{
 
 .sharebar{
     list-style: none;
-    padding: 5px;
+    padding: 0;
     margin: 0;
-    text-align: left;
+    text-align: center;
     width: 60px;
+}
+
+.sharebar .facebook iframe{
+    width: 53px!important;
 }
 
 .sharebar .twitter{
@@ -977,9 +991,17 @@ img.size-thumbnail{
     height: 390px;
 }
 
+.home .youtube-container{
+    height: auto;
+}
+
 .youtube-container .sharebar{
     float:left;
     margin: 35px 0 0 10px;
+}
+
+.institucional .youtube-container .sharebar, .home .youtube-container .sharebar{
+    margin: 0 0 0 10px;
 }
 
 .youtube-container .youtube-player{
