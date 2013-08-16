@@ -1,4 +1,4 @@
-<div class="tab-pane" id="tab-ssl-converter">
+<div class="tab-pane {% if op == 'ssl-converter' %}active{% endif %}" id="tab-ssl-converter">
     <form action="" method="POST" enctype='multipart/form-data'>
         <table>
             {{ form_ssl_converter }}
@@ -6,7 +6,11 @@
         </table>
         {% csrf_token %}
     </form>
-    {% if resultado and operacao == 'ssl-converter' %}
-        <div>Resultado:<br> {{ resultado }}</div>
+    {% if resultado and op == 'ssl-converter' %}
+        {% if resultado.ok %}
+            <div>Resultado:<br> {{ resultado }}</div>
+        {% else %}
+            <p>{{ resultado.mensagem_erro }}</p>
+        {% endif %}
     {% endif %}
 </div>

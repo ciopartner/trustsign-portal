@@ -1,11 +1,28 @@
 # coding=utf-8
 from Crypto.Util import asn1
+from datetime import date
 import urllib
 import urlparse
 import OpenSSL
 from django.core.exceptions import ValidationError
 from django.forms import Form, CharField, HiddenInput, Textarea, FileField, ChoiceField, PasswordInput
 import requests
+from hashlib import md5
+
+
+def string_to_date(valor):
+    print valor
+    print date(int(valor[:4]), int(valor[4:6]), int(valor[6:8]))
+    print '------'
+    return date(int(valor[:4]), int(valor[4:6]), int(valor[6:8]))
+
+
+def altera_datas(d, chaves):
+    """
+    Recebe um dict e a lista de chaves que é para transformar em datetime.date
+    """
+    for k in chaves:
+        d[k] = string_to_date(d[k])
 
 
 class SSLCheckerError(Exception):
@@ -18,18 +35,21 @@ class SSLCheckerForm(Form):
     operation = CharField(widget=HiddenInput, initial='ssl-checker')
 
     def processa(self):
+
         url = self.cleaned_data['url']
         response = requests.post('https://secure.comodo.com/sslchecker', {
             'url': url
         })
-        d = urlparse.parse_qs(urllib.unquote(response.text))  # transforma em um dict todos os parametros recebidos
-        d = dict((k, v[0])for k, v in d.iteritems())  # tira os valores da lista
-        print d
+        resultado = urlparse.parse_qs(urllib.unquote(response.text))  # transforma em um dict os dados recebidos
+        resultado = dict((k, v[0])for k, v in resultado.iteritems())  # tira os valores da lista
 
-        if int(d.get('error_code', 0)) != 0:
-            raise SSLCheckerError(d.get('error_message'))
+        resultado['ok'] = ok = int(resultado.get('error_code', 0)) == 0
+        if ok:
+            altera_datas(resultado, ('cert_validity_notBefore', 'cert_validity_notAfter', ))
+            resultado['expira_em'] = (resultado['cert_validity_notAfter'] - date.today()).days
+            resultado['hostname_listado'] = url in resultado.get('cert_san_1_dNSName') or url in resultado.get('cert_san_2_dNSName')
 
-        return d
+        return resultado
 
 
 class CSRDecodeError(Exception):
@@ -49,20 +69,21 @@ class CSRDecoderForm(Form):
             'csr': csr
         })
 
+        print response.text
+
         d = {}
         street_index = 1
         linhas = response.text.splitlines()
-
-        erros = [linhas[i + 1] for i in range(int(linhas[0]))]
-        if erros:
-            raise CSRDecodeError(erros)
+        # erro -13 e quando o certificado esta incompleto, mas da pra exibir alguns campos mesmo assim
+        erros = [linhas[i + 1] for i in range(int(linhas[0])) if not linhas[i + 1].startswith('-13')]
+        d['ok'] = not erros
 
         for linha in linhas:
             x = linha.split('=')
             if len(x) == 2:
                 key, value = x
                 if key == 'STREET':  # tem 3 STREET na resposta
-                    key += street_index
+                    key = '%s%d' % (key, street_index)
                     street_index += 1
                 d[key] = value
 
@@ -78,8 +99,8 @@ class CertificateKeyMatcherForm(Form):
     def processa(self):
         # source: http://www.v13.gr/blog/?p=325
 
-        certificate = self.cleaned_data['certificado']
-        private_key = self.cleaned_data['private_key']
+        certificate = self.cleaned_data['certificado'].read()
+        private_key = self.cleaned_data['private_key'].read()
 
         c = OpenSSL.crypto
 
@@ -101,7 +122,12 @@ class CertificateKeyMatcherForm(Form):
         pub_modulus = pub_der[1]
         priv_modulus = priv_der[1]
 
-        return pub_modulus == priv_modulus
+        return {
+            'ok': True,
+            'match': pub_modulus == priv_modulus,
+            'modulus_certificado': md5('Modulus=%s\n' % hex(pub_modulus)[2:-1].upper()).hexdigest(),
+            'modulus_key': md5('Modulus=%s\n' % hex(priv_modulus)[2:-1].upper()).hexdigest(),
+        }
 
 
 class SSLConverterForm(Form):

@@ -1,4 +1,4 @@
-<div class="tab-pane active" id="tab-ssl-checker">
+<div class="tab-pane {% if op == 'ssl-checker' or op == '' %}active{% endif %}" id="tab-ssl-checker">
     <form action="" method="POST">
         <table>
             {{ form_ssl_checker }}
@@ -7,8 +7,16 @@
         {% csrf_token %}
     </form>
 
-    {% if resultado and operacao == 'ssl-checker' %}
-        <p>{{ form_ssl_checker.url.value }} resolve para {{ resultado.server_ip }}</p>
-        <p>Tipo do servidor: {{ resultado.server_type }}</p>
+    {% if resultado and op == 'ssl-checker' %}
+        {% if resultado.ok %}
+            <p>{{ form_ssl_checker.url.value }} resolve para {{ resultado.server_ip }}</p>
+    {#        <p>Tipo do servidor: {{ resultado.server_type }}</p>#}
+            {% if resultado.chain_isTrusted_mozilla == 'Y' and resultado.chain_isTrusted_microsoft == 'Y' %}
+                <p>O certificado deve ser confiável por todos os principais navegadores.</p>
+            {% endif %}
+            <p>O certificado expira em {{ resultado.expira_em }} dias.</p>
+        {% else %}
+            <p>Não foi encontrado certificado SSL em {{ form_ssl_checker.url.value }}. Tenha certeza que a url está correta e que a porta SSL está aberta no firewall.</p>
+        {% endif %}
     {% endif %}
 </div>

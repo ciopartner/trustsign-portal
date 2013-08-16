@@ -24,15 +24,15 @@
 {% block one_row %}
     <div class="tabbable">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab-ssl-checker" data-toggle="tab">SSL Checker</a></li>
-            <li><a href="#tab-csr-decoder" data-toggle="tab">CSR Decoder</a></li>
-            <li><a href="#tab-certificated-key-matcher" data-toggle="tab">Certificated Key Matcher</a></li>
-            <li><a href="#tab-ssl-converter" data-toggle="tab">SSL Converter</a></li>
+            <li {% if op == 'ssl-checker' or op == '' %}class="active"{% endif %}><a href="#tab-ssl-checker" data-toggle="tab">SSL Checker</a></li>
+            <li {% if op == 'csr-decoder' %}class="active"{% endif %}><a href="#tab-csr-decoder" data-toggle="tab">CSR Decoder</a></li>
+            <li {% if op == 'certificated-key-matcher' %}class="active"{% endif %}><a href="#tab-certificated-key-matcher" data-toggle="tab">Certificated Key Matcher</a></li>
+            <li {% if op == 'ssl-converter' %}class="active"{% endif %}><a href="#tab-ssl-converter" data-toggle="tab">SSL Converter</a></li>
         </ul>
         <div class="tab-content">
             {% include 'includes/tab-ssl-checker.html' %}
             {% include 'includes/tab-csr-decoder.html' %}
-            {% include 'includes/tab-certificated-key-matcher.html' %}
+            {% include 'includes/tab-certificate-key-matcher.html' %}
             {% include 'includes/tab-ssl-converter.html' %}
         </div>
     </div>

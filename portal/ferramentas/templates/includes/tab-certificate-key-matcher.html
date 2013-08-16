@@ -1,0 +1,22 @@
+<div class="tab-pane {% if op == 'certificate-key-matcher' %}active{% endif %}" id="tab-certificated-key-matcher">
+    <form action="" method="POST" enctype='multipart/form-data'>
+        <table>
+            {{ form_certificated_key_matcher }}
+            <tr><td colspan="2"><input type="submit"/></td></tr>
+        </table>
+        {% csrf_token %}
+    </form>
+    {% if resultado and op == 'certificate-key-matcher' %}
+        {% if resultado.ok %}
+            {% if resultado.match %}
+                <p>O certificado e a private key combinam!</p>
+            {% else %}
+                <p>O certificado e a private key não combinam!</p>
+            {% endif %}
+            <p><b>Hash do modulus do certificado:</b> {{ resultado.modulus_certificado }}</p>
+            <p><b>Hash do modulus da private key:</b> {{ resultado.modulus_key }}</p>
+        {% else %}
+            <p>Ocorreu um erro durante o processamento.</p>
+        {% endif %}
+    {% endif %}
+</div>
