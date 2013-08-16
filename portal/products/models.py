@@ -75,13 +75,13 @@ class TabContent(models.Model):
         return self.tab_title
 
 
-
 class FAQPage(Page):
-        pass
+    pass
+
 
 class Question(models.Model):
-        question = models.TextField()
-        answer =  models.TextField()
-        page = models.ForeignKey(FAQPage, related_name="questions")
+    question = models.TextField()
+    answer = models.TextField()
+    page = models.ForeignKey(FAQPage, related_name="questions")
 
 
