@@ -43,7 +43,7 @@
                     </div>
                     <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content {%if forloop.counter == 1%} in {%endif%}">
                         <div class="accordion-inner">
-                            {{question.answer}}
+                            {{question.answer|safe|linebreaksbr}}
                         </div>
                     </div>
                 </div>

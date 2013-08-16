@@ -512,7 +512,7 @@ img.size-thumbnail{
 
 .sortmune{
 	position:absolute;
-	margin:0;
+	margin:20px 0 0 0;
 	width:auto;
 	display:none;
 }
@@ -520,12 +520,12 @@ img.size-thumbnail{
 .sortmune > ul{
 	padding:0;
 	margin:0;
+    width: 140px;
 }
 
 .sortmune > ul > li{
 	background-color:#fbfbfb;
-	padding-bottom:10px;
-	padding-top:10px;
+	padding:10px 5px;
 	list-style:none;
 }
 
@@ -533,19 +533,13 @@ img.size-thumbnail{
 	background-color:#F2F2F2;
 }
 
-.sortmune > ul{
-}
-
 .sortmune > ul > li > p{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#666;
 	text-align:left;
 	line-height:110%;
-	margin-top:2px;
-	margin-bottom:2px;
-
-
-	}
+	margin:2px 5px;
+}
 
 /*-------Shortmenu Closed---------*/
 

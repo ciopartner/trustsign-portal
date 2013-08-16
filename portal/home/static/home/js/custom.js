@@ -246,11 +246,11 @@ $(window).resize(function (event) {
 
 /////////////////////// header search closed ////////////////////
 
-setsortmenupos();
+//setsortmenupos();
 header1navicontrol();
 //searchcontroling();
 $(window).resize(function () {
-    setsortmenupos();
+    //setsortmenupos();
     header1navicontrol();
     //searchcontroling();
 });
