@@ -41,7 +41,7 @@
                     <div class="accordion-heading">
                         <h2><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{question.question}}</a></h2>
                     </div>
-                    <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content {%if forloop.counter == 1%} in {%endif%}">
+                    <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content">
                         <div class="accordion-inner">
                             {{question.answer|linebreaksbr}}
                         </div>
