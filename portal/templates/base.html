@@ -61,6 +61,16 @@
 
 </head>
 <body id="{% block body_id %}body{% endblock %}">
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+
 <div class="container" >
 
     {% block headers %}
@@ -91,30 +101,32 @@
 
 <div class="container">
     <div class="row">
-        {% block one_row %}
-            <div class="span2 left">
-                {% block left_panel %}
-                    <div class="panel tree">{% page_menu "pages/menus/tree.html" %}</div>
-                {% endblock %}
-            </div>
-
-            <div class="span7 middle">
-                {% block main %}{% endblock %}
-            </div>
-
-            <div class="span3 right">
-                {% nevercache %}
-                    {% include "includes/user_panel.html" %}
-                {% endnevercache %}
-                <div class="panel">
-                    {% block right_panel %}
-                        {% ifinstalled mezzanine.twitter %}
-                            {% include "twitter/tweets.html" %}
-                        {% endifinstalled %}
+        <div class="content-base">
+            {% block one_row %}
+                <div class="span2 left">
+                    {% block left_panel %}
+                        <div class="panel tree">{% page_menu "pages/menus/tree.html" %}</div>
                     {% endblock %}
                 </div>
-            </div>
-        {% endblock %}
+
+                <div class="span7 middle">
+                    {% block main %}{% endblock %}
+                </div>
+
+                <div class="span3 right">
+                    {% nevercache %}
+                        {% include "includes/user_panel.html" %}
+                    {% endnevercache %}
+                    <div class="panel">
+                        {% block right_panel %}
+                            {% ifinstalled mezzanine.twitter %}
+                                {% include "twitter/tweets.html" %}
+                            {% endifinstalled %}
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
     </div>
 </div>
 

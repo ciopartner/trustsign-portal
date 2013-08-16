@@ -22,8 +22,9 @@ class ProductAdmin(PageAdmin):
 class QuestionAdminInline(admin.TabularInline):
     model = Question
 
+
 class FAQPageAdmin(PageAdmin):
-    inlines = (QuestionAdminInline, )
+    inlines = [QuestionAdminInline]
 
 
 admin.site.register(Product, ProductAdmin)
