@@ -60,7 +60,7 @@
     {% block extra_head %}{% endblock %}
 
 </head>
-<body id="{% block body_id %}body{% endblock %}">
+<body id="{% block body_id %}body{% endblock %}" class="{{ page.slug }}">
 <script>
 (function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];

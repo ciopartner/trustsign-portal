@@ -1390,3 +1390,18 @@ img.size-thumbnail{
 .accordion-toggle{
     color: inherit;
 }
+
+/*   LIGAMOS PARA VOCE   */
+.ligamos-para-voce .content-base{
+    border: 1px solid #ccc;
+}
+
+.ligamos-para-voce label{
+    font-weight: bold;
+}
+
+.ligamos-para-voce .btn{
+    font-size: 110%;
+    font-weight: bold;
+    box-shadow: 3px 3px 5px #ccc;
+}
