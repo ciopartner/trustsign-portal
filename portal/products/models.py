@@ -76,7 +76,19 @@ class TabContent(models.Model):
 
 
 class FAQPage(Page):
-    pass
+    class Meta:
+        verbose_name = 'Página de FAQ'
+
+    def __unicode__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        """
+        Update the URL slug if settings.UPDATE_SLUG is True.
+        """
+        if hasattr(settings, 'UPDATE_SLUG') and settings.UPDATE_SLUG:
+            self.slug = self.get_slug()
+        super(FAQPage, self).save(*args, **kwargs)
 
 
 class Question(models.Model):
