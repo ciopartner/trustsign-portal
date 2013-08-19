@@ -77,7 +77,7 @@ class TabContent(models.Model):
 
 class FAQPage(Page):
     class Meta:
-        verbose_name = 'Página de FAQ'
+        verbose_name = 'FAQ Page'
 
     def __unicode__(self):
         return self.title
