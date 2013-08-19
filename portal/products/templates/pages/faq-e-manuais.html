@@ -39,7 +39,7 @@
             {%editable question.question question.answer%}
                 <div class="accordion-group">
                     <div class="accordion-heading">
-                        <h2><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{question.question}}</a></h2>
+                        <span class="faq-question"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{question.question}}</a></span>
                     </div>
                     <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content">
                         <div class="accordion-inner">
