@@ -1474,7 +1474,7 @@ img.size-thumbnail{
 }
 
 .ferramentas ul.nav-tabs li:hover{
-    background: #ccc;
+    background: #ddd;
 }
 
 .ferramentas ul.nav-tabs a{
@@ -1492,7 +1492,7 @@ img.size-thumbnail{
 
 .ferramentas ul.nav-tabs li.active a, .ferramentas ul.nav-tabs a:hover{
     border: 0;
-    background: transparent;
+    background: none;
 }
 
 .ferramentas .tab-content{

@@ -1,4 +1,6 @@
 # coding=utf-8
+from StringIO import StringIO
+from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
 from portal.ferramentas.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm, CSRDecodeError
 from portal.ferramentas.models import FerramentasPage
@@ -12,6 +14,8 @@ def ferramentas_processor(request, page):
     certificated_key_matcher_form = CertificateKeyMatcherForm()
     ssl_converter_form = SSLConverterForm()
     resultado = ''
+
+    print dir(page)
 
     if request.method == 'POST':
         op = request.POST.get('operation')
@@ -35,12 +39,29 @@ def ferramentas_processor(request, page):
                 try:
                     resultado = certificated_key_matcher_form.processa()
                 except Exception as e:
-                    print e
                     resultado = {
                         'ok': False
                     }
         elif op == 'ssl-converter':
-            ssl_converter_form = SSLConverterForm(request.POST),
+            nomes = {
+                SSLConverterForm.STANDARD_PEM: ('certificado.cer', 'application/octet-stream'),
+                SSLConverterForm.DER_BINARY: ('certificado.der', 'application/octet-stream'),
+                SSLConverterForm.P7B_PKCS_7: ('certificado.p7b', 'application/x-pkcs7-certificates'),
+                SSLConverterForm.PFX_PKCS_12: ('certificado.p12', 'application/x-pkcs12'),
+            }
+
+            ssl_converter_form = SSLConverterForm(request.POST, request.FILES)
+            certificado = ssl_converter_form.processa()
+            tipo = ssl_converter_form.cleaned_data['tipo_para_converter']
+
+            arquivo = StringIO()
+            arquivo.write(certificado)
+            arquivo.close()
+
+            response = HttpResponse(arquivo, content_type=nomes[tipo][1])
+            response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0]
+
+            return response
     else:
         op = ''
 
