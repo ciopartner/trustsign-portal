@@ -201,7 +201,7 @@ class SSLConverterForm(Form):
             return self.converte_pem_der(self.converte_p12_pem(certificado, password))
         return self.converte_pem_p7(self.converte_p12_pem(certificado, password))
 
-    def _runopenssl(self, comando):
+    def _run(self, comando):
         write, read = popen2(comando, "b")
         write.close()
         return read.read()
@@ -216,7 +216,7 @@ class SSLConverterForm(Form):
         path_in = file_in.name
         file_in.close()
         # Como a biblioteca PyOpenSSL não trata pkcs7, é usado a própria openssl do linux.
-        cert = self._runopenssl('openssl crl2pkcs7 -nocrl -certfile %s' % path_in)
+        cert = self._run('openssl crl2pkcs7 -nocrl -certfile %s' % path_in)
         os.remove(path_in)
         return cert
 
@@ -237,7 +237,7 @@ class SSLConverterForm(Form):
         path_in = file_in.name
         file_in.close()
         # Como a biblioteca PyOpenSSL não trata pkcs7, é usado a própria openssl do linux.
-        cert = self._runopenssl('openssl pkcs7 -print_certs -in %s' % path_in)
+        cert = self._run('openssl pkcs7 -print_certs -in %s' % path_in)
         os.remove(path_in)
         return cert
 
