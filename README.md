@@ -28,4 +28,5 @@ Executar uma vez para o portal e outra para o e-commerce
 6) Dependências:
 # apt-get install libncurses5-dev
 # apt-get install python-dev
+# apt-get install openssl
 # apt-get install libssl-dev
