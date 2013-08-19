@@ -1463,6 +1463,7 @@ img.size-thumbnail{
     width: 24%;
     margin-right: 1.33333%;
     text-align: center;
+    height: 85px;
 }
 
 .ferramentas ul.nav-tabs li:nth-child(even){
@@ -1495,7 +1496,7 @@ img.size-thumbnail{
     background: none;
 }
 
-.ferramentas .tab-content{
+.ferramentas form{
     background: #eee;
     padding: 10px
 }

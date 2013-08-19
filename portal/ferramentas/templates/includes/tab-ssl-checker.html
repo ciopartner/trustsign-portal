@@ -5,18 +5,22 @@
             <tr><td colspan="2"><input type="submit" class="btn btn-large"/></td></tr>
         </table>
         {% csrf_token %}
+
+        {% if resultado and op == 'ssl-checker' %}
+            {% if resultado.ok %}
+                <p>{{ form_ssl_checker.url.value }} resolve para {{ resultado.server_ip }}</p>
+        {#        <p>Tipo do servidor: {{ resultado.server_type }}</p>#}
+                {% if resultado.chain_isTrusted_mozilla == 'Y' and resultado.chain_isTrusted_microsoft == 'Y' %}
+                    <p>O certificado deve ser confiável por todos os principais navegadores.</p>
+                {% endif %}
+                <p>O certificado expira em {{ resultado.expira_em }} dias.</p>
+            {% else %}
+                <p>Não foi encontrado certificado SSL em {{ form_ssl_checker.url.value }}. Tenha certeza que a url está correta e que a porta SSL está aberta no firewall.</p>
+            {% endif %}
+        {% endif %}
+
     </form>
 
-    {% if resultado and op == 'ssl-checker' %}
-        {% if resultado.ok %}
-            <p>{{ form_ssl_checker.url.value }} resolve para {{ resultado.server_ip }}</p>
-    {#        <p>Tipo do servidor: {{ resultado.server_type }}</p>#}
-            {% if resultado.chain_isTrusted_mozilla == 'Y' and resultado.chain_isTrusted_microsoft == 'Y' %}
-                <p>O certificado deve ser confiável por todos os principais navegadores.</p>
-            {% endif %}
-            <p>O certificado expira em {{ resultado.expira_em }} dias.</p>
-        {% else %}
-            <p>Não foi encontrado certificado SSL em {{ form_ssl_checker.url.value }}. Tenha certeza que a url está correta e que a porta SSL está aberta no firewall.</p>
-        {% endif %}
-    {% endif %}
+    <p class="descricao">Com o SSL Checker (Verificador de SSL),  é possível identificar a presença de um certificado e
+        se ele está corretamente instalado.  Verifique cadeias intermediárias, entidades emissoras e validade do certificado.</p>
 </div>

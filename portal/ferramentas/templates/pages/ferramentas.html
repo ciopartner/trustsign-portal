@@ -26,19 +26,19 @@
         <ul class="nav nav-tabs">
             <li {% if op == 'ssl-checker' or op == '' %}class="active"{% endif %}>
                 <a href="#tab-ssl-checker" data-toggle="tab">SSL Checker</a>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium</p>
+                <p>Identifique se seu certificado está corretamente instalado.</p>
             </li>
             <li {% if op == 'csr-decoder' %}class="active"{% endif %}>
                 <a href="#tab-csr-decoder" data-toggle="tab">CSR Decoder</a>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium</p>
+                <p>Decodifique seu CSR</p>
             </li>
             <li {% if op == 'certificated-key-matcher' %}class="active"{% endif %}>
                 <a href="#tab-certificated-key-matcher" data-toggle="tab">Certificated Key Matcher</a>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium</p>
+                <p>Valide a combinação entre um certificado e a chave privada</p>
             </li>
             <li {% if op == 'ssl-converter' %}class="active"{% endif %}>
                 <a href="#tab-ssl-converter" data-toggle="tab">SSL Converter</a>
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium</p>
+                <p>Altere o formato do seu certificado</p>
             </li>
         </ul>
         <div class="tab-content">
@@ -47,10 +47,5 @@
             {% include 'includes/tab-certificate-key-matcher.html' %}
             {% include 'includes/tab-ssl-converter.html' %}
         </div>
-        <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.</p>
     </div>
 {% endblock %}

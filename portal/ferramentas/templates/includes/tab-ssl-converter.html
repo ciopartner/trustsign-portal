@@ -5,7 +5,7 @@
             <tr><td colspan="2"><input type="submit" class="btn btn-large"/></td></tr>
         </table>
         {% csrf_token %}
-    </form>
+
     {% if resultado and op == 'ssl-converter' %}
         {% if resultado.ok %}
             <div>Resultado:<br> {{ resultado }}</div>
@@ -13,4 +13,9 @@
             <p>{{ resultado.mensagem_erro }}</p>
         {% endif %}
     {% endif %}
+
+    </form>
+
+    <p class="descricao">Com o SSL Converter é possível alterar o tipo de arquivo do certificado. Faça exportações de
+        forma rápida e simples e em todos os ambientes desejados.</p>
 </div>
