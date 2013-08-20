@@ -15,8 +15,6 @@ def ferramentas_processor(request, page):
     ssl_converter_form = SSLConverterForm()
     resultado = ''
 
-    print dir(page)
-
     if request.method == 'POST':
         op = request.POST.get('operation')
         if op == 'ssl-checker':
@@ -51,17 +49,14 @@ def ferramentas_processor(request, page):
             }
 
             ssl_converter_form = SSLConverterForm(request.POST, request.FILES)
-            certificado = ssl_converter_form.processa()
-            tipo = ssl_converter_form.cleaned_data['tipo_para_converter']
+            if ssl_converter_form.is_valid():
+                certificado = ssl_converter_form.processa()
+                tipo = int(ssl_converter_form.cleaned_data['tipo_para_converter'])
 
-            arquivo = StringIO()
-            arquivo.write(certificado)
-            arquivo.close()
+                response = HttpResponse(StringIO(certificado), content_type=nomes[tipo][1])
+                response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0]
 
-            response = HttpResponse(arquivo, content_type=nomes[tipo][1])
-            response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0]
-
-            return response
+                return response
     else:
         op = ''
 

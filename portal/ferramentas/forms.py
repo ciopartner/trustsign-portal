@@ -6,7 +6,7 @@ import os
 import urllib
 import urlparse
 import OpenSSL
-from OpenSSL.crypto import load_certificate, FILETYPE_PEM, dump_certificate, FILETYPE_ASN1, load_pkcs12, PKCS12, dump_privatekey
+from OpenSSL.crypto import load_certificate, FILETYPE_PEM, dump_certificate, FILETYPE_ASN1, load_pkcs12, PKCS12, dump_privatekey, load_privatekey
 from django.core.exceptions import ValidationError
 from django.core.files.temp import NamedTemporaryFile
 from django.forms import Form, CharField, HiddenInput, Textarea, FileField, ChoiceField, PasswordInput
@@ -148,10 +148,10 @@ class SSLConverterForm(Form):
     )
 
     certificado = FileField()
-    private_key = FileField()
+    private_key = FileField(required=False)
     tipo_atual = ChoiceField(choices=TIPO_CHOICES)
-    tipo_para_coverter = ChoiceField(choices=TIPO_CHOICES)
-    pfx_password = CharField(widget=PasswordInput)
+    tipo_para_converter = ChoiceField(choices=TIPO_CHOICES)
+    pfx_password = CharField(widget=PasswordInput, required=False)
     operation = CharField(widget=HiddenInput, initial='ssl-converter')
 
     def clean(self):
@@ -165,9 +165,11 @@ class SSLConverterForm(Form):
 
     def processa(self):
         certificado = self.cleaned_data['certificado'].read()
-        private_key = self.cleaned_data['private_key'].read()
-        tipo_atual = self.cleaned_data['tipo_atual']
-        tipo_para_converter = self.cleaned_data['tipo_para_converter']
+        private_key = self.cleaned_data['private_key']
+        if private_key:
+            private_key = private_key.read()
+        tipo_atual = int(self.cleaned_data['tipo_atual'])
+        tipo_para_converter = int(self.cleaned_data['tipo_para_converter'])
         password = self.cleaned_data['pfx_password']
 
         # PEM -> X
@@ -223,8 +225,9 @@ class SSLConverterForm(Form):
     def converte_pem_p12(self, certificado, private_key, password):
         p12 = PKCS12()
         cert = load_certificate(FILETYPE_PEM, certificado)
+        priv = load_privatekey(FILETYPE_PEM, private_key)
         p12.set_certificate(cert)
-        p12.set_privatekey(private_key)
+        p12.set_privatekey(priv)
         return p12.export(password, iter=2, maciter=3)
 
     def converte_der_pem(self, certificado):
