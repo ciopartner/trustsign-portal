@@ -1515,3 +1515,30 @@ div.ferramentas form{
 div.ferramentas table{
     margin: 20px 0;
 }
+
+/*   PÁGINA 404   */
+
+.frame-404 {
+    margin: 0 auto;
+    background: #fff;
+    border: 2px #ddd solid;
+    height: 435px;
+    width: 530px;
+    text-align: center;
+    box-shadow: 5px -5px 30px #eee
+}
+
+.frame-404 h1{
+    margin-top: 50px;
+    color: #555;
+    font-size: 220%;
+}
+
+.frame-404 h2{
+    color: #999;
+    font-size: 100%;
+}
+
+.frame-404 img{
+    margin-top: 70px;
+}

@@ -1,11 +1,18 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% load i18n %}
+{% block breadcrumb %}{% endblock %}
 
-{% block title %}
-{% trans "Error" %}
+{% block meta_title %}Problema no servidor{% endblock %}
+
+{% block one_row %}
+    <div class="frame-404">
+        <img src="{% static "home/img/triste.png" %}" alt="triste"/>
+        <h1>PROBLEMA NO SERVIDOR</h1>
+        <br>
+        <h2>Pedimos desculpas pelo ocorrido. Se você precisar de ajuda, entre em contato com nosso suporte
+                clicando <a href="/suporte-trustsign/atendimento-por-e-mail/">aqui</a>.<br>
+            Este erro foi registrado em nossos sistema e tomaremos as devidas ações para corrigí-lo.</h2>
+    </div>
 {% endblock %}
 
-{% block main %}
-{% trans "Sorry, an error occurred." %}
-{% endblock %}

@@ -1,11 +1,16 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% load i18n %}
+{% block breadcrumb %}{% endblock %}
 
-{% block title %}
-{% trans "Page not found" %}
+{% block meta_title %}Página não encontrada{% endblock %}
+
+{% block one_row %}
+    <div class="frame-404">
+        <img src="{% static "home/img/triste.png" %}" alt="triste"/>
+        <h1>PÁGINA NÃO ENCONTRADA</h1>
+        <br>
+        <h2>Se você estiver com dificuldades, entre em contato clicando <a href="/suporte-trustsign/atendimento-por-e-mail/">aqui</a></h2>
+    </div>
 {% endblock %}
 
-{% block main %}
-{% trans "The page you requested does not exist." %}
-{% endblock %}
