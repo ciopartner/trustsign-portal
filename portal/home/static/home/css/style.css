@@ -1480,15 +1480,21 @@ img.size-thumbnail{
 
 .ferramentas ul.nav-tabs a{
     border: 0;
+    color: #555;
+    margin: 0;
+}
+
+.ferramentas ul.nav-tabs a.title{
     font-size: 120%;
     font-weight: bold;
     text-shadow: 0 0 1px;
-    color: #555;
+    height: 18px;
 }
 
-.ferramentas ul.nav-tabs p{
-    margin: 5px;
+.ferramentas ul.nav-tabs a.descr{
+    color: #555;
     font-size: 80%;
+    height: 33px;
 }
 
 .ferramentas ul.nav-tabs li.active a, .ferramentas ul.nav-tabs a:hover{
