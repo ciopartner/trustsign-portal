@@ -1448,17 +1448,13 @@ img.size-thumbnail{
 
 /*   FERRAMENTAS   */
 
-.ferramentas{
-
-}
-
-.ferramentas ul.nav-tabs{
+div.ferramentas ul.nav-tabs{
     margin-bottom: 10px;
     border-bottom: 0;
 
 }
 
-.ferramentas ul.nav-tabs li{
+div.ferramentas ul.nav-tabs li{
     background: #eee;
     width: 24%;
     margin-right: 1.33333%;
@@ -1466,47 +1462,47 @@ img.size-thumbnail{
     height: 85px;
 }
 
-.ferramentas ul.nav-tabs li:nth-child(even){
+div.ferramentas ul.nav-tabs li:nth-child(even){
     background: #f5f5f5;
 }
 
-.ferramentas ul.nav-tabs li:last-child{
+div.ferramentas ul.nav-tabs li:last-child{
     margin-right: 0;
 }
 
-.ferramentas ul.nav-tabs li:hover{
+div.ferramentas ul.nav-tabs li:hover{
     background: #ddd;
 }
 
-.ferramentas ul.nav-tabs a{
+div.ferramentas ul.nav-tabs a{
     border: 0;
     color: #555;
     margin: 0;
 }
 
-.ferramentas ul.nav-tabs a.title{
+div.ferramentas ul.nav-tabs a.title{
     font-size: 120%;
     font-weight: bold;
     text-shadow: 0 0 1px;
     height: 18px;
 }
 
-.ferramentas ul.nav-tabs a.descr{
+div.ferramentas ul.nav-tabs a.descr{
     color: #555;
     font-size: 80%;
     height: 33px;
 }
 
-.ferramentas ul.nav-tabs li.active a, .ferramentas ul.nav-tabs a:hover{
+div.ferramentas ul.nav-tabs li.active a, div.ferramentas ul.nav-tabs a:hover{
     border: 0;
     background: none;
 }
 
-.ferramentas form{
+div.ferramentas form{
     background: #eee;
     padding: 10px
 }
 
-.ferramentas .descricao{
+div.ferramentas .descricao{
     margin: 10px 10px 10px 25.33333%;
 }

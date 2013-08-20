@@ -36,16 +36,16 @@ def ferramentas_processor(request, page):
             if certificated_key_matcher_form.is_valid():
                 try:
                     resultado = certificated_key_matcher_form.processa()
-                except Exception as e:
+                except Exception:
                     resultado = {
                         'ok': False
                     }
         elif op == 'ssl-converter':
             nomes = {
-                SSLConverterForm.STANDARD_PEM: ('certificado.cer', 'application/octet-stream'),
-                SSLConverterForm.DER_BINARY: ('certificado.der', 'application/octet-stream'),
-                SSLConverterForm.P7B_PKCS_7: ('certificado.p7b', 'application/x-pkcs7-certificates'),
-                SSLConverterForm.PFX_PKCS_12: ('certificado.p12', 'application/x-pkcs12'),
+                SSLConverterForm.STANDARD_PEM: ('%s.cer', 'application/octet-stream'),
+                SSLConverterForm.DER_BINARY: ('%s.der', 'application/octet-stream'),
+                SSLConverterForm.P7B_PKCS_7: ('%s.p7b', 'application/x-pkcs7-certificates'),
+                SSLConverterForm.PFX_PKCS_12: ('%s.p12', 'application/x-pkcs12'),
             }
 
             ssl_converter_form = SSLConverterForm(request.POST, request.FILES)
@@ -53,8 +53,10 @@ def ferramentas_processor(request, page):
                 certificado = ssl_converter_form.processa()
                 tipo = int(ssl_converter_form.cleaned_data['tipo_para_converter'])
 
+                nome = '.'.join(ssl_converter_form.cleaned_data['certificado'].name.split('.')[:-1])
+
                 response = HttpResponse(StringIO(certificado), content_type=nomes[tipo][1])
-                response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0]
+                response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0] % nome
 
                 return response
     else:
