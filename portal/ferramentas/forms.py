@@ -15,9 +15,6 @@ from hashlib import md5
 
 
 def string_to_date(valor):
-    print valor
-    print date(int(valor[:4]), int(valor[4:6]), int(valor[6:8]))
-    print '------'
     return date(int(valor[:4]), int(valor[4:6]), int(valor[6:8]))
 
 
@@ -72,8 +69,6 @@ class CSRDecoderForm(Form):
         response = requests.post('https://secure.comodo.net/products/!DecodeCSR', {
             'csr': csr
         })
-
-        print response.text
 
         d = {}
         street_index = 1
