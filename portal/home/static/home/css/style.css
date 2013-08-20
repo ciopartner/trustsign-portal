@@ -1455,15 +1455,17 @@ div.ferramentas ul.nav-tabs{
 }
 
 div.ferramentas ul.nav-tabs li{
-    background: #eee;
-    width: 24%;
-    margin-right: 1.33333%;
+    display: inline-block;
+    float: left;
+    background: #f7f7f7;
+    width: calc(25% - 2px);
+    margin-right: 2px;
     text-align: center;
-    height: 85px;
+    height: 115px;
 }
 
 div.ferramentas ul.nav-tabs li:nth-child(even){
-    background: #f5f5f5;
+    background: #f0f0f0;
 }
 
 div.ferramentas ul.nav-tabs li:last-child{
@@ -1480,17 +1482,24 @@ div.ferramentas ul.nav-tabs a{
     margin: 0;
 }
 
+div.ferramentas ul.nav-tabs h4 {
+    font-family: Tahoma, Geneva, sans-serif;
+    color: #929299;
+    font-size: 100%;
+    font-weight: normal;
+    line-height: 140%;
+    height: 50px;
+    padding: 0 10px;
+}
+
 div.ferramentas ul.nav-tabs a.title{
-    font-size: 120%;
     font-weight: bold;
-    text-shadow: 0 0 1px;
     height: 18px;
 }
 
 div.ferramentas ul.nav-tabs a.descr{
     color: #555;
-    font-size: 80%;
-    height: 33px;
+    height: 65px;
 }
 
 div.ferramentas ul.nav-tabs li.active a, div.ferramentas ul.nav-tabs a:hover{
@@ -1499,10 +1508,10 @@ div.ferramentas ul.nav-tabs li.active a, div.ferramentas ul.nav-tabs a:hover{
 }
 
 div.ferramentas form{
-    background: #eee;
-    padding: 10px
+    background: #e2e2e2;
+    padding: 20px
 }
 
-div.ferramentas .descricao{
-    margin: 10px 10px 10px 25.33333%;
+div.ferramentas table{
+    margin: 20px 0;
 }

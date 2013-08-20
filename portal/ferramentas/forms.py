@@ -225,9 +225,10 @@ class SSLConverterForm(Form):
     def converte_pem_p12(self, certificado, private_key, password):
         p12 = PKCS12()
         cert = load_certificate(FILETYPE_PEM, certificado)
-        priv = load_privatekey(FILETYPE_PEM, private_key)
         p12.set_certificate(cert)
-        p12.set_privatekey(priv)
+        if private_key:
+            priv = load_privatekey(FILETYPE_PEM, private_key)
+            p12.set_privatekey(priv)
         return p12.export(password, iter=2, maciter=3)
 
     def converte_der_pem(self, certificado):

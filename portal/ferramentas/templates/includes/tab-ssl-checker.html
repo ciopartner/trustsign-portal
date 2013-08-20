@@ -1,5 +1,7 @@
 <div class="tab-pane {% if op == 'ssl-checker' or op == '' %}active{% endif %}" id="tab-ssl-checker">
     <form action="" method="POST">
+        <p>Com o SSL Checker (Verificador de SSL),  é possível identificar a presença de um certificado e
+        se ele está corretamente instalado.  Verifique cadeias intermediárias, entidades emissoras e validade do certificado.</p>
         <table>
             {{ form_ssl_checker }}
             <tr><td colspan="2"><input type="submit" class="btn btn-large"/></td></tr>
@@ -20,7 +22,4 @@
         {% endif %}
 
     </form>
-
-    <p class="descricao">Com o SSL Checker (Verificador de SSL),  é possível identificar a presença de um certificado e
-        se ele está corretamente instalado.  Verifique cadeias intermediárias, entidades emissoras e validade do certificado.</p>
 </div>

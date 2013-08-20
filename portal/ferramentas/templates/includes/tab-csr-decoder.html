@@ -1,5 +1,8 @@
 <div class="tab-pane {% if op == 'csr-decoder' %}active{% endif %}" id="tab-csr-decoder">
     <form action="" method="POST" >
+        <p>Com o CSR Decoder é possível decodificar o CSR e conferir informações necessárias para a
+        emissão, tais como organização, URL, tamanho de chave, entre outros. Evite o retrabalho e valide as informações
+        antes de encaminhar seu CSR para emissão.</p>
         <table>
             {{ form_csr_decoder }}
             <tr><td colspan="2"><input type="submit" class="btn btn-large"/></td></tr>
@@ -27,8 +30,4 @@
         {% endif %}
 
     </form>
-
-    <p class="descricao">Com o CSR Decoder é possível decodificar o CSR e conferir informações necessárias para a
-        emissão, tais como organização, URL, tamanho de chave, entre outros. Evite o retrabalho e valide as informações
-        antes de encaminhar seu CSR para emissão.</p>
 </div>

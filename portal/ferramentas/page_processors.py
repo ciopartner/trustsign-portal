@@ -2,7 +2,7 @@
 from StringIO import StringIO
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
-from portal.ferramentas.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm, CSRDecodeError
+from portal.ferramentas.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
 from portal.ferramentas.models import FerramentasPage
 
 
@@ -11,7 +11,7 @@ def ferramentas_processor(request, page):
 
     ssl_checker_form = SSLCheckerForm()
     csr_decoder_form = CSRDecoderForm()
-    certificated_key_matcher_form = CertificateKeyMatcherForm()
+    certificate_key_matcher_form = CertificateKeyMatcherForm()
     ssl_converter_form = SSLConverterForm()
     resultado = ''
 
@@ -32,10 +32,10 @@ def ferramentas_processor(request, page):
                     }
 
         elif op == 'certificate-key-matcher':
-            certificated_key_matcher_form = CertificateKeyMatcherForm(request.POST, request.FILES)
-            if certificated_key_matcher_form.is_valid():
+            certificate_key_matcher_form = CertificateKeyMatcherForm(request.POST, request.FILES)
+            if certificate_key_matcher_form.is_valid():
                 try:
-                    resultado = certificated_key_matcher_form.processa()
+                    resultado = certificate_key_matcher_form.processa()
                 except Exception:
                     resultado = {
                         'ok': False
@@ -67,6 +67,6 @@ def ferramentas_processor(request, page):
         'resultado': resultado,
         'form_ssl_checker': ssl_checker_form,
         'form_csr_decoder': csr_decoder_form,
-        'form_certificated_key_matcher': certificated_key_matcher_form,
+        'form_certificate_key_matcher': certificate_key_matcher_form,
         'form_ssl_converter': ssl_converter_form,
     }
