@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from Crypto.Util import asn1
 from datetime import date
 from os import popen2
@@ -9,7 +10,7 @@ import OpenSSL
 from OpenSSL.crypto import load_certificate, FILETYPE_PEM, dump_certificate, FILETYPE_ASN1, load_pkcs12, PKCS12, dump_privatekey, load_privatekey
 from django.core.exceptions import ValidationError
 from django.core.files.temp import NamedTemporaryFile
-from django.forms import Form, CharField, HiddenInput, Textarea, FileField, ChoiceField, PasswordInput
+from django.forms import Form, CharField, HiddenInput, Textarea, FileField, ChoiceField, PasswordInput, TextInput
 import requests
 from hashlib import md5
 
@@ -32,7 +33,7 @@ class SSLCheckerError(Exception):
 
 class SSLCheckerForm(Form):
 
-    url = CharField()
+    url = CharField(label='URL', widget=TextInput(attrs={'class': 'span5'}))
     operation = CharField(widget=HiddenInput, initial='ssl-checker')
 
     def processa(self):
@@ -61,7 +62,7 @@ class CSRDecodeError(Exception):
 
 class CSRDecoderForm(Form):
 
-    csr = CharField(widget=Textarea)
+    csr = CharField(label='CSR', widget=Textarea(attrs={'class': 'span5'}))
     operation = CharField(widget=HiddenInput, initial='csr-decoder')
 
     def processa(self):
@@ -92,7 +93,7 @@ class CSRDecoderForm(Form):
 class CertificateKeyMatcherForm(Form):
 
     certificado = FileField()
-    private_key = FileField()
+    private_key = FileField(label='Chave Privada')
     operation = CharField(widget=HiddenInput, initial='certificate-key-matcher')
 
     def processa(self):
@@ -143,9 +144,9 @@ class SSLConverterForm(Form):
     )
 
     certificado = FileField()
-    private_key = FileField(required=False)
-    tipo_atual = ChoiceField(choices=TIPO_CHOICES)
-    tipo_para_converter = ChoiceField(choices=TIPO_CHOICES)
+    private_key = FileField(required=False, label='Chave Privada')
+    tipo_atual = ChoiceField(choices=TIPO_CHOICES, label='Formato Entrada')
+    tipo_para_converter = ChoiceField(choices=TIPO_CHOICES, label='Formato Saída')
     pfx_password = CharField(widget=PasswordInput, required=False)
     operation = CharField(widget=HiddenInput, initial='ssl-converter')
 
@@ -154,7 +155,7 @@ class SSLConverterForm(Form):
         tipo_para_converter = self.cleaned_data['tipo_para_converter']
 
         if tipo_atual == tipo_para_converter:
-            raise ValidationError(u'Os tipos precisam ser diferentes')
+            raise ValidationError('Os tipos precisam ser diferentes')
 
         return self.cleaned_data
 

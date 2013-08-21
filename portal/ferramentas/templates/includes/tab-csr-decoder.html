@@ -1,33 +1,35 @@
 <div class="tab-pane {% if op == 'csr-decoder' %}active{% endif %}" id="tab-csr-decoder">
     <form action="" method="POST" >
-        <p>Com o CSR Decoder é possível decodificar o CSR e conferir informações necessárias para a
-        emissão, tais como organização, URL, tamanho de chave, entre outros. Evite o retrabalho e valide as informações
-        antes de encaminhar seu CSR para emissão.</p>
-        <table>
-            {{ form_csr_decoder }}
-            <tr><td colspan="2"><input type="submit" class="btn btn-large"/></td></tr>
-        </table>
-        {% csrf_token %}
-
-        {% if resultado and op == 'csr-decoder' %}
-            {% if resultado.ok %}
-                <p><b>Common Name:</b> {{ resultado.CN }}</p>
-                <p><b>Organizational Unit Name:</b> {{ resultado.OU }}</p>
-                <p><b>Organization Name:</b> {{ resultado.O }}</p>
-                <p><b>Post Office Box:</b> {{ resultado.POBox }}</p>
-                <p><b>Street Address 1:</b> {{ resultado.STREET1 }}</p>
-                <p><b>Street Address 2:</b> {{ resultado.STREET2 }}</p>
-                <p><b>Street Address 3:</b> {{ resultado.STREET3 }}</p>
-                <p><b>Locality Name:</b> {{ resultado.L }}</p>
-                <p><b>State or Province Name:</b> {{ resultado.S }}</p>
-                <p><b>Postal Code:</b> {{ resultado.PostalCode }}</p>
-                <p><b>Country Name:</b> {{ resultado.C }}</p>
-                <p><b>Email Address:</b> {{ resultado.Email }}</p>
-                <p><b>Telephone Number:</b> {{ resultado.Phone }}</p>
-            {% else %}
-                <p>{{ resultado.mensagem_erro }}</p>
+        <div class="well">
+            <p>Com o CSR Decoder é possível decodificar o CSR e conferir informações necessárias para a
+            emissão, tais como organização, URL, tamanho de chave, entre outros. Evite o retrabalho e valide as informações
+            antes de encaminhar seu CSR para emissão.</p>
+            <table>
+                {{ form_csr_decoder }}
+                <tr><td colspan="2"><input type="submit" class="btn btn-large pull-right"/></td></tr>
+            </table>
+            {% csrf_token %}
+        </div>
+        <div class="well">
+            {% if resultado and op == 'csr-decoder' %}
+                {% if resultado.ok %}
+                    <p><b>Common Name:</b> {{ resultado.CN }}</p>
+                    <p><b>Organizational Unit Name:</b> {{ resultado.OU }}</p>
+                    <p><b>Organization Name:</b> {{ resultado.O }}</p>
+                    <p><b>Post Office Box:</b> {{ resultado.POBox }}</p>
+                    <p><b>Street Address 1:</b> {{ resultado.STREET1 }}</p>
+                    <p><b>Street Address 2:</b> {{ resultado.STREET2 }}</p>
+                    <p><b>Street Address 3:</b> {{ resultado.STREET3 }}</p>
+                    <p><b>Locality Name:</b> {{ resultado.L }}</p>
+                    <p><b>State or Province Name:</b> {{ resultado.S }}</p>
+                    <p><b>Postal Code:</b> {{ resultado.PostalCode }}</p>
+                    <p><b>Country Name:</b> {{ resultado.C }}</p>
+                    <p><b>Email Address:</b> {{ resultado.Email }}</p>
+                    <p><b>Telephone Number:</b> {{ resultado.Phone }}</p>
+                {% else %}
+                    <p>{{ resultado.mensagem_erro }}</p>
+                {% endif %}
             {% endif %}
-        {% endif %}
-
+        </div>
     </form>
 </div>
