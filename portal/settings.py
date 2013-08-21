@@ -187,6 +187,7 @@ INSTALLED_APPS = (
     "home",
     "ferramentas",
     "products",
+    "melhor_solucao",
 )
 
 # List of processors used by RequestContext to populate the context.

@@ -1,0 +1,74 @@
+{% extends 'pages/page.html' %}
+
+{% block title %}O especialista TrustSign orienta você a encontrar a melhor solução para seu negócio{% endblock %}
+
+{% block one_row %}
+
+    <p>Você pode voltar a qualquer pergunta a qualquer momento, clicando na pergunta desejada</p>
+
+    <div class="tabbable tabs-melhor-solucao">
+
+
+
+        <ul class="nav nav-tabs perguntas ativa-1">
+            <li class="pergunta-1"><a href="#tab-pergunta-1" data-toggle="tab"><b>JÁ TEM UM SITE?</b><i></i></a><span></span></li>
+            <li class="pergunta-2"><a href="#tab-pergunta-2" data-toggle="tab"><b>SERÁ UM E-COMMERCE?</b><i></i></a><span></span></li>
+            <li class="pergunta-3"><a href="#tab-pergunta-3" data-toggle="tab"><b>SERÁ UM WEBMAIL?</b><i></i></a><span></span></li>
+            <li class="pergunta-4"><a href="#tab-pergunta-4" data-toggle="tab"><b>SERÁ UMA APLICAÇÂO WEB?</b><i></i></a><span></span></li>
+            <li class="pergunta-5"><a href="#tab-pergunta-5" data-toggle="tab"><b>SERÁ ASSINATURA DE CÓDIGO?</b><i></i></a><span></span></li>
+            <li class="pergunta-final hidden"><a href="#tab-final" data-toggle="tab"></a></li>
+            <li class="linha-pergunta-bg"><div class="linha-pergunta-concluida"></div></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-pergunta-1">
+                <div class="pergunta">
+                    <p>JÁ TEM UM SITE?</p>
+                    <a class="btn btn-large">SIM</a>
+                    <a class="btn btn-large">NÃO</a>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab-pergunta-2">
+                <div class="pergunta">
+                    <p>SERÁ UM E-COMMERCE?</p>
+                    <a class="btn btn-large">SIM</a>
+                    <a class="btn btn-large">NÃO</a>
+                </div>
+                <div class="resposta">
+                    SSL, EV, Site + seguro
+                </div>
+            </div>
+            <div class="tab-pane" id="tab-pergunta-3">
+                <div class="pergunta">
+                    <p>SERÁ UM WEBMAIL?</p>
+                    <a class="btn btn-large">SIM</a>
+                    <a class="btn btn-large">NÃO</a>
+                </div>
+                <div class="resposta">
+                    SSL, SAN SSL
+                </div>
+            </div>
+            <div class="tab-pane" id="tab-pergunta-4">
+                <div class="pergunta">
+                    <p>SERÁ UMA APLICAÇÂO WEB?</p>
+                    <a class="btn btn-large">SIM</a>
+                    <a class="btn btn-large">NÃO</a>
+                </div>
+                <div class="resposta">SSL, EV, MDC, EV MDC, WILDCARD, SITE+SEGURO</div>
+            </div>
+            <div class="tab-pane" id="tab-pergunta-5">
+                <div class="pergunta">
+                    <p>SERÁ ASSINATURA DE CÓDIGO?</p>
+                    <a class="btn btn-large">SIM</a>
+                    <a class="btn btn-large">NÃO</a>
+                </div>
+                <div class="resposta-sim"></div>
+                <div class="resposta-nao"></div>
+            </div>
+            <div class="tab-pane" id="tab-final">
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
