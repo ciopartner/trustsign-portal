@@ -1509,6 +1509,7 @@ div.ferramentas ul.nav-tabs li.active a, div.ferramentas ul.nav-tabs a:hover{
 
 div.ferramentas table{
     margin: 20px 0;
+    text-align: left;
 }
 
 div.ferramentas .well{
