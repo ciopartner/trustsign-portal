@@ -12,12 +12,22 @@
         <div class="well">
             {% if resultado and op == 'ssl-checker' %}
                 {% if resultado.ok %}
-                    <p>{{ form_ssl_checker.url.value }} resolve para {{ resultado.server_ip }}</p>
-            {#        <p>Tipo do servidor: {{ resultado.server_type }}</p>#}
-                    {% if resultado.chain_isTrusted_mozilla == 'Y' and resultado.chain_isTrusted_microsoft == 'Y' %}
-                        <p>O certificado deve ser confiável por todos os principais navegadores.</p>
-                    {% endif %}
-                    <p>O certificado expira em {{ resultado.expira_em }} dias.</p>
+                    <p><b>Valid To:</b> {{ resultado.cert_validity_notAfter}}</p>
+                    <p><b>Key Size:</b> {{ resultado.cert_key_size }}</p>
+                    <p><b>Signature Algorithm:</b> {{ resultado.cert_signature_hash_algorithm }} / {{ resultado.cert_signature_key_algorithm }}</p>
+                    <p><b>Site Listed:</b> {{ resultado.site_listed }}</p>
+                    <p><b>Trusted:</b> {% if resultado.chain_isTrusted_mozilla == 'Y' and resultado.chain_isTrusted_microsoft == 'Y' %}Yes{% else %}No{% endif %}</p>
+
+                    <hr>
+
+                    <p><b>Subject DN:</b> <br> {{ resultado.cert_subject_DN|linebreaksbr }}</p>
+
+                    <hr>
+
+                    <p><b>Issuer Company:</b> {{ resultado.cert_issuer_O }}</p>
+                    <p><b>Issuer DN:</b> <br> {{ resultado.cert_issuer_DN|linebreaksbr }}</p>
+
+                    <p><b>SANS:</b> {{ resultado.cert_sans }}</p>
                 {% else %}
                     <p>Não foi encontrado certificado SSL em {{ form_ssl_checker.url.value }}. Tenha certeza que a url está correta e que a porta SSL está aberta no firewall.</p>
                 {% endif %}
