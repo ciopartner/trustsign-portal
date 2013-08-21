@@ -700,7 +700,7 @@ img.size-thumbnail{
 }
 
 .header2-text .atendimento-email{
-    width: 230px;
+    width: 230px!important;
     font-size: 99%; /* tava quebrando no firefox */
 }
 
@@ -1596,7 +1596,6 @@ div.ferramentas select{
 
 .perguntas li a b{
     display: inline-block;
-    width: 135px;
     height: 40px;
 }
 
@@ -1606,7 +1605,8 @@ div.ferramentas select{
     display: block;
     border-radius: 50px;
     background: #eee;
-    margin: 0 auto
+    margin: 0 auto;
+    transition: background 1.5s;
 }
 
 .linha-pergunta-bg{
@@ -1616,12 +1616,14 @@ div.ferramentas select{
     background: #eee;
     top: 63px;
     left: 38px;
+    z-index: -1;
 }
 
 .linha-pergunta-concluida{
     background: #aaa;
     width: 13%;
     height: 5px;
+    transition: width 1s;
 }
 
 .perguntas.ativa-1 .pergunta-2 b,
@@ -1670,3 +1672,18 @@ div.ferramentas select{
 {background: #aaa}
 .perguntas.ativa-5 .linha-pergunta-concluida
 {width: 100%}
+
+#tab-final .span3{
+    width: 214px;
+    font-size: 90%;
+}
+
+.resposta .span5 div{
+    margin-top: 30px;
+}
+
+h3.title{
+    margin-top: 30px;
+    font-weight: bold;
+    line-height: 110%;
+}
