@@ -27,6 +27,11 @@ def altera_datas(d, chaves):
         d[k] = string_to_date(d[k])
 
 
+def url_parse(url):
+    resultado = urlparse.parse_qs(urllib.unquote(url))  # transforma em um dict os dados recebidos
+    return dict((k, v[0])for k, v in resultado.iteritems())  # tira os valores da lista
+
+
 class SSLCheckerError(Exception):
     pass
 
@@ -42,15 +47,26 @@ class SSLCheckerForm(Form):
         response = requests.post('https://secure.comodo.com/sslchecker', {
             'url': url
         })
-        resultado = urlparse.parse_qs(urllib.unquote(response.text))  # transforma em um dict os dados recebidos
-        resultado = dict((k, v[0])for k, v in resultado.iteritems())  # tira os valores da lista
+        resultado = url_parse(response.text)
 
         resultado['ok'] = ok = int(resultado.get('error_code', 0)) == 0
         if ok:
             altera_datas(resultado, ('cert_validity_notBefore', 'cert_validity_notAfter', ))
             resultado['expira_em'] = (resultado['cert_validity_notAfter'] - date.today()).days
-            resultado['hostname_listado'] = url in resultado.get('cert_san_1_dNSName') or url in resultado.get('cert_san_2_dNSName')
 
+
+            resultado['cert_subject_DN'] = urllib.unquote(resultado['cert_subject_DN']).replace('\\r\\n', '\r\n')
+            resultado['cert_issuer_DN'] = urllib.unquote(resultado['cert_issuer_DN']).replace('\\r\\n', '\r\n')
+        sans = []
+        site_listed = False
+        for k, v in resultado.iteritems():
+            if k.startswith('cert_san_'):
+                if url == v:
+                    site_listed = True
+                sans.append(v)
+
+        resultado['cert_sans'] = ', '.join(sans)
+        resultado['site_listed'] = site_listed
         return resultado
 
 
@@ -68,12 +84,15 @@ class CSRDecoderForm(Form):
     def processa(self):
         csr = self.cleaned_data['csr']
         response = requests.post('https://secure.comodo.net/products/!DecodeCSR', {
-            'csr': csr
+            'csr': csr,
+            'showKeySize': 'Y',
+            'showCSRHashes': 'Y',
         })
 
         d = {}
         street_index = 1
         linhas = response.text.splitlines()
+
         # erro -13 e quando o certificado esta incompleto, mas da pra exibir alguns campos mesmo assim
         erros = [linhas[i + 1] for i in range(int(linhas[0])) if not linhas[i + 1].startswith('-13')]
         d['ok'] = not erros
@@ -85,7 +104,11 @@ class CSRDecoderForm(Form):
                 if key == 'STREET':  # tem 3 STREET na resposta
                     key = '%s%d' % (key, street_index)
                     street_index += 1
-                d[key] = value
+                d[key.replace(' ', '')] = value
+
+        print d.get('CN'), d.get('O'), d.get('L'), d.get('ST'), d.get('C')
+
+        d['subject_ok'] = d.get('CN') and d.get('O') and d.get('L') and d.get('S') and d.get('C')
 
         return d
 

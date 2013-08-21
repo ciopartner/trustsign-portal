@@ -13,6 +13,10 @@
         <div class="well">
             {% if resultado and op == 'csr-decoder' %}
                 {% if resultado.ok %}
+                    <p><b>Signature:</b> valid</p>
+                    <p><b>Key Size:</b> {{ resultado.KeySize }}</p>
+                    <p><b>Subject</b>: {% if resultado.subject_ok %}Does not contain empty values{% else %}Does contain empty values{% endif %}</p>
+                    <hr>
                     <p><b>Common Name:</b> {{ resultado.CN }}</p>
                     <p><b>Organizational Unit Name:</b> {{ resultado.OU }}</p>
                     <p><b>Organization Name:</b> {{ resultado.O }}</p>
@@ -27,7 +31,7 @@
                     <p><b>Email Address:</b> {{ resultado.Email }}</p>
                     <p><b>Telephone Number:</b> {{ resultado.Phone }}</p>
                 {% else %}
-                    <p>{{ resultado.mensagem_erro }}</p>
+                    <p>O CSR possui uma assinatura inválida.</p>
                 {% endif %}
             {% endif %}
         </div>
