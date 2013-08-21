@@ -1,20 +1,16 @@
 <div class="tab-pane {% if op == 'ssl-converter' %}active{% endif %}" id="tab-ssl-converter">
     <form action="" method="POST" enctype='multipart/form-data'>
-        <p>Com o SSL Converter é possível alterar o tipo de arquivo do certificado. Faça exportações de
-        forma rápida e simples e em todos os ambientes desejados.</p>
-        <table>
-            {{ form_ssl_converter }}
-            <tr><td colspan="2"><input type="submit" class="btn btn-large"/></td></tr>
-        </table>
-        {% csrf_token %}
+        <div class="well">
+            <p>Com o SSL Converter é possível alterar o tipo de arquivo do certificado. Faça exportações de
+            forma rápida e simples e em todos os ambientes desejados.</p>
+            <table>
+                {{ form_ssl_converter }}
+                <tr><td colspan="2"><input type="submit" class="btn btn-large pull-right"/></td></tr>
+            </table>
+            {% csrf_token %}
+        </div>
+        <div class="well">
 
-    {% if resultado and op == 'ssl-converter' %}
-        {% if resultado.ok %}
-            <div>Resultado:<br> {{ resultado }}</div>
-        {% else %}
-            <p>{{ resultado.mensagem_erro }}</p>
-        {% endif %}
-    {% endif %}
-
+        </div>
     </form>
 </div>

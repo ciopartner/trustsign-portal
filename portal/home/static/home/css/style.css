@@ -1507,13 +1507,23 @@ div.ferramentas ul.nav-tabs li.active a, div.ferramentas ul.nav-tabs a:hover{
     background: none;
 }
 
-div.ferramentas form{
-    background: #e2e2e2;
-    padding: 20px
-}
-
 div.ferramentas table{
     margin: 20px 0;
+}
+
+div.ferramentas .well{
+    margin: 0;
+    width: 429px;
+    float:left;
+    min-height: 385px;
+}
+
+div.ferramentas .well:last-child{
+    float:right;
+}
+
+div.ferramentas select{
+    width: 300px;
 }
 
 /*   PÁGINA 404   */

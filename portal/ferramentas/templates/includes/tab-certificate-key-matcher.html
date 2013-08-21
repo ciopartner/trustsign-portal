@@ -1,26 +1,28 @@
 <div class="tab-pane {% if op == 'certificate-key-matcher' %}active{% endif %}" id="tab-certificate-key-matcher">
     <form action="" method="POST" enctype='multipart/form-data'>
-        <p>Com o Certificate Key Matcher é possível validar a chave privada correspondente de um
-        certificado digital. Ferramenta útil para quem possui muitos certificados instalados em um mesmo diretório.</p>
-        <table>
-            {{ form_certificate_key_matcher }}
-            <tr><td colspan="2"><input type="submit" class="btn btn-large"/></td></tr>
-        </table>
-        {% csrf_token %}
-
-        {% if resultado and op == 'certificate-key-matcher' %}
-            {% if resultado.ok %}
-                {% if resultado.match %}
-                    <p>O certificado e a private key combinam!</p>
+        <div class="well">
+            <p>Com o Certificate Key Matcher é possível validar a chave privada correspondente de um
+            certificado digital. Ferramenta útil para quem possui muitos certificados instalados em um mesmo diretório.</p>
+            <table>
+                {{ form_certificate_key_matcher }}
+                <tr><td colspan="2"><input type="submit" class="btn btn-large pull-right"/></td></tr>
+            </table>
+            {% csrf_token %}
+        </div>
+        <div class="well">
+            {% if resultado and op == 'certificate-key-matcher' %}
+                {% if resultado.ok %}
+                    {% if resultado.match %}
+                        <p>O certificado e a private key combinam!</p>
+                    {% else %}
+                        <p>O certificado e a private key não combinam!</p>
+                    {% endif %}
+                    <p><b>Hash do modulus do certificado:</b> {{ resultado.modulus_certificado }}</p>
+                    <p><b>Hash do modulus da private key:</b> {{ resultado.modulus_key }}</p>
                 {% else %}
-                    <p>O certificado e a private key não combinam!</p>
+                    <p>Ocorreu um erro durante o processamento.</p>
                 {% endif %}
-                <p><b>Hash do modulus do certificado:</b> {{ resultado.modulus_certificado }}</p>
-                <p><b>Hash do modulus da private key:</b> {{ resultado.modulus_key }}</p>
-            {% else %}
-                <p>Ocorreu um erro durante o processamento.</p>
             {% endif %}
-        {% endif %}
-
+        </div>
     </form>
 </div>
