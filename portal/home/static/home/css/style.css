@@ -700,7 +700,7 @@ img.size-thumbnail{
 }
 
 .header2-text .atendimento-email{
-    width: 230px;
+    width: 230px!important;
     font-size: 99%; /* tava quebrando no firefox */
 }
 
@@ -1551,4 +1551,139 @@ div.ferramentas select{
 
 .frame-404 img{
     margin-top: 70px;
+}
+
+/*   MELHOR SOLUÇÂO   */
+.tabs-melhor-solucao{
+    position: relative;
+    margin: 40px 10px;
+}
+
+.perguntas{
+    border: 0;
+}
+
+.perguntas li{
+    text-align: center;
+}
+
+.perguntas .pergunta-1{width: 125px}
+.perguntas .pergunta-2{width: 175px}
+.perguntas .pergunta-3{width: 145px}
+.perguntas .pergunta-4{width: 210px}
+.perguntas .pergunta-5{width: 220px; margin-right: 0}
+
+.perguntas li{
+    margin-right: 10px;
+}
+
+.perguntas li:last-child{
+    margin-right: 0;
+}
+
+.perguntas li a{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.perguntas li a:hover,
+.perguntas li.active a,
+.perguntas li.active a:hover{
+    background: transparent;
+    border: 0;
+}
+
+.perguntas li a b{
+    display: inline-block;
+    height: 40px;
+}
+
+.perguntas li i{
+    width: 50px;
+    height: 50px;
+    display: block;
+    border-radius: 50px;
+    background: #eee;
+    margin: 0 auto;
+    transition: background 1.5s;
+}
+
+.linha-pergunta-bg{
+    width: 792px;
+    height: 5px;
+    position: absolute;
+    background: #eee;
+    top: 63px;
+    left: 38px;
+    z-index: -1;
+}
+
+.linha-pergunta-concluida{
+    background: #aaa;
+    width: 13%;
+    height: 5px;
+    transition: width 1s;
+}
+
+.perguntas.ativa-1 .pergunta-2 b,
+.perguntas.ativa-1 .pergunta-3 b,
+.perguntas.ativa-1 .pergunta-4 b,
+.perguntas.ativa-1 .pergunta-5 b
+{color: #fff}
+.perguntas.ativa-1 .pergunta-1 i
+{background: #aaa}
+
+.perguntas.ativa-2 .pergunta-3 b,
+.perguntas.ativa-2 .pergunta-4 b,
+.perguntas.ativa-2 .pergunta-5 b
+{color: #fff}
+.perguntas.ativa-2 .pergunta-1 a i,
+.perguntas.ativa-2 .pergunta-2 a i
+{background: #aaa}
+.perguntas.ativa-2 .linha-pergunta-concluida
+{width: 34%}
+
+.perguntas.ativa-3 .pergunta-4 b,
+.perguntas.ativa-3 .pergunta-5 b
+{color: #fff}
+.perguntas.ativa-3 .pergunta-1 a i,
+.perguntas.ativa-3 .pergunta-2 a i,
+.perguntas.ativa-3 .pergunta-3 a i
+{background: #aaa}
+.perguntas.ativa-3 .linha-pergunta-concluida
+{width: 57%}
+
+.perguntas.ativa-4 .pergunta-5 b
+{color: #fff}
+.perguntas.ativa-4 .pergunta-1 a i,
+.perguntas.ativa-4 .pergunta-2 a i,
+.perguntas.ativa-4 .pergunta-3 a i,
+.perguntas.ativa-4 .pergunta-4 a i
+{background: #aaa}
+.perguntas.ativa-4 .linha-pergunta-concluida
+{width: 83%}
+
+.perguntas.ativa-5 .pergunta-1 a i,
+.perguntas.ativa-5 .pergunta-2 a i,
+.perguntas.ativa-5 .pergunta-3 a i,
+.perguntas.ativa-5 .pergunta-4 a i,
+.perguntas.ativa-5 .pergunta-5 a i
+{background: #aaa}
+.perguntas.ativa-5 .linha-pergunta-concluida
+{width: 100%}
+
+#tab-final .span3{
+    width: 214px;
+    font-size: 90%;
+}
+
+.resposta .span5 div{
+    margin-top: 30px;
+}
+
+h3.title{
+    margin-top: 30px;
+    font-weight: bold;
+    line-height: 110%;
 }
