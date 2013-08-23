@@ -8,7 +8,7 @@ body {
 }
 
 .breadcrumb {
-    padding: 0px 0px;
+    padding: 0 0;
     background-color: #ffffff;
 }
 
@@ -17,17 +17,17 @@ body {
     text-align: center;
 }
 .navbar .nav > li > a {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 /* Overwriting h1, h2 and h3 to make the content easy */
 h1 {
     font-family:Tahoma, Geneva, sans-serif;
-    color: rgb(0, 82, 149);
+    color: #005295;
     font-size: 170%;
     line-height: 100%;
-    letter-spacing: 0px;
+    letter-spacing: 0;
     margin-top: 10px;
 }
 
@@ -45,8 +45,8 @@ h3 {
     color: #333333;
     font-size: 120%;
     font-weight: normal;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .h1-complement {
@@ -69,6 +69,32 @@ img.size-thumbnail{
     float:left;
     padding-right: 10px;
 }
+
+.featured-thumb{
+    width: 90px;
+    float: left;
+    margin: 0 15px 15px 0;
+}
+
+.post{
+    clear: both;
+}
+
+.post h1{
+    padding-top: 15px;
+}
+
+.post h1 a{
+    color: #005295;
+}
+
+.post-description{
+    clear: both;
+}
+
+.shortbio{
+}
+
 /* END BLOG CONFIG */
 
 /*padding and margin started*/
@@ -353,7 +379,6 @@ img.size-thumbnail{
 }
 
 .content-base{
-    margin-left: 20px;
     line-height: 140%;
     font-size: 100%;
 }
@@ -444,8 +469,8 @@ img.size-thumbnail{
 }
 
 .header3-t-h{
-	padding-top:0px;
-	padding-bottom:0px;
+	padding-top:0;
+	padding-bottom:0;
 	height:105px;
 	background:#FFF;
 }
@@ -584,11 +609,6 @@ img.size-thumbnail{
     text-indent: -999em;
     z-index: 2000;
 }
-
-
-
-
-
 
 /*-------productpage started---------*/
 

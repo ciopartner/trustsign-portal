@@ -67,6 +67,13 @@
         {% endeditable %}
     {% endblock %}
 
+    {% editable blog_post.user.get_profile.bio %}
+        <div class="shortbio well">
+            <h3>Sobre o autor:</h3>
+            <p>{{ blog_post.user.get_profile.bio|linebreaksbr }}</p>
+        </div>
+    {% endeditable %}
+
     {% block blog_post_detail_keywords %}
         {% keywords_for blog_post as tags %}
         {% if tags %}

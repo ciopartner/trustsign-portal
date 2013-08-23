@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n future mezzanine_tags blog_tags keyword_tags disqus_tags %}
+{% load i18n future mezzanine_tags blog_tags keyword_tags disqus_tags static %}
 
 {% block meta_title %}{% if page %}{{ page.richtextpage.meta_title }}{% else %}{% trans "Blog" %}
 {% endif %}{% endblock %}
@@ -15,14 +15,6 @@
 {% block meta_description %}{% metablock %}
     {{ page.description }}
 {% endmetablock %}{% endblock %}
-
-{% block title %}
-    {% if page %}
-        {% editable page.title %}{{ page.title }}{% endeditable %}
-    {% else %}
-        {% trans "Blog" %}
-    {% endif %}
-{% endblock %}
 
 {% block breadcrumb_menu %}
     {#    {{ block.super }}#}
@@ -72,74 +64,55 @@
             {% endif %}
         {% endif %}
 
+
         {% for blog_post in blog_posts.object_list %}
-            {% block blog_post_list_post_title %}
-                {% editable blog_post.title %}
-                    <h2 style="clear: both; margin-top: 40px;">
-                        <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-                    </h2>
-                {% endeditable %}
-            {% endblock %}
-            {% block blog_post_list_post_metainfo %}
-                {% editable blog_post.publish_date %}
-                    <h6>
-                        {% trans "Postado por" %}:
-                        {% with blog_post.user as author %}
-                            <a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
-                        {% endwith %}
-                        {% with blog_post.category.all as categories %}
-                            {% if categories %}
-                                {% trans "em" %}
-                                {% for category in categories %}
-                                    <a href="{% url "blog_post_list_category" category.slug %}">{{ category }}</a>
-                                {% endfor %}
-                            {% endif %}
-                        {% endwith %}
-                        {#                        {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }}#}
-                        {#                            ago{% endblocktrans %}#}
-                    </h6>
-                {% endeditable %}
-            {% endblock %}
 
-            {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
-                {% block blog_post_list_post_featured_image %}
-                    <img class="featured-thumb" src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 90 90 %}">
+            <div class="post">
+                {% block blog_post_list_post_title %}
+                    {% editable blog_post.title %}
+                        <h1><a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a></h1>
+                    {% endeditable %}
                 {% endblock %}
-            {% endif %}
+                {% block blog_post_list_post_metainfo %}
+                    {% editable blog_post.publish_date %}
+                        <h6>
+                            <span class="data">{{ blog_post.publish_date|date:"d/m/Y" }}</span>
+                            {% trans "por" %}
+                            {% with blog_post.user as author %}
+                                <a href="{% url "blog_post_list_author" author %}">{{ author.get_full_name|default:author.username }}</a>
+                            {% endwith %}
+                            {% with blog_post.categories.all as categories %}
+                                {% if categories %}
+                                    | {% trans "categoria" %}
+                                    {% for category in categories %}
+                                        <a href="{% url "blog_post_list_category" category.slug %}">{{ category }}</a>
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            {#                        {% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }}#}
+                            {#                            ago{% endblocktrans %}#}
+                        </h6>
+                    {% endeditable %}
+                {% endblock %}
 
-            {% block blog_post_list_post_content %}
-                {% editable blog_post.content %}
-                    {{ blog_post.description_from_content|safe }}
-                {% endeditable %}
-            {% endblock %}
+                {% block blog_post_list_post_content %}
+                    <div class="post-description">
+                        {% if settings.BLOG_USE_FEATURED_IMAGE and blog_post.featured_image %}
+                            {% block blog_post_list_post_featured_image %}
+                                <img class="featured-thumb" src="{{ MEDIA_URL }}{% thumbnail blog_post.featured_image 90 90 %}">
+                            {% endblock %}
+                        {% endif %}
+{#                        <img class="featured-thumb" src="{% static "home/img/customers/logo-claro-chile.png" %}" height="90">#}
 
-            {% block blog_post_list_post_links %}
-                <p class="blog-list-detail">
-                    {% keywords_for blog_post as tags %}
-                    {% if tags %}
-                        {% trans "Tags" %}:
-                        {% spaceless %}
-                            {% for tag in tags %}
-                                <a href="{% url "blog_post_list_tag" tag.slug %}" class="tag">{{ tag }}</a>
-                            {% endfor %}
-                        {% endspaceless %}
-                        <br>
-                    {% endif %}
-                    <a href="{{ blog_post.get_absolute_url }}">{% trans "leia mais" %}</a>
-                    /
-                    {% if settings.COMMENTS_DISQUS_SHORTNAME %}
-                        <a href="{{ blog_post.get_absolute_url }}#disqus_thread"
-                           data-disqus-identifier="{% disqus_id_for blog_post %}">
-                            {% trans "Comentários" %}
-                        </a>
-                    {% else %}
-                        <a href="{{ blog_post.get_absolute_url }}#comments">
-                            {% blocktrans count blog_post.comments_count as comments_count %}1 comment
-                                {% plural %}{{ comments_count }} comentário{% endblocktrans %}
-                        </a>
-                    {% endif %}
-                </p>
-            {% endblock %}
+                        {% editable blog_post.content %}
+                            {{ blog_post.description_from_content|removetags:"img a"|safe }}
+                        {% endeditable %}
+                    </div>
+                {% endblock %}
+            </div>
+
+            {% if not forloop.last %}<hr>{% endif %}
         {% endfor %}
 
         {% if blog_posts %}
