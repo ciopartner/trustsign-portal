@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
 from mezzanine.pages.models import Page
 
 # The members of Page will be inherited by the Author model, such
@@ -18,7 +20,15 @@ from mezzanine.pages.models import Page
 
 
 class TrustSignProfile(models.Model):
-    user = models.OneToOneField("auth.User")
-    date_of_birth = models.DateField(blank=True)
+    user = models.OneToOneField(User)
+    date_of_birth = models.DateField(blank=True, null=True)
     bio = models.TextField(blank=True)
     tagline = models.TextField(blank=True)
+
+
+def create_profile(sender, **kwargs):
+    if kwargs["created"]:
+        profile = TrustSignProfile(user=kwargs['instance'])
+        profile.save()
+
+post_save.connect(create_profile, sender=User)
