@@ -383,6 +383,11 @@ img.size-thumbnail{
     font-size: 100%;
 }
 
+.content-base > p {
+    padding: 0 20px;
+    text-align: justify;
+}
+
 
 /*custom header started*/
 
