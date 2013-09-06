@@ -188,6 +188,8 @@ INSTALLED_APPS = (
     "ferramentas",
     "products",
     "melhor_solucao",
+    'certificados',
+    'rest_framework',
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -233,6 +235,10 @@ MIDDLEWARE_CLASSES = (
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
+
+REST_FRAMEWORK = {
+
+}
 
 #########################
 # OPTIONAL APPLICATIONS #
