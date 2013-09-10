@@ -1,10 +1,11 @@
 # coding=utf-8
 from django.forms import ModelForm, HiddenInput
 from portal.certificados.models import Emissao, Voucher
+from portal.certificados.validations import ValidateCRMHashMixin
 from portal.ferramentas.utils import get_razao_social_dominio, comparacao_fuzzy
 
 
-class EmissaoModelForm(ModelForm):
+class EmissaoModelForm(ModelForm, ValidateCRMHashMixin):
     user = None
 
     class Meta:

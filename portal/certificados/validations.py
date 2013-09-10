@@ -55,7 +55,8 @@ class ValidateCRMHashMixin(AddExcecaoMixin):
 
     def _valida_crm_hash(self, valor, fields):
         voucher = self.get_voucher(valor)
-
+        if voucher.solicitante_user != self.user and not self.user.is_superuser:
+            raise self.ValidationError('Este certificado não pertence à você')
         return valor
 
 
