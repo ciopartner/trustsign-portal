@@ -13,6 +13,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.forms import Form, CharField, HiddenInput, Textarea, FileField, ChoiceField, PasswordInput, TextInput
 import requests
 from hashlib import md5
+from portal.ferramentas.utils import decode_csr
 
 
 def string_to_date(valor):
@@ -83,34 +84,7 @@ class CSRDecoderForm(Form):
 
     def processa(self):
         csr = self.cleaned_data['csr']
-        response = requests.post('https://secure.comodo.net/products/!DecodeCSR', {
-            'csr': csr,
-            'showKeySize': 'Y',
-            'showCSRHashes': 'Y',
-        })
-
-        d = {}
-        street_index = 1
-        linhas = response.text.splitlines()
-
-        # erro -13 e quando o certificado esta incompleto, mas da pra exibir alguns campos mesmo assim
-        erros = [linhas[i + 1] for i in range(int(linhas[0])) if not linhas[i + 1].startswith('-13')]
-        d['ok'] = not erros
-
-        for linha in linhas:
-            x = linha.split('=')
-            if len(x) == 2:
-                key, value = x
-                if key == 'STREET':  # tem 3 STREET na resposta
-                    key = '%s%d' % (key, street_index)
-                    street_index += 1
-                d[key.replace(' ', '')] = value
-
-        print d.get('CN'), d.get('O'), d.get('L'), d.get('ST'), d.get('C')
-
-        d['subject_ok'] = d.get('CN') and d.get('O') and d.get('L') and d.get('S') and d.get('C')
-
-        return d
+        return decode_csr(csr)
 
 
 class CertificateKeyMatcherForm(Form):

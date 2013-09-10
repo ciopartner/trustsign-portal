@@ -3,24 +3,51 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField
+from django.db.models.signals import pre_save
+import knu
 
 User = get_user_model()
 
 
 class Voucher(Model):
+    #TODO: verificar a relação dos códigos e definir codigo produto s+s e sm
+    PRODUTO_SITE_SEGURO = 99999
+    PRODUTO_SITE_MONITORADO = 88888
+    PRODUTO_SSL = 488
+    PRODUTO_SSL_WILDCARD = 489
+    PRODUTO_SAN_UCC = 492
+    PRODUTO_EV = 337
+    PRODUTO_EV_MDC = 410
+    PRODUTO_TRIAL = 43
+    PRODUTO_MDC = 335
     PRODUTO_CHOICES = (
-        (488, 'SSL'),
-        (489, 'SSL Wildcard'),
-        (492, 'SAN UCC'),
-        (337, 'EV'),
-        (410, 'EV MDC'),
-        (43, 'Trial'),
-        (335, 'MDC')
+        (PRODUTO_SITE_SEGURO, 'Site + Seguro'),
+        (PRODUTO_SITE_MONITORADO, 'Site Monitorado'),
+        (PRODUTO_SSL, 'SSL'),
+        (PRODUTO_SSL_WILDCARD, 'SSL Wildcard'),
+        (PRODUTO_SAN_UCC, 'SAN UCC'),
+        (PRODUTO_EV, 'EV'),
+        (PRODUTO_EV_MDC, 'EV MDC'),
+        (PRODUTO_TRIAL, 'Trial'),
+        (PRODUTO_MDC, 'MDC')
     )
+
+    LINHA_BASIC = 1
+    LINHA_PRO = 2
+    LINHA_PRIME = 3
+    LINHA_CHOICES = (
+        (LINHA_BASIC, 'Basic'),
+        (LINHA_PRO, 'Pro'),
+        (LINHA_PRIME, 'Prime'),
+    )
+
+    PERIODO_ANUAL = 1
+    PERIODO_BIANUAL = 2
+    PERIODO_TRIANUAL = 3
     PERIODO_CHOICES = (
-        (1, '1 ano'),
-        (2, '2 anos'),
-        (3, '3 anos'),
+        (PERIODO_ANUAL, 'Anual'),
+        (PERIODO_BIANUAL, 'Bianual'),
+        (PERIODO_TRIANUAL, 'Trianual'),
     )
 
     crm_hash = CharField(max_length=128)
@@ -45,6 +72,7 @@ class Voucher(Model):
 
     ssl_url = CharField(max_length=200, blank=True, null=True)
     ssl_produto = IntegerField(choices=PRODUTO_CHOICES)
+    ssl_linha = IntegerField(choices=LINHA_CHOICES)
     ssl_periodo = IntegerField(choices=PERIODO_CHOICES)
     ssl_valido_de = DateTimeField(blank=True, null=True)
     ssl_valido_ate = DateTimeField(blank=True, null=True)
@@ -164,4 +192,23 @@ class Emissao(Model):
 class Revogacao(Model):
     crm_hash = CharField(max_length=128)
     emissao = ForeignKey(Emissao, related_name='revogacoes')
-    motivo = TextField()
+    revogacao_motivo = TextField()
+
+
+def pedido_consulta_knu(sender, instance, **kwargs):
+    if not instance.pk and instance.cliente_cnpj:  # pk = None significa que vai inserir o voucher
+        r = knu.receitaCNPJ(instance.cliente_cnpj)
+        if r.erro == 0:
+            instance.cliente_razaosocial = r.nome_empresarial
+            instance.cliente_cep = r.cep
+            instance.cliente_logradouro = r.logradouro
+            instance.cliente_numero = r.numero
+            instance.cliente_complemento = r.complemento
+            instance.cliente_bairro = r.bairro
+            instance.cliente_cidade = r.municipio
+            instance.cliente_uf = r.uf
+            instance.cliente_pais = 'Brasil'
+        else:
+            raise Exception('Ocorreu um erro ao consultar seu CNPJ: %s' % r.desc_erro)
+
+# pre_save.connect(pedido_consulta_knu, sender=Pedido)
