@@ -66,10 +66,13 @@ class Voucher(Model):
     cliente_pais = CharField(max_length=64)
 
     cliente_situacao_cadastral = CharField(max_length=128)
+    cliente_callback_tratamento = CharField(max_length=8)
     cliente_callback_nome = CharField(max_length=128)
+    cliente_callback_sobrenome = CharField(max_length=128)
     cliente_callback_email = EmailField()
     cliente_callback_telefone = CharField(max_length=16)
-    contato_observacao = CharField(max_length=128)
+    cliente_callback_username = CharField(max_length=32)
+    cliente_callback_observacao = CharField(max_length=128)
 
     ssl_url = CharField(max_length=200, blank=True, null=True)
     ssl_produto = IntegerField(choices=PRODUTO_CHOICES)
