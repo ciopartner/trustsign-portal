@@ -1,0 +1,16 @@
+.emissao table{
+    width: 100%;
+}
+
+.emissao th{
+    vertical-align: top;
+    text-align: left;
+}
+
+.emissao td{
+    text-align: right;
+}
+
+.emissao input[type=text]{
+    width: 270px;
+}

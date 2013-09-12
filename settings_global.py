@@ -37,14 +37,14 @@ USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "pt-BR"
+LANGUAGE_CODE = "pt_BR"
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "199dea65-51c5-4ded-9b3d-eb95f22878bb4b9286f0-db7f-4dda-8b1b-8a32faa6aee9f8cd3ea6-cdee-48ef-a813-042d4b1b3e68"

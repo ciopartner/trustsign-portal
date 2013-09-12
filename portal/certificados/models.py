@@ -11,16 +11,17 @@ User = get_user_model()
 
 
 class Voucher(Model):
-    #TODO: verificar a relação dos códigos e definir codigo produto s+s e sm
-    PRODUTO_SITE_SEGURO = 99999
-    PRODUTO_SITE_MONITORADO = 88888
-    PRODUTO_SSL = 488
-    PRODUTO_SSL_WILDCARD = 489
-    PRODUTO_SAN_UCC = 492
-    PRODUTO_EV = 337
-    PRODUTO_EV_MDC = 410
-    PRODUTO_TRIAL = 43
-    PRODUTO_MDC = 335
+    PRODUTO_SITE_SEGURO = 'site-seguro'
+    PRODUTO_SITE_MONITORADO = 'site-monitorado'
+    PRODUTO_SSL = 'ssl'
+    PRODUTO_SSL_WILDCARD = 'ssl-wildcard'
+    PRODUTO_SAN_UCC = 'ssl-san'
+    PRODUTO_EV = 'ssl-ev'
+    PRODUTO_EV_MDC = 'ssl-ev-mdc'
+    PRODUTO_MDC = 'ssl-mdc'
+    PRODUTO_JRE = 'ssl-jre',
+    PRODUTO_CODE_SIGNING = 'ssl-cs'
+    PRODUTO_SMIME = 'ssl-smime'
     PRODUTO_CHOICES = (
         (PRODUTO_SITE_SEGURO, 'Site + Seguro'),
         (PRODUTO_SITE_MONITORADO, 'Site Monitorado'),
@@ -29,26 +30,36 @@ class Voucher(Model):
         (PRODUTO_SAN_UCC, 'SAN UCC'),
         (PRODUTO_EV, 'EV'),
         (PRODUTO_EV_MDC, 'EV MDC'),
-        (PRODUTO_TRIAL, 'Trial'),
-        (PRODUTO_MDC, 'MDC')
+        (PRODUTO_MDC, 'MDC'),
+        (PRODUTO_JRE, 'JRE'),
+        (PRODUTO_CODE_SIGNING, 'MDC'),
+        (PRODUTO_SMIME, 'MDC'),
     )
 
-    LINHA_BASIC = 1
-    LINHA_PRO = 2
-    LINHA_PRIME = 3
+    LINHA_DEGUSTACAO = 'free'
+    LINHA_BASIC = 'basic'
+    LINHA_PRO = 'pro'
+    LINHA_PRIME = 'prime'
     LINHA_CHOICES = (
+        (LINHA_DEGUSTACAO, 'Degustação'),
         (LINHA_BASIC, 'Basic'),
         (LINHA_PRO, 'Pro'),
         (LINHA_PRIME, 'Prime'),
     )
 
-    PERIODO_ANUAL = 1
-    PERIODO_BIANUAL = 2
-    PERIODO_TRIANUAL = 3
-    PERIODO_CHOICES = (
-        (PERIODO_ANUAL, 'Anual'),
-        (PERIODO_BIANUAL, 'Bianual'),
-        (PERIODO_TRIANUAL, 'Trianual'),
+    VALIDADE_ANUAL = '1y'
+    VALIDADE_BIANUAL = '2y'
+    VALIDADE_TRIANUAL = '3y'
+    VALIDADE_ASSINATURA_MENSAL = 'a1m'
+    VALIDADE_ASSINATURA_SEMESTRAL = 'a6m'
+    VALIDADE_ASSINATURA_ANUAL = 'a12m'
+    VALIDADE_CHOICES = (
+        (VALIDADE_ANUAL, 'Anual'),
+        (VALIDADE_BIANUAL, 'Bianual'),
+        (VALIDADE_TRIANUAL, 'Trianual'),
+        (VALIDADE_ASSINATURA_MENSAL, 'Assinatura Mensal'),
+        (VALIDADE_ASSINATURA_SEMESTRAL, 'Assinatura Semestral'),
+        (VALIDADE_ASSINATURA_ANUAL, 'Assinatura Anual'),
     )
 
     crm_hash = CharField(max_length=128)
@@ -64,26 +75,23 @@ class Voucher(Model):
     cliente_cidade = CharField(max_length=64)
     cliente_uf = CharField(max_length=2)
     cliente_pais = CharField(max_length=64)
-
     cliente_situacao_cadastral = CharField(max_length=128)
+
     cliente_callback_tratamento = CharField(max_length=8)
     cliente_callback_nome = CharField(max_length=128)
     cliente_callback_sobrenome = CharField(max_length=128)
     cliente_callback_email = EmailField()
     cliente_callback_telefone = CharField(max_length=16)
-    cliente_callback_username = CharField(max_length=32)
+    cliente_callback_username = CharField(max_length=32, blank=True, null=True)
     cliente_callback_observacao = CharField(max_length=128)
 
     ssl_url = CharField(max_length=200, blank=True, null=True)
-    ssl_produto = IntegerField(choices=PRODUTO_CHOICES)
-    ssl_linha = IntegerField(choices=LINHA_CHOICES)
-    ssl_periodo = IntegerField(choices=PERIODO_CHOICES)
+    ssl_produto = CharField(max_length=16, choices=PRODUTO_CHOICES)
+    ssl_linha = CharField(max_length=16, choices=LINHA_CHOICES)
+    ssl_validade = CharField(max_length=16, choices=VALIDADE_CHOICES)
     ssl_valido_de = DateTimeField(blank=True, null=True)
     ssl_valido_ate = DateTimeField(blank=True, null=True)
     ssl_publickey = TextField(blank=True, null=True)
-    ssl_certificado_tipo = CharField(max_length=32, blank=True, null=True)
-    ssl_certificado_linha = CharField(max_length=32, blank=True, null=True)
-    ssl_certificado_validade = CharField(max_length=32, blank=True, null=True)
     ssl_revogado_data = DateTimeField(blank=True, null=True)
     ssl_dominios_qtde = IntegerField(blank=True, null=True)
 
@@ -160,16 +168,27 @@ class Emissao(Model):
         (-1, 'Other'),
     )
 
+    STATUS_NAO_EMITIDO = 0
+    STATUS_EM_EMISSAO = 1
+    STATUS_ACAO_MANUAL_PENDENTE = 2
+    STATUS_EMITIDO = 3
+    STATUS_REEMITIDO = 4
+    STATUS_REVOGADO = 5
     STATUS_CHOICES = (
-        (1, 'Finalizada'),
-        (2, 'Aguardando aprovação manual'),
+        (STATUS_NAO_EMITIDO, 'Não Emitido'),
+        (STATUS_EM_EMISSAO, 'Em emissão'),
+        (STATUS_ACAO_MANUAL_PENDENTE, 'Ação manual pendente'),
+        (STATUS_EMITIDO, 'Emitido'),
+        (STATUS_REEMITIDO, 'Reemitido'),
+        (STATUS_REVOGADO, 'Revogado'),
+
     )
-    voucher = OneToOneField(Voucher, primary_key=True)
+
+    voucher = OneToOneField(Voucher, primary_key=True, related_name='emissao')
     crm_hash = CharField(max_length=128)
     comodo_order = CharField(max_length=128)
 
     solicitante_user = ForeignKey(User, related_name='emissoes')
-    solicitante_canal = CharField(max_length=64)
     solicitante_timestamp = DateTimeField(auto_now_add=True)
 
     emissao_url = CharField(max_length=256, blank=True, null=True)
@@ -189,8 +208,10 @@ class Emissao(Model):
     emissao_comprovante_endereco = FileField(upload_to='uploads/comprovantes_endereco/', blank=True, null=True)
     emissao_ccsa = FileField(upload_to='uploads/ccsas/', blank=True, null=True)  # comodo cert. subscriber agreement
     emissao_evcr = FileField(upload_to='uploads/evcrs/', blank=True, null=True)  # ev certificate request
+    emissao_conta_telefone = FileField(upload_to='uploads/conta-telefone/', blank=True, null=True)
+    emissao_doc_identificacao = FileField(upload_to='uploads/docs/', blank=True, null=True)
 
-    emissao_status = IntegerField(choices=STATUS_CHOICES)
+    emissao_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
 
 
 class Revogacao(Model):

@@ -5,7 +5,7 @@ from portal.certificados.validations import EmissaoModelSerializer, ValidateEmis
 
 
 class EmissaoNv0Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin):
-    FIELDS_REQUIRED = ('emissao_url', )
+    REQUIRED_FIELDS = ('emissao_url', )
 
     class Meta:
         model = Emissao
