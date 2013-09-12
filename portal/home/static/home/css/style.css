@@ -615,6 +615,20 @@ img.size-thumbnail{
     z-index: 2000;
 }
 
+.ytube img{
+    width: 150px;
+    height: 100px;
+}
+
+.ytube div:before{
+    position: absolute;
+    content: '';
+    background: url(../img/youtube/youtube-seta.png) center center no-repeat;
+    width: 150px;
+    height: 100px;
+    pointer-events: none;
+}
+
 /*-------productpage started---------*/
 
 .black_link a {
