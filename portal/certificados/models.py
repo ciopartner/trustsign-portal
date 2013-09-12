@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField
 from django.db.models.signals import pre_save
-import knu
+#import knu
+knu = None
 
 User = get_user_model()
 
