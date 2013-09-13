@@ -240,6 +240,14 @@ REST_FRAMEWORK = {
 
 }
 
+COMODO_LOGIN_NAME = '<mudar no local_settings.py>'
+COMODO_LOGIN_PASSWORD = '<mudar no local_settings.py>'
+COMODO_ENVIAR_COMO_TESTE = True  # enviar as requisições como teste?
+COMODO_API_EMISSAO_URL = 'https://secure.comodo.net/products/!AutoApplySSL'
+COMODO_API_REEMISSAO_URL = 'https://secure.comodo.net/products/!AutoReplaceSSL'
+COMODO_API_REVOGACAO_URL = 'https://secure.comodo.net/products/!AutoRevokeSSL'
+COMODO_API_GET_DCV_EMAILS_URL = 'https://secure.comodo.net/products/!GetDCVEmailAddressList'
+
 #########################
 # OPTIONAL APPLICATIONS #
 #########################

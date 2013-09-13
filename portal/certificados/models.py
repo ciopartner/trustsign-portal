@@ -83,7 +83,7 @@ class Voucher(Model):
     cliente_callback_email = EmailField()
     cliente_callback_telefone = CharField(max_length=16)
     cliente_callback_username = CharField(max_length=32, blank=True, null=True)
-    cliente_callback_observacao = CharField(max_length=128)
+    cliente_callback_observacao = CharField(max_length=128, blank=True, default='')
 
     ssl_url = CharField(max_length=200, blank=True, null=True)
     ssl_produto = CharField(max_length=16, choices=PRODUTO_CHOICES)
@@ -102,6 +102,9 @@ class Voucher(Model):
 
     selo_html = TextField()
     criacao_historico = BooleanField(default=False)
+
+    def __unicode__(self):
+        return '#%s (%s)' % (self.crm_hash, self.comodo_order)
 
 
 # class Pedido(Model):  # TODO: Substituir por abstract do oscar
@@ -184,7 +187,7 @@ class Emissao(Model):
 
     )
 
-    voucher = OneToOneField(Voucher, primary_key=True, related_name='emissao')
+    voucher = OneToOneField(Voucher, related_name='emissao')
     crm_hash = CharField(max_length=128)
     comodo_order = CharField(max_length=128)
 
@@ -211,7 +214,12 @@ class Emissao(Model):
     emissao_conta_telefone = FileField(upload_to='uploads/conta-telefone/', blank=True, null=True)
     emissao_doc_identificacao = FileField(upload_to='uploads/docs/', blank=True, null=True)
 
+    emissao_custo = DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
+
     emissao_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
+
+    def __unicode__(self):
+        return '#%s (%s)' % (self.crm_hash, self.comodo_order)
 
 
 class Revogacao(Model):
@@ -232,7 +240,7 @@ def pedido_consulta_knu(sender, instance, **kwargs):
             instance.cliente_bairro = r.bairro
             instance.cliente_cidade = r.municipio
             instance.cliente_uf = r.uf
-            instance.cliente_pais = 'Brasil'
+            instance.cliente_pais = 'BR'
         else:
             raise Exception('Ocorreu um erro ao consultar seu CNPJ: %s' % r.desc_erro)
 

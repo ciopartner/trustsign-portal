@@ -5,7 +5,6 @@ from datetime import date
 from os import popen2
 import os
 import urllib
-import urlparse
 import OpenSSL
 from OpenSSL.crypto import load_certificate, FILETYPE_PEM, dump_certificate, FILETYPE_ASN1, load_pkcs12, PKCS12, dump_privatekey, load_privatekey
 from django.core.exceptions import ValidationError
@@ -13,7 +12,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.forms import Form, CharField, HiddenInput, Textarea, FileField, ChoiceField, PasswordInput, TextInput
 import requests
 from hashlib import md5
-from portal.ferramentas.utils import decode_csr
+from portal.ferramentas.utils import decode_csr, url_parse
 
 
 def string_to_date(valor):
@@ -26,11 +25,6 @@ def altera_datas(d, chaves):
     """
     for k in chaves:
         d[k] = string_to_date(d[k])
-
-
-def url_parse(url):
-    resultado = urlparse.parse_qs(urllib.unquote(url))  # transforma em um dict os dados recebidos
-    return dict((k, v[0])for k, v in resultado.iteritems())  # tira os valores da lista
 
 
 class SSLCheckerError(Exception):

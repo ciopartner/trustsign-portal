@@ -2,6 +2,8 @@
 import commands
 from difflib import get_close_matches
 import re
+import urllib
+import urlparse
 import requests
 from unicodedata import normalize
 from nltk import metrics
@@ -85,3 +87,13 @@ def comparacao_fuzzy(string1, string2, max_dist=5):
     precisam ser substituidos, removidos ou adicionados de string1 para chegar em string2)
     """
     return metrics.edit_distance(remove_acentos(string1).lower(), remove_acentos(string2).lower()) <= max_dist
+
+
+def verifica_razaosocial_dominio(razao_social, emissao_url):
+    razaosocial_dominio = get_razao_social_dominio(emissao_url)
+    return razaosocial_dominio and comparacao_fuzzy(razaosocial_dominio, razao_social)
+
+
+def url_parse(url):
+    resultado = urlparse.parse_qs(urllib.unquote(url))  # transforma em um dict os dados recebidos
+    return dict((k, v[0])for k, v in resultado.iteritems())  # tira os valores da lista

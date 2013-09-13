@@ -14,3 +14,25 @@
 .emissao input[type=text]{
     width: 270px;
 }
+
+.emissao select, .emissao input[type=file]{
+    width: 284px;
+}
+
+.emissao .nome input[type=text] {
+    width: 126px;
+}
+
+.emissao th{
+    padding: 10px;
+}
+
+.emissao.th{
+    padding: 10px;
+}
+
+ul.errorlist{
+    list-style: none;
+    color: #c33;
+    font-weight: bold;
+}

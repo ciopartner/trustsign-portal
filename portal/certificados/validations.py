@@ -1,8 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from django.core.exceptions import ValidationError as ValidationErrorDjango
-from rest_framework.serializers import ModelSerializer, Serializer, ValidationError as ValidationErrorRest
-from portal.certificados.comodo import get_emails_validacao
+from rest_framework.serializers import ModelSerializer, ValidationError
+from portal.certificados.comodo import get_emails_validacao_padrao
 from portal.certificados.models import Voucher
 from portal.ferramentas.utils import decode_csr, comparacao_fuzzy, get_razao_social_dominio
 
@@ -37,31 +36,18 @@ def insere_metodos_validacao(field):
     return wrap
 
 
-class AddExcecaoMixin(object):
-    """
-    Adiciona o ValidationError correto na classe, pois o django e o djangorestframework usam diferentes classes
-    Deve ser usado: raise self.ValidationError
-    """
-    ValidationError = Exception
-    cleaned_data = None
-
-    def __init__(self, *args, **kwargs):
-        super(AddExcecaoMixin, self).__init__(**kwargs)
-        self.ValidationError = ValidationErrorRest if isinstance(self, Serializer) else ValidationErrorDjango
-
-
 @insere_metodos_validacao('crm_hash')
-class ValidateCRMHashMixin(AddExcecaoMixin):
+class ValidateCRMHashMixin(object):
 
     def _valida_crm_hash(self, valor, fields):
-        voucher = self.get_voucher(valor)
+        voucher = self.get_voucher()
         if voucher.solicitante_user != self.user and not self.user.is_superuser:
             raise self.ValidationError('Este certificado não pertence à você')
         return valor
 
 
 @insere_metodos_validacao('emissao_url')
-class ValidateEmissaoUrlMixin(AddExcecaoMixin):
+class ValidateEmissaoUrlMixin(object):
 
     def _valida_emissao_url(self, valor, fields):
         razao_social = get_razao_social_dominio(valor)
@@ -84,25 +70,25 @@ class ValidateEmissaoUrlMixin(AddExcecaoMixin):
 
 
 @insere_metodos_validacao('emissao_csr')
-class ValidateEmissaoCSRMixin(AddExcecaoMixin):
+class ValidateEmissaoCSRMixin(object):
 
     def _valida_emissao_csr(self, valor, fields):
+        csr = self.get_csr_decoded(valor)
+        url = fields.get('emissao_url', '')
+
+        if not csr['ok']:
+            raise self.ValidationError('CSR Inválida')
+
         try:
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
-            raise self.ValidationError('Voucher não encontrado.')
+            raise self.ValidationError('Voucher não encontrado')
 
-        csr = self.get_csr_decoded(valor)
-
-        if csr.get('CN') != voucher.ssl_url:
-            raise self.ValidationError('O campo Common Name(CN) deve conter o domínio: %s' % voucher.ssl_url)
+        if csr.get('CN') != url:
+            raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
 
         if not comparacao_fuzzy(csr.get('O'), voucher.cliente_razaosocial):
-            raise self.ValidationError('O campo Organization (O) deve conter a razão social: %s' % voucher.cliente_razaosocial)
-
-        email = fields.get('emissao_validacao_email')
-        if email and csr.get('Email') != email:
-            raise self.ValidationError('O campo E-mail (Email) deve conter o e-mail: %s' % email)
+            raise self.ValidationError('O campo Organization Name (O) deve conter a razão social: %s' % voucher.cliente_razaosocial)
 
         key_size = int(csr.get('KeySize'))
         if voucher.ssl_linha in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
@@ -124,12 +110,12 @@ class ValidateEmissaoCSRMixin(AddExcecaoMixin):
                         self.validacao_manual = True
                     else:
                         raise Exception('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
-                #TODO: TBD > Chamar o serviço da COMODO de e-mails válidos para validar o e-mail de confirmação enviado pela API
+            #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
         return valor
 
 
 @insere_metodos_validacao('emissao_primary_dn')
-class ValidateEmissaoPrimaryDN(AddExcecaoMixin):
+class ValidateEmissaoPrimaryDN(object):
 
     def _valida_emissao_primary_dn(self, valor, fields):
         csr = self.get_csr_decoded(fields['emissao_csr'])
@@ -139,38 +125,38 @@ class ValidateEmissaoPrimaryDN(AddExcecaoMixin):
 
 
 @insere_metodos_validacao('emissao_validacao_email')
-class ValidateEmissaoValidacaoEmail(AddExcecaoMixin):
+class ValidateEmissaoValidacaoEmail(object):
 
     def _valida_emissao_validacao_email(self, valor, fields):
-        emails = get_emails_validacao(fields['emissao_url'])
+        emails = get_emails_validacao_padrao(fields['emissao_url'])
         if valor not in emails:
             raise self.ValidationError('E-mail de validação inválido')
         return valor
 
 
 @insere_metodos_validacao('emissao_contrato_social')
-class ValidateEmissaoContratoSocial(AddExcecaoMixin):
+class ValidateEmissaoContratoSocial(object):
     def _valida_emissao_contrato_social(self, valor, fields):
         #TODO: TBD > como vai funcionar o envio de arquivos pela API
         return valor
 
 
 @insere_metodos_validacao('emissao_comprovante_endereco')
-class ValidateEmissaoComprovanteEndereco(AddExcecaoMixin):
+class ValidateEmissaoComprovanteEndereco(object):
     def _valida_emissao_comprovante_endereco(self, valor, fields):
         #TODO: TBD > como vai funcionar o envio de arquivos pela API
         return valor
 
 
 @insere_metodos_validacao('emissao_evcr')
-class ValidateEmissaoEVCR(AddExcecaoMixin):
+class ValidateEmissaoEVCR(object):
     def _valida_emissao_evcr(self, valor, fields):
         #TODO: TBD > como vai funcionar o envio de arquivos pela API
         return valor
 
 
 @insere_metodos_validacao('emissao_ccsa')
-class ValidateEmissaoCCSA(AddExcecaoMixin):
+class ValidateEmissaoCCSA(object):
     def _valida_emissao_ccsa(self, valor, fields):
         #TODO: TBD > como vai funcionar o envio de arquivos pela API
         return valor
@@ -182,18 +168,17 @@ class EmissaoModelSerializer(ModelSerializer):
     _csr_decoded = None
     _voucher = None
     user = None
+    ValidationError = ValidationError
 
-    def __init__(self, user=None, **kwargs):
+    def __init__(self, user=None, crm_hash=None, **kwargs):
         self.user = user
+        self._crm_hash = crm_hash
         super(EmissaoModelSerializer, self).__init__(**kwargs)
 
     def get_csr_decoded(self, valor):
-        if self._csr_decoded:
-            csr = self._csr_decoded
-        else:
-            csr = decode_csr(valor)
-            self._csr_decoded = csr
-        return csr
+        if not self._csr_decoded:
+            self._csr_decoded = decode_csr(valor)
+        return self._csr_decoded
 
     def get_fields(self):
         fields = super(EmissaoModelSerializer, self).get_fields()
@@ -201,7 +186,7 @@ class EmissaoModelSerializer(ModelSerializer):
             fields[f].required = True
         return fields
 
-    def get_voucher(self, crm_hash):
+    def get_voucher(self):
         if not self._voucher:
-            self._voucher = Voucher.objects.get(crm_hash=crm_hash)
+            self._voucher = Voucher.objects.get(crm_hash=self._crm_hash)
         return self._voucher

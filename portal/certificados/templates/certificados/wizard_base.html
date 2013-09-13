@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
+{% endblock %}
+
+{% block one_row %}
+    <form action="" method="POST" class="emissao">
+
+        <div class="span6">
+            {% block coluna-esquerda %}
+
+            {% endblock %}
+        </div>
+
+        <div class="span6">
+            {% block coluna-direita %}
+
+            {% endblock %}
+        </div>
+
+        {% block botoes %}
+            <input type="submit" value="Enviar" class="pull-right"/>
+
+            <input type="button" value="Voltar" class="pull-right"/>
+        {% endblock %}
+
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        {{ form.crm_hash }}
+
+    </form>
+
+{% endblock %}
