@@ -3,6 +3,9 @@ from django.conf import settings
 import requests
 from portal.ferramentas.utils import url_parse
 
+import logging
+
+log = logging.getLogger('portal.certificados.comodo')
 
 CODIGOS_PRODUTOS = {
     'ssl': 488,
@@ -15,18 +18,32 @@ CODIGOS_PRODUTOS = {
 
 
 def get_emails_validacao_padrao(dominio):
-    emails_padroes = ('admin@%s', 'webmaster@%s', 'hostmaster@%s', 'postmaster@%s', 'administrator@%s')
+    emails_padroes = ('admin@%s', 'administrator@%s', 'hostmaster@%s', 'postmaster@%s', 'webmaster@%s')
     return [e % dominio for e in emails_padroes]
+
+
+def get_emails_validacao_whois(dominio):
+    response = requests.post(settings.COMODO_API_GET_DCV_EMAILS_URL, data={
+        'loginName': settings.COMODO_LOGIN_NAME,
+        'loginPassword': settings.COMODO_LOGIN_PASSWORD,
+        'domainName': dominio
+    })
+    return [r[12:] for r in response.text.splitlines()
+            if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+
+
+def get_emails_validacao(dominio):
+    return get_emails_validacao_padrao(dominio) + get_emails_validacao_whois(dominio)
 
 
 def emite_certificado(emissao):
     voucher = emissao.voucher
 
-    if voucher.ssl_validade == voucher.VALIDADE_ANUAL:
+    if voucher.ssl_term == voucher.VALIDADE_ANUAL:
         validade = 1
-    elif voucher.ssl_validade == voucher.VALIDADE_BIANUAL:
+    elif voucher.ssl_term == voucher.VALIDADE_BIANUAL:
         validade = 2
-    elif voucher.ssl_validade == voucher.VALIDADE_TRIANUAL:
+    elif voucher.ssl_term == voucher.VALIDADE_TRIANUAL:
         validade = 3
     else:
         raise Exception('Validade inválida para emissão de certificados')
@@ -34,15 +51,15 @@ def emite_certificado(emissao):
     params = {
         'loginName': settings.COMODO_LOGIN_NAME,
         'loginPassword': settings.COMODO_LOGIN_PASSWORD,
-        'product': CODIGOS_PRODUTOS[voucher.ssl_produto],
+        'product': CODIGOS_PRODUTOS[voucher.ssl_product],
         'years': validade,
-        'serverSoftware': emissao.emissao_servidor_tipo,
-        'csr': emissao.emissao_csr,
+        'serverSoftware': emissao.emission_server_type,
+        'csr': emissao.emission_csr,
         'prioritiseCSRValues': 'N',
-        'streetAddress1': voucher.cliente_logradouro,
-        'localityName': voucher.cliente_cidade,
-        'stateOrProvinceName': voucher.cliente_uf,
-        'postalCode': voucher.cliente_cep,
+        'streetAddress1': voucher.customer_address1,
+        'localityName': voucher.customer_city,
+        'stateOrProvinceName': voucher.customer_state,
+        'postalCode': voucher.customer_zip,
         'countryName': 'BR',
         'emailAddress': 'none',
         'isCustomerValidated': 'Y',
@@ -55,19 +72,20 @@ def emite_certificado(emissao):
     }
 
     if voucher.ssl_produto in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
-        params['domainNames'] = emissao.emissao_fqdns
-        params['dcvEmailAddresses'] = emissao.emissao_validacao_email
+        params['domainNames'] = emissao.emission_fqdns
+        params['dcvEmailAddresses'] = emissao.emission_dcv_emails
     else:
-        params['dcvEmailAddress'] = emissao.emissao_validacao_email
+        params['dcvEmailAddress'] = emissao.emission_dcv_emails
 
     if voucher.ssl_produto in (voucher.PRODUTO_EV, voucher.PRODUTO_EV_MDC):
-        params['joiLocalityName'] = voucher.cliente_cidade
-        params['joiStateOrProvinceName'] = voucher.cliente_uf
+        params['joiLocalityName'] = voucher.customer_city
+        params['joiStateOrProvinceName'] = voucher.customer_state
         params['joiCountryName'] = 'BR'
 
     response = requests.post(settings.COMODO_API_EMISSAO_URL, params)
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':
+        log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
         raise Exception('Ocorreu um erro na chamada da COMODO')
     return r

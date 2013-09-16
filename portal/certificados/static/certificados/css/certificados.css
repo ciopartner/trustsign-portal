@@ -31,8 +31,26 @@
     padding: 10px;
 }
 
-ul.errorlist{
+ul, li{
     list-style: none;
+}
+
+ul.errorlist{
     color: #c33;
     font-weight: bold;
+}
+
+table{
+    width: 100%;
+    border: 1px solid #bbb;
+}
+
+th{
+    background: #bbb;
+}
+td{
+    text-align: center;
+}
+tr:nth-child(even) td{
+    background: #efefef;
 }

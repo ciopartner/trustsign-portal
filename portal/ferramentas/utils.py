@@ -4,6 +4,7 @@ from difflib import get_close_matches
 import re
 import urllib
 import urlparse
+from django.utils.encoding import smart_unicode
 import requests
 from unicodedata import normalize
 from nltk import metrics
@@ -78,7 +79,7 @@ def get_razao_social_dominio(dominio):
 
 
 def remove_acentos(txt, codif='utf-8'):
-    return normalize('NFKD', txt.decode(codif)).encode('ASCII','ignore')
+    return normalize('NFKD', smart_unicode(txt)).encode('ASCII', 'ignore')
 
 
 def comparacao_fuzzy(string1, string2, max_dist=5):

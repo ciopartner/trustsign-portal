@@ -1,12 +1,13 @@
 # coding=utf-8
-from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput
+from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect
+from portal.certificados.comodo import get_emails_validacao
 from portal.certificados.models import Emissao, Voucher
-from portal.certificados.validations import ValidateCRMHashMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail
-from portal.ferramentas.utils import get_razao_social_dominio, comparacao_fuzzy, decode_csr
+from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail
+from portal.ferramentas.utils import decode_csr
 from django.core.exceptions import ValidationError
 
 
-class EmissaoModelForm(ModelForm, ValidateCRMHashMixin):
+class EmissaoModelForm(ModelForm):
     user = None
     _crm_hash = None
     _voucher = None
@@ -17,15 +18,16 @@ class EmissaoModelForm(ModelForm, ValidateCRMHashMixin):
     class Meta:
         model = Emissao
 
-    def __init__(self, user=None, crm_hash=None, precisa_carta_cessao=False, **kwargs):
+    def __init__(self, user=None, crm_hash=None, voucher=None, precisa_carta_cessao=False, **kwargs):
         self.user = user
         self._crm_hash = crm_hash
+        self._voucher = voucher
         super(EmissaoModelForm, self).__init__(**kwargs)
 
         for f in self.REQUIRED_FIELDS:
             self.fields[f].required = True
         if precisa_carta_cessao:
-            f = self.fields.get('emissao_carta')
+            f = self.fields.get('emission_assignment_letter')
             if f:
                 f.required = True
 
@@ -61,35 +63,71 @@ class EmissaoCallbackForm(ModelForm):
 
 class EmissaoNv1Tela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin):
 
-    REQUIRED_FIELDS = ('emissao_url', 'emissao_csr')
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr')
 
     class Meta(EmissaoModelForm.Meta):
-        fields = ['emissao_url', 'emissao_csr']
+        fields = ['emission_url', 'emission_csr']
+
+
+class EmissaoNv1Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
+                       'emission_server_type')
+
+    class Meta(EmissaoModelForm.Meta):
+        fields = ['emission_url', 'emission_csr', 'emission_assignment_letter', 'emission_dcv_emails',
+                  'emission_publickey_sendto', 'emission_server_type']
+        widgets = {
+            'emission_url': HiddenInput,
+            'emission_csr': HiddenInput,
+        }
+
+
+class EmissaoNv2Tela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin):
+
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr')
+
+    class Meta(EmissaoModelForm.Meta):
+        fields = ['emission_url', 'emission_csr']
+
+
+class EmissaoNv2Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail ):
+
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
+                       'emission_server_type')
+
+    class Meta(EmissaoModelForm.Meta):
+        fields = ['emission_url', 'emission_csr', 'emission_assignment_letter', 'emission_dcv_emails',
+                  'emission_publickey_sendto', 'emission_server_type']
+        widgets = {
+            'emission_url': HiddenInput,
+            'emission_csr': HiddenInput,
+        }
+
+
+class EmissaoNv3Tela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin):
+
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr')
+
+    class Meta(EmissaoModelForm.Meta):
+        fields = ['emission_url', 'emission_csr']
+
+
+class EmissaoNv3Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
+                       'emission_server_type')
+
+    class Meta(EmissaoModelForm.Meta):
+        fields = ['emission_url', 'emission_csr', 'emission_assignment_letter', 'emission_dcv_emails',
+                  'emission_publickey_sendto', 'emission_server_type', 'emission_articles_of_incorporation',
+                  'emission_address_proof', 'emission_ccsa', 'emission_evcr']
+        widgets = {
+            'emission_url': HiddenInput,
+            'emission_csr': HiddenInput,
+        }
 
     def __init__(self, **kwargs):
-        initial = kwargs.pop('initial', {})
-        self._crm_hash = kwargs.get('crm_hash', None)
-        voucher = self.get_voucher()
-        initial.update({
-            'callback_tratamento': voucher.cliente_callback_tratamento,
-            'callback_nome': voucher.cliente_callback_nome,
-            'callback_sobrenome': voucher.cliente_callback_sobrenome,
-            'callback_email': voucher.cliente_callback_email,
-            'callback_telefone': voucher.cliente_callback_telefone,
-            'callback_observacao': voucher.cliente_callback_observacao,
-            'callback_username': voucher.cliente_callback_username,
-        })
-        super(EmissaoNv1Tela1Form, self).__init__(initial=initial, **kwargs)
-
-
-class EmissaoNv1Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail ):
-
-    REQUIRED_FIELDS = ('emissao_url', 'emissao_csr', 'emissao_validacao_email', 'emissao_certificado_envio_email', 'emissao_servidor_tipo')
-
-    class Meta(EmissaoModelForm.Meta):
-        fields = ['emissao_url', 'emissao_csr', 'emissao_carta', 'emissao_validacao_email', 'emissao_certificado_envio_email',
-                  'emissao_servidor_tipo']
-        widgets = {
-            'emissao_url': HiddenInput,
-            'emissao_csr': HiddenInput,
-        }
+        super(EmissaoNv3Tela2Form, self).__init__(**kwargs)
+        choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
+        self.fields['emission_dcv_email'] = ChoiceField(choices=choices_email, widget=RadioSelect)

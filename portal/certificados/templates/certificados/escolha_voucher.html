@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
+{% endblock %}
+
+{% block one_row %}
+    <div class="escolha-voucher">
+        <h3>Escolha o produto disponível e a ação desejada</h3>
+        <table>
+            <tr>
+                <th>Produto</th>
+                <th>Linha</th>
+                <th>Validade</th>
+                <th>Saldo</th>
+                <th>Expira em</th>
+                <th>Ação</th>
+            </tr>
+            {% for voucher in vouchers %}
+                <tr>
+                    <td>{{ voucher.get_ssl_product_display }}</td>
+                    <td>{{ voucher.get_ssl_line_display }}</td>
+                    <td>{{ voucher.get_ssl_term_display }}</td>
+                    <td>1 {# TODO: como calcular saldo voucher? #}</td>
+                    <td>{{ voucher.ssl_valid_to|date:"d/m/Y" }}</td>
+                    <td>
+                    {% with emissao=voucher.emissao %}
+                        {% if emissao.emission_status == emissao.STATUS_NAO_EMITIDO %}
+                            <a href="#">Emitir</a>
+                        {% elif emissao.emission_status == emissao.STATUS_EM_EMISSAO or emissao.emission_status == emissao.STATUS_ACAO_MANUAL_PENDENTE %}
+                            Em emissão
+                        {% elif emissao.emission_status == emissao.STATUS_EMITIDO %}
+                            <a href="#">Reemitir</a>,
+                            <a href="#">Revogar</a>,
+                            <a href="#">HTML Selo</a>,
+                            <a href="#">Chave Pública</a>
+                        {% endif %}
+                    {% endwith %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

@@ -1,73 +1,68 @@
 from portal.certificados.models import Emissao
 from portal.certificados.validations import EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
-    ValidateEmissaoValidacaoEmail, ValidateEmissaoPrimaryDN, ValidateEmissaoComprovanteEndereco, \
-    ValidateEmissaoContratoSocial, ValidateEmissaoCCSA, ValidateEmissaoEVCR
+    ValidateEmissaoValidacaoEmail, ValidateEmissaoPrimaryDN
 
 
 class EmissaoNv0Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin):
-    REQUIRED_FIELDS = ('emissao_url', )
+    REQUIRED_FIELDS = ('emission_url', )
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emissao_url', 'emissao_carta')
+        fields = ('crm_hash', 'emission_url', 'emission_assignment_letter')
 
 
 class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
                            ValidateEmissaoValidacaoEmail):
-    REQUIRED_FIELDS = ('emissao_url', 'emissao_validacao_email', 'emissao_certificado_envio_email',
-                       'emissao_servidor_tipo', 'emissao_csr')
+    REQUIRED_FIELDS = ('emission_url', 'emission_dcv_email', 'emission_publickey_sendto',
+                       'emission_server_type', 'emission_csr')
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emissao_url', 'emissao_validacao_email', 'emissao_certificado_envio_email',
-                  'emissao_servidor_tipo', 'emissao_csr', 'emissao_carta')
+        fields = ('crm_hash', 'emission_url', 'emission_dcv_email', 'emission_publickey_sendto',
+                  'emission_server_type', 'emission_csr', 'emission_assignment_letter')
 
 
 class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
                            ValidateEmissaoPrimaryDN):
-    REQUIRED_FIELDS = ('emissao_url', 'emissao_validacao_email', 'emissao_certificado_envio_email',
-                       'emissao_servidor_tipo', 'emissao_csr', 'emissao_primary_dn', )
+    REQUIRED_FIELDS = ('emission_url', 'emission_dcv_email', 'emission_publickey_sendto',
+                       'emission_server_type', 'emission_csr', 'emission_primary_dn', )
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emissao_url', 'emissao_csr', 'emissao_primary_dn', 'emissao_validacao_email',
-                  'emissao_certificado_envio_email', 'emissao_servidor_tipo', 'emissao_carta')
+        fields = ('crm_hash', 'emission_url', 'emission_csr', 'emission_primary_dn', 'emission_dcv_email',
+                  'emission_publickey_sendto', 'emission_server_type', 'emission_assignment_letter')
 
 
-class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
-                           ValidateEmissaoContratoSocial, ValidateEmissaoComprovanteEndereco,
-                           ValidateEmissaoEVCR, ValidateEmissaoCCSA):
+class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin):
     validacao_manual = True
 
-    REQUIRED_FIELDS = ('emissao_url', 'emissao_validacao_email', 'emissao_certificado_envio_email',
-                       'emissao_servidor_tipo', 'emissao_csr', 'emissao_contrato_social',
-                       'emissao_comprovante_endereco', 'emissao_ccsa', 'emissao_evcr')
+    REQUIRED_FIELDS = ('emission_url', 'emission_dcv_email', 'emission_publickey_sendto',
+                       'emission_server_type', 'emission_csr', 'emission_articles_of_incorporation',
+                       'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emissao_url', 'emissao_certificado_envio_email', 'emissao_validacao_email',
-                  'emissao_servidor_tipo', 'emissao_csr', 'emissao_carta', 'emissao_contrato_social',
-                  'emissao_comprovante_endereco', 'emissao_ccsa', 'emissao_evcr')
+        fields = ('crm_hash', 'emission_url', 'emission_publickey_sendto', 'emission_dcv_email',
+                  'emission_server_type', 'emission_csr', 'emission_assignment_letter', 'emission_articles_of_incorporation',
+                  'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
 
-class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoPrimaryDN,
-                           ValidateEmissaoContratoSocial, ValidateEmissaoComprovanteEndereco,
-                           ValidateEmissaoEVCR, ValidateEmissaoCCSA):
-    REQUIRED_FIELDS = ('emissao_url', 'emissao_validacao_email', 'emissao_certificado_envio_email',
-                       'emissao_servidor_tipo', 'emissao_csr', 'emissao_contrato_social',
-                       'emissao_comprovante_endereco', 'emissao_ccsa', 'emissao_evcr', 'emissao_primary_dn')
+class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoPrimaryDN):
+    REQUIRED_FIELDS = ('emission_url', 'emission_dcv_email', 'emission_publickey_sendto',
+                       'emission_server_type', 'emission_csr', 'emission_articles_of_incorporation',
+                       'emission_address_proof', 'emission_ccsa', 'emission_evcr', 'emission_primary_dn')
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emissao_url', 'emissao_fqdns', 'emissao_certificado_envio_email',
-                  'emissao_validacao_email', 'emissao_servidor_tipo', 'emissao_csr', 'emissao_primary_dn',
-                  'emissao_carta', 'emissao_contrato_social', 'emissao_comprovante_endereco', 'emissao_ccsa',
-                  'emissao_evcr')
+        fields = ('crm_hash', 'emission_url', 'emission_fqdns', 'emission_publickey_sendto',
+                  'emission_dcv_email', 'emission_server_type', 'emission_csr', 'emission_primary_dn',
+                  'emission_assignment_letter', 'emission_articles_of_incorporation', 'emission_address_proof', 'emission_ccsa',
+                  'emission_evcr')
 
 
-class EmissaoNvASerializer(EmissaoModelSerializer, ValidateEmissaoComprovanteEndereco):
-    REQUIRED_FIELDS = ('emissao_comprovante_endereco',)
+class EmissaoNvASerializer(EmissaoModelSerializer):
+    REQUIRED_FIELDS = ('emission_address_proof',)
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emissao_comprovante_endereco',)
+        fields = ('crm_hash', 'emission_address_proof',)

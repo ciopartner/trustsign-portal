@@ -79,7 +79,6 @@ STATICFILES_FINDERS = (
 ###########
 # LOGGING #
 ###########
-
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -88,6 +87,14 @@ STATICFILES_FINDERS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s [%(pathname)s:%(lineno)d %(funcName)s]'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -98,7 +105,12 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
     },
     'loggers': {
         'django.request': {
@@ -106,7 +118,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-    }
+        'portal': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO'
+        }
+    },
 }
 
 

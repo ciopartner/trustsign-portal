@@ -36,17 +36,7 @@ def insere_metodos_validacao(field):
     return wrap
 
 
-@insere_metodos_validacao('crm_hash')
-class ValidateCRMHashMixin(object):
-
-    def _valida_crm_hash(self, valor, fields):
-        voucher = self.get_voucher()
-        if voucher.solicitante_user != self.user and not self.user.is_superuser:
-            raise self.ValidationError('Este certificado não pertence à você')
-        return valor
-
-
-@insere_metodos_validacao('emissao_url')
+@insere_metodos_validacao('emission_url')
 class ValidateEmissaoUrlMixin(object):
 
     def _valida_emissao_url(self, valor, fields):
@@ -59,8 +49,8 @@ class ValidateEmissaoUrlMixin(object):
         except Voucher.DoesNotExist:
             raise self.ValidationError('Voucher não encontrado')
 
-        if not comparacao_fuzzy(razao_social, voucher.cliente_razaosocial):
-            if fields.get('emissao_carta'):
+        if not comparacao_fuzzy(razao_social, voucher.customer_companyname):
+            if fields.get('emission_assignment_letter'):
                 # se a razão social for diferente, mas o cliente enviar uma carta de cessão,
                 # será preciso validação manual
                 self.validacao_manual = True
@@ -69,12 +59,12 @@ class ValidateEmissaoUrlMixin(object):
         return valor
 
 
-@insere_metodos_validacao('emissao_csr')
+@insere_metodos_validacao('emission_csr')
 class ValidateEmissaoCSRMixin(object):
 
     def _valida_emissao_csr(self, valor, fields):
         csr = self.get_csr_decoded(valor)
-        url = fields.get('emissao_url', '')
+        url = fields.get('emission_url', '')
 
         if not csr['ok']:
             raise self.ValidationError('CSR Inválida')
@@ -87,26 +77,26 @@ class ValidateEmissaoCSRMixin(object):
         if csr.get('CN') != url:
             raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
 
-        if not comparacao_fuzzy(csr.get('O'), voucher.cliente_razaosocial):
-            raise self.ValidationError('O campo Organization Name (O) deve conter a razão social: %s' % voucher.cliente_razaosocial)
+        if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
+            raise self.ValidationError('O campo Organization Name (O) deve conter a razão social: %s' % voucher.customer_companyname)
 
         key_size = int(csr.get('KeySize'))
-        if voucher.ssl_linha in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
+        if voucher.ssl_line in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
             raise self.ValidationError('O tamanho da chave para produtos das linhas Basic e Pro deve ser 2048')
 
-        if voucher.ssl_linha == voucher.LINHA_PRIME and key_size != 4096:
+        if voucher.ssl_line == voucher.LINHA_PRIME and key_size != 4096:
             raise self.ValidationError('O tamanho da chave para produtos da linha Prime deve ser 4096')
 
         if voucher.ssl_produto in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
             dominios = csr.get('dnsNames', [])
-            if len(dominios) > voucher.ssl_dominios_qtde:
-                raise self.ValidationError('A CSR possui mais domínios que a quantidade comprada: %s' % voucher.ssl_dominios_qtde)
+            if len(dominios) > voucher.ssl_domains_qty:
+                raise self.ValidationError('A CSR possui mais domínios que a quantidade comprada: %s' % voucher.ssl_domains_qty)
             for dominio in dominios:
                 razao_social = get_razao_social_dominio(dominio)
                 if not razao_social:
                     raise self.ValidationError('Não foi possível conseguir a razão social apartir do domínio: %s' % dominio)
-                if not comparacao_fuzzy(razao_social, voucher.cliente_razaosocial):
-                    if fields.get('emissao_carta'):
+                if not comparacao_fuzzy(razao_social, voucher.customer_companyname):
+                    if fields.get('emission_assignment_letter'):
                         self.validacao_manual = True
                     else:
                         raise Exception('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
@@ -114,51 +104,23 @@ class ValidateEmissaoCSRMixin(object):
         return valor
 
 
-@insere_metodos_validacao('emissao_primary_dn')
+@insere_metodos_validacao('emission_primary_dn')
 class ValidateEmissaoPrimaryDN(object):
 
     def _valida_emissao_primary_dn(self, valor, fields):
-        csr = self.get_csr_decoded(fields['emissao_csr'])
+        csr = self.get_csr_decoded(fields['emission_csr'])
         if not valor.strip() in csr.get('dnsNames'):
             raise self.ValidationError('O domínio primário não consta na lista de domínios na CSR')
         return valor
 
 
-@insere_metodos_validacao('emissao_validacao_email')
+@insere_metodos_validacao('emission_dcv_email')
 class ValidateEmissaoValidacaoEmail(object):
 
     def _valida_emissao_validacao_email(self, valor, fields):
-        emails = get_emails_validacao_padrao(fields['emissao_url'])
+        emails = get_emails_validacao_padrao(fields['emission_url'])
         if valor not in emails:
             raise self.ValidationError('E-mail de validação inválido')
-        return valor
-
-
-@insere_metodos_validacao('emissao_contrato_social')
-class ValidateEmissaoContratoSocial(object):
-    def _valida_emissao_contrato_social(self, valor, fields):
-        #TODO: TBD > como vai funcionar o envio de arquivos pela API
-        return valor
-
-
-@insere_metodos_validacao('emissao_comprovante_endereco')
-class ValidateEmissaoComprovanteEndereco(object):
-    def _valida_emissao_comprovante_endereco(self, valor, fields):
-        #TODO: TBD > como vai funcionar o envio de arquivos pela API
-        return valor
-
-
-@insere_metodos_validacao('emissao_evcr')
-class ValidateEmissaoEVCR(object):
-    def _valida_emissao_evcr(self, valor, fields):
-        #TODO: TBD > como vai funcionar o envio de arquivos pela API
-        return valor
-
-
-@insere_metodos_validacao('emissao_ccsa')
-class ValidateEmissaoCCSA(object):
-    def _valida_emissao_ccsa(self, valor, fields):
-        #TODO: TBD > como vai funcionar o envio de arquivos pela API
         return valor
 
 

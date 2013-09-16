@@ -22,6 +22,8 @@ class Voucher(Model):
     PRODUTO_JRE = 'ssl-jre',
     PRODUTO_CODE_SIGNING = 'ssl-cs'
     PRODUTO_SMIME = 'ssl-smime'
+    PRODUTO_SSL_MDC_DOMINIO = 'ssl-mdc-domain'
+    PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
     PRODUTO_CHOICES = (
         (PRODUTO_SITE_SEGURO, 'Site + Seguro'),
         (PRODUTO_SITE_MONITORADO, 'Site Monitorado'),
@@ -36,7 +38,7 @@ class Voucher(Model):
         (PRODUTO_SMIME, 'MDC'),
     )
 
-    LINHA_DEGUSTACAO = 'free'
+    LINHA_DEGUSTACAO = 'trial'
     LINHA_BASIC = 'basic'
     LINHA_PRO = 'pro'
     LINHA_PRIME = 'prime'
@@ -47,12 +49,12 @@ class Voucher(Model):
         (LINHA_PRIME, 'Prime'),
     )
 
-    VALIDADE_ANUAL = '1y'
-    VALIDADE_BIANUAL = '2y'
-    VALIDADE_TRIANUAL = '3y'
-    VALIDADE_ASSINATURA_MENSAL = 'a1m'
-    VALIDADE_ASSINATURA_SEMESTRAL = 'a6m'
-    VALIDADE_ASSINATURA_ANUAL = 'a12m'
+    VALIDADE_ANUAL = '1year'
+    VALIDADE_BIANUAL = '2years'
+    VALIDADE_TRIANUAL = '3years'
+    VALIDADE_ASSINATURA_MENSAL = 'subscription_1m'
+    VALIDADE_ASSINATURA_SEMESTRAL = 'subscription_6m'
+    VALIDADE_ASSINATURA_ANUAL = 'subscription_12m'
     VALIDADE_CHOICES = (
         (VALIDADE_ANUAL, 'Anual'),
         (VALIDADE_BIANUAL, 'Bianual'),
@@ -64,44 +66,43 @@ class Voucher(Model):
 
     crm_hash = CharField(max_length=128)
     comodo_order = CharField(max_length=128, blank=True, null=True)
+    legacy_imported = BooleanField(default=False)
 
-    cliente_cnpj = CharField(max_length=32)
-    cliente_razaosocial = CharField(max_length=128)
-    cliente_cep = CharField(max_length=16)
-    cliente_logradouro = CharField(max_length=128)
-    cliente_numero = CharField(max_length=8)
-    cliente_complemento = CharField(max_length=32)
-    cliente_bairro = CharField(max_length=64)
-    cliente_cidade = CharField(max_length=64)
-    cliente_uf = CharField(max_length=2)
-    cliente_pais = CharField(max_length=64)
-    cliente_situacao_cadastral = CharField(max_length=128)
+    customer_cnpj = CharField(max_length=32)
+    customer_companyname = CharField(max_length=128)
+    customer_zip = CharField(max_length=16)
+    customer_address1 = CharField(max_length=128)
+    customer_address2 = CharField(max_length=8)
+    customer_address3 = CharField(max_length=32, blank=True, default='')
+    customer_address4 = CharField(max_length=64)
+    customer_city = CharField(max_length=64)
+    customer_state = CharField(max_length=2)
+    customer_country = CharField(max_length=64)
+    customer_registration_status = CharField(max_length=128)
 
-    cliente_callback_tratamento = CharField(max_length=8)
-    cliente_callback_nome = CharField(max_length=128)
-    cliente_callback_sobrenome = CharField(max_length=128)
-    cliente_callback_email = EmailField()
-    cliente_callback_telefone = CharField(max_length=16)
-    cliente_callback_username = CharField(max_length=32, blank=True, null=True)
-    cliente_callback_observacao = CharField(max_length=128, blank=True, default='')
+    customer_callback_title = CharField(max_length=8)
+    customer_callback_fistname = CharField(max_length=128)
+    customer_callback_lastname = CharField(max_length=128)
+    customer_callback_email = EmailField()
+    customer_callback_phone = CharField(max_length=16)
+    customer_callback_username = CharField(max_length=32, blank=True, null=True)
+    customer_callback_note = CharField(max_length=128, blank=True, default='')
 
     ssl_url = CharField(max_length=200, blank=True, null=True)
-    ssl_produto = CharField(max_length=16, choices=PRODUTO_CHOICES)
-    ssl_linha = CharField(max_length=16, choices=LINHA_CHOICES)
-    ssl_validade = CharField(max_length=16, choices=VALIDADE_CHOICES)
-    ssl_valido_de = DateTimeField(blank=True, null=True)
-    ssl_valido_ate = DateTimeField(blank=True, null=True)
+    ssl_product = CharField(max_length=16, choices=PRODUTO_CHOICES)
+    ssl_line = CharField(max_length=16, choices=LINHA_CHOICES)
+    ssl_term = CharField(max_length=16, choices=VALIDADE_CHOICES)
+    ssl_valid_from = DateTimeField(blank=True, null=True)
+    ssl_valid_to = DateTimeField(blank=True, null=True)
     ssl_publickey = TextField(blank=True, null=True)
-    ssl_revogado_data = DateTimeField(blank=True, null=True)
-    ssl_dominios_qtde = IntegerField(blank=True, null=True)
+    ssl_revoked_date = DateTimeField(blank=True, null=True)
+    ssl_domains_qty = IntegerField(blank=True, null=True)
+    ssl_seal_html = TextField()
 
-    pedido_data = DateTimeField()
-    pedido_item_valor = DecimalField(decimal_places=2, max_digits=9)
-    pedido_canal = CharField(max_length=64)
-    pedido_cancelado_data = DateTimeField(blank=True, null=True)
-
-    selo_html = TextField()
-    criacao_historico = BooleanField(default=False)
+    order_date = DateTimeField()
+    order_item_value = DecimalField(decimal_places=2, max_digits=9)
+    order_channel = CharField(max_length=64)
+    order_canceled_date = DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
@@ -110,23 +111,23 @@ class Voucher(Model):
 # class Pedido(Model):  # TODO: Substituir por abstract do oscar
 #     knu_html = TextField()
 #     crm_envio_data = DateTimeField()
-#     pedido_cancelado_data = DateTimeField(blank=True, null=True)
+#     order_canceled_date = DateTimeField(blank=True, null=True)
 #
-#     cliente_cnpj = CharField(max_length=32)
-#     cliente_razaosocial = CharField(max_length=128)
-#     cliente_cep = CharField(max_length=16)
-#     cliente_logradouro = CharField(max_length=128)
-#     cliente_numero = CharField(max_length=8)
-#     cliente_complemento = CharField(max_length=32)
-#     cliente_bairro = CharField(max_length=64)
-#     cliente_cidade = CharField(max_length=64)
-#     cliente_uf = CharField(max_length=2)
-#     cliente_pais = CharField(max_length=64)
+#     customer_cnpj = CharField(max_length=32)
+#     customer_companyname = CharField(max_length=128)
+#     customer_zip = CharField(max_length=16)
+#     customer_address1 = CharField(max_length=128)
+#     customer_address2 = CharField(max_length=8)
+#     customer_address3 = CharField(max_length=32)
+#     customer_address4 = CharField(max_length=64)
+#     customer_city = CharField(max_length=64)
+#     customer_state = CharField(max_length=2)
+#     customer_country = CharField(max_length=64)
 #
-#     cliente_situacao_cadastral = CharField(max_length=128)
-#     cliente_callback_nome = CharField(max_length=128)
-#     cliente_callback_email = EmailField()
-#     cliente_callback_telefone = CharField(max_length=16)
+#     customer_registration_status = CharField(max_length=128)
+#     customer_callback_fistname = CharField(max_length=128)
+#     customer_callback_email = EmailField()
+#     customer_callback_phone = CharField(max_length=16)
 #     contato_observacao = CharField(max_length=128)
 
 
@@ -191,32 +192,36 @@ class Emissao(Model):
     crm_hash = CharField(max_length=128)
     comodo_order = CharField(max_length=128)
 
-    solicitante_user = ForeignKey(User, related_name='emissoes')
-    solicitante_timestamp = DateTimeField(auto_now_add=True)
+    requestor_user = ForeignKey(User, related_name='emissoes')
+    requestor_timestamp = DateTimeField(auto_now_add=True)
 
-    emissao_url = CharField(max_length=256, blank=True, null=True)
-    emissao_validacao_email = CharField(max_length=128, blank=True, null=True)
-    emissao_certificado_envio_email = EmailField(blank=True, null=True)
-    emissao_servidor_tipo = IntegerField(choices=SERVIDOR_TIPO_CHOICES, blank=True, null=True)
+    emission_url = CharField(max_length=256, blank=True, null=True)
+    emission_dcv_emails = TextField(blank=True, null=True)
+    emission_publickey_sendto = EmailField(blank=True, null=True)
+    emission_server_type = IntegerField(choices=SERVIDOR_TIPO_CHOICES, blank=True, null=True)
 
-    emissao_csr = TextField(blank=True, null=True)
+    emission_csr = TextField(blank=True, null=True)
 
-    emissao_aprovador = CharField(max_length=128, null=True, blank=True)
+    emission_approver = ForeignKey(User, related_name='emissoes_aprovadas', null=True, blank=True)
 
-    emissao_fqdns = TextField(blank=True, null=True)
-    emissao_primary_dn = CharField(max_length=256, null=True, blank=True)
+    emission_fqdns = TextField(blank=True, null=True)
+    emission_primary_dn = CharField(max_length=256, null=True, blank=True)
 
-    emissao_carta = FileField(upload_to='uploads/cartas/', blank=True, null=True)
-    emissao_contrato_social = FileField(upload_to='uploads/contratos_sociais/', blank=True, null=True)
-    emissao_comprovante_endereco = FileField(upload_to='uploads/comprovantes_endereco/', blank=True, null=True)
-    emissao_ccsa = FileField(upload_to='uploads/ccsas/', blank=True, null=True)  # comodo cert. subscriber agreement
-    emissao_evcr = FileField(upload_to='uploads/evcrs/', blank=True, null=True)  # ev certificate request
-    emissao_conta_telefone = FileField(upload_to='uploads/conta-telefone/', blank=True, null=True)
-    emissao_doc_identificacao = FileField(upload_to='uploads/docs/', blank=True, null=True)
+    emission_assignment_letter = FileField(upload_to='uploads/cartas/', blank=True, null=True)
+    emission_articles_of_incorporation = FileField(upload_to='uploads/contratos_sociais/', blank=True, null=True)
+    emission_address_proof = FileField(upload_to='uploads/comprovantes_endereco/', blank=True, null=True)
+    emission_ccsa = FileField(upload_to='uploads/ccsas/', blank=True, null=True)  # comodo cert. subscriber agreement
+    emission_evcr = FileField(upload_to='uploads/evcrs/', blank=True, null=True)  # ev certificate request
+    emission_phone_proof = FileField(upload_to='uploads/conta-telefone/', blank=True, null=True)
+    emission_id = FileField(upload_to='uploads/docs/', blank=True, null=True)
 
-    emissao_custo = DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
+    emission_cost = DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
 
-    emissao_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
+    emission_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
+
+    class Meta:
+        verbose_name = 'emissão'
+        verbose_name_plural = 'emissões'
 
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)

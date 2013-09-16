@@ -1,9 +1,12 @@
 # coding=utf-8
 import os
 from django.contrib.formtools.wizard.views import SessionWizardView
+from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
+from django.views.generic import ListView
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer, BrowsableAPIRenderer
@@ -33,17 +36,17 @@ class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
     def get_serializer_class(self):
         voucher = self.get_voucher()
-        if voucher.ssl_produto in (voucher.PRODUTO_SITE_SEGURO, voucher.PRODUTO_SITE_MONITORADO):
+        if voucher.ssl_product in (voucher.PRODUTO_SITE_SEGURO, voucher.PRODUTO_SITE_MONITORADO):
             return EmissaoNv0Serializer
-        if voucher.ssl_produto in (voucher.PRODUTO_SSL, voucher.PRODUTO_SSL_WILDCARD):
+        if voucher.ssl_product in (voucher.PRODUTO_SSL, voucher.PRODUTO_SSL_WILDCARD):
             return EmissaoNv1Serializer
-        if voucher.ssl_produto in (voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_MDC):
+        if voucher.ssl_product in (voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_MDC):
             return EmissaoNv2Serializer
-        if voucher.ssl_produto == voucher.PRODUTO_EV:
+        if voucher.ssl_product == voucher.PRODUTO_EV:
             return EmissaoNv3Serializer
-        if voucher.ssl_produto == voucher.PRODUTO_EV_MDC:
+        if voucher.ssl_product == voucher.PRODUTO_EV_MDC:
             return EmissaoNv4Serializer
-        if voucher.ssl_produto in (voucher.PRODUTO_JRE, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_SMIME):
+        if voucher.ssl_product in (voucher.PRODUTO_JRE, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_SMIME):
             return EmissaoNvASerializer
         raise Http404()
 
@@ -85,26 +88,52 @@ class ValidaUrlCSRAPIView(GenericAPIView):
     pass
 
 
-class EmissaoBaseWizardView(SessionWizardView):
-    # TODO: precisa validar se o self.request.user.username = voucher.cnpj ou usuario esta no grupo com permissao(trust)
-    model = None
+class EscolhaVoucherView(ListView):
+    template_name = 'certificados/escolha_voucher.html'
+    model = Voucher
+    context_object_name = 'vouchers'
+
+    def get_queryset(self):
+        return Voucher.objects.select_related('emissao').filter(
+            Q(emissao__isnull=True) |
+            Q(emissao__emissao_status__in=(Emissao.STATUS_NAO_EMITIDO, Emissao.STATUS_EMITIDO,
+                                           Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_ACAO_MANUAL_PENDENTE)))
+        #.filter(customer_cnpj=self.request.user.username) TODO: incluir esse filter depois dos testes
+
+
+class EmissaoWizardView(SessionWizardView):
+    model = Emissao
     done_redirect_url = 'certificado_emitido_sucesso'
     file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'forms'))
     template_name = 'base.html'
     templates = {}
+    _voucher = None
 
     # para verificar se precisa de carta de cessao:
-    tela_emissao_url = 'tela-1'  # usado para encontrar o form que vai exibir o campo emissao_url
-    tela_carta_cessao = 'tela-2' # usado para encontrar o form que vai exibir o campo emissao_carta
+    tela_emissao_url = 'tela-1'  # usado para encontrar o form que vai exibir o campo emission_url
+    tela_carta_cessao = 'tela-2'  # usado para encontrar o form que vai exibir o campo emission_assignment_letter
+
+    produtos_voucher = ()
 
     def dispatch(self, request, *args, **kwargs):
         self.instance = self.model()
         self._precisa_carta_cessao = {}
-        return super(EmissaoBaseWizardView, self).dispatch(request, *args, **kwargs)
+        if Emissao.objects.filter(crm_hash=self.kwargs['crm_hash']).exists():
+            raise Http404()  # Não é possível emitir duas vezes o mesmo voucher
+
+        voucher = self.get_voucher()
+        if voucher.ssl_product not in self.produtos_voucher:
+            raise Http404()
+        user = self.request.user
+        if voucher.customer_cnpj != user.username and not user.is_superuser:
+            # TODO: TBD > precisa validar também se o usuario esta no grupo com permissao(trust)
+            raise PermissionDenied()
+
+        return super(EmissaoWizardView, self).dispatch(request, *args, **kwargs)
 
     def post(self, *args, **kwargs):
         self.precisa_carta_cessao(self.steps.current)
-        return super(EmissaoBaseWizardView, self).post(*args, **kwargs)
+        return super(EmissaoWizardView, self).post(*args, **kwargs)
 
     def get_form_instance(self, step):
         return self.instance
@@ -117,69 +146,102 @@ class EmissaoBaseWizardView(SessionWizardView):
         self.instance.save()
 
     def get_form_initial(self, step):
-        initial = super(EmissaoBaseWizardView, self).get_form_initial(step)
-        if step == 'tela-2':
+        initial = super(EmissaoWizardView, self).get_form_initial(step)
+
+        if step == 'tela-1':
+            voucher = self.get_voucher()
+            initial.update({
+                'callback_tratamento': voucher.customer_callback_title,
+                'callback_nome': voucher.customer_callback_fistname,
+                'callback_sobrenome': voucher.customer_callback_lastname,
+                'callback_email': voucher.customer_callback_email,
+                'callback_telefone': voucher.customer_callback_phone,
+                'callback_observacao': voucher.customer_callback_note,
+                'callback_username': voucher.customer_callback_username,
+            })
+        elif step == 'tela-2':
             cd = self.get_cleaned_data_for_step('tela-1')
-            initial['emissao_url'] = cd['emissao_url']
-            initial['emissao_csr'] = cd['emissao_csr']
+            initial['emission_url'] = cd['emission_url']
+            initial['emission_csr'] = cd['emission_csr']
         return initial
 
     def get_form_kwargs(self, step=None):
-        kwargs = super(EmissaoBaseWizardView, self).get_form_kwargs(step)
+        kwargs = super(EmissaoWizardView, self).get_form_kwargs(step)
         kwargs['user'] = self.request.user
         kwargs['crm_hash'] = self.kwargs['crm_hash']
+        kwargs['voucher'] = self.get_voucher()
         kwargs['precisa_carta_cessao'] = self._precisa_carta_cessao.get(self.steps.current, False)
         return kwargs
 
     def get_context_data(self, form, **kwargs):
-        context = super(EmissaoBaseWizardView, self).get_context_data(form, **kwargs)
-        try:
-            context.update({
-                'voucher': Voucher.objects.get(crm_hash=self.kwargs['crm_hash']),
-                'precisa_carta_cessao': self.precisa_carta_cessao(self.steps.current)
-            })
-        except Voucher.DoesNotExist:
-            #raise Http404
-            print 'nao encontrou'
+        context = super(EmissaoWizardView, self).get_context_data(form, **kwargs)
+        context.update({
+            'voucher': self.get_voucher(),
+            'precisa_carta_cessao': self.precisa_carta_cessao(self.steps.current)
+        })
         return context
 
     def get_template_names(self):
         return [self.templates[self.steps.current]]
+
+    def get_voucher(self):
+        if not self._voucher:
+            try:
+                self._voucher = Voucher.objects.get(crm_hash=self.kwargs.get('crm_hash'))
+            except Voucher.DoesNotExist:
+                raise Http404()
+        return self._voucher
 
     def precisa_carta_cessao(self, step):
         if self._precisa_carta_cessao.get(step) is None:
             if self.steps.current == self.tela_carta_cessao:
                 cleaned_data = self.get_cleaned_data_for_step(self.tela_emissao_url) or {}
 
-                try:
-                    voucher = Voucher.objects.get(crm_hash=self.kwargs.get('crm_hash'))
-                    self._precisa_carta_cessao[step] = not verifica_razaosocial_dominio(
-                        voucher.cliente_razaosocial,
-                        cleaned_data['emissao_url']
-                    )
-                except Voucher.DoesNotExist:
-                    self._precisa_carta_cessao[step] = False
+                voucher = self.get_voucher()
+                self._precisa_carta_cessao[step] = not verifica_razaosocial_dominio(
+                    voucher.customer_companyname,
+                    cleaned_data['emission_url']
+                )
 
             else:
                 self._precisa_carta_cessao[step] = False
 
         return self._precisa_carta_cessao[step]
 
-
-class EmissaoNv1WizardView(EmissaoBaseWizardView):
-    model = Emissao
-    templates = {
-        'tela-1': 'certificados/wizard_nv1_1_ssl_wildcard.html',
-        'tela-2': 'certificados/wizard_nv1_2_ssl_wildcard.html'
-    }
-
     def save(self, form_list, **kwargs):
         emissao = self.instance
         emissao.solicitante_user_id = self.request.user.pk
         emissao.crm_hash = self.kwargs['crm_hash']
-        emissao.voucher = Voucher.objects.get(crm_hash=emissao.crm_hash)
+        voucher = self.get_voucher()
+        emissao.voucher = voucher
 
         resposta = comodo.emite_certificado(emissao)
+
         emissao.comodo_order = resposta['orderNumber']
-        emissao.emissao_custo = resposta['totalCost']
+        emissao.emission_cost = resposta['totalCost']
+
         emissao.save()
+
+
+class EmissaoNv1WizardView(EmissaoWizardView):
+    produtos_voucher = (Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD)
+    templates = {
+        'tela-1': 'certificados/wizard_nv1_tela_1.html',
+        'tela-2': 'certificados/wizard_nv1_tela_2.html'
+    }
+
+
+class EmissaoNv2WizardView(EmissaoWizardView):
+    produtos_voucher = (Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC)
+    templates = {
+        'tela-1': 'certificados/wizard_nv2_tela_1.html',
+        'tela-2': 'certificados/wizard_nv2_tela_2.html'
+    }
+
+
+class EmissaoNv3WizardView(EmissaoWizardView):
+    produtos_voucher = (Voucher.PRODUTO_EV,)
+    templates = {
+        'tela-1': 'certificados/wizard_nv3_tela_1.html',
+        'tela-2': 'certificados/wizard_nv3_tela_2.html'
+    }
