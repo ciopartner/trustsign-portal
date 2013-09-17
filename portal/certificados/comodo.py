@@ -69,6 +69,7 @@ def emite_certificado(emissao):
         'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
         'isAppRepValidated': 'Y',
         'isCallbackCompleted': 'Y'
+
     }
 
     if voucher.ssl_produto in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):

@@ -1,0 +1,58 @@
+{% extends 'certificados/wizard_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
+{% endblock %}
+
+{% block coluna-esquerda %}
+    {% include 'certificados/includes/dados_cliente.html' %}
+    {% include 'certificados/includes/dados_callback.html' %}
+{% endblock %}
+
+{% block coluna-direita %}
+    <h3>Dados Específicos do Produto Escolhido</h3>
+
+    {{ form.non_field_errors }}
+
+    <table>
+        {% include 'certificados/includes/dados_produto.html' %}
+        <tr><th>{% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %} Primário:</th>
+            <td>{{ form.emission_primary_dn }} {{ form.emission_primary_dn.errors }}</td></tr>
+        {% if precisa_carta_cessao %}
+            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}</td></tr>
+        {% endif %}
+        <tr><th>Tipo do Servidor:</th><td>{{ form.emission_server_type }} {{ form.emission_server_type.errors }}</td></tr>
+        <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
+        <tr id="lista-fqdns">
+            <th>Lista de {% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN's{% else %}domínios{% endif %}:</th>
+            <td>
+                <table class="fqdn-table">
+                    <tr>
+                        <th>{% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
+                        <th>E-mail</th>
+                    </tr>
+                    {% for fqdn in form.get_domains_csr %}
+                        <tr id="fqdn-{{ forloop.counter0 }}">
+                            <td>{{ fqdn }}</td>
+                            <td><span></span><a data-toggle="modal" href="#windowEscolheEmail">escolher</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                {{ form.emission_dcv_emails }} {{ form.emission_dcv_emails.errors }}
+            </td>
+        </tr>
+
+    </table>
+    {{ form.emission_url }}
+    {{ form.emission_csr }}
+
+    {% include 'certificados/includes/escolher_email_window.html' %}
+
+{% endblock %}
+
+{% block extra-js-body %}
+    <script src="{% static "certificados/js/certificados.js" %}"></script>
+{% endblock %}

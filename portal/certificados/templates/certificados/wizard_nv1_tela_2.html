@@ -12,14 +12,17 @@
 {% endblock %}
 
 {% block coluna-direita %}
-    {{ form.errors }}
+
     <h3>Dados Específicos do Produto Escolhido</h3>
+
+    {{ form.non_field_errors }}
+
     <table>
         {% include 'certificados/includes/dados_produto.html' %}
         {% if precisa_carta_cessao %}
             <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}</td></tr>
         {% endif %}
-        <tr><th>E-mail para validação do domínio:</th><td>{{ form.emission_dcv_emails }} {{ form.emission_dcv_emails.errors }}</td></tr>
+        <tr><th>E-mail para validação do domínio:</th><td>{{ form.emission_dcv_emails }} {{ form.emission_dcv_emails.errors }} <a href="">Não tenho acesso a nenhum dos e-mails acima</a></td></tr>
         <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
         <tr><th>Tipo do Servidor:</th><td>{{ form.emission_server_type }} {{ form.emission_server_type.errors }}</td></tr>
     </table>

@@ -39,7 +39,7 @@ def insere_metodos_validacao(field):
 @insere_metodos_validacao('emission_url')
 class ValidateEmissaoUrlMixin(object):
 
-    def _valida_emissao_url(self, valor, fields):
+    def _valida_emission_url(self, valor, fields):
         razao_social = get_razao_social_dominio(valor)
         if not razao_social:
             raise self.ValidationError('Não foi possível conseguir a razão social apartir da url informada')
@@ -54,6 +54,7 @@ class ValidateEmissaoUrlMixin(object):
                 # se a razão social for diferente, mas o cliente enviar uma carta de cessão,
                 # será preciso validação manual
                 self.validacao_manual = True
+
             else:
                 raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ.')
         return valor
@@ -62,7 +63,7 @@ class ValidateEmissaoUrlMixin(object):
 @insere_metodos_validacao('emission_csr')
 class ValidateEmissaoCSRMixin(object):
 
-    def _valida_emissao_csr(self, valor, fields):
+    def _valida_emission_csr(self, valor, fields):
         csr = self.get_csr_decoded(valor)
         url = fields.get('emission_url', '')
 
@@ -87,11 +88,13 @@ class ValidateEmissaoCSRMixin(object):
         if voucher.ssl_line == voucher.LINHA_PRIME and key_size != 4096:
             raise self.ValidationError('O tamanho da chave para produtos da linha Prime deve ser 4096')
 
-        if voucher.ssl_produto in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
+        if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
             dominios = csr.get('dnsNames', [])
             if len(dominios) > voucher.ssl_domains_qty:
                 raise self.ValidationError('A CSR possui mais domínios que a quantidade comprada: %s' % voucher.ssl_domains_qty)
             for dominio in dominios:
+                if dominio.startswith('*.'):
+                    dominio = dominio[2:]
                 razao_social = get_razao_social_dominio(dominio)
                 if not razao_social:
                     raise self.ValidationError('Não foi possível conseguir a razão social apartir do domínio: %s' % dominio)
@@ -99,7 +102,7 @@ class ValidateEmissaoCSRMixin(object):
                     if fields.get('emission_assignment_letter'):
                         self.validacao_manual = True
                     else:
-                        raise Exception('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
+                        raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
             #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
         return valor
 
@@ -107,20 +110,35 @@ class ValidateEmissaoCSRMixin(object):
 @insere_metodos_validacao('emission_primary_dn')
 class ValidateEmissaoPrimaryDN(object):
 
-    def _valida_emissao_primary_dn(self, valor, fields):
+    def _valida_emission_primary_dn(self, valor, fields):
         csr = self.get_csr_decoded(fields['emission_csr'])
         if not valor.strip() in csr.get('dnsNames'):
             raise self.ValidationError('O domínio primário não consta na lista de domínios na CSR')
         return valor
 
 
-@insere_metodos_validacao('emission_dcv_email')
+@insere_metodos_validacao('emission_dcv_emails')
 class ValidateEmissaoValidacaoEmail(object):
 
-    def _valida_emissao_validacao_email(self, valor, fields):
+    def _valida_emission_dcv_emails(self, valor, fields):
         emails = get_emails_validacao_padrao(fields['emission_url'])
         if valor not in emails:
             raise self.ValidationError('E-mail de validação inválido')
+        return valor
+
+@insere_metodos_validacao('emission_dcv_emails')
+class ValidateEmissaoValidacaoEmailMultiplo(object):
+
+    def _valida_emission_dcv_emails(self, valor, fields):
+        dominios = fields['emission_fqdns'].split(' ')
+        emails = valor.split(' ')
+
+        if len(dominios) != len(emails):
+            raise self.ValidationError('Número de e-mails diferente do número de domínios')
+
+        for dominio, email in zip(dominios, emails):
+            if email not in get_emails_validacao_padrao(dominio):
+                raise self.ValidationError('E-mail de validação inválido: %s para o domínio %s' % (email, dominio))
         return valor
 
 

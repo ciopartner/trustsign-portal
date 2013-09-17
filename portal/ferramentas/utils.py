@@ -61,7 +61,7 @@ def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True)
                 street_index += 1
             if key == 'dnsName(s)':
                 key = 'dnsNames'
-                value = map(lambda x: x.strip(), value.split())
+                value = map(lambda x: x.strip(), value.split(','))
 
             d[key.replace(' ', '')] = value
 
@@ -69,12 +69,21 @@ def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True)
 
     return d
 
+RAZOES_CACHE = {}
+
 
 def get_razao_social_dominio(dominio):
+    if dominio in RAZOES_CACHE:
+        return RAZOES_CACHE[dominio]
+    print dominio
     razao_social = commands.getoutput('whois %s | grep ^owner:' % dominio).strip()
-    r = re.match('owner:\s*(.+)', razao_social)
+    r = re.match('owner:\s*(.+)(\([0-9]+\))?', razao_social)
     if r:
-        return r.groups()[0]
+        razao = r.groups()[0]
+        RAZOES_CACHE[dominio] = razao
+        print razao
+        print 123
+        return razao
     return None
 
 

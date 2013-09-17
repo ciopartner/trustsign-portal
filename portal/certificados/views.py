@@ -95,10 +95,12 @@ class EscolhaVoucherView(ListView):
 
     def get_queryset(self):
         return Voucher.objects.select_related('emissao').filter(
-            Q(emissao__isnull=True) |
-            Q(emissao__emissao_status__in=(Emissao.STATUS_NAO_EMITIDO, Emissao.STATUS_EMITIDO,
-                                           Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_ACAO_MANUAL_PENDENTE)))
-        #.filter(customer_cnpj=self.request.user.username) TODO: incluir esse filter depois dos testes
+            Q(emissao__isnull=True) | Q(emissao__emissao_status__in=(
+                Emissao.STATUS_NAO_EMITIDO, Emissao.STATUS_EMITIDO,
+                Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_ACAO_MANUAL_PENDENTE
+            ))).filter(
+                customer_cnpj=self.request.user.username
+            )
 
 
 class EmissaoWizardView(SessionWizardView):
@@ -152,7 +154,7 @@ class EmissaoWizardView(SessionWizardView):
             voucher = self.get_voucher()
             initial.update({
                 'callback_tratamento': voucher.customer_callback_title,
-                'callback_nome': voucher.customer_callback_fistname,
+                'callback_nome': voucher.customer_callback_firstname,
                 'callback_sobrenome': voucher.customer_callback_lastname,
                 'callback_email': voucher.customer_callback_email,
                 'callback_telefone': voucher.customer_callback_phone,
@@ -212,22 +214,64 @@ class EmissaoWizardView(SessionWizardView):
         emissao = self.instance
         emissao.solicitante_user_id = self.request.user.pk
         emissao.crm_hash = self.kwargs['crm_hash']
+
         voucher = self.get_voucher()
         emissao.voucher = voucher
 
-        resposta = comodo.emite_certificado(emissao)
+        self.atualiza_voucher(voucher)
 
-        emissao.comodo_order = resposta['orderNumber']
-        emissao.emission_cost = resposta['totalCost']
+        if any(f.validacao_manual for f in form_list):
+            emissao.emission_status = emissao.STATUS_ACAO_MANUAL_PENDENTE
+        else:
+            emissao.emission_status = emissao.STATUS_EM_EMISSAO
+            resposta = comodo.emite_certificado(emissao)
 
+            emissao.comodo_order = resposta['orderNumber']
+            emissao.emission_cost = resposta['totalCost']
         emissao.save()
+
+    def atualiza_voucher(self, voucher):
+        dados_voucher = self.get_cleaned_data_for_step('tela-1')
+
+        v = dados_voucher.get('callback_tratamento')
+        if v:
+            voucher.customer_callback_title = v
+
+        v = dados_voucher.get('callback_nome')
+        if v:
+            voucher.customer_callback_firstname = v
+
+        v = dados_voucher.get('callback_sobrenome')
+        if v:
+            voucher.customer_callback_lastname = v
+
+        v = dados_voucher.get('callback_email')
+        if v:
+            voucher.customer_callback_email = v
+
+        v = dados_voucher.get('callback_telefone')
+        if v:
+            voucher.customer_callback_phone = v
+
+        v = dados_voucher.get('callback_observacao')
+        if v:
+            voucher.customer_callback_note = v
+
+        v = dados_voucher.get('callback_username')
+        if v:
+            voucher.customer_callback_username = v
+
+        v = dados_voucher.get('callback_password')
+        if v:
+            voucher.customer_callback_password = v
 
 
 class EmissaoNv1WizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD)
     templates = {
         'tela-1': 'certificados/wizard_nv1_tela_1.html',
-        'tela-2': 'certificados/wizard_nv1_tela_2.html'
+        'tela-2': 'certificados/wizard_nv1_tela_2.html',
+        'tela-confirmacao': 'certificados/wizard_nv1_confirmacao.html'
     }
 
 
@@ -235,7 +279,8 @@ class EmissaoNv2WizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC)
     templates = {
         'tela-1': 'certificados/wizard_nv2_tela_1.html',
-        'tela-2': 'certificados/wizard_nv2_tela_2.html'
+        'tela-2': 'certificados/wizard_nv2_tela_2.html',
+        'tela-confirmacao': 'certificados/wizard_nv2_confirmacao.html'
     }
 
 
@@ -243,5 +288,31 @@ class EmissaoNv3WizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_EV,)
     templates = {
         'tela-1': 'certificados/wizard_nv3_tela_1.html',
-        'tela-2': 'certificados/wizard_nv3_tela_2.html'
+        'tela-2': 'certificados/wizard_nv3_tela_2.html',
+        'tela-confirmacao': 'certificados/wizard_nv3_confirmacao.html'
+    }
+
+
+class EmissaoNv4WizardView(EmissaoWizardView):
+    produtos_voucher = (Voucher.PRODUTO_EV_MDC,)
+    templates = {
+        'tela-1': 'certificados/wizard_nv4_tela_1.html',
+        'tela-2': 'certificados/wizard_nv4_tela_2.html',
+        'tela-confirmacao': 'certificados/wizard_nv4_confirmacao.html'
+    }
+
+
+class EmissaoNvAWizardView(EmissaoWizardView):
+    produtos_voucher = (Voucher.PRODUTO_JRE, Voucher.PRODUTO_CODE_SIGNING)
+    templates = {
+        'tela-1': 'certificados/wizard_nvA_tela_1.html',
+        'tela-confirmacao': 'certificados/wizard_nvA_confirmacao.html'
+    }
+
+
+class EmissaoNvBWizardView(EmissaoWizardView):
+    produtos_voucher = (Voucher.PRODUTO_SMIME,)
+    templates = {
+        'tela-1': 'certificados/wizard_nvB_tela_1.html',
+        'tela-confirmacao': 'certificados/wizard_nvB_confirmacao.html'
     }

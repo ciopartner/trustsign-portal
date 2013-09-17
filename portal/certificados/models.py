@@ -66,6 +66,7 @@ class Voucher(Model):
 
     crm_hash = CharField(max_length=128)
     comodo_order = CharField(max_length=128, blank=True, null=True)
+    order_number = CharField(max_length=32, blank=True, null=True)
     legacy_imported = BooleanField(default=False)
 
     customer_cnpj = CharField(max_length=32)
@@ -81,11 +82,12 @@ class Voucher(Model):
     customer_registration_status = CharField(max_length=128)
 
     customer_callback_title = CharField(max_length=8)
-    customer_callback_fistname = CharField(max_length=128)
+    customer_callback_firstname = CharField(max_length=128)
     customer_callback_lastname = CharField(max_length=128)
     customer_callback_email = EmailField()
     customer_callback_phone = CharField(max_length=16)
     customer_callback_username = CharField(max_length=32, blank=True, null=True)
+    customer_callback_password = CharField(max_length=128, blank=True, null=True)
     customer_callback_note = CharField(max_length=128, blank=True, default='')
 
     ssl_url = CharField(max_length=200, blank=True, null=True)
@@ -96,7 +98,7 @@ class Voucher(Model):
     ssl_valid_to = DateTimeField(blank=True, null=True)
     ssl_publickey = TextField(blank=True, null=True)
     ssl_revoked_date = DateTimeField(blank=True, null=True)
-    ssl_domains_qty = IntegerField(blank=True, null=True)
+    ssl_domains_qty = IntegerField(blank=True, default=0)
     ssl_seal_html = TextField()
 
     order_date = DateTimeField()
@@ -125,7 +127,7 @@ class Voucher(Model):
 #     customer_country = CharField(max_length=64)
 #
 #     customer_registration_status = CharField(max_length=128)
-#     customer_callback_fistname = CharField(max_length=128)
+#     customer_callback_firstname = CharField(max_length=128)
 #     customer_callback_email = EmailField()
 #     customer_callback_phone = CharField(max_length=16)
 #     contato_observacao = CharField(max_length=128)
@@ -190,7 +192,7 @@ class Emissao(Model):
 
     voucher = OneToOneField(Voucher, related_name='emissao')
     crm_hash = CharField(max_length=128)
-    comodo_order = CharField(max_length=128)
+    comodo_order = CharField(max_length=128, blank=True, null=True)
 
     requestor_user = ForeignKey(User, related_name='emissoes')
     requestor_timestamp = DateTimeField(auto_now_add=True)
