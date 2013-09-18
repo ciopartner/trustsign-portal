@@ -1,9 +1,8 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.comodo import get_emails_validacao_padrao
 from portal.certificados.models import Voucher
-from portal.ferramentas.utils import decode_csr, comparacao_fuzzy, get_razao_social_dominio
+from portal.ferramentas.utils import comparacao_fuzzy, get_razao_social_dominio
 
 
 def insere_metodos_validacao(field):
@@ -140,33 +139,3 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             if email not in get_emails_validacao_padrao(dominio):
                 raise self.ValidationError('E-mail de validação inválido: %s para o domínio %s' % (email, dominio))
         return valor
-
-
-class EmissaoModelSerializer(ModelSerializer):
-    REQUIRED_FIELDS = ()
-    validacao_manual = False
-    _csr_decoded = None
-    _voucher = None
-    user = None
-    ValidationError = ValidationError
-
-    def __init__(self, user=None, crm_hash=None, **kwargs):
-        self.user = user
-        self._crm_hash = crm_hash
-        super(EmissaoModelSerializer, self).__init__(**kwargs)
-
-    def get_csr_decoded(self, valor):
-        if not self._csr_decoded:
-            self._csr_decoded = decode_csr(valor)
-        return self._csr_decoded
-
-    def get_fields(self):
-        fields = super(EmissaoModelSerializer, self).get_fields()
-        for f in self.REQUIRED_FIELDS:
-            fields[f].required = True
-        return fields
-
-    def get_voucher(self):
-        if not self._voucher:
-            self._voucher = Voucher.objects.get(crm_hash=self._crm_hash)
-        return self._voucher

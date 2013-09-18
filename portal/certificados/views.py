@@ -7,16 +7,17 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework import status
+from rest_framework.generics import GenericAPIView, get_object_or_404
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer, BrowsableAPIRenderer
+from rest_framework.response import Response
 from portal.certificados import comodo
 from portal.certificados.authentication import UserPasswordAuthentication
 from portal.certificados.models import Emissao, Voucher
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
-    EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer
+    EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer
 from django.conf import settings
-from portal.ferramentas.utils import verifica_razaosocial_dominio
 
 
 class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
@@ -54,7 +55,37 @@ class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+
+        if serializer.is_valid():
+
+            emissao = serializer.object
+            emissao.requestor_user_id = self.request.user.pk
+            emissao.crm_hash = self.kwargs['crm_hash']
+
+            voucher = self.get_voucher()
+            emissao.voucher = voucher
+
+            # self.atualiza_voucher(voucher) TODO: TBD > o que fazer com os dados do voucher
+
+            if serializer.validacao_manual:
+                emissao.emission_status = emissao.STATUS_ACAO_MANUAL_PENDENTE
+            else:
+                emissao.emission_status = emissao.STATUS_EM_EMISSAO
+                resposta = comodo.emite_certificado(emissao)
+
+                emissao.comodo_order = resposta['orderNumber']
+                emissao.emission_cost = resposta['totalCost']
+
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # errors = {
+        #     'errors': serializer.errors
+        # }
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_voucher(self):
         try:
@@ -78,9 +109,38 @@ class EmailWhoisAPIView(GenericAPIView):
     pass
 
 
-class VoucherAPIView(GenericAPIView):
-    #TODO: implementar
-    pass
+class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
+    authentication_classes = [UserPasswordAuthentication]
+    renderer_classes = [UnicodeJSONRenderer]
+    serializer_class = VoucherSerializer
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(self.object)
+        serializer.is_valid()
+        data = serializer.data
+
+        novo = {'contact': {}, 'customer': {}, 'product': {}, 'order': {}}
+        for k, v in data.iteritems():
+            if k.startswith('customer_callback'):
+                novo['contact'][k] = v
+            elif k.startswith('customer'):
+                novo['customer'][k] = v
+            elif k.startswith('ssl'):
+                novo['product'][k] = v
+            elif k.startswith('order'):
+                novo['order'][k] = v
+            else:
+                novo[k] = v
+        return Response(novo)
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(Voucher.objects, crm_hash=self.request.GET.get('crm_hash'))
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
 
 
 class ValidaUrlCSRAPIView(GenericAPIView):
