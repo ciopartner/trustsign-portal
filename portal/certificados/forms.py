@@ -3,7 +3,7 @@ from django.forms import ModelForm, CharField, EmailField, PasswordInput, Hidden
 from portal.certificados.comodo import get_emails_validacao
 from portal.certificados.models import Emissao, Voucher
 from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo
-from portal.ferramentas.utils import decode_csr
+from portal.ferramentas.utils import decode_csr, verifica_razaosocial_dominio
 from django.core.exceptions import ValidationError
 
 
@@ -12,6 +12,7 @@ class EmissaoModelForm(ModelForm):
     _crm_hash = None
     _voucher = None
     _csr_decoded = None
+    _precisa_carta_cessao = None
     ValidationError = ValidationError
     REQUIRED_FIELDS = ()
     validacao_manual = False
@@ -41,6 +42,20 @@ class EmissaoModelForm(ModelForm):
         if not self._csr_decoded:
             self._csr_decoded = decode_csr(valor)
         return self._csr_decoded
+
+    def precisa_carta_cessao(self):
+        if self._precisa_carta_cessao is None:
+            dominio = self.initial.get('emission_url')
+            if dominio:
+                voucher = self.get_voucher()
+                self._precisa_carta_cessao = not verifica_razaosocial_dominio(
+                    voucher.customer_companyname,
+                    dominio
+                )
+            else:
+                self._precisa_carta_cessao = False
+
+        return self._precisa_carta_cessao
 
 
 class EmissaoCallbackForm(ModelForm):
@@ -142,7 +157,8 @@ class EmissaoNv3Tela1Form(EmissaoTela1Form):
 class EmissaoNv3Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
-                       'emission_server_type')
+                       'emission_server_type', 'emission_articles_of_incorporation', 'emission_address_proof',
+                       'emission_ccsa', 'emission_evcr')
     validacao_manual = True
 
     class Meta(EmissaoModelForm.Meta):

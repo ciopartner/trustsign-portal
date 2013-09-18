@@ -228,6 +228,9 @@ class Emissao(Model):
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
 
+    def get_dominios_x_emails(self):
+        return zip(self.emission_fqdns.split(' '), self.emission_dcv_emails.split(' '))
+
 
 class Revogacao(Model):
     crm_hash = CharField(max_length=128)

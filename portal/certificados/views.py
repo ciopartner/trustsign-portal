@@ -95,7 +95,7 @@ class EscolhaVoucherView(ListView):
 
     def get_queryset(self):
         return Voucher.objects.select_related('emissao').filter(
-            Q(emissao__isnull=True) | Q(emissao__emissao_status__in=(
+            Q(emissao__isnull=True) | Q(emissao__emission_status__in=(
                 Emissao.STATUS_NAO_EMITIDO, Emissao.STATUS_EMITIDO,
                 Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_ACAO_MANUAL_PENDENTE
             ))).filter(
@@ -172,15 +172,18 @@ class EmissaoWizardView(SessionWizardView):
         kwargs['user'] = self.request.user
         kwargs['crm_hash'] = self.kwargs['crm_hash']
         kwargs['voucher'] = self.get_voucher()
-        kwargs['precisa_carta_cessao'] = self._precisa_carta_cessao.get(self.steps.current, False)
         return kwargs
 
     def get_context_data(self, form, **kwargs):
         context = super(EmissaoWizardView, self).get_context_data(form, **kwargs)
         context.update({
             'voucher': self.get_voucher(),
-            'precisa_carta_cessao': self.precisa_carta_cessao(self.steps.current)
+            'emissao': self.instance,
         })
+        if self.steps.current == 'tela-confirmacao':
+            context['dados_form1'] = self.get_cleaned_data_for_step('tela-1'),
+            if 'tela-2' in self.templates:
+                context['dados_form2'] = self.get_cleaned_data_for_step('tela-2')
         return context
 
     def get_template_names(self):
@@ -194,25 +197,9 @@ class EmissaoWizardView(SessionWizardView):
                 raise Http404()
         return self._voucher
 
-    def precisa_carta_cessao(self, step):
-        if self._precisa_carta_cessao.get(step) is None:
-            if self.steps.current == self.tela_carta_cessao:
-                cleaned_data = self.get_cleaned_data_for_step(self.tela_emissao_url) or {}
-
-                voucher = self.get_voucher()
-                self._precisa_carta_cessao[step] = not verifica_razaosocial_dominio(
-                    voucher.customer_companyname,
-                    cleaned_data['emission_url']
-                )
-
-            else:
-                self._precisa_carta_cessao[step] = False
-
-        return self._precisa_carta_cessao[step]
-
     def save(self, form_list, **kwargs):
         emissao = self.instance
-        emissao.solicitante_user_id = self.request.user.pk
+        emissao.requestor_user_id = self.request.user.pk
         emissao.crm_hash = self.kwargs['crm_hash']
 
         voucher = self.get_voucher()
@@ -230,8 +217,8 @@ class EmissaoWizardView(SessionWizardView):
             emissao.emission_cost = resposta['totalCost']
         emissao.save()
 
-    def atualiza_voucher(self, voucher):
-        dados_voucher = self.get_cleaned_data_for_step('tela-1')
+    def atualiza_voucher(self, voucher, form_step='tela-1'):
+        dados_voucher = self.get_cleaned_data_for_step(form_step)
 
         v = dados_voucher.get('callback_tratamento')
         if v:
@@ -269,50 +256,50 @@ class EmissaoWizardView(SessionWizardView):
 class EmissaoNv1WizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD)
     templates = {
-        'tela-1': 'certificados/wizard_nv1_tela_1.html',
-        'tela-2': 'certificados/wizard_nv1_tela_2.html',
-        'tela-confirmacao': 'certificados/wizard_nv1_confirmacao.html'
+        'tela-1': 'certificados/nv1/wizard_tela_1.html',
+        'tela-2': 'certificados/nv1/wizard_tela_2.html',
+        'tela-confirmacao': 'certificados/nv1/wizard_tela_3_confirmacao.html'
     }
 
 
 class EmissaoNv2WizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC)
     templates = {
-        'tela-1': 'certificados/wizard_nv2_tela_1.html',
-        'tela-2': 'certificados/wizard_nv2_tela_2.html',
-        'tela-confirmacao': 'certificados/wizard_nv2_confirmacao.html'
+        'tela-1': 'certificados/nv2/wizard_tela_1.html',
+        'tela-2': 'certificados/nv2/wizard_tela_2.html',
+        'tela-confirmacao': 'certificados/nv2/wizard_tela_3_confirmacao.html'
     }
 
 
 class EmissaoNv3WizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_EV,)
     templates = {
-        'tela-1': 'certificados/wizard_nv3_tela_1.html',
-        'tela-2': 'certificados/wizard_nv3_tela_2.html',
-        'tela-confirmacao': 'certificados/wizard_nv3_confirmacao.html'
+        'tela-1': 'certificados/nv3/wizard_tela_1.html',
+        'tela-2': 'certificados/nv3/wizard_tela_2.html',
+        'tela-confirmacao': 'certificados/nv3/wizard_tela_3_confirmacao.html'
     }
 
 
 class EmissaoNv4WizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_EV_MDC,)
     templates = {
-        'tela-1': 'certificados/wizard_nv4_tela_1.html',
-        'tela-2': 'certificados/wizard_nv4_tela_2.html',
-        'tela-confirmacao': 'certificados/wizard_nv4_confirmacao.html'
+        'tela-1': 'certificados/nv4/wizard_tela_1.html',
+        'tela-2': 'certificados/nv4/wizard_tela_2.html',
+        'tela-confirmacao': 'certificados/nv4/wizard_tela_3_confirmacao.html'
     }
 
 
 class EmissaoNvAWizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_JRE, Voucher.PRODUTO_CODE_SIGNING)
     templates = {
-        'tela-1': 'certificados/wizard_nvA_tela_1.html',
-        'tela-confirmacao': 'certificados/wizard_nvA_confirmacao.html'
+        'tela-1': 'certificados/nvA/wizard_tela_1.html',
+        'tela-confirmacao': 'certificados/nvA/wizard_tela_2_confirmacao.html'
     }
 
 
 class EmissaoNvBWizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_SMIME,)
     templates = {
-        'tela-1': 'certificados/wizard_nvB_tela_1.html',
-        'tela-confirmacao': 'certificados/wizard_nvB_confirmacao.html'
+        'tela-1': 'certificados/nvB/wizard_tela_1.html',
+        'tela-confirmacao': 'certificados/nvB/wizard_tela_2_confirmacao.html'
     }

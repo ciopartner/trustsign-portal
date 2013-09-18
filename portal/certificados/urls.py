@@ -5,9 +5,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from portal.certificados import views
 from portal.certificados.forms import EmissaoNv1Tela1Form, EmissaoNv1Tela2Form, EmissaoNv3Tela1Form, \
     EmissaoNv3Tela2Form, EmissaoNv2Tela2Form, EmissaoNv2Tela1Form, EmissaoNv4Tela1Form, EmissaoNv4Tela2Form, \
-    EmissaoNvATela1Form, EmissaoConfirmacaoForm
+    EmissaoNvATela1Form, EmissaoConfirmacaoForm, EmissaoNvBTela1Form
 from portal.certificados.views import EmissaoNv1WizardView, EmissaoNv3WizardView, EscolhaVoucherView, \
-    EmissaoNv2WizardView, EmissaoNv4WizardView, EmissaoNvAWizardView
+    EmissaoNv2WizardView, EmissaoNv4WizardView, EmissaoNvAWizardView, EmissaoNvBWizardView
 
 FORMS_NV1 = [('tela-1', EmissaoNv1Tela1Form), ('tela-2', EmissaoNv1Tela2Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
 FORMS_NV2 = [('tela-1', EmissaoNv2Tela1Form), ('tela-2', EmissaoNv2Tela2Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
@@ -33,7 +33,7 @@ urlpatterns = patterns(
     url(r'^emissao/ssl-smime/(?P<crm_hash>\w+)/$', login_required(EmissaoNvBWizardView.as_view(form_list=FORMS_NVB)), name='form-nvB'),
 
     url(r'^escolha-voucher/$', login_required(EscolhaVoucherView.as_view()), name='escolha_voucher'),
-    url(r'^emissao-de-certificado-finalizada/$', TemplateView.as_view(template_name='certificados/sucesso.html'),
+    url(r'^emissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/sucesso.html'),
         name='certificado_emitido_sucesso')
 )
 
