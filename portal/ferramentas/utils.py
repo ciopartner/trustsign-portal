@@ -69,22 +69,49 @@ def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True)
 
     return d
 
+
+def compare_csr(csr_1, csr_2):
+    if not csr_1['ok'] or not csr_2['ok']:
+        return False
+    if any(csr_1[f] != csr_2[f] for f in ('CN', 'OU', 'O', 'POBox', 'STREET1', 'STREET2', 'STREET3', 'L',
+                                          'S', 'PostalCode', 'C', 'Email', 'Phone', 'KeySize')):
+        return False
+    if set(csr_1['dnsNames']) != set(csr_2['dnsNames']):
+        return False
+    return True
+
+
 RAZOES_CACHE = {}
 
 
 def get_razao_social_dominio(dominio):
     if dominio in RAZOES_CACHE:
         return RAZOES_CACHE[dominio]
-    print dominio
     razao_social = commands.getoutput('whois %s | grep ^owner:' % dominio).strip()
     r = re.match('owner:\s*(.+)(\([0-9]+\))?', razao_social)
     if r:
         razao = r.groups()[0]
         RAZOES_CACHE[dominio] = razao
-        print razao
-        print 123
-        return razao
     return None
+
+
+EMAIL_CACHE = {}
+
+
+def get_emails_dominio(dominio):
+    if dominio in EMAIL_CACHE:
+        return EMAIL_CACHE[dominio]
+    resposta = commands.getoutput('whois %s | grep ^e-mail' % dominio).splitlines()
+    emails = []
+    for email in resposta:
+        r = re.match('e-mail:\s*(.+)', email)
+        if r:
+            r = r.groups()[0]
+            if r not in emails:
+                emails.append(r)
+    if emails:
+        EMAIL_CACHE[dominio] = emails
+    return emails
 
 
 def remove_acentos(txt, codif='utf-8'):

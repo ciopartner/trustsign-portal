@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework.urlpatterns import format_suffix_patterns
 from portal.certificados import views
@@ -18,12 +19,12 @@ FORMS_NVB = [('tela-1', EmissaoNvBTela1Form), ('tela-confirmacao', EmissaoConfir
 
 urlpatterns = patterns(
     '',
-    url(r'^api/v1/ssl-apply/$', views.EmissaoAPIView.as_view()),
-    url(r'^api/v1/ssl-replace/$', views.ReemissaoAPIView.as_view()),
-    url(r'^api/v1/ssl-revoke/$', views.RevogacaoAPIView.as_view()),
-    url(r'^api/v1/ssl-validate-url-csr/$', views.ValidaUrlCSRAPIView.as_view()),
-    url(r'^api/v1/get-voucher-data/$', views.VoucherAPIView.as_view()),
-    url(r'^api/v1/get-email-whois/$', views.EmailWhoisAPIView.as_view()),
+    url(r'^api/v1/ssl-apply/$', csrf_exempt(views.EmissaoAPIView.as_view())),
+    url(r'^api/v1/ssl-replace/$', csrf_exempt(views.ReemissaoAPIView.as_view())),
+    url(r'^api/v1/ssl-revoke/$', csrf_exempt(views.RevogacaoAPIView.as_view())),
+    url(r'^api/v1/ssl-validate-url-csr/$', csrf_exempt(views.ValidaUrlCSRAPIView.as_view())),
+    url(r'^api/v1/get-voucher-data/$', csrf_exempt(views.VoucherAPIView.as_view())),
+    url(r'^api/v1/get-email-whois/$', csrf_exempt(views.EmailWhoisAPIView.as_view())),
 
     url(r'^emissao/(ssl|wildcard)/(?P<crm_hash>\w+)/$', login_required(EmissaoNv1WizardView.as_view(form_list=FORMS_NV1)), name='form-nv1'),
     url(r'^emissao/(ssl-san|ssl-mdc)/(?P<crm_hash>\w+)/$', login_required(EmissaoNv2WizardView.as_view(form_list=FORMS_NV2)), name='form-nv2'),

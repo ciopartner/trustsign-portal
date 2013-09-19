@@ -237,7 +237,7 @@ PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 REST_FRAMEWORK = {
-
+    'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
 }
 
 COMODO_LOGIN_NAME = '<mudar no local_settings.py>'

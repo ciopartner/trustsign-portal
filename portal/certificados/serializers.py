@@ -1,9 +1,11 @@
-from rest_framework.fields import Field, DateTimeField
+# coding=utf-8
+from __future__ import unicode_literals
+from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, ValidationError
-from portal.certificados.models import Emissao, Voucher
+from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
-    ValidateEmissaoValidacaoEmail, ValidateEmissaoPrimaryDN
-from portal.ferramentas.utils import decode_csr
+    ValidateEmissaoValidacaoEmail, ValidateEmissaoPrimaryDN, ValidateEmissaoValidacaoEmailMultiplo
+from portal.ferramentas.utils import decode_csr, compare_csr
 
 
 class VoucherSerializer(ModelSerializer):
@@ -13,6 +15,31 @@ class VoucherSerializer(ModelSerializer):
     class Meta:
         model = Voucher
         exclude = ['order_item_value']
+
+
+class RevogacaoSerializer(ModelSerializer):
+
+    order_date = DateTimeField(format='%d/%m/%Y %H:%M')
+
+    class Meta:
+        model = Revogacao
+        fields = ['crm_hash', 'revogacao_motivo']
+
+
+class ReemissaoSerializer(ModelSerializer):
+
+    class Meta:
+        model = Emissao
+        fields = ['crm_hash', 'emission_csr']
+
+    def validate_emission_csr(self, attrs, source):
+        csr_nova = attrs[source]
+        csr_antiga = Emissao.objects.get(pk=self.object.pk).emission_csr
+
+        if not compare_csr(decode_csr(csr_nova), decode_csr(csr_antiga)):
+            raise ValidationError('Único campo que pode mudar na CSR de reemssão é a chave pública')
+
+        return csr_nova
 
 
 class EmissaoModelSerializer(ModelSerializer):
@@ -53,8 +80,7 @@ class EmissaoNv0Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin):
         fields = ('crm_hash', 'emission_url', 'emission_assignment_letter')
 
 
-class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
-                           ValidateEmissaoValidacaoEmail):
+class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr')
 
@@ -64,8 +90,8 @@ class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
                   'emission_server_type', 'emission_csr', 'emission_assignment_letter')
 
 
-class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
-                           ValidateEmissaoPrimaryDN):
+class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoPrimaryDN,
+                           ValidateEmissaoValidacaoEmailMultiplo):
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr', 'emission_primary_dn', )
 
@@ -75,7 +101,7 @@ class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
                   'emission_publickey_sendto', 'emission_server_type', 'emission_assignment_letter')
 
 
-class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin):
+class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
     validacao_manual = True
 
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
@@ -89,7 +115,8 @@ class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
                   'emission_articles_of_incorporation', 'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
 
-class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoPrimaryDN):
+class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoPrimaryDN,
+                           ValidateEmissaoValidacaoEmailMultiplo):
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr', 'emission_articles_of_incorporation',
                        'emission_address_proof', 'emission_ccsa', 'emission_evcr', 'emission_primary_dn')

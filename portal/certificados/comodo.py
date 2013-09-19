@@ -1,7 +1,7 @@
 #coding=utf-8
 from django.conf import settings
 import requests
-from portal.ferramentas.utils import url_parse
+from portal.ferramentas.utils import url_parse, get_emails_dominio
 
 import logging
 
@@ -30,6 +30,14 @@ def get_emails_validacao_whois(dominio):
     })
     return [r[12:] for r in response.text.splitlines()
             if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+
+
+def get_emails_validacao_whois(dominio):
+    """
+    Esse método esta aqui porque a API da comodo não está retornando os emails corretamente para dominios brasileiros
+    então estamos fazendo direto no whois
+    """
+    return get_emails_dominio(dominio)
 
 
 def get_emails_validacao(dominio):
@@ -84,6 +92,50 @@ def emite_certificado(emissao):
         params['joiCountryName'] = 'BR'
 
     response = requests.post(settings.COMODO_API_EMISSAO_URL, params)
+
+    r = url_parse(response.text)
+    if r['errorCode'] != '0':
+        log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
+        raise Exception('Ocorreu um erro na chamada da COMODO')
+    return r
+
+
+def revoga_certificado(revogacao):
+
+    params = {
+        'loginName': settings.COMODO_LOGIN_NAME,
+        'loginPassword': settings.COMODO_LOGIN_PASSWORD,
+        'orderNumber': revogacao.emissao.comodo_order,
+        'revocationReason': revogacao.revogacao_motivo,
+        'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
+        'responseFormat': '1',
+    }
+
+    response = requests.post(settings.COMODO_API_REVOGACAO_URL, params)
+
+    r = url_parse(response.text)
+    if r['errorCode'] != '0':
+        log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
+        raise Exception('Ocorreu um erro na chamada da COMODO')
+    return r
+
+
+def reemite_certificado(emissao):
+
+    params = {
+        'loginName': settings.COMODO_LOGIN_NAME,
+        'loginPassword': settings.COMODO_LOGIN_PASSWORD,
+        'orderNumber': emissao.comodo_order,
+        'csr': emissao.emission_csr,
+        'emailAddress': 'none',
+        'isCustomerValidated': 'Y',
+        'foreignOrderNumber': emissao.crm_hash,
+        'responseFormat': '1',
+        'isAppRepValidated': 'Y',
+        'isCallbackCompleted': 'Y'
+    }
+
+    response = requests.post(settings.COMODO_API_REEMISSAO_URL, params)
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':

@@ -10,20 +10,35 @@ from django.views.generic import ListView
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
-from rest_framework.renderers import UnicodeJSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from portal.certificados import comodo
 from portal.certificados.authentication import UserPasswordAuthentication
-from portal.certificados.models import Emissao, Voucher
+from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
-    EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer
+    EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer, RevogacaoSerializer, \
+    ReemissaoSerializer
 from django.conf import settings
 
 
-class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
+def erro_rest(*erros):
+    """
+    Cria o Response com o padrão:
+    {
+        'errors': [ {'code':X, 'message': Y}, {'code':A, 'message': B},]
+    }
+
+    onde a chamada seria erro_rest((X,Y), (A,B))
+    """
+    return Response({
+        'errors': [{'code': e[0], 'message': e[1]} for e in erros]
+    })
+
+
+class EmissaoAPIView(CreateModelMixin, GenericAPIView):
     queryset = Emissao.objects.all()
     authentication_classes = [UserPasswordAuthentication]
-    renderer_classes = [UnicodeJSONRenderer, BrowsableAPIRenderer]
+    renderer_classes = [UnicodeJSONRenderer]
 
     def get_serializer_context(self):
         """
@@ -34,6 +49,9 @@ class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
             'user': self.request.user
         })
         return context
+
+    def perform_authentication(self, request):
+        pass
 
     def get_serializer_class(self):
         voucher = self.get_voucher()
@@ -51,9 +69,6 @@ class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
             return EmissaoNvASerializer
         raise Http404()
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
@@ -61,7 +76,7 @@ class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
             emissao = serializer.object
             emissao.requestor_user_id = self.request.user.pk
-            emissao.crm_hash = self.kwargs['crm_hash']
+            emissao.crm_hash = request.DATA.get('crm_hash')
 
             voucher = self.get_voucher()
             emissao.voucher = voucher
@@ -80,8 +95,7 @@ class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
             self.post_save(self.object, created=True)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            return Response({}, status=status.HTTP_200_OK)
         # errors = {
         #     'errors': serializer.errors
         # }
@@ -95,18 +109,80 @@ class EmissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
 
 class ReemissaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
-    #TODO: implementar
-    pass
+    model = Emissao
+    authentication_classes = [UserPasswordAuthentication]
+    renderer_classes = [UnicodeJSONRenderer]
+    serializer_class = ReemissaoSerializer
+
+    def post(self, request, *args, **kwargs):
+        emissao = get_object_or_404(Emissao.objects, crm_hash=request.DATA.get('crm_hash'))
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES, instance=emissao)
+
+        if serializer.is_valid():
+
+            emissao = serializer.object
+
+            resposta = comodo.reemite_certificado(emissao)
+
+            emissao.comodo_order = resposta['orderNumber']
+            emissao.emission_cost = resposta['totalCost']
+
+            emissao.id = None  # isso obriga o django a criar um novo objeto
+
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+
+            headers = self.get_success_headers(serializer.data)
+            return Response({}, status=status.HTTP_200_OK, headers=headers)
+        # errors = {
+        #     'errors': serializer.errors
+        # }
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class RevogacaoAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
-    #TODO: implementar
-    pass
+class RevogacaoAPIView(CreateModelMixin, GenericAPIView):
+    model = Revogacao
+    authentication_classes = [UserPasswordAuthentication]
+    renderer_classes = [UnicodeJSONRenderer]
+    serializer_class = RevogacaoSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+
+        if serializer.is_valid():
+
+            revogacao = serializer.object
+            revogacao.emissao = get_object_or_404(Emissao.objects, crm_hash=self.request.DATA.get('crm_hash'))
+
+            comodo.revoga_certificado(revogacao)
+
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+
+            headers = self.get_success_headers(serializer.data)
+            return Response({}, status=status.HTTP_201_CREATED, headers=headers)
+        # errors = {
+        #     'errors': serializer.errors
+        # }
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EmailWhoisAPIView(GenericAPIView):
-    #TODO: implementar
-    pass
+    authentication_classes = [UserPasswordAuthentication]
+    renderer_classes = [UnicodeJSONRenderer]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            url = request.GET.get('emission_url')
+            if not url:
+                return erro_rest(('1321', 'Campo emission_url requerido'))  # TODO: codigo erro
+            return Response({
+                'email_list': comodo.get_emails_validacao(url)
+            })
+        except Exception:
+            return erro_rest(('-1', 'Erro interno do servidor'))
 
 
 class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
@@ -117,7 +193,6 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         serializer = self.get_serializer(self.object)
-        serializer.is_valid()
         data = serializer.data
 
         novo = {'contact': {}, 'customer': {}, 'product': {}, 'order': {}}
@@ -143,9 +218,21 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
         return obj
 
 
-class ValidaUrlCSRAPIView(GenericAPIView):
-    #TODO: implementar
-    pass
+class ValidaUrlCSRAPIView(EmissaoAPIView):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+
+        if serializer.is_valid():
+            data = {
+                'required_fields': serializer.REQUIRED_FIELDS,
+                'emission_dcv_emails': ['admin', 'postmaster', 'webmaster', 'administrator', 'hostmaster'],
+                'server_list': Emissao.SERVIDOR_TIPO_CHOICES
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        # errors = {
+        #     'errors': serializer.errors
+        # }
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EscolhaVoucherView(ListView):
