@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView
 from rest_framework import status
-from rest_framework.generics import GenericAPIView, get_object_or_404
+from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
@@ -19,6 +19,9 @@ from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Seri
     EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer, RevogacaoSerializer, \
     ReemissaoSerializer, EmissaoValidaSerializer
 from django.conf import settings
+import logging
+
+log = logging.getLogger('portal.certificados.view')
 
 
 def erro_rest(*erros):
@@ -33,7 +36,7 @@ def erro_rest(*erros):
     """
     return Response({
         'errors': [{'code': e[0], 'message': e[1]} for e in erros]
-    })
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddErrorResponseMixin(object):
@@ -83,9 +86,15 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             return EmissaoNv4Serializer
         if voucher.ssl_product in (voucher.PRODUTO_JRE, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_SMIME):
             return EmissaoNvASerializer
+        log.warning('voucher #%s com produto inválido' % voucher.crm_hash)
         raise Http404()
 
     def post(self, request, *args, **kwargs):
+        try:
+            voucher = self.get_voucher()
+        except Voucher.DoesNotExist:
+            return erro_rest(('---', 'Emissão não encontrada'))  # TODO corrigir codigo erro
+
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
@@ -94,7 +103,6 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
 
-            voucher = self.get_voucher()
             emissao.voucher = voucher
 
             # self.atualiza_voucher(voucher) TODO: TBD > o que fazer com os dados do voucher
@@ -116,10 +124,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         return self.error_response(serializer)
 
     def get_voucher(self):
-        try:
-            return Voucher.objects.get(crm_hash=self.request.DATA.get('crm_hash'))
-        except Voucher.DoesNotExist:
-            raise Http404()
+        return Voucher.objects.get(crm_hash=self.request.DATA.get('crm_hash'))
 
 
 class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
@@ -129,7 +134,10 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
     serializer_class = ReemissaoSerializer
 
     def post(self, request, *args, **kwargs):
-        emissao = get_object_or_404(Emissao.objects, crm_hash=request.DATA.get('crm_hash'))
+        try:
+            emissao = Emissao.objects.get(crm_hash=request.DATA.get('crm_hash'))
+        except Emissao.DoesNotExist:
+            return erro_rest(('---', 'Emissão não encontrada'))  # TODO corrigir codigo erro
         serializer = self.get_serializer(data=request.DATA, files=request.FILES, instance=emissao)
 
         if serializer.is_valid():
@@ -160,12 +168,17 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
     serializer_class = RevogacaoSerializer
 
     def post(self, request, *args, **kwargs):
+        try:
+            emissao = Emissao.objects.get(crm_hash=self.request.DATA.get('crm_hash'))
+        except Emissao.DoesNotExist:
+            return erro_rest(('---', 'Emissão não encontrada'))  # TODO corrigir codigo erro
+
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
 
             revogacao = serializer.object
-            revogacao.emissao = get_object_or_404(Emissao.objects, crm_hash=self.request.DATA.get('crm_hash'))
+            revogacao.emissao = emissao
 
             comodo.revoga_certificado(revogacao)
 
@@ -201,7 +214,10 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
     serializer_class = VoucherSerializer
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        try:
+            self.object = self.get_object()
+        except Voucher.DoesNotExist:
+            return erro_rest(('---', 'Voucher não encontrado'))  # TODO corrigir codigo erro
         serializer = self.get_serializer(self.object)
         data = serializer.data
 
@@ -220,7 +236,7 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
         return Response(novo)
 
     def get_object(self, queryset=None):
-        obj = get_object_or_404(Voucher.objects, crm_hash=self.request.GET.get('crm_hash'))
+        obj = Voucher.objects.get(crm_hash=self.request.GET.get('crm_hash'))
 
         # May raise a permission denied
         self.check_object_permissions(self.request, obj)

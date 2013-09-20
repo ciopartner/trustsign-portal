@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ###########################################
 # GLOBAL SETTINGS FOR MEZZANINE AND OSCAR #
 ###########################################
@@ -111,15 +113,24 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
+        'logfile': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'formatter': 'simple',
+            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile.log'),
+            'mode': 'a',
+            'maxBytes': 10485760,
+            'backupCount': 5,
+        }
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'logfile'],
             'level': 'ERROR',
             'propagate': True,
         },
         'portal': {
-            'handlers': ['console', 'mail_admins'],
+            'handlers': ['console', 'logfile', 'mail_admins'],
             'level': 'INFO'
         }
     },
@@ -131,8 +142,6 @@ LOGGING = {
 #############
 
 # DATABASE_ROUTERS = ['routers.UserSessionRouter']
-import os
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
     "common": {

@@ -109,6 +109,18 @@ class Voucher(Model):
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
 
+    def get_ssl_url(self):
+        try:
+            return self.emissao.emission_url
+        except Emissao.DoesNotExist:
+            return ''
+
+    def get_ssl_urls(self):
+        try:
+            return self.emissao.emission_fqdns.split(' ')
+        except Emissao.DoesNotExist:
+            return []
+
 
 # class Pedido(Model):  # TODO: Substituir por abstract do oscar
 #     knu_html = TextField()

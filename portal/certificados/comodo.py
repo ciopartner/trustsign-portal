@@ -1,4 +1,5 @@
 #coding=utf-8
+from __future__ import unicode_literals
 from django.conf import settings
 import requests
 from portal.ferramentas.utils import url_parse, get_emails_dominio
