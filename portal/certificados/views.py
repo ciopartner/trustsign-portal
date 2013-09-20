@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, get_object_or_404
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from portal.certificados import comodo
@@ -31,9 +31,6 @@ def erro_rest(*erros):
 
     onde a chamada seria erro_rest((X,Y), (A,B))
     """
-    for e in erros:
-        print 1113, e
-
     return Response({
         'errors': [{'code': e[0], 'message': e[1]} for e in erros]
     })
@@ -259,13 +256,17 @@ class EscolhaVoucherView(ListView):
     context_object_name = 'vouchers'
 
     def get_queryset(self):
-        return Voucher.objects.select_related('emissao').filter(
+        qs = Voucher.objects.select_related('emissao').filter(
             Q(emissao__isnull=True) | Q(emissao__emission_status__in=(
                 Emissao.STATUS_NAO_EMITIDO, Emissao.STATUS_EMITIDO,
                 Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_ACAO_MANUAL_PENDENTE
-            ))).filter(
+            )))
+        profile = self.request.user.get_profile()
+        if profile.perfil == profile.PERFIL_CLIENTE:
+            qs = qs.filter(
                 customer_cnpj=self.request.user.username
             )
+        return qs
 
 
 class EmissaoWizardView(SessionWizardView):
@@ -299,7 +300,6 @@ class EmissaoWizardView(SessionWizardView):
         return super(EmissaoWizardView, self).dispatch(request, *args, **kwargs)
 
     def post(self, *args, **kwargs):
-        self.precisa_carta_cessao(self.steps.current)
         return super(EmissaoWizardView, self).post(*args, **kwargs)
 
     def get_form_instance(self, step):
