@@ -92,7 +92,9 @@ def get_razao_social_dominio(dominio):
     if r:
         razao = r.groups()[0]
         RAZOES_CACHE[dominio] = razao
-    return None
+    else:
+        razao = None
+    return razao
 
 
 EMAIL_CACHE = {}

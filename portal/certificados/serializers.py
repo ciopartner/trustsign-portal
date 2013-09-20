@@ -135,3 +135,11 @@ class EmissaoNvASerializer(EmissaoModelSerializer):
     class Meta:
         model = Emissao
         fields = ('crm_hash', 'emission_address_proof',)
+
+
+class EmissaoValidaSerializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin):
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr')
+
+    class Meta:
+        model = Emissao
+        fields = ('crm_hash', 'emission_url', 'emission_csr')

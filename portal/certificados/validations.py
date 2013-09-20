@@ -21,7 +21,7 @@ def insere_metodos_validacao(field):
     def wrap(klass):
         def validade_rest(self, attrs, source):
             funcao_valida_campo = getattr(self, '_valida_%s' % field)
-            attrs[source] = funcao_valida_campo(attrs[source], attrs)
+            attrs[source] = funcao_valida_campo(attrs.get(source, ''), attrs)
             return attrs
 
         def clean_django(self):
@@ -55,7 +55,7 @@ class ValidateEmissaoUrlMixin(object):
                 self.validacao_manual = True
 
             else:
-                raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ.')
+                raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
         return valor
 
 
