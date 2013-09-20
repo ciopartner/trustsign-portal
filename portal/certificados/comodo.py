@@ -80,13 +80,13 @@ def emite_certificado(emissao):
 
     }
 
-    if voucher.ssl_produto in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
+    if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
         params['domainNames'] = emissao.emission_fqdns
         params['dcvEmailAddresses'] = emissao.emission_dcv_emails
     else:
         params['dcvEmailAddress'] = emissao.emission_dcv_emails
 
-    if voucher.ssl_produto in (voucher.PRODUTO_EV, voucher.PRODUTO_EV_MDC):
+    if voucher.ssl_product in (voucher.PRODUTO_EV, voucher.PRODUTO_EV_MDC):
         params['joiLocalityName'] = voucher.customer_city
         params['joiStateOrProvinceName'] = voucher.customer_state
         params['joiCountryName'] = 'BR'
