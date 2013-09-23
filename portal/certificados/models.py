@@ -35,7 +35,7 @@ class Voucher(Model):
         (PRODUTO_MDC, 'MDC'),
         (PRODUTO_JRE, 'JRE'),
         (PRODUTO_CODE_SIGNING, 'MDC'),
-        (PRODUTO_SMIME, 'MDC'),
+        (PRODUTO_SMIME, 'S/MIME'),
     )
 
     LINHA_DEGUSTACAO = 'trial'
@@ -108,18 +108,6 @@ class Voucher(Model):
 
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
-
-    def get_ssl_url(self):
-        try:
-            return self.emissao.emission_url
-        except Emissao.DoesNotExist:
-            return ''
-
-    def get_ssl_urls(self):
-        try:
-            return self.emissao.emission_fqdns.split(' ')
-        except Emissao.DoesNotExist:
-            return []
 
 
 # class Pedido(Model):  # TODO: Substituir por abstract do oscar
@@ -210,11 +198,11 @@ class Emissao(Model):
     requestor_timestamp = DateTimeField(auto_now_add=True)
 
     emission_url = CharField(max_length=256, blank=True, null=True)
+    emission_csr = TextField(blank=True, null=True)
+
     emission_dcv_emails = TextField(blank=True, null=True)
     emission_publickey_sendto = EmailField(blank=True, null=True)
     emission_server_type = IntegerField(choices=SERVIDOR_TIPO_CHOICES, blank=True, null=True)
-
-    emission_csr = TextField(blank=True, null=True)
 
     emission_approver = ForeignKey(User, related_name='emissoes_aprovadas', null=True, blank=True)
 

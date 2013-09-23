@@ -25,7 +25,6 @@ ERRO_CAMPO_DOMINIO_OBRIGATORIO = -103
 ERRO_CAMPO_CSR_OBRIGATORIO = -104
 ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS = -105
 ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS = -106
-ERRO_EMAIL_CONTATO_PRECISA_SER_DOMINIO = -107
 ERRO_SITUACAO_CADASTRAL_INATIVA = -108
 ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ = -109
 ERRO_CSR_ENDERECO_DIFERENTE_CNPJ = -110
@@ -74,14 +73,13 @@ ERROS = {
     ERRO_CAMPO_CSR_OBRIGATORIO: 'O campo CSR é obrigatório',
     ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS: 'Erro na CSR: para este produto o tamanho da chave obrigatoriamente deve ser 2048 bits',
     ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS: 'Erro na CSR: para este produto o tamanho da chave obrigatoriamente deve ser 4096 bits',
-    ERRO_EMAIL_CONTATO_PRECISA_SER_DOMINIO: 'O e-mail de contato obrigatoriamente precisa pertencer ao domínio do certificado a ser emitido (ou de um dos domínios no caso de certificado para múltiplos domínios)',
     ERRO_SITUACAO_CADASTRAL_INATIVA: 'A situação cadastral da empresa cliente não está ativa na Receita Federal do Brasil. Favor entrar em contato com o suporte.',
-    ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. Sugere-se que o campo ORGANIZATION da CSR seja idêntico ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
-    ERRO_CSR_ENDERECO_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. Sugere-se que os campos de endereço da CSR sejam idênticos ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
-    ERRO_DOMINIO_SEM_EMAIL_VALIDACAO: 'O(s) domínio(s) contido(s) na CSR precisa(m) estar com e-mail de validação do domínio preenchidos.',
+    ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que o campo ORGANIZATION da CSR seja idêntico ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
+    ERRO_CSR_ENDERECO_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que os campos de endereço da CSR sejam idênticos ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
+    ERRO_DOMINIO_SEM_EMAIL_VALIDACAO: 'Para cada domínio existente na CSR é necessário o preenchimento de um e-mail de validação',
     ERRO_CAMPO_EMAIL_ENVIO_CERT_OBRIGATORIO: 'É obrigatório informar um e-mail para envio da chave pública',
     ERRO_CAMPO_TIPO_SERVIDOR_OBRIGATORIO: 'É obrigatório informar o tipo de servidor que será instalado o certificado',
-    ERRO_VOUCHER_NAO_ENCONTRADO: 'Voucher não encontrado. Contacte o suporte',
+    ERRO_VOUCHER_NAO_ENCONTRADO: 'Cupom de emissãonão encontrado. Contate o suporte',
     ERRO_SEM_CREDITO_FQDN: 'Não há créditos suficientes de FQDN\'s adicionais para emitir este certificado. Considere adquirir FQDN\'s adicionais em nosso e-commerce.',
     ERRO_SEM_CREDITO_DOMINIO: 'Não há créditos suficientes de Domínios adicionais para emitir este certificado. Considere adquirir domínios adicionais em nosso e-commerce.',
     ERRO_CAMPO_CONTRATO_SOCIAL_OBRIGATORIO: 'É obrigatório o envio do Contrato Social',
@@ -96,6 +94,10 @@ ERROS = {
     ERRO_CAMPO_SENHA_OBRIGATORIO: 'É obrigatório o preenchimento de uma senha para este certificado',
     ERRO_CAMPO_SENHA_NAO_SEGURA: 'Esta senha não é considerada segura, favor tentar outra senha',
 }
+
+
+def get_erro_message(codigo):
+    return ERROS[codigo]
 
 
 class APIError(Exception):

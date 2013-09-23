@@ -1,8 +1,10 @@
 # coding=utf-8
 from __future__ import unicode_literals
 from portal.certificados.comodo import get_emails_validacao_padrao
+from portal.certificados.erros import get_erro_message
 from portal.certificados.models import Voucher
 from portal.ferramentas.utils import comparacao_fuzzy, get_razao_social_dominio
+from portal.certificados import erros as e
 
 
 def insere_metodos_validacao(field):
@@ -46,7 +48,7 @@ class ValidateEmissaoUrlMixin(object):
         try:
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
-            raise self.ValidationError('Voucher não encontrado')
+            raise self.ValidationError(get_erro_message(e.ERRO_VOUCHER_NAO_ENCONTRADO))
 
         if not comparacao_fuzzy(razao_social, voucher.customer_companyname):
             if fields.get('emission_assignment_letter'):
@@ -72,25 +74,29 @@ class ValidateEmissaoCSRMixin(object):
         try:
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
-            raise self.ValidationError('Voucher não encontrado')
+            raise self.ValidationError()
 
         if csr.get('CN') != url:
             raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
 
         if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
-            raise self.ValidationError('O campo Organization Name (O) deve conter a razão social: %s' % voucher.customer_companyname)
+            raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
 
         key_size = int(csr.get('KeySize'))
         if voucher.ssl_line in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
-            raise self.ValidationError('O tamanho da chave para produtos das linhas Basic e Pro deve ser 2048')
+            raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS))
 
         if voucher.ssl_line == voucher.LINHA_PRIME and key_size != 4096:
-            raise self.ValidationError('O tamanho da chave para produtos da linha Prime deve ser 4096')
+            raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS))
 
         if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
             dominios = csr.get('dnsNames', [])
+
             if len(dominios) > voucher.ssl_domains_qty:
-                raise self.ValidationError('A CSR possui mais domínios que a quantidade comprada: %s' % voucher.ssl_domains_qty)
+                if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
+                    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_FQDN))
+                raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
+
             for dominio in dominios:
                 if dominio.startswith('*.'):
                     dominio = dominio[2:]
@@ -133,7 +139,7 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
         emails = valor.split(' ')
 
         if len(dominios) != len(emails):
-            raise self.ValidationError('Número de e-mails diferente do número de domínios')
+            raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
 
         for dominio, email in zip(dominios, emails):
             if email not in get_emails_validacao_padrao(dominio):

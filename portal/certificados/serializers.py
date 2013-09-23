@@ -9,8 +9,6 @@ from portal.ferramentas.utils import decode_csr, compare_csr
 
 
 class VoucherSerializer(ModelSerializer):
-    ssl_url = CharField(source='get_ssl_url')
-    ssl_urls = Field(source='get_ssl_urls')
     order_date = DateTimeField(format='%d/%m/%Y %H:%M')
 
     class Meta:
