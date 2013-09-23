@@ -31,101 +31,83 @@
 {% endblock %}
 
 {% block one_row %}
-    <section class="container productbgw certificado-digital">
-        <section class="featurette tlrp15">
-            <section class="row-fluid">
-                <aside class="span6 all-body-text1">
-                    <article class="tblrp510">
-                        <div>
-                            <h2>
-                                Mostre aos seus clientes mais segurança e controle. Gere confiabilidade e aumento de
-                                receita
-                            </h2>
-                            {% for p in page.children.all.order_by %}
-                                {% if forloop.counter < 7 and p.product %}
-                                    {# Hardcoded Product Separator #}
-                                    {% if p.title == 'S/MIME' %}
-                                        <h2>e-Mails assinados digitalmente</h2>
-                                    {% endif %}
-                                    {% if p.title == 'JRE' %}
-                                        <h2>Maior segurança em downloads com assinatura de códigos</h2>
-                                    {% endif %}
-                                    {% editable p.title %}
-                                        <a href="/{{ p.get_slug }}">
-                                            <h3>{{ p.title }}</h3></a>
-                                    {% endeditable %}
-                                    {% editable p.product.youtube_title %}
-                                        <p class="all-body-text5 borderp bp10">
-                                            {{ p.product.youtube_title }}
-                                        </p>
-                                    {% endeditable %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </article>
-                </aside>
+    <section class="featurette hdmgmenu">
+        <section class="row">
+            <aside class="span8 all-body-text1">
+                <div class="site-body-text tblrp10" style="background-color:#F2F2F2;">
+                    Mostre aos seus clientes mais segurança - Gere confiabilidade e aumento de receita
+                </div>
 
-                <aside class="span6 all-body-text1">
-                    <article class="tblrp510">
-                        <div>
-                            {% for p in page.children.all.order_by %}
-                                {% if forloop.counter >= 7 and p.product %}
-                                    {# Hardcoded Product Separator #}
-                                    {% if p.title == 'S/MIME' %}
-                                        <h2>e-Mails assinados digitalmente</h2>
-                                    {% endif %}
-                                    {% if p.title == 'JRE' %}
-                                        <h2>Maior segurança em downloads com assinatura de códigos</h2>
-                                    {% endif %}
-                                    {% editable p.title %}
-                                        <a href="/{{ p.get_slug }}">
-                                            <h3>{{ p.title }}</h3></a>
-                                    {% endeditable %}
-                                    {% editable p.product.youtube_title %}
-                                        <p class="all-body-text5 borderp bp10">
-                                            {{ p.product.youtube_title }}
-                                        </p>
-                                    {% endeditable %}
-                                {% endif %}
-                            {% endfor %}
-                            <div class="buttons">
-                                <a href="/certificado-digital/comparar-certificados-digitais" class="btn btn-large"
-                                   type="button" style="width:360px;">Veja as diferenças
-                                    entre os certificados
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                </aside>
-            </section>
+
+                <section class="row">
+                    <aside class="span4">
+                        <article class="tblrp510 black_link">
+                            <a href="/certificado-digital/ssl"><b>SSL</b></a>
+
+                            <p class="all-body-text5 justified">Mostre que seu site é autêntico, confiável e possui criptografia de dados</p>
+
+                            <a href="/certificado-digital/ev-extended-validation-ssl"><b>EV (Extended Validation) SSL</b></a>
+
+                            <p class="all-body-text5 justified">Obtenha os benefícios do SSL e exiba a barra verde no navegador com o maior nível de segurança e validação</p>
+
+                            <a href="/certificado-digital/ev-mdc-ssl"><b>EV MDC SSL</b></a>
+
+                            <p class="all-body-text5 justified">Obtenha os benefícios do SSL, exiba a barra verde e certifique até 210 domínios com um único certificado</p>
+                        </article>
+                    </aside>
+
+                    <aside class="span4">
+                        <article class="tblrp510 black_link">
+                            <a href="/certificado-digital/san-ssl"><b>SAN SSL</b></a>
+
+                            <p class="all-body-text5 justified">Obtenha os benefícios do SSL para vários FQDNs
+                                em ambiente Microsoft (inclusive Exchange) com um único certificado</p>
+
+                            <a href="/certificado-digital/mdc-ssl"><b>MDC SSL</b></a>
+
+                            <p class="all-body-text5 justified">Obtenha os benefícios do SSL e certifique até 210
+                                domínios com um único certificado</p>
+
+                            <a href="/certificado-digital/wildcard-ssl"><b>WildCard SSL</b></a>
+
+                            <p class="all-body-text5 justified">Obtenha os benefícios do SSL e certifique infinitos
+                                sub-domínios com um único certificado WildCard</p>
+                        </article>
+                    </aside>
+                </section>
+
+
+                <div class="tblrp10" style="background-color:#F2F2F2;">
+                    <span class="all-body-text3 tbm2">DÚVIDAS?</span>
+
+                                <span class="all-body-text4 tbm2">Não sabe a diferença entre os certificados?
+                                    <a href="/certificado-digital/comparar-certificados-digitais/" style="margin-left: 25px;"
+                                       class="btn btn-large" type="button">Descubra agora!</a>
+                                </span>
+                </div>
+            </aside>
+
+
+            <aside class="span4 all-body-text1 black_link">
+                <div class="site-body-text tblrp10" style="background-color:#F2F2F2;">
+                    Assine e-mails digitalmente
+                </div>
+
+                <a href="/certificado-digital/smime" class="tblrp10"><b>S/MIME</b></a>
+
+                <p class="all-body-text5 justified lrp10">Garanta a identidade do remetente e a integridade das informações</p>
+                <div class="site-body-text tblrp10" style="background-color:#F2F2F2;">
+                    Segurança em downloads de códigos
+                </div>
+
+                <a href="/certificado-digital/jre" class="tblrp10"><b>JRE</b></a>
+
+                <p class="all-body-text5 justified lrp10">Confiabilidade em downloads de códigos JAVA</p>
+
+                <a href="/certificado-digital/code-signing" class="tblrp10"><b>Code Signing</b></a>
+
+                <p class="all-body-text5 justified lrp10">Confiabilidade em downloads de diversos códigos</p>
+            </aside>
         </section>
     </section>
-
-
-
-    {#    <div class="span12 left">#}
-    {#        <h2>#}
-    {#            {% editable page.richtextpage.content %}#}
-    {#                {{ page.richtextpage.content|richtext_filter|safe }}#}
-    {#            {% endeditable %}#}
-    {#        </h2>#}
-    {##}
-    {#        {% for p in page.children.all.order_by %}#}
-    {# Hardcoded Product Separator #}
-    {#            {% if p.title == 'S/MIME' %}#}
-    {#                <h2>Envie e-mails codificados para que apenas o destinatário possa ver</h2>#}
-    {#            {% endif %}#}
-    {#            {% if p.title == 'JRE' %}#}
-    {#                <h2>Moribunduns aliquos pietem piú</h2>#}
-    {#            {% endif %}#}
-    {##}
-    {#            {% editable p.title %}#}
-    {#                <a href="/{{ p.get_slug }}">#}
-    {#                    <h3>{{ p.title }}</h3></a><br>#}
-    {#            {% endeditable %}#}
-    {#            {% editable p.product.youtube_title %}#}
-    {#                {{ p.product.youtube_title }}<br><br>#}
-    {#            {% endeditable %}#}
-    {#        {% endfor %}#}
-    {#    </div>#}
 {% endblock %}

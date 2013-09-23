@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.contrib.admindocs.tests import fields
 from django.db import models
 from mezzanine.pages.models import Page
-from mezzanine.utils.urls import slugify
 
 # The members of Page will be inherited by the Author model, such
 # as title, slug, etc. For authors we can use the title field to
@@ -97,3 +95,15 @@ class Question(models.Model):
     page = models.ForeignKey(FAQPage, related_name="questions")
 
 
+# class ManualPage(Page):
+#     class Meta:
+#         verbose_name = 'Manual Page'
+#
+#     def __unicode__(self):
+#         return self.title
+#
+#
+# class Manual(models.Model):
+#     titulo = models.CharField(max_length=128)
+#     arquivo = models.FileField(upload_to='uploads/manuais')
+#     pagina = models.ForeignKey(ManualPage, related_name='manuais')
