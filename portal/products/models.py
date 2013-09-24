@@ -93,17 +93,3 @@ class Question(models.Model):
     question = models.TextField()
     answer = models.TextField()
     page = models.ForeignKey(FAQPage, related_name="questions")
-
-
-# class ManualPage(Page):
-#     class Meta:
-#         verbose_name = 'Manual Page'
-#
-#     def __unicode__(self):
-#         return self.title
-#
-#
-# class Manual(models.Model):
-#     titulo = models.CharField(max_length=128)
-#     arquivo = models.FileField(upload_to='uploads/manuais')
-#     pagina = models.ForeignKey(ManualPage, related_name='manuais')
