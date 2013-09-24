@@ -154,14 +154,18 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
+from oscar import OSCAR_MAIN_TEMPLATE_DIR
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_ROOT, "templates"),
+    OSCAR_MAIN_TEMPLATE_DIR,
+)
 
 
 ################
 # APPLICATIONS #
 ################
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -181,6 +185,7 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     "mezzanine.accounts",
     #"mezzanine.mobile",
+    'django.contrib.flatpages',
 
     'django_extensions',
 
@@ -191,7 +196,7 @@ INSTALLED_APPS = (
     'suporte',
     'certificados',
     'rest_framework',
-)
+]
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
@@ -206,6 +211,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.tz",
     "mezzanine.conf.context_processors.settings",
+    'oscar.apps.search.context_processors.search_form',
+    'oscar.apps.promotions.context_processors.promotions',
+    'oscar.apps.checkout.context_processors.checkout',
+    'oscar.apps.customer.notifications.context_processors.notifications',
+    'oscar.core.context_processors.metadata',
 )
 
 # List of middleware classes to use. Order is important; in the request phase,
@@ -226,10 +236,12 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.TemplateForHostMiddleware",
     "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
     "mezzanine.core.middleware.SitePermissionMiddleware",
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # Uncomment the following if using any of the SSL settings:
     # "mezzanine.core.middleware.SSLRedirectMiddleware",
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
+
 )
 
 # Store these package names here as they may change in the future since
@@ -268,6 +280,36 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 from settings_global import *
 DEFAULT_DATABASE = DATABASES.get('common')
 DATABASES = {'default': DEFAULT_DATABASE}
+
+
+##################
+#     OSCAR      #
+##################
+
+# APPS FOR OSCAR
+from oscar import get_core_apps
+INSTALLED_APPS += get_core_apps()
+
+# TODO: Antes de ir para produção isso precisa ser alterado para um novo engine
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+    },
+}
+
+# STATUS DAS ORDENS
+OSCAR_INITIAL_ORDER_STATUS = 'Pendente'
+OSCAR_INITIAL_LINE_STATUS = 'Pendente'
+OSCAR_ORDER_STATUS_PIPELINE = {
+    'Pendente': ('Em processamento', 'Cancelada',),
+    'Em processamento': ('Pagamento Aprovado', 'Cancelada',),
+    'Pagamento Aprovado': ('Concluído',),
+    'Concluído': (),
+    'Cancelada': (),
+}
+
+from oscar.defaults import *
+
 
 ##################
 # LOCAL SETTINGS #
