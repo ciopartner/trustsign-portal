@@ -3,7 +3,9 @@ from django.contrib import admin
 from mezzanine.pages.admin import PageAdmin
 from .models import Wizard
 
+
 class WizardAdmin(PageAdmin):
-	pass
+    pass
+
 
 admin.site.register(Wizard, WizardAdmin)

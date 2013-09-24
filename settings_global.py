@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ###########################################
 # GLOBAL SETTINGS FOR MEZZANINE AND OSCAR #
 ###########################################
@@ -37,14 +39,14 @@ USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "pt-BR"
+LANGUAGE_CODE = "pt_BR"
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = "199dea65-51c5-4ded-9b3d-eb95f22878bb4b9286f0-db7f-4dda-8b1b-8a32faa6aee9f8cd3ea6-cdee-48ef-a813-042d4b1b3e68"
@@ -79,7 +81,6 @@ STATICFILES_FINDERS = (
 ###########
 # LOGGING #
 ###########
-
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -88,6 +89,14 @@ STATICFILES_FINDERS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s [%(pathname)s:%(lineno)d %(funcName)s]'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -98,15 +107,33 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'logfile': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'formatter': 'simple',
+            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile.log'),
+            'mode': 'a',
+            'maxBytes': 10485760,
+            'backupCount': 5,
         }
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['mail_admins', 'logfile'],
             'level': 'ERROR',
             'propagate': True,
         },
-    }
+        'portal': {
+            'handlers': ['console', 'logfile', 'mail_admins'],
+            'level': 'INFO'
+        }
+    },
 }
 
 
@@ -115,8 +142,6 @@ LOGGING = {
 #############
 
 # DATABASE_ROUTERS = ['routers.UserSessionRouter']
-import os
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
     "common": {

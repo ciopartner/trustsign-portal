@@ -97,7 +97,7 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 LANGUAGE_CODE = "pt_BR"
 LANGUAGES = (
     ('pt', 'Português'),
@@ -188,6 +188,8 @@ INSTALLED_APPS = (
     "ferramentas",
     "products",
     "melhor_solucao",
+    'certificados',
+    'rest_framework',
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -233,6 +235,18 @@ MIDDLEWARE_CLASSES = (
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
+}
+
+COMODO_LOGIN_NAME = '<mudar no local_settings.py>'
+COMODO_LOGIN_PASSWORD = '<mudar no local_settings.py>'
+COMODO_ENVIAR_COMO_TESTE = True  # enviar as requisições como teste?
+COMODO_API_EMISSAO_URL = 'https://secure.comodo.net/products/!AutoApplySSL'
+COMODO_API_REEMISSAO_URL = 'https://secure.comodo.net/products/!AutoReplaceSSL'
+COMODO_API_REVOGACAO_URL = 'https://secure.comodo.net/products/!AutoRevokeSSL'
+COMODO_API_GET_DCV_EMAILS_URL = 'https://secure.comodo.net/products/!GetDCVEmailAddressList'
 
 #########################
 # OPTIONAL APPLICATIONS #

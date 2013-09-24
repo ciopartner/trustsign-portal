@@ -1,0 +1,36 @@
+{% extends 'certificados/wizard_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
+{% endblock %}
+
+{% block coluna-esquerda %}
+    {% include 'certificados/includes/dados_cliente.html' %}
+{% endblock %}
+
+{% block coluna-direita %}
+    <h3>Dados Específicos do Produto Escolhido</h3>
+
+    {{ form.non_field_errors }}
+
+    <table>
+        {% include 'certificados/includes/dados_produto.html' %}
+        <tr><th>Doc Identif. c/ Foto</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_id.name }}"/></td></tr>
+    </table>
+
+    <h3>Dados de Callback</h3>
+    <table>
+        <tr class="nome"><th>Nome</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_nome }}"/>
+        <input type="text" disabled="disabled" value="{{ dados_form1.callback_sobrenome }}"/>
+        </td></tr>
+        <tr><th>e-mail Corporativo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_email }}"/></td></tr>
+        <tr><th>Telefone fixo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_telefone }}"/></td></tr>
+        <tr><th>Tamanho da Chave</th><td><input type="text" disabled="disabled" value="2048 bits"/></td></tr>
+        <tr><th>Senha</th><td><input type="text" disabled="disabled" value="********"/></td></tr>
+        <tr><th>Confirmação</th><td><input type="text" disabled="disabled" value="********"/></td></tr>
+    </table>
+
+    {{ form.confirma }}
+{% endblock %}

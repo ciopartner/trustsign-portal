@@ -20,10 +20,20 @@ from mezzanine.pages.models import Page
 
 
 class TrustSignProfile(models.Model):
+    PERFIL_CLIENTE = 1
+    PERFIL_PLATAFORMA = 2
+    PERFIL_TRUSTSIGN = 3
+    PERFIL_CHOICES = (
+        (PERFIL_CLIENTE, 'Cliente'),
+        (PERFIL_PLATAFORMA, 'Plataforma'),
+        (PERFIL_TRUSTSIGN, 'Trustsign'),
+    )
+
     user = models.OneToOneField(User)
     date_of_birth = models.DateField(blank=True, null=True)
     bio = models.TextField(blank=True)
     tagline = models.TextField(blank=True)
+    perfil = models.PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
 
 
 def create_profile(sender, **kwargs):
