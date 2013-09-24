@@ -1,9 +1,9 @@
 # coding=utf-8
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form
 from portal.certificados.comodo import get_emails_validacao
-from portal.certificados.models import Emissao, Voucher
+from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo
-from portal.ferramentas.utils import decode_csr, verifica_razaosocial_dominio
+from portal.ferramentas.utils import decode_csr, verifica_razaosocial_dominio, compare_csr
 from django.core.exceptions import ValidationError
 
 
@@ -20,7 +20,7 @@ class EmissaoModelForm(ModelForm):
     class Meta:
         model = Emissao
 
-    def __init__(self, user=None, crm_hash=None, voucher=None, precisa_carta_cessao=False, **kwargs):
+    def __init__(self, user=None, crm_hash=None, voucher=None, **kwargs):
         self.user = user
         self._crm_hash = crm_hash
         self._voucher = voucher
@@ -28,7 +28,7 @@ class EmissaoModelForm(ModelForm):
 
         for f in self.REQUIRED_FIELDS:
             self.fields[f].required = True
-        if precisa_carta_cessao:
+        if self.precisa_carta_cessao():
             f = self.fields.get('emission_assignment_letter')
             if f:
                 f.required = True
@@ -227,3 +227,27 @@ class EmissaoConfirmacaoForm(Form):
         if value != '1':
             raise self.ValidationError('Você precisa confirmar os dados')
         return value
+
+
+class RevogacaoForm(ModelForm):
+
+    class Meta:
+        model = Revogacao
+        fields = ('revogacao_motivo',)
+
+
+class ReemissaoForm(EmissaoModelForm, EmissaoCallbackForm):
+    validacao_manual = True
+
+    class Meta:
+        model = Emissao
+        fields = ['emission_csr', 'emission_publickey_sendto']
+
+    def clean_emission_csr(self):
+        csr_nova = self.cleaned_data['emission_csr']
+        csr_antiga = Emissao.objects.get(pk=self.instance.pk).emission_csr
+
+        if not compare_csr(decode_csr(csr_nova), decode_csr(csr_antiga)):
+            raise ValidationError('Único campo que pode mudar na CSR de reemissão é a chave pública')
+
+        return csr_nova

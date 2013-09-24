@@ -2,20 +2,36 @@
 from __future__ import unicode_literals
 from django.conf import settings
 import requests
+from portal.certificados.models import Voucher
 from portal.ferramentas.utils import url_parse, get_emails_dominio
 
 import logging
 
 log = logging.getLogger('portal.certificados.comodo')
 
+CODIGO_SSL = 488
+CODIGO_SSL_WILDCARD = 489
+CODIGO_SSL_SAN = 492
+CODIGO_SSL_EV = 337
+CODIGO_SSL_EV_MDC = 410
+CODIGO_MDC = 335
+
 CODIGOS_PRODUTOS = {
-    'ssl': 488,
-    'ssl-wildcard': 489,
-    'ssl-san': 492,
-    'ssl-ev': 337,
-    'ssl-ev-mdc': 410,
-    'ssl-mdc': 335
+    Voucher.PRODUTO_SSL: CODIGO_SSL,
+    Voucher.PRODUTO_SSL_WILDCARD: CODIGO_SSL_WILDCARD,
+    Voucher.PRODUTO_SAN_UCC: CODIGO_SSL_SAN,
+    Voucher.PRODUTO_EV: CODIGO_SSL_EV,
+    Voucher.PRODUTO_EV_MDC: CODIGO_SSL_EV_MDC,
+    Voucher.PRODUTO_MDC: CODIGO_MDC
 }
+
+
+class ComodoError(Exception):
+    code = None
+
+    def __init__(self, *args, **kwargs):
+        self.code = kwargs.pop('code', -1)
+        super(ComodoError, self).__init__(*args, **kwargs)
 
 
 def get_emails_validacao_padrao(dominio):
@@ -55,7 +71,7 @@ def emite_certificado(emissao):
     elif voucher.ssl_term == voucher.VALIDADE_TRIANUAL:
         validade = 3
     else:
-        raise Exception('Validade inválida para emissão de certificados')
+        raise Exception('Validade inválida para emissão de certificados', code=-1)
 
     params = {
         'loginName': settings.COMODO_LOGIN_NAME,
@@ -97,7 +113,7 @@ def emite_certificado(emissao):
     r = url_parse(response.text)
     if r['errorCode'] != '0':
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise Exception('Ocorreu um erro na chamada da COMODO')
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
     return r
 
 
@@ -117,7 +133,7 @@ def revoga_certificado(revogacao):
     r = url_parse(response.text)
     if r['errorCode'] != '0':
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise Exception('Ocorreu um erro na chamada da COMODO')
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
     return r
 
 
@@ -128,7 +144,6 @@ def reemite_certificado(emissao):
         'loginPassword': settings.COMODO_LOGIN_PASSWORD,
         'orderNumber': emissao.comodo_order,
         'csr': emissao.emission_csr,
-        'emailAddress': 'none',
         'isCustomerValidated': 'Y',
         'foreignOrderNumber': emissao.crm_hash,
         'responseFormat': '1',
@@ -141,5 +156,5 @@ def reemite_certificado(emissao):
     r = url_parse(response.text)
     if r['errorCode'] != '0':
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise Exception('Ocorreu um erro na chamada da COMODO')
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
     return r

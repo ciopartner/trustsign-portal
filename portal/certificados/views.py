@@ -6,7 +6,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, UpdateView
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
@@ -14,6 +14,7 @@ from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from portal.certificados import comodo
 from portal.certificados.authentication import UserPasswordAuthentication
+from portal.certificados.forms import RevogacaoForm, ReemissaoForm
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
     EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer, RevogacaoSerializer, \
@@ -39,6 +40,40 @@ def erro_rest(*erros):
     }, status=status.HTTP_400_BAD_REQUEST)
 
 
+def atualiza_voucher(voucher, dados_voucher):
+        v = dados_voucher.get('callback_tratamento')
+        if v:
+            voucher.customer_callback_title = v
+
+        v = dados_voucher.get('callback_nome')
+        if v:
+            voucher.customer_callback_firstname = v
+
+        v = dados_voucher.get('callback_sobrenome')
+        if v:
+            voucher.customer_callback_lastname = v
+
+        v = dados_voucher.get('callback_email')
+        if v:
+            voucher.customer_callback_email = v
+
+        v = dados_voucher.get('callback_telefone')
+        if v:
+            voucher.customer_callback_phone = v
+
+        v = dados_voucher.get('callback_observacao')
+        if v:
+            voucher.customer_callback_note = v
+
+        v = dados_voucher.get('callback_username')
+        if v:
+            voucher.customer_callback_username = v
+
+        v = dados_voucher.get('callback_password')
+        if v:
+            voucher.customer_callback_password = v
+
+
 class AddErrorResponseMixin(object):
     """
     Mixin que adiciona o metodo error_response, que retorna um Response, com o padrão de erros apartir do serializer.errors:
@@ -51,8 +86,8 @@ class AddErrorResponseMixin(object):
 
     def error_response(self, serializer):
         return erro_rest(*[('XX', '%s: %s' % (campo, erro))
-                         for campo, lista_erros in serializer.errors.iteritems()
-                         for erro in lista_erros])
+                           for campo, lista_erros in serializer.errors.iteritems()
+                           for erro in lista_erros])
 
 
 class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
@@ -141,7 +176,6 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         serializer = self.get_serializer(data=request.DATA, files=request.FILES, instance=emissao)
 
         if serializer.is_valid():
-
             emissao = serializer.object
 
             resposta = comodo.reemite_certificado(emissao)
@@ -176,7 +210,6 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
-
             revogacao = serializer.object
             revogacao.emissao = emissao
 
@@ -275,7 +308,7 @@ class EscolhaVoucherView(ListView):
         qs = Voucher.objects.select_related('emissao').filter(
             Q(emissao__isnull=True) | Q(emissao__emission_status__in=(
                 Emissao.STATUS_NAO_EMITIDO, Emissao.STATUS_EMITIDO,
-                Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_ACAO_MANUAL_PENDENTE
+                Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_EMISSAO_PENDENTE, Emissao.STATUS_REVOGACAO_PENDENTE
             )))
         profile = self.request.user.get_profile()
         if profile.perfil == profile.PERFIL_CLIENTE:
@@ -301,7 +334,6 @@ class EmissaoWizardView(SessionWizardView):
 
     def dispatch(self, request, *args, **kwargs):
         self.instance = self.model()
-        self._precisa_carta_cessao = {}
         if Emissao.objects.filter(crm_hash=self.kwargs['crm_hash']).exists():
             raise Http404()  # Não é possível emitir duas vezes o mesmo voucher
 
@@ -386,10 +418,10 @@ class EmissaoWizardView(SessionWizardView):
         voucher = self.get_voucher()
         emissao.voucher = voucher
 
-        self.atualiza_voucher(voucher)
+        atualiza_voucher(voucher, dados_voucher=self.get_cleaned_data_for_step('tela-1'))
 
         if any(f.validacao_manual for f in form_list):
-            emissao.emission_status = emissao.STATUS_ACAO_MANUAL_PENDENTE
+            emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
         else:
             emissao.emission_status = emissao.STATUS_EM_EMISSAO
             resposta = comodo.emite_certificado(emissao)
@@ -397,41 +429,6 @@ class EmissaoWizardView(SessionWizardView):
             emissao.comodo_order = resposta['orderNumber']
             emissao.emission_cost = resposta['totalCost']
         emissao.save()
-
-    def atualiza_voucher(self, voucher, form_step='tela-1'):
-        dados_voucher = self.get_cleaned_data_for_step(form_step)
-
-        v = dados_voucher.get('callback_tratamento')
-        if v:
-            voucher.customer_callback_title = v
-
-        v = dados_voucher.get('callback_nome')
-        if v:
-            voucher.customer_callback_firstname = v
-
-        v = dados_voucher.get('callback_sobrenome')
-        if v:
-            voucher.customer_callback_lastname = v
-
-        v = dados_voucher.get('callback_email')
-        if v:
-            voucher.customer_callback_email = v
-
-        v = dados_voucher.get('callback_telefone')
-        if v:
-            voucher.customer_callback_phone = v
-
-        v = dados_voucher.get('callback_observacao')
-        if v:
-            voucher.customer_callback_note = v
-
-        v = dados_voucher.get('callback_username')
-        if v:
-            voucher.customer_callback_username = v
-
-        v = dados_voucher.get('callback_password')
-        if v:
-            voucher.customer_callback_password = v
 
 
 class EmissaoNv1WizardView(EmissaoWizardView):
@@ -484,3 +481,102 @@ class EmissaoNvBWizardView(EmissaoWizardView):
         'tela-1': 'certificados/nvB/wizard_tela_1.html',
         'tela-confirmacao': 'certificados/nvB/wizard_tela_2_confirmacao.html'
     }
+
+
+class RevogacaoView(CreateView):
+    form_class = RevogacaoForm
+    template_name = 'certificados/revogacao.html'
+    _voucher = None
+
+    def get_context_data(self, **kwargs):
+        context = super(RevogacaoView, self).get_context_data(**kwargs)
+        context.update({
+            'voucher': self.get_voucher()
+        })
+        return context
+
+    def get_crm_hash(self):
+        return self.kwargs.get('crm_hash')
+
+    def get_voucher(self):
+        if not self._voucher:
+            try:
+                # só é para retornar voucher que já foram emitidos
+                self._voucher = Voucher.objects.select_related('emissao').filter(emissao__isnull=False).get(
+                    crm_hash=self.get_crm_hash())
+            except Voucher.DoesNotExist:
+                raise Http404()
+        return self._voucher
+
+    def form_valid(self, form):
+        voucher = self.get_voucher()
+        revogacao = self.object = form.save(commit=False)
+        emissao = voucher.emissao
+
+        revogacao.crm_hash = self.get_crm_hash()
+        revogacao.emissao = emissao
+        revogacao.save()
+
+        emissao.emission_status = emissao.STATUS_REVOGACAO_PENDENTE
+        emissao.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ReemissaoView(UpdateView):
+    form_class = ReemissaoForm
+    template_name = 'certificados/reemissao.html'
+    _voucher = None
+
+    def get_context_data(self, **kwargs):
+        context = super(ReemissaoView, self).get_context_data(**kwargs)
+        context.update({
+            'voucher': self.get_voucher()
+        })
+        return context
+
+    def get_object(self, queryset=None):
+        try:
+            return Emissao.objects.get(crm_hash=self.get_crm_hash())
+        except Emissao.DoesNotExist:
+            raise Http404
+
+    def get_initial(self):
+        initial = super(ReemissaoView, self).get_initial()
+        voucher = self.get_voucher()
+        initial.update({
+            'callback_tratamento': voucher.customer_callback_title,
+            'callback_nome': voucher.customer_callback_firstname,
+            'callback_sobrenome': voucher.customer_callback_lastname,
+            'callback_email': voucher.customer_callback_email,
+            'callback_telefone': voucher.customer_callback_phone,
+            'callback_observacao': voucher.customer_callback_note,
+            'callback_username': voucher.customer_callback_username,
+        })
+        return initial
+
+    def get_crm_hash(self):
+        return self.kwargs.get('crm_hash')
+
+    def get_voucher(self):
+        if not self._voucher:
+            try:
+                # só é para retornar voucher que já foram emitidos
+                self._voucher = Voucher.objects.select_related('emissao').filter(emissao__isnull=False).get(
+                    crm_hash=self.get_crm_hash())
+            except Voucher.DoesNotExist:
+                raise Http404()
+        return self._voucher
+
+    def form_valid(self, form):
+        emissao = self.object = form.save(commit=False)
+
+        comodo.reemite_certificado(emissao)
+
+        emissao.emission_status = emissao.STATUS_REEMITIDO
+        emissao.save()
+
+        voucher = self.get_voucher()
+        atualiza_voucher(voucher, form.cleaned_data)
+        voucher.save()
+        return HttpResponseRedirect(self.get_success_url())

@@ -36,7 +36,7 @@ class ReemissaoSerializer(ModelSerializer):
         csr_antiga = Emissao.objects.get(pk=self.object.pk).emission_csr
 
         if not compare_csr(decode_csr(csr_nova), decode_csr(csr_antiga)):
-            raise ValidationError('Único campo que pode mudar na CSR de reemssão é a chave pública')
+            raise ValidationError('Único campo que pode mudar na CSR de reemissão é a chave pública')
 
         return csr_nova
 

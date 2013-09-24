@@ -176,14 +176,16 @@ class Emissao(Model):
 
     STATUS_NAO_EMITIDO = 0
     STATUS_EM_EMISSAO = 1
-    STATUS_ACAO_MANUAL_PENDENTE = 2
     STATUS_EMITIDO = 3
     STATUS_REEMITIDO = 4
     STATUS_REVOGADO = 5
+    STATUS_EMISSAO_PENDENTE = 6
+    STATUS_REVOGACAO_PENDENTE = 7
     STATUS_CHOICES = (
         (STATUS_NAO_EMITIDO, 'Não Emitido'),
         (STATUS_EM_EMISSAO, 'Em emissão'),
-        (STATUS_ACAO_MANUAL_PENDENTE, 'Ação manual pendente'),
+        (STATUS_EMISSAO_PENDENTE, 'Ação manual pendente (revogação)'),
+        (STATUS_REVOGACAO_PENDENTE, 'Ação manual pendente (revogação)'),
         (STATUS_EMITIDO, 'Emitido'),
         (STATUS_REEMITIDO, 'Reemitido'),
         (STATUS_REVOGADO, 'Revogado'),
@@ -229,13 +231,29 @@ class Emissao(Model):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
 
     def get_dominios_x_emails(self):
-        return zip(self.emission_fqdns.split(' '), self.emission_dcv_emails.split(' '))
+        return zip(self.get_lista_dominios(), self.get_lista_emails())
+
+    def get_lista_emails(self):
+        return self.emission_dcv_emails.split(' ')
+
+    def get_lista_dominios(self):
+        return self.emission_fqdns.split(' ')
+
+    def get_lista_dominios_linha(self):
+        return '\n'.join(self.get_lista_dominios())
 
 
 class Revogacao(Model):
     crm_hash = CharField(max_length=128)
     emissao = ForeignKey(Emissao, related_name='revogacoes')
     revogacao_motivo = TextField()
+
+    class Meta:
+        verbose_name = 'revogação'
+        verbose_name_plural = 'revogações'
+
+    def __unicode__(self):
+        return '#%s' % self.crm_hash
 
 
 def pedido_consulta_knu(sender, instance, **kwargs):

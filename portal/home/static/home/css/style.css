@@ -64,6 +64,10 @@ body {
     line-height: 100%;
 }
 
+textarea{
+   resize: none;
+}
+
 /* START BLOG CONFIG */
 img.size-thumbnail{
     float:left;
