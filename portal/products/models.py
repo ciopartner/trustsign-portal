@@ -56,7 +56,6 @@ class Product(Page):
             another_tab.product = another_product
             another_tab.id = None
             another_tab.save(force_insert=True)
-            print another_tab.id
 
 
 class TabContent(models.Model):
@@ -71,25 +70,3 @@ class TabContent(models.Model):
 
     def __unicode__(self):
         return self.tab_title
-
-
-class FAQPage(Page):
-    class Meta:
-        verbose_name = 'FAQ Page'
-
-    def __unicode__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        """
-        Update the URL slug if settings.UPDATE_SLUG is True.
-        """
-        if hasattr(settings, 'UPDATE_SLUG') and settings.UPDATE_SLUG:
-            self.slug = self.get_slug()
-        super(FAQPage, self).save(*args, **kwargs)
-
-
-class Question(models.Model):
-    question = models.TextField()
-    answer = models.TextField()
-    page = models.ForeignKey(FAQPage, related_name="questions")

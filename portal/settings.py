@@ -188,6 +188,7 @@ INSTALLED_APPS = (
     "ferramentas",
     "products",
     "melhor_solucao",
+    'suporte',
     'certificados',
     'rest_framework',
 )

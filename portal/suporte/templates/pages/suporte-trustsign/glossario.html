@@ -30,19 +30,25 @@
 {% endblock %}
 
 {% block title %}
-    {% editable page.manualpage.title %}{% endeditable %}
+    {%editable page.glossariopage.title%}{%endeditable%}
 {% endblock %}
 
 {% block one_row %}
-    <div class="manuais span12">
-        {% for manual in page.manualpage.manuais.all %}
-            {% editable manual.titulo manual.arquivo manual.descricao %}
-                <div class="manual">
-                    <h3>{{ manual.titulo }}</h3>
-                    <p>{{ manual.descricao|linebreaksbr }}</p>
-                    <a href="{{ manual.arquivo.url }}">Download</a>
+    <div class="accordion glossario" id="accordion2">
+        {% for item in page.glossariopage.itens.all %}
+            {% editable item.termo item.descricao %}
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <span class="glossario-termo">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{ item.termo }}</a></span>
+                    </div>
+                    <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content">
+                        <div class="accordion-inner">
+                            {{ item.descricao|linebreaksbr }}
+                        </div>
+                    </div>
                 </div>
-            {% endeditable %}
-        {% endfor%}
+            {%endeditable%}
+        {%endfor%}
     </div>
 {% endblock %}
