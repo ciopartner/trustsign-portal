@@ -41,21 +41,9 @@ class Product(Page):
         """
         Update the URL slug if settings.UPDATE_SLUG is True.
         """
-        if hasattr(settings, 'UPDATE_SLUG') and settings.UPDATE_SLUG:
+        if getattr(settings, 'UPDATE_SLUG', False):
             self.slug = self.get_slug()
         super(Product, self).save(*args, **kwargs)
-
-    def duplicate(self):
-        another_product = self
-        another_product.id = Product.objects.count() + 2
-        another_product.save()
-        for tab in TabContent.objects.all():
-            if tab.id > 5:
-                break
-            another_tab = tab
-            another_tab.product = another_product
-            another_tab.id = None
-            another_tab.save(force_insert=True)
 
 
 class TabContent(models.Model):
