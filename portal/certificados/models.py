@@ -64,28 +64,34 @@ class Voucher(Model):
         (VALIDADE_ASSINATURA_ANUAL, 'Assinatura Anual'),
     )
 
+    ORDERCHANNEL_WEB = 'web'
+    ORDERCHANNEL_INSIDE_SALES = 'inside-sales'
+    ORDERCHANNEL_CHOICES = (
+        (ORDERCHANNEL_WEB, 'Web'),
+        (ORDERCHANNEL_INSIDE_SALES, 'Inside sales'),
+    )
+
     crm_hash = CharField(max_length=128)
     comodo_order = CharField(max_length=128, blank=True, null=True)
     order_number = CharField(max_length=32, blank=True, null=True)
-    legacy_imported = BooleanField(default=False)
 
     customer_cnpj = CharField(max_length=32)
     customer_companyname = CharField(max_length=128)
     customer_zip = CharField(max_length=16)
     customer_address1 = CharField(max_length=128)
-    customer_address2 = CharField(max_length=8)
+    customer_address2 = CharField(max_length=8, blank=True, default='')
     customer_address3 = CharField(max_length=32, blank=True, default='')
-    customer_address4 = CharField(max_length=64)
+    customer_address4 = CharField(max_length=64, blank=True, default='')
     customer_city = CharField(max_length=64)
     customer_state = CharField(max_length=2)
     customer_country = CharField(max_length=64)
-    customer_registration_status = CharField(max_length=128)
+    customer_registration_status = BooleanField(default=False)
 
-    customer_callback_title = CharField(max_length=8)
-    customer_callback_firstname = CharField(max_length=128)
-    customer_callback_lastname = CharField(max_length=128)
-    customer_callback_email = EmailField()
-    customer_callback_phone = CharField(max_length=16)
+    customer_callback_title = CharField(max_length=8, blank=True, default='')
+    customer_callback_firstname = CharField(max_length=128, blank=True, default='')
+    customer_callback_lastname = CharField(max_length=128, blank=True, default='')
+    customer_callback_email = EmailField(blank=True, null=True)
+    customer_callback_phone = CharField(max_length=16, blank=True, default='')
     customer_callback_username = CharField(max_length=32, blank=True, null=True)
     customer_callback_password = CharField(max_length=128, blank=True, null=True)
     customer_callback_note = CharField(max_length=128, blank=True, default='')
@@ -99,11 +105,11 @@ class Voucher(Model):
     ssl_publickey = TextField(blank=True, null=True)
     ssl_revoked_date = DateTimeField(blank=True, null=True)
     ssl_domains_qty = IntegerField(blank=True, default=0)
-    ssl_seal_html = TextField()
+    ssl_seal_html = TextField(blank=True, default='')
 
     order_date = DateTimeField()
     order_item_value = DecimalField(decimal_places=2, max_digits=9)
-    order_channel = CharField(max_length=64)
+    order_channel = CharField(max_length=64, choices=ORDERCHANNEL_CHOICES)
     order_canceled_date = DateTimeField(blank=True, null=True)
 
     def __unicode__(self):

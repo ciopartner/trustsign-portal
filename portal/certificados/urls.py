@@ -23,6 +23,7 @@ urlpatterns = patterns(
     url(r'^api/v1/ssl-replace/$', csrf_exempt(views.ReemissaoAPIView.as_view())),
     url(r'^api/v1/ssl-revoke/$', csrf_exempt(views.RevogacaoAPIView.as_view())),
     url(r'^api/v1/ssl-validate-url-csr/$', csrf_exempt(views.ValidaUrlCSRAPIView.as_view())),
+    url(r'^api/v1/ssl-voucher-create/$', csrf_exempt(views.VoucherCreateAPIView.as_view())),
     url(r'^api/v1/get-voucher-data/$', csrf_exempt(views.VoucherAPIView.as_view())),
     url(r'^api/v1/get-email-whois/$', csrf_exempt(views.EmailWhoisAPIView.as_view())),
 

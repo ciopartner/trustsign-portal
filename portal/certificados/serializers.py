@@ -9,11 +9,20 @@ from portal.ferramentas.utils import decode_csr, compare_csr
 
 
 class VoucherSerializer(ModelSerializer):
-    order_date = DateTimeField(format='%d/%m/%Y %H:%M')
+    order_date = DateTimeField(format='%d/%m/%Y %H:%M', input_formats=['%d/%m/%Y', '%d/%m/%Y %H:%M'])
 
     class Meta:
         model = Voucher
-        exclude = ['order_item_value', 'id', 'legacy_imported']
+        fields = ['crm_hash', 'customer_cnpj', 'customer_companyname', 'customer_zip', 'customer_address1',
+                  'customer_address2', 'customer_address3', 'customer_address4', 'customer_city', 'customer_state',
+                  'customer_country', 'customer_registration_status', 'ssl_product', 'ssl_line', 'ssl_term',
+                  'order_date', 'order_item_value', 'order_channel', 'order_number']
+
+    def validate_crm_hash(self, attrs, source):
+        crm_hash = attrs[source]
+        if Voucher.objects.filter(crm_hash=crm_hash).exists():
+            raise ValidationError('CRM Hash já existente!')
+        return attrs
 
 
 class RevogacaoSerializer(ModelSerializer):
@@ -38,7 +47,7 @@ class ReemissaoSerializer(ModelSerializer):
         if not compare_csr(decode_csr(csr_nova), decode_csr(csr_antiga)):
             raise ValidationError('Único campo que pode mudar na CSR de reemissão é a chave pública')
 
-        return csr_nova
+        return attrs
 
 
 class EmissaoModelSerializer(ModelSerializer):
