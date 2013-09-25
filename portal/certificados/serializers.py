@@ -1,6 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from rest_framework.fields import DateTimeField, CharField, Field
+from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \

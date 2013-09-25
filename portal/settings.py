@@ -290,6 +290,8 @@ DATABASES = {'default': DEFAULT_DATABASE}
 from oscar import get_core_apps
 INSTALLED_APPS += get_core_apps()
 
+from oscar.defaults import *
+
 # TODO: Antes de ir para produção isso precisa ser alterado para um novo engine
 HAYSTACK_CONNECTIONS = {
     'default': {
@@ -297,7 +299,9 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-# STATUS DAS ORDENS
+OSCAR_DEFAULT_CURRENCY = 'BRL'
+OSCAR_SHOP_NAME = 'Oscar'
+
 OSCAR_INITIAL_ORDER_STATUS = 'Pendente'
 OSCAR_INITIAL_LINE_STATUS = 'Pendente'
 OSCAR_ORDER_STATUS_PIPELINE = {
@@ -308,7 +312,7 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Cancelada': (),
 }
 
-from oscar.defaults import *
+
 
 
 ##################
