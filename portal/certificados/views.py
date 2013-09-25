@@ -241,6 +241,25 @@ class EmailWhoisAPIView(GenericAPIView):
             return erro_rest(('-1', 'Erro interno do servidor'))
 
 
+class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
+    authentication_classes = [UserPasswordAuthentication]
+    renderer_classes = [UnicodeJSONRenderer]
+    serializer_class = VoucherSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+
+        if serializer.is_valid():
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+            headers = self.get_success_headers(serializer.data)
+            return Response({}, status=status.HTTP_200_OK,
+                            headers=headers)
+
+        return self.error_response(serializer)
+
+
 class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
     authentication_classes = [UserPasswordAuthentication]
     renderer_classes = [UnicodeJSONRenderer]
@@ -250,7 +269,7 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
         try:
             self.object = self.get_object()
         except Voucher.DoesNotExist:
-            return erro_rest(('---', 'Voucher não encontrado'))  # TODO corrigir codigo erro
+            return erro_rest(('---', 'Voucher não encontrado'))  # TODO: corrigir codigo erro
         serializer = self.get_serializer(self.object)
         data = serializer.data
 
