@@ -26,8 +26,10 @@ Executar uma vez para o portal e outra para o e-commerce
   - PRD
 
 6) Dependências:
+<code>
 # apt-get install libncurses5-dev
 # apt-get install python-dev
 # apt-get install openssl
 # apt-get install libssl-dev
 # apt-get install whois
+</code>
