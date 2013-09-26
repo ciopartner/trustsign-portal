@@ -251,8 +251,8 @@ class Emissao(Model):
 
 class Revogacao(Model):
     crm_hash = CharField(max_length=128)
-    emissao = ForeignKey(Emissao, related_name='revogacoes')
-    revogacao_motivo = TextField()
+    emission = ForeignKey(Emissao, related_name='revogacoes')
+    revoke_reason = TextField()
 
     class Meta:
         verbose_name = 'revogação'

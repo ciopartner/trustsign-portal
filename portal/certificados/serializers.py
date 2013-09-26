@@ -33,7 +33,7 @@ class RevogacaoSerializer(ModelSerializer):
 
     class Meta:
         model = Revogacao
-        fields = ['crm_hash', 'revogacao_motivo']
+        fields = ['crm_hash', 'revoke_reason']
 
 
 class ReemissaoSerializer(ModelSerializer):
