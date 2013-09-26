@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.views.generic import ListView, CreateView, UpdateView
+from oscar.apps.basket.views import BasketAddView
+from oscar.core.loading import get_class
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
@@ -14,13 +16,17 @@ from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from portal.certificados import comodo
 from portal.certificados.authentication import UserPasswordAuthentication
-from portal.certificados.forms import RevogacaoForm, ReemissaoForm
+from portal.certificados.forms import RevogacaoForm, ReemissaoForm, AdicionarProdutoForm
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
     EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer, RevogacaoSerializer, \
     ReemissaoSerializer, EmissaoValidaSerializer
 from django.conf import settings
 import logging
+from portal.portal.utils import JSONFormView
+
+StockRecord = get_class('partner.models', 'StockRecord')
+
 
 log = logging.getLogger('portal.certificados.view')
 
@@ -599,3 +605,21 @@ class ReemissaoView(UpdateView):
         atualiza_voucher(voucher, form.cleaned_data)
         voucher.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class AdicionarProdutoView(BasketAddView, JSONFormView):
+    form_class = AdicionarProdutoForm
+
+    def get(self, request, *args, **kwargs):
+        raise Http404()
+
+    def form_valid(self, form):
+        self.request.basket.add_product(
+            form.instance, form.cleaned_data['quantity'],
+            form.cleaned_options())
+        return self.render_to_response({
+            'ok': True
+        })
+
+    def form_invalid(self, form):
+        return self.render_to_response(form.errors, status=400)

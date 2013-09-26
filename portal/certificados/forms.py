@@ -1,10 +1,15 @@
 # coding=utf-8
-from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form
+from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form, \
+    IntegerField
+from oscar.apps.basket.forms import AddToBasketForm
+from oscar.core.loading import get_class
 from portal.certificados.comodo import get_emails_validacao
 from portal.certificados.models import Emissao, Voucher, Revogacao
-from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo
+from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
+    ValidateEmissaoValidacaoEmailMultiplo
 from portal.ferramentas.utils import decode_csr, verifica_razaosocial_dominio, compare_csr
 from django.core.exceptions import ValidationError
+StockRecord = get_class('partner.models', 'StockRecord')
 
 
 class EmissaoModelForm(ModelForm):
@@ -251,3 +256,8 @@ class ReemissaoForm(EmissaoModelForm, EmissaoCallbackForm):
             raise ValidationError('Único campo que pode mudar na CSR de reemissão é a chave pública')
 
         return csr_nova
+
+
+class AdicionarProdutoForm(AddToBasketForm):
+    line = ChoiceField(choices=Voucher.LINHA_CHOICES)
+    term = ChoiceField(choices=Voucher.VALIDADE_CHOICES)

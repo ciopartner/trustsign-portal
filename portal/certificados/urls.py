@@ -8,7 +8,7 @@ from portal.certificados.forms import EmissaoNv1Tela1Form, EmissaoNv1Tela2Form, 
     EmissaoNv3Tela2Form, EmissaoNv2Tela2Form, EmissaoNv2Tela1Form, EmissaoNv4Tela1Form, EmissaoNv4Tela2Form, \
     EmissaoNvATela1Form, EmissaoConfirmacaoForm, EmissaoNvBTela1Form
 from portal.certificados.views import EmissaoNv1WizardView, EmissaoNv3WizardView, EscolhaVoucherView, \
-    EmissaoNv2WizardView, EmissaoNv4WizardView, EmissaoNvAWizardView, EmissaoNvBWizardView, RevogacaoView, ReemissaoView
+    EmissaoNv2WizardView, EmissaoNv4WizardView, EmissaoNvAWizardView, EmissaoNvBWizardView, RevogacaoView, ReemissaoView, AdicionarProdutoView
 
 FORMS_NV1 = [('tela-1', EmissaoNv1Tela1Form), ('tela-2', EmissaoNv1Tela2Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
 FORMS_NV2 = [('tela-1', EmissaoNv2Tela1Form), ('tela-2', EmissaoNv2Tela2Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
@@ -39,7 +39,9 @@ urlpatterns = patterns(
 
     url(r'^escolha-voucher/$', login_required(EscolhaVoucherView.as_view()), name='escolha_voucher'),
     url(r'^emissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/sucesso.html'),
-        name='certificado_emitido_sucesso')
+        name='certificado_emitido_sucesso'),
+
+    url(r'^ajax/adicionar-produto/', csrf_exempt(AdicionarProdutoView.as_view()))
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

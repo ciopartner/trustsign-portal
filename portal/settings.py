@@ -236,10 +236,12 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.TemplateForHostMiddleware",
     "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
     "mezzanine.core.middleware.SitePermissionMiddleware",
+    'oscar.apps.basket.middleware.BasketMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # Uncomment the following if using any of the SSL settings:
     # "mezzanine.core.middleware.SSLRedirectMiddleware",
     "mezzanine.pages.middleware.PageMiddleware",
+    'django.middleware.transaction.TransactionMiddleware',
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
 
 )
