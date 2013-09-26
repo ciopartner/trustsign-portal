@@ -233,7 +233,7 @@ class RevogacaoForm(ModelForm):
 
     class Meta:
         model = Revogacao
-        fields = ('revogacao_motivo',)
+        fields = ('revoke_reason',)
 
 
 class ReemissaoForm(EmissaoModelForm, EmissaoCallbackForm):

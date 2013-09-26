@@ -15,8 +15,10 @@ class VoucherSerializer(ModelSerializer):
         model = Voucher
         fields = ['crm_hash', 'customer_cnpj', 'customer_companyname', 'customer_zip', 'customer_address1',
                   'customer_address2', 'customer_address3', 'customer_address4', 'customer_city', 'customer_state',
-                  'customer_country', 'customer_registration_status', 'ssl_product', 'ssl_line', 'ssl_term',
-                  'order_date', 'order_item_value', 'order_channel', 'order_number']
+                  'customer_country', 'customer_registration_status', 'customer_callback_firstname',
+                  'customer_callback_lastname', 'customer_callback_email', 'customer_callback_phone',
+                  'customer_callback_note', 'ssl_product', 'ssl_line', 'ssl_term', 'order_date', 'order_item_value',
+                  'order_channel', 'order_number']
 
     def validate_crm_hash(self, attrs, source):
         crm_hash = attrs[source]
@@ -31,7 +33,7 @@ class RevogacaoSerializer(ModelSerializer):
 
     class Meta:
         model = Revogacao
-        fields = ['crm_hash', 'revogacao_motivo']
+        fields = ['crm_hash', 'revoke_reason']
 
 
 class ReemissaoSerializer(ModelSerializer):
