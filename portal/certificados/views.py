@@ -12,8 +12,9 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
-from portal.certificados import comodo
+from portal.certificados import comodo, erros
 from portal.certificados.authentication import UserPasswordAuthentication
+from portal.certificados.comodo import ComodoError
 from portal.certificados.forms import RevogacaoForm, ReemissaoForm
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
@@ -146,10 +147,15 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
                 emissao.emission_status = emissao.STATUS_ACAO_MANUAL_PENDENTE
             else:
                 emissao.emission_status = emissao.STATUS_EM_EMISSAO
-                resposta = comodo.emite_certificado(emissao)
+                if voucher.ssl_product not in (voucher.PRODUTO_SMIME, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_JRE):
+                    # TODO: retirar o if depois que implementar API dos 3
+                    try:
+                        resposta = comodo.emite_certificado(emissao)
+                    except ComodoError as e:
+                        return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
 
-                emissao.comodo_order = resposta['orderNumber']
-                emissao.emission_cost = resposta['totalCost']
+                    emissao.comodo_order = resposta['orderNumber']
+                    emissao.emission_cost = resposta['totalCost']
 
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
@@ -306,8 +312,11 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
             data = {
                 'required_fields': self.required_fields,
                 'emission_dcv_emails': ['admin', 'postmaster', 'webmaster', 'administrator', 'hostmaster'],
-                'server_list': Emissao.SERVIDOR_TIPO_CHOICES
+                'server_list': Emissao.SERVIDOR_TIPO_CHOICES,
             }
+            csr = serializer.get_csr_decoded()
+            if 'dnsNames' in csr:
+                data['emission_fqdns'] = csr['dnsNames']
             return Response(data, status=status.HTTP_200_OK)
 
         return self.error_response(serializer)

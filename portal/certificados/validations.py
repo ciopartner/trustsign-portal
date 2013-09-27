@@ -135,8 +135,13 @@ class ValidateEmissaoValidacaoEmail(object):
 class ValidateEmissaoValidacaoEmailMultiplo(object):
 
     def _valida_emission_dcv_emails(self, valor, fields):
-        dominios = fields['emission_fqdns'].split(' ')
+        csr = self.get_csr_decoded(valor)
+
+        dominios = csr['dnsNames']
         emails = valor.split(' ')
+
+        print dominios
+        print emails
 
         if len(dominios) != len(emails):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
