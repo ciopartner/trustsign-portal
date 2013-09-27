@@ -376,9 +376,6 @@ class EmissaoWizardView(SessionWizardView):
         self.save(form_list, **kwargs)
         return HttpResponseRedirect(reverse(self.done_redirect_url))
 
-    def save(self, form_list, **kwargs):
-        self.instance.save()
-
     def get_form_initial(self, step):
         initial = super(EmissaoWizardView, self).get_form_initial(step)
 
@@ -493,6 +490,20 @@ class EmissaoNvAWizardView(EmissaoWizardView):
         'tela-confirmacao': 'certificados/nvA/wizard_tela_2_confirmacao.html'
     }
 
+    def save(self, form_list, **kwargs):
+        emissao = self.instance
+        emissao.requestor_user_id = self.request.user.pk
+        emissao.crm_hash = self.kwargs['crm_hash']
+
+        voucher = self.get_voucher()
+        emissao.voucher = voucher
+
+        if any(f.validacao_manual for f in form_list):
+            emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
+        else:
+            emissao.emission_status = emissao.STATUS_EM_EMISSAO
+        emissao.save()
+
 
 class EmissaoNvBWizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_SMIME,)
@@ -500,6 +511,20 @@ class EmissaoNvBWizardView(EmissaoWizardView):
         'tela-1': 'certificados/nvB/wizard_tela_1.html',
         'tela-confirmacao': 'certificados/nvB/wizard_tela_2_confirmacao.html'
     }
+
+    def save(self, form_list, **kwargs):
+        emissao = self.instance
+        emissao.requestor_user_id = self.request.user.pk
+        emissao.crm_hash = self.kwargs['crm_hash']
+
+        voucher = self.get_voucher()
+        emissao.voucher = voucher
+
+        if any(f.validacao_manual for f in form_list):
+            emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
+        else:
+            emissao.emission_status = emissao.STATUS_EM_EMISSAO
+        emissao.save()
 
 
 class RevogacaoView(CreateView):
