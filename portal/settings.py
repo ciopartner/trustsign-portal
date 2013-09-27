@@ -73,6 +73,14 @@
 # Setting to identify a user profile
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 
+ACCOUNTS_PROFILE_FORM_CLASS = 'portal.home.forms.ProfileForm'
+ACCOUNTS_PROFILE_FORM_EXCLUDE_FIELDS = (
+    'bio',
+    'tagline',
+    'date_of_birth',
+    'perfil',
+)
+
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 BLOG_USE_FEATURED_IMAGE = True

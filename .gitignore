@@ -8,4 +8,5 @@
 local_settings.py
 /static
 /portal/static
-/ecommerce/ecommerce/static
+/ecommerce/static_root
+/ecommerce/media

@@ -7,11 +7,16 @@ from oscar.defaults import *
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-SITE_ID = 2
+SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
+LANGUAGE_CODE = "pt_BR"
+LANGUAGES = (
+    ('pt', 'Português'),
+    ('en', 'English'),
+)
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
@@ -28,17 +33,20 @@ import os
 import sys
 
 # Full filesystem path to the project.
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT_PARENT = os.path.dirname(PROJECT_ROOT)
-PROJECT_ROOT_PARENT_PARENT = os.path.dirname(PROJECT_ROOT_PARENT)
-sys.path.insert(0, PROJECT_ROOT_PARENT_PARENT)
+sys.path.insert(0, PROJECT_ROOT_PARENT)
 
 # Retirado do OSCAR SANDBOX
-location = lambda x: os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), x)
+location = lambda x: os.path.join(PROJECT_ROOT, x)
 
 # Name of the directory for the project.
 PROJECT_DIRNAME = PROJECT_ROOT.split(os.sep)[-1]
+
+# Traduções
+LOCALE_PATHS = (
+    location('locale'),
+)
 
 # Every cache key will get prefixed with this value - here we set it to
 # the name of the directory the project is in to try and use something
@@ -53,19 +61,17 @@ STATIC_URL = "/static/"
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
+STATIC_ROOT = location('static_root')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = STATIC_URL + "media/"
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 
 # Retirado de OSCAR SANDBOX: MEDIA_ROOT = onde estarão os user uploaded files
-MEDIA_ROOT = location('public/media')
-#MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
+MEDIA_ROOT = location('media')
 MEDIA_URL = '/media/'
 
 # Package/module name to import the root urlpatterns from for the project.
@@ -75,7 +81,7 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
+TEMPLATE_DIRS = (location("templates"),)
 
 # Included for OSCAR:
 from oscar import OSCAR_MAIN_TEMPLATE_DIR
@@ -86,6 +92,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    location("static"),
 )
 
 # List of finder classes that know how to find static files in
@@ -135,8 +142,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.core.context_processors.metadata',
 )
 
-ROOT_URLCONF = 'ecommerce.urls'
-
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
@@ -148,10 +153,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.flatpages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs',
+
+    'apps.customer',
+    'website',
+
     'south',
     'compressor',
 ]
@@ -167,13 +173,16 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+OSCAR_DEFAULT_CURRENCY = 'BRL'
+OSCAR_SHOP_NAME = 'TrustSign e-commerce'
+
 # STATUS DAS ORDENS
 OSCAR_INITIAL_ORDER_STATUS = 'Pendente'
 OSCAR_INITIAL_LINE_STATUS = 'Pendente'
 OSCAR_ORDER_STATUS_PIPELINE = {
     'Pendente': ('Em processamento', 'Cancelada',),
     'Em processamento': ('Pagamento Aprovado', 'Cancelada',),
-    'Pagamento Aprovado': ('Concluído'),
+    'Pagamento Aprovado': ('Concluído',),
     'Concluído': (),
     'Cancelada': (),
 }

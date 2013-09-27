@@ -256,8 +256,3 @@ class ReemissaoForm(EmissaoModelForm, EmissaoCallbackForm):
             raise ValidationError('Único campo que pode mudar na CSR de reemissão é a chave pública')
 
         return csr_nova
-
-
-class AdicionarProdutoForm(AddToBasketForm):
-    line = ChoiceField(choices=Voucher.LINHA_CHOICES)
-    term = ChoiceField(choices=Voucher.VALIDADE_CHOICES)

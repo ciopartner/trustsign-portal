@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
-from django.db import models
+from django.db.models import OneToOneField, DateField, TextField, PositiveSmallIntegerField, CharField, Model, EmailField
 from django.db.models.signals import post_save
-from mezzanine.pages.models import Page
 
 # The members of Page will be inherited by the Author model, such
 # as title, slug, etc. For authors we can use the title field to
@@ -19,7 +18,7 @@ from mezzanine.pages.models import Page
 #     cover = models.ImageField(upload_to="authors")
 
 
-class TrustSignProfile(models.Model):
+class TrustSignProfile(Model):
     PERFIL_CLIENTE = 1
     PERFIL_PLATAFORMA = 2
     PERFIL_TRUSTSIGN = 3
@@ -29,11 +28,28 @@ class TrustSignProfile(models.Model):
         (PERFIL_TRUSTSIGN, 'Trustsign'),
     )
 
-    user = models.OneToOneField(User)
-    date_of_birth = models.DateField(blank=True, null=True)
-    bio = models.TextField(blank=True)
-    tagline = models.TextField(blank=True)
-    perfil = models.PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
+    user = OneToOneField(User)
+    date_of_birth = DateField(blank=True, null=True)
+    bio = TextField(blank=True, default='')
+    tagline = TextField(blank=True, default='')
+
+    cliente_cnpj = CharField(max_length=32, blank=True, default='')
+    cliente_razaosocial = CharField(max_length=128, blank=True, default='')
+    cliente_logradouro = CharField(max_length=128, blank=True, default='')
+    cliente_numero = CharField(max_length=16, blank=True, default='')
+    cliente_complemento = CharField(max_length=64, blank=True, default='')
+    cliente_cep = CharField(max_length=8, blank=True, default='')
+    cliente_bairro = CharField(max_length=128, blank=True, default='')
+    cliente_cidade = CharField(max_length=128, blank=True, default='')
+    cliente_uf = CharField(max_length=128, blank=True, default='')
+    cliente_situacao_cadastral = CharField(max_length=128, blank=True, default='')
+
+    callback_nome = CharField(max_length=128, blank=True, default='')
+    callback_sobrenome = CharField(max_length=128, blank=True, default='')
+    callback_email_corporativo = EmailField(blank=True, default='')
+    callback_telefone_principal = CharField(max_length=16, blank=True, default='')
+
+    perfil = PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
 
 
 def create_profile(sender, **kwargs):

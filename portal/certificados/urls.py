@@ -41,7 +41,7 @@ urlpatterns = patterns(
     url(r'^emissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/sucesso.html'),
         name='certificado_emitido_sucesso'),
 
-    url(r'^ajax/adicionar-produto/', csrf_exempt(AdicionarProdutoView.as_view()))
+    url(r'^ajax/adicionar-produto/', AdicionarProdutoView.as_view())
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
