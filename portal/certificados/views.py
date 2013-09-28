@@ -588,8 +588,8 @@ class RevogacaoView(CreateView):
         if not self._voucher:
             try:
                 # só é para retornar voucher que já foram emitidos
-                self._voucher = Voucher.objects.select_related('emissao').filter(emissao__isnull=False).get(
-                    crm_hash=self.get_crm_hash())
+                self._voucher = Voucher.objects.select_related('emissao').get(crm_hash=self.get_crm_hash(),
+                                                                              emissao__isnull=False)
             except Voucher.DoesNotExist:
                 raise Http404()
         return self._voucher

@@ -71,7 +71,7 @@ class Voucher(Model):
         (ORDERCHANNEL_INSIDE_SALES, 'Inside sales'),
     )
 
-    crm_hash = CharField(max_length=128)
+    crm_hash = CharField(max_length=128, unique=True)
     comodo_order = CharField(max_length=128, blank=True, null=True)
     order_number = CharField(max_length=32, blank=True, null=True)
 
@@ -250,7 +250,7 @@ class Emissao(Model):
 
 
 class Revogacao(Model):
-    crm_hash = CharField(max_length=128)
+    crm_hash = CharField(max_length=128, unique=True)
     emission = ForeignKey(Emissao, related_name='revogacoes')
     revoke_reason = TextField()
 
