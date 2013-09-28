@@ -143,11 +143,11 @@ class EmissaoNv2Tela1Form(EmissaoTela1Form):
 class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
-                       'emission_server_type', 'emission_primary_dn')
+                       'emission_server_type')
 
     class Meta(EmissaoModelForm.Meta):
         fields = ['emission_url', 'emission_csr', 'emission_assignment_letter', 'emission_dcv_emails',
-                  'emission_publickey_sendto', 'emission_server_type', 'emission_primary_dn']
+                  'emission_publickey_sendto', 'emission_server_type']
         widgets = {
             'emission_url': HiddenInput,
             'emission_csr': HiddenInput,
@@ -190,13 +190,13 @@ class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios):
     validacao_manual = True
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
-                       'emission_server_type', 'emission_primary_dn', 'emission_articles_of_incorporation',
+                       'emission_server_type', 'emission_articles_of_incorporation',
                        'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
     class Meta(EmissaoModelForm.Meta):
         fields = ['emission_url', 'emission_csr', 'emission_assignment_letter', 'emission_dcv_emails',
-                  'emission_publickey_sendto', 'emission_server_type', 'emission_primary_dn',
-                  'emission_articles_of_incorporation', 'emission_address_proof', 'emission_ccsa', 'emission_evcr']
+                  'emission_publickey_sendto', 'emission_server_type', 'emission_articles_of_incorporation',
+                  'emission_address_proof', 'emission_ccsa', 'emission_evcr']
         widgets = {
             'emission_url': HiddenInput,
             'emission_csr': HiddenInput,

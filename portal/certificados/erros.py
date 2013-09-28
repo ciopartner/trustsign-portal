@@ -48,7 +48,7 @@ ERRO_CAMPO_SENHA_NAO_SEGURA = -127
 
 
 ERROS = {
-    ERRO_INTERNO_SERVIDOR: 'Erro interno do servidor(%d)',
+    ERRO_INTERNO_SERVIDOR: 'Erro interno do servidor(%s)',
     ERRO_CSR_INVALIDA_CN_NAO_PODE_CONTER_WILDCARD: 'CSR Inválida: COMMON NAME não pode conter um wildcard (\'*\')',
     ERRO_CSR_INVALIDA_CN_PRECISA_DE_UNICO_WILDCARD: 'CSR Inválida: COMMON NAME precisa de um único wildcard (\'*\')',
     ERRO_CSR_INVALIDA_FALTA_CAMPO_OBRIGATORIO: 'Não foi possível ler a CSR: falta um campo obrigatório',
