@@ -1,0 +1,51 @@
+{% extends "oscar/basket/basket.html" %}
+{% load i18n compress %}
+{% load staticfiles %}
+
+{#{% load currency_filters %}#}
+{#{% load thumbnail %}#}
+{% load i18n %}
+{#{% load url from future %}#}
+{##}
+{#{% block title %}#}
+{#    {% trans "Basket" %} | {{ block.super }}#}
+{#{% endblock %}#}
+{##}
+
+{% block breadcrumbs %}
+    <nav id="checkoutnav" class="hidden-phone">
+        <div class="row-fluid">
+            <div class="span9">
+                <ul class="progress-bar progress-bar4">
+                    <li class="active">Carrinho de compras</li>
+                    <li>Identificação</li>
+                    <li>Pagamento</li>
+                    <li>Emissão</li>
+                </ul>
+            </div>
+            <div class="span3">
+                <a href="#" id="buy-more" class="btn btn-block">CONTINUAR COMPRANDO</a>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+{##}
+{# Hide mini-basket so we don't have two baskets to keep in sync #}
+{#{% block mini_basket %}{% endblock %}#}
+{##}
+{#{% block headertext %}#}
+{#    {% trans "Basket" %}#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+    {# Use a partial template so that AJAX can be used to re-render basket #}
+{#    {% include 'basket/partials/basket_content.html' %}#}
+{#{% endblock content %}#}
+{##}
+{#{% block onbodyload %}#}
+    {# We pass in the URL to send AJAX requests to #}
+{#    var options = {#}
+{#        'basketURL': '{% url 'basket:summary' %}'#}
+{#    };#}
+{#    oscar.basket.init(options);#}
+{#{% endblock %}#}

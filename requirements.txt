@@ -1,6 +1,6 @@
 Babel==0.9.6
-Django==1.5.1
-Mezzanine==1.4.10
+Django==1.5.4
+Mezzanine==1.4.14
 Pillow==1.7.8
 South==0.7.6
 Unidecode==0.04.13
