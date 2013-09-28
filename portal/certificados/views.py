@@ -15,7 +15,7 @@ from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from portal.certificados import comodo, erros
 from portal.certificados.authentication import UserPasswordAuthentication
-from portal.certificados.comodo import ComodoError
+from portal.certificados.comodo import ComodoError, get_emails_validacao_padrao
 from portal.certificados.forms import RevogacaoForm, ReemissaoForm
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
@@ -142,7 +142,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = serializer.object
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
-            emissao.emission_fqdns = serializer.get_csr_decoded().get('dnsNames', '')
+            emissao.emission_fqdns = serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', '')
 
             emissao.voucher = voucher
 
@@ -339,18 +339,28 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
     required_fields = None
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+        try:
+            serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
-        if serializer.is_valid():
-            data = {
-                'required_fields': self.required_fields,
-                'emission_dcv_emails': ['admin', 'postmaster', 'webmaster', 'administrator', 'hostmaster'],
-                'server_list': Emissao.SERVIDOR_TIPO_CHOICES,
-            }
-            csr = serializer.get_csr_decoded()
-            if 'dnsNames' in csr:
-                data['emission_fqdns'] = csr['dnsNames']
-            return Response(data, status=status.HTTP_200_OK)
+            if serializer.is_valid():
+                data = {
+                    'required_fields': self.required_fields,
+                    'server_list': Emissao.SERVIDOR_TIPO_CHOICES,
+                }
+                emissao = serializer.object
+                csr = serializer.get_csr_decoded(emissao.emission_csr)
+
+                if 'dnsNames' in csr and csr['dnsNames']:
+                    data['ssl_urls'] = [{'url': dominio,
+                                         'emission_dcv_emails': get_emails_validacao_padrao(dominio),
+                                         'primary': dominio == emissao.emission_url} for dominio in csr['dnsNames']]
+                else:
+                    data['ssl_url'] = {'url': emissao.emission_url,
+                                       'emission_dcv_emails': get_emails_validacao_padrao(emissao.emission_url)}
+                return Response(data, status=status.HTTP_200_OK)
+        except Voucher.DoesNotExist:
+            return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
+                              erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
 
         return self.error_response(serializer)
 
