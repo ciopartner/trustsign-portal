@@ -6,6 +6,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
+from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -22,6 +23,7 @@ from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Seri
     ReemissaoSerializer, EmissaoValidaSerializer
 from django.conf import settings
 import logging
+from portal.ferramentas.utils import decode_csr
 
 log = logging.getLogger('portal.certificados.view')
 
@@ -95,6 +97,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
     queryset = Emissao.objects.all()
     authentication_classes = [UserPasswordAuthentication]
     renderer_classes = [UnicodeJSONRenderer]
+    _voucher = None
 
     def get_serializer(self, instance=None, data=None,
                        files=None, many=False, partial=False):
@@ -129,7 +132,8 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         try:
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
-            return erro_rest(('---', 'Emissão não encontrada'))  # TODO corrigir codigo erro
+            return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
+                              erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
@@ -138,13 +142,14 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = serializer.object
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
+            emissao.emission_fqdns = serializer.get_csr_decoded().get('dnsNames', '')
 
             emissao.voucher = voucher
 
             # self.atualiza_voucher(voucher) TODO: TBD > o que fazer com os dados do voucher
 
             if serializer.validacao_manual:
-                emissao.emission_status = emissao.STATUS_ACAO_MANUAL_PENDENTE
+                emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
             else:
                 emissao.emission_status = emissao.STATUS_EM_EMISSAO
                 if voucher.ssl_product not in (voucher.PRODUTO_SMIME, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_JRE):
@@ -165,7 +170,9 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         return self.error_response(serializer)
 
     def get_voucher(self):
-        return Voucher.objects.get(crm_hash=self.request.DATA.get('crm_hash'))
+        if not self._voucher:
+            self._voucher = Voucher.objects.get(crm_hash=self.request.DATA.get('crm_hash'), emissao__isnull=True)
+        return self._voucher
 
 
 class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
@@ -178,18 +185,22 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         try:
             emissao = Emissao.objects.get(crm_hash=request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
-            return erro_rest(('---', 'Emissão não encontrada'))  # TODO corrigir codigo erro
+            return erro_rest(('---', 'Emissão não encontrada'))  # TODO: corrigir codigo erro
+
+        if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
+            return erro_rest(('---', 'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
+
         serializer = self.get_serializer(data=request.DATA, files=request.FILES, instance=emissao)
 
         if serializer.is_valid():
             emissao = serializer.object
 
-            resposta = comodo.reemite_certificado(emissao)
+            try:
+                comodo.reemite_certificado(emissao)
+            except ComodoError as e:
+                return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
 
-            emissao.comodo_order = resposta['orderNumber']
-            emissao.emission_cost = resposta['totalCost']
-
-            emissao.id = None  # isso obriga o django a criar um novo objeto
+            emissao.emission_status = Emissao.STATUS_REEMITIDO
 
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
@@ -209,24 +220,35 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            emissao = Emissao.objects.get(crm_hash=self.request.DATA.get('crm_hash'))
+            emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
             return erro_rest(('---', 'Emissão não encontrada'))  # TODO corrigir codigo erro
+
+        if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
+            return erro_rest(('---', 'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
             revogacao = serializer.object
-            revogacao.emissao = emissao
+            revogacao.emission = emissao
 
-            comodo.revoga_certificado(revogacao)
+            try:
+                comodo.revoga_certificado(revogacao)
+            except ComodoError as e:
+                return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
+
+            emissao.status = Emissao.STATUS_REVOGADO
 
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
             self.post_save(self.object, created=True)
 
+            emissao.voucher.ssl_revoked_date = now()
+            emissao.voucher.save()
+
             headers = self.get_success_headers(serializer.data)
-            return Response({}, status=status.HTTP_201_CREATED, headers=headers)
+            return Response({}, status=status.HTTP_200_OK, headers=headers)
 
         return self.error_response(serializer)
 
@@ -291,6 +313,17 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
                 novo['order'][k] = v
             else:
                 novo[k] = v
+
+        try:
+            emissao = self.object.emissao
+            novo['status_code'] = emissao.emission_status
+            novo['status_text'] = emissao.get_emission_status_display()
+            novo['ssl_url'] = emissao.emission_url
+            novo['ssl_urls'] = emissao.emission_fqdns.split(' ')
+        except Emissao.DoesNotExist:
+            novo['status_code'] = Emissao.STATUS_NAO_EMITIDO
+            novo['status_text'] = dict(Emissao.STATUS_CHOICES)[Emissao.STATUS_NAO_EMITIDO]
+
         return Response(novo)
 
     def get_object(self, queryset=None):
@@ -567,7 +600,7 @@ class RevogacaoView(CreateView):
         emissao = voucher.emissao
 
         revogacao.crm_hash = self.get_crm_hash()
-        revogacao.emissao = emissao
+        revogacao.emission = emissao
         revogacao.save()
 
         emissao.emission_status = emissao.STATUS_REVOGACAO_PENDENTE

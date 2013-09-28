@@ -19,7 +19,7 @@ class Voucher(Model):
     PRODUTO_EV = 'ssl-ev'
     PRODUTO_EV_MDC = 'ssl-ev-mdc'
     PRODUTO_MDC = 'ssl-mdc'
-    PRODUTO_JRE = 'ssl-jre',
+    PRODUTO_JRE = 'ssl-jre'
     PRODUTO_CODE_SIGNING = 'ssl-cs'
     PRODUTO_SMIME = 'ssl-smime'
     PRODUTO_SSL_MDC_DOMINIO = 'ssl-mdc-domain'
@@ -34,7 +34,7 @@ class Voucher(Model):
         (PRODUTO_EV_MDC, 'EV MDC'),
         (PRODUTO_MDC, 'MDC'),
         (PRODUTO_JRE, 'JRE'),
-        (PRODUTO_CODE_SIGNING, 'MDC'),
+        (PRODUTO_CODE_SIGNING, 'Code Signing'),
         (PRODUTO_SMIME, 'S/MIME'),
     )
 
@@ -190,7 +190,7 @@ class Emissao(Model):
     STATUS_CHOICES = (
         (STATUS_NAO_EMITIDO, 'Não Emitido'),
         (STATUS_EM_EMISSAO, 'Em emissão'),
-        (STATUS_EMISSAO_PENDENTE, 'Ação manual pendente (revogação)'),
+        (STATUS_EMISSAO_PENDENTE, 'Ação manual pendente (emissão)'),
         (STATUS_REVOGACAO_PENDENTE, 'Ação manual pendente (revogação)'),
         (STATUS_EMITIDO, 'Emitido'),
         (STATUS_REEMITIDO, 'Reemitido'),
@@ -199,7 +199,7 @@ class Emissao(Model):
     )
 
     voucher = OneToOneField(Voucher, related_name='emissao')
-    crm_hash = CharField(max_length=128)
+    crm_hash = CharField(max_length=128, unique=True)
     comodo_order = CharField(max_length=128, blank=True, null=True)
 
     requestor_user = ForeignKey(User, related_name='emissoes')
