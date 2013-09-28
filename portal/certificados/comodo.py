@@ -114,6 +114,7 @@ def emite_certificado(emissao):
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':
+        log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
         raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
     return r
@@ -134,6 +135,7 @@ def revoga_certificado(revogacao):
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':
+        log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
         raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
     return r
@@ -157,6 +159,7 @@ def reemite_certificado(emissao):
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':
+        log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
         raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
     return r

@@ -92,10 +92,10 @@ class ValidateEmissaoCSRMixin(object):
         if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
             dominios = csr.get('dnsNames', [])
 
-            if len(dominios) > voucher.ssl_domains_qty:
-                if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
-                    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_FQDN))
-                raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
+            #if len(dominios) > voucher.ssl_domains_qty:
+            #    if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
+            #        raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_FQDN))
+            #    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
 
             for dominio in dominios:
                 if dominio.startswith('*.'):
