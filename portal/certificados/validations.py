@@ -79,8 +79,8 @@ class ValidateEmissaoCSRMixin(object):
         if csr.get('CN') != url:
             raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
 
-        if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
-            raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
+        # if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
+        #     raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
 
         key_size = int(csr.get('KeySize'))
         if voucher.ssl_line in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
