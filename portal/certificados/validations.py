@@ -57,7 +57,9 @@ class ValidateEmissaoUrlMixin(object):
                 self.validacao_manual = True
 
             else:
-                raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
+                pass
+                # TODO: descomentar isso após os testes com a tqi
+                #raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
         return valor
 
 
