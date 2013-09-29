@@ -185,10 +185,10 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         try:
             emissao = Emissao.objects.get(crm_hash=request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
-            return erro_rest(('---', 'Emissão não encontrada'))  # TODO: corrigir codigo erro
+            return erro_rest(('---', u'Emissão não encontrada'))  # TODO: corrigir codigo erro
 
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
-            return erro_rest(('---', 'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
+            return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES, instance=emissao)
 
@@ -222,10 +222,10 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         try:
             emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
-            return erro_rest(('---', 'Emissão não encontrada'))  # TODO corrigir codigo erro
+            return erro_rest(('---', u'Emissão não encontrada'))  # TODO corrigir codigo erro
 
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
-            return erro_rest(('---', 'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
+            return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
