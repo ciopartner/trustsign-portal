@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from rest_framework.fields import DateTimeField, CharField, Field
 from rest_framework.serializers import ModelSerializer, ValidationError

@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 import os
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.core.exceptions import PermissionDenied

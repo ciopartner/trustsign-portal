@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from portal.certificados.comodo import get_emails_validacao_padrao
 from portal.certificados.erros import get_erro_message
