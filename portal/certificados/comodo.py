@@ -100,7 +100,7 @@ def emite_certificado(emissao):
     }
 
     if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
-        params['domainNames'] = ' '.join(emissao.emission_fqdns)
+        params['domainNames'] = emissao.emission_fqdns
         params['dcvEmailAddresses'] = emissao.emission_dcv_emails
     else:
         params['dcvEmailAddress'] = emissao.emission_dcv_emails

@@ -142,7 +142,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = serializer.object
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
-            emissao.emission_fqdns = serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', '')
+            emissao.emission_fqdns = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', ''))
 
             emissao.voucher = voucher
 
@@ -321,7 +321,7 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
             novo['status_code'] = emissao.emission_status
             novo['status_text'] = emissao.get_emission_status_display()
             novo['ssl_url'] = emissao.emission_url
-            novo['ssl_urls'] = ' '.join(emissao.emission_fqdns)
+            novo['ssl_urls'] = emissao.emission_fqdns
         except Emissao.DoesNotExist:
             novo['status_code'] = Emissao.STATUS_NAO_EMITIDO
             novo['status_text'] = dict(Emissao.STATUS_CHOICES)[Emissao.STATUS_NAO_EMITIDO]
