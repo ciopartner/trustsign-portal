@@ -361,9 +361,9 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
                                          'emission_dcv_emails': get_emails_validacao_padrao(dominio),
                                          'primary': dominio == emissao.emission_url} for dominio in csr['dnsNames']]
                 else:
-                    data['ssl_urls'] = {'url': emissao.emission_url,
-                                        'emission_dcv_emails': get_emails_validacao_padrao(emissao.emission_url),
-                                        'primary': True}
+                    data['ssl_urls'] = [{'url': emissao.emission_url,
+                                         'emission_dcv_emails': get_emails_validacao_padrao(emissao.emission_url),
+                                         'primary': True}]
                 return Response(data, status=status.HTTP_200_OK)
         except Voucher.DoesNotExist:
             return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
