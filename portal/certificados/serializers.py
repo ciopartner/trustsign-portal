@@ -21,7 +21,7 @@ class VoucherSerializer(ModelSerializer):
                   'order_channel', 'order_number']
 
     def validate_crm_hash(self, attrs, source):
-        crm_hash = attrs[source]
+        crm_hash = attrs.get(source)
         if Voucher.objects.filter(crm_hash=crm_hash).exists():
             raise ValidationError('CRM Hash já existente!')
         return attrs
@@ -43,7 +43,7 @@ class ReemissaoSerializer(ModelSerializer):
         fields = ['crm_hash', 'emission_csr']
 
     def validate_emission_csr(self, attrs, source):
-        csr_nova = attrs[source]
+        csr_nova = attrs.get(source)
         csr_antiga = Emissao.objects.get(pk=self.object.pk).emission_csr
 
         if not compare_csr(decode_csr(csr_nova), decode_csr(csr_antiga)):

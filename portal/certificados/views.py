@@ -240,6 +240,7 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
                 return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
 
             emissao.status = Emissao.STATUS_REVOGADO
+            emissao.save()
 
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
