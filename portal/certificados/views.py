@@ -204,6 +204,7 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
                 return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
 
             emissao.emission_status = Emissao.STATUS_REEMITIDO
+            emissao.save()
 
             if not settings.COMODO_ENVIAR_COMO_TESTE:
                 self.pre_save(serializer.object)
@@ -324,7 +325,7 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
             novo['status_code'] = emissao.emission_status
             novo['status_text'] = emissao.get_emission_status_display()
             novo['ssl_url'] = emissao.emission_url
-            novo['ssl_urls'] = emissao.emission_fqdns
+            novo['ssl_urls'] = emissao.emission_fqdns.split(' ')
         except Emissao.DoesNotExist:
             novo['status_code'] = Emissao.STATUS_NAO_EMITIDO
             novo['status_text'] = dict(Emissao.STATUS_CHOICES)[Emissao.STATUS_NAO_EMITIDO]
