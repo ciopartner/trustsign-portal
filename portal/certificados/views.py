@@ -135,6 +135,8 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
                               erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
 
+        log.info('request DATA: %s ' % unicode(request.DATA))
+        log.info('request FILES: %s ' % unicode(request.FILES))
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
