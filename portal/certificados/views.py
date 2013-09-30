@@ -356,13 +356,14 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
                 emissao = serializer.object
                 csr = serializer.get_csr_decoded(emissao.emission_csr)
 
-                if 'dnsNames' in csr and csr['dnsNames']:
+                if 'dnsNames' in csr and csr.get('dnsNames'):
                     data['ssl_urls'] = [{'url': dominio,
                                          'emission_dcv_emails': get_emails_validacao_padrao(dominio),
                                          'primary': dominio == emissao.emission_url} for dominio in csr['dnsNames']]
                 else:
-                    data['ssl_url'] = {'url': emissao.emission_url,
-                                       'emission_dcv_emails': get_emails_validacao_padrao(emissao.emission_url)}
+                    data['ssl_urls'] = {'url': emissao.emission_url,
+                                        'emission_dcv_emails': get_emails_validacao_padrao(emissao.emission_url),
+                                        'primary': True}
                 return Response(data, status=status.HTTP_200_OK)
         except Voucher.DoesNotExist:
             return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,

@@ -61,7 +61,7 @@ def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True)
                 street_index += 1
             if key == 'dnsName(s)':
                 key = 'dnsNames'
-                value = map(lambda x: x.strip(), value.split(','))
+                value = map(lambda x: x.strip(), value.split(',')) if value else []
 
             d[key.replace(' ', '')] = value
 
@@ -117,7 +117,10 @@ def get_emails_dominio(dominio):
 
 
 def remove_acentos(txt, codif='utf-8'):
-    return normalize('NFKD', smart_unicode(txt)).encode('ASCII', 'ignore')
+    try:
+        return normalize('NFKD', smart_unicode(txt)).encode('ASCII', 'ignore')
+    except Exception:
+        return normalize('NFKD', txt.decode('iso-8859-1')).encode('ASCII', 'ignore')
 
 
 def comparacao_fuzzy(string1, string2, max_dist=5):
