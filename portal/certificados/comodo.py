@@ -126,7 +126,7 @@ def revoga_certificado(revogacao):
         'loginName': settings.COMODO_LOGIN_NAME,
         'loginPassword': settings.COMODO_LOGIN_PASSWORD,
         'orderNumber': revogacao.emission.comodo_order,
-        'revocationReason': revogacao.revogacao_motivo,
+        'revocationReason': revogacao.revoke_reason,
         'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
         'responseFormat': '1',
     }
