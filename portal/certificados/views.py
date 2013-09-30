@@ -320,7 +320,7 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
             novo['status_code'] = emissao.emission_status
             novo['status_text'] = emissao.get_emission_status_display()
             novo['ssl_url'] = emissao.emission_url
-            novo['ssl_urls'] = emissao.emission_fqdns.split(' ')
+            novo['ssl_urls'] = ' '.join(emissao.emission_fqdns)
         except Emissao.DoesNotExist:
             novo['status_code'] = Emissao.STATUS_NAO_EMITIDO
             novo['status_text'] = dict(Emissao.STATUS_CHOICES)[Emissao.STATUS_NAO_EMITIDO]
