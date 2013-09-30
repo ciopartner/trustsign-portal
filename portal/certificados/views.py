@@ -197,15 +197,18 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = serializer.object
 
             try:
-                comodo.reemite_certificado(emissao)
+                # Como o ambiente de testes não existe para reemissão...
+                if not settings.COMODO_ENVIAR_COMO_TESTE:
+                    comodo.reemite_certificado(emissao)
             except ComodoError as e:
                 return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
 
             emissao.emission_status = Emissao.STATUS_REEMITIDO
 
-            self.pre_save(serializer.object)
-            self.object = serializer.save(force_insert=True)
-            self.post_save(self.object, created=True)
+            if not settings.COMODO_ENVIAR_COMO_TESTE:
+                self.pre_save(serializer.object)
+                self.object = serializer.save(force_insert=True)
+                self.post_save(self.object, created=True)
 
             headers = self.get_success_headers(serializer.data)
             return Response({}, status=status.HTTP_200_OK, headers=headers)
