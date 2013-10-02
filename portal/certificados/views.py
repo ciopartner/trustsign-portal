@@ -24,6 +24,7 @@ from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Seri
 from django.conf import settings
 import logging
 from portal.ferramentas.utils import decode_csr
+from portal.home.models import TrustSignProfile
 
 log = logging.getLogger('portal.certificados.view')
 
@@ -419,6 +420,7 @@ class EmissaoWizardView(SessionWizardView):
     template_name = 'base.html'
     templates = {}
     _voucher = None
+    revisao = False
 
     # para verificar se precisa de carta de cessao:
     tela_emissao_url = 'tela-1'  # usado para encontrar o form que vai exibir o campo emission_url
@@ -427,16 +429,19 @@ class EmissaoWizardView(SessionWizardView):
     produtos_voucher = ()
 
     def dispatch(self, request, *args, **kwargs):
-        self.instance = self.model()
-        if Emissao.objects.filter(crm_hash=self.kwargs['crm_hash']).exists():
-            raise Http404()  # Não é possível emitir duas vezes o mesmo voucher
+        if self.revisao:
+            self.instance = Emissao.objects.get(crm_hash=self.kwargs['crm_hash'])
+        else:
+            if Emissao.objects.filter(crm_hash=self.kwargs.get('crm_hash')).exists():
+                raise Http404()  # Não é possível emitir duas vezes o mesmo voucher
+            self.instance = self.model()
 
         voucher = self.get_voucher()
         if voucher.ssl_product not in self.produtos_voucher:
             raise Http404()
+
         user = self.request.user
-        if voucher.customer_cnpj != user.username and not user.is_superuser:
-            # TODO: TBD > precisa validar também se o usuario esta no grupo com permissao(trust)
+        if (voucher.customer_cnpj != user.username or user.get_profile().perfil != TrustSignProfile.PERFIL_TRUSTSIGN) and not user.is_superuser:
             raise PermissionDenied()
 
         return super(EmissaoWizardView, self).dispatch(request, *args, **kwargs)
@@ -465,7 +470,7 @@ class EmissaoWizardView(SessionWizardView):
                 'callback_observacao': voucher.customer_callback_note,
                 'callback_username': voucher.customer_callback_username,
             })
-        elif step == 'tela-2':
+        elif step == 'tela-2' and not self.revisao:
             cd = self.get_cleaned_data_for_step('tela-1')
             initial['emission_url'] = cd['emission_url']
             initial['emission_csr'] = cd['emission_csr']
@@ -515,10 +520,13 @@ class EmissaoWizardView(SessionWizardView):
             emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
         else:
             emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
-            resposta = comodo.emite_certificado(emissao)
 
-            emissao.comodo_order = resposta['orderNumber']
-            emissao.emission_cost = resposta['totalCost']
+            # TODO: passar a chamada da comodo para o cron
+
+            #resposta = comodo.emite_certificado(emissao)
+            #
+            #emissao.comodo_order = resposta['orderNumber']
+            #emissao.emission_cost = resposta['totalCost']
         emissao.save()
 
 
@@ -699,3 +707,27 @@ class ReemissaoView(UpdateView):
         atualiza_voucher(voucher, form.cleaned_data)
         voucher.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class RevisaoEmissaoNv1WizardView(EmissaoNv1WizardView):
+    revisao = True
+
+
+class RevisaoEmissaoNv2WizardView(EmissaoNv2WizardView):
+    revisao = True
+
+
+class RevisaoEmissaoNv3WizardView(EmissaoNv3WizardView):
+    revisao = True
+
+
+class RevisaoEmissaoNv4WizardView(EmissaoNv4WizardView):
+    revisao = True
+
+
+class RevisaoEmissaoNvAWizardView(EmissaoNvAWizardView):
+    revisao = True
+
+
+class RevisaoEmissaoNvBWizardView(EmissaoNvBWizardView):
+    revisao = True
