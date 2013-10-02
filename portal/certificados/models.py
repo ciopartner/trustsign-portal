@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
-    OneToOneField, FileField, BooleanField, IntegerField
+    OneToOneField, FileField, BooleanField, IntegerField, permalink
 from django.db.models.signals import pre_save
 #import knu
+from django.utils import timezone
+
 knu = None
 
 User = get_user_model()
@@ -131,7 +133,53 @@ class Voucher(Model):
 
     @property
     def sla_estourado(self):
-        return self.order_date + timedelta(hours=self.tempo_em_espera) < datetime.now()
+        return self.order_date + timedelta(hours=self.tempo_em_espera) < timezone.now()
+
+    @permalink
+    def get_emissao_url(self):
+        if self.ssl_product in (self.PRODUTO_SSL, self.PRODUTO_SSL_WILDCARD):
+            view_name = 'form-emissao-nv1'
+        elif self.ssl_product in (self.PRODUTO_SAN_UCC, self.PRODUTO_MDC):
+            view_name = 'form-emissao-nv2'
+        elif self.ssl_product == self.PRODUTO_EV:
+            view_name = 'form-emissao-nv3'
+        elif self.ssl_product == self.PRODUTO_EV_MDC:
+            view_name = 'form-emissao-nv4'
+        elif self.ssl_product in (self.PRODUTO_CODE_SIGNING, self.PRODUTO_JRE):
+            view_name = 'form-emissao-nvA'
+        elif self.ssl_product == self.PRODUTO_SMIME:
+            view_name = 'form-emissao-nvB'
+        else:
+            raise Exception('produto não possui url de emissao')
+
+        return view_name, (self.ssl_product, self.crm_hash)
+
+    @permalink
+    def get_revisao_url(self):
+        if self.ssl_product in (self.PRODUTO_SSL, self.PRODUTO_SSL_WILDCARD):
+            view_name = 'form-revisao-emissao-nv1'
+        elif self.ssl_product in (self.PRODUTO_SAN_UCC, self.PRODUTO_MDC):
+            view_name = 'form-revisao-emissao-nv2'
+        elif self.ssl_product == self.PRODUTO_EV:
+            view_name = 'form-revisao-emissao-nv3'
+        elif self.ssl_product == self.PRODUTO_EV_MDC:
+            view_name = 'form-revisao-emissao-nv4'
+        elif self.ssl_product in (self.PRODUTO_CODE_SIGNING, self.PRODUTO_JRE):
+            view_name = 'form-revisao-emissao-nvA'
+        elif self.ssl_product == self.PRODUTO_SMIME:
+            view_name = 'form-revisao-emissao-nvB'
+        else:
+            raise Exception('produto não possui url de emissao')
+
+        return view_name, (self.ssl_product, self.crm_hash)
+
+    @permalink
+    def get_reemissao_url(self):
+        return 'form-reemissao', (), {'crm_hash': self.crm_hash}
+
+    @permalink
+    def get_revogacao_url(self):
+        return 'form-revogacao', (), {'crm_hash': self.crm_hash}
 
 # class Pedido(Model):  # TODO: Substituir por abstract do oscar
 #     knu_html = TextField()
@@ -231,6 +279,7 @@ class Emissao(Model):
     emission_publickey_sendto = EmailField(blank=True, null=True)
     emission_server_type = IntegerField(choices=SERVIDOR_TIPO_CHOICES, blank=True, null=True)
 
+    emission_reviewer = ForeignKey(User, related_name='emissoes_revisadas', null=True, blank=True)
     emission_approver = ForeignKey(User, related_name='emissoes_aprovadas', null=True, blank=True)
 
     emission_fqdns = TextField(blank=True, null=True)

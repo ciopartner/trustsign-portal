@@ -35,6 +35,18 @@ class TrustSignProfile(models.Model):
     tagline = models.TextField(blank=True)
     perfil = models.PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
 
+    @property
+    def is_trustsign(self):
+        return self.perfil == self.PERFIL_TRUSTSIGN
+
+    @property
+    def is_cliente(self):
+        return self.perfil == self.PERFIL_CLIENTE
+
+    @property
+    def is_plataforma(self):
+        return self.perfil == self.PERFIL_PLATAFORMA
+
 
 def create_profile(sender, **kwargs):
     if kwargs["created"]:

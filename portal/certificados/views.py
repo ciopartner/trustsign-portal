@@ -397,8 +397,8 @@ class EscolhaVoucherView(ListView):
         return qs
 
 
-class AprovaVoucherListView(ListView):
-    template_name = 'certificados/aprova_voucher_list.html'
+class VouchersPendentesListView(ListView):
+    template_name = 'certificados/vouchers_pentendes.html'
     model = Voucher
     context_object_name = 'vouchers'
 
@@ -435,13 +435,11 @@ class EmissaoWizardView(SessionWizardView):
             if Emissao.objects.filter(crm_hash=self.kwargs.get('crm_hash')).exists():
                 raise Http404()  # Não é possível emitir duas vezes o mesmo voucher
             self.instance = self.model()
-
         voucher = self.get_voucher()
         if voucher.ssl_product not in self.produtos_voucher:
             raise Http404()
-
         user = self.request.user
-        if (voucher.customer_cnpj != user.username or user.get_profile().perfil != TrustSignProfile.PERFIL_TRUSTSIGN) and not user.is_superuser:
+        if (voucher.customer_cnpj != user.username or user.get_profile().is_trustsign) and not user.is_superuser:
             raise PermissionDenied()
 
         return super(EmissaoWizardView, self).dispatch(request, *args, **kwargs)
@@ -470,29 +468,38 @@ class EmissaoWizardView(SessionWizardView):
                 'callback_observacao': voucher.customer_callback_note,
                 'callback_username': voucher.customer_callback_username,
             })
+
         elif step == 'tela-2' and not self.revisao:
             cd = self.get_cleaned_data_for_step('tela-1')
             initial['emission_url'] = cd['emission_url']
             initial['emission_csr'] = cd['emission_csr']
+
         return initial
 
     def get_form_kwargs(self, step=None):
         kwargs = super(EmissaoWizardView, self).get_form_kwargs(step)
-        kwargs['user'] = self.request.user
-        kwargs['crm_hash'] = self.kwargs['crm_hash']
-        kwargs['voucher'] = self.get_voucher()
+
+        kwargs.update({
+            'user': self.request.user,
+            'crm_hash': self.kwargs['crm_hash'],
+            'voucher': self.get_voucher(),
+        })
+
         return kwargs
 
     def get_context_data(self, form, **kwargs):
         context = super(EmissaoWizardView, self).get_context_data(form, **kwargs)
+
         context.update({
             'voucher': self.get_voucher(),
             'emissao': self.instance,
         })
+
         if self.steps.current == 'tela-confirmacao':
-            context['dados_form1'] = self.get_cleaned_data_for_step('tela-1'),
+            context['dados_form1'] = self.get_cleaned_data_for_step('tela-1')
             if 'tela-2' in self.templates:
                 context['dados_form2'] = self.get_cleaned_data_for_step('tela-2')
+
         return context
 
     def get_template_names(self):
@@ -504,20 +511,22 @@ class EmissaoWizardView(SessionWizardView):
                 self._voucher = Voucher.objects.get(crm_hash=self.kwargs.get('crm_hash'))
             except Voucher.DoesNotExist:
                 raise Http404()
+
         return self._voucher
 
     def save(self, form_list, **kwargs):
         emissao = self.instance
-        emissao.requestor_user_id = self.request.user.pk
-        emissao.crm_hash = self.kwargs['crm_hash']
+        if not self.revisao:
+            emissao.requestor_user_id = self.request.user.pk
+            emissao.crm_hash = self.kwargs['crm_hash']
+            emissao.voucher = self.get_voucher()
 
-        voucher = self.get_voucher()
-        emissao.voucher = voucher
+        atualiza_voucher(emissao.voucher, dados_voucher=self.get_cleaned_data_for_step('tela-1'))
 
-        atualiza_voucher(voucher, dados_voucher=self.get_cleaned_data_for_step('tela-1'))
-
-        if any(f.validacao_manual for f in form_list):
+        if self.revisao or any(f.validacao_manual for f in form_list):
             emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
+            if self.revisao:
+                emissao.emission_reviewer = self.request.user
         else:
             emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
 
@@ -573,20 +582,6 @@ class EmissaoNvAWizardView(EmissaoWizardView):
         'tela-confirmacao': 'certificados/nvA/wizard_tela_2_confirmacao.html'
     }
 
-    def save(self, form_list, **kwargs):
-        emissao = self.instance
-        emissao.requestor_user_id = self.request.user.pk
-        emissao.crm_hash = self.kwargs['crm_hash']
-
-        voucher = self.get_voucher()
-        emissao.voucher = voucher
-
-        if any(f.validacao_manual for f in form_list):
-            emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
-        else:
-            emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
-        emissao.save()
-
 
 class EmissaoNvBWizardView(EmissaoWizardView):
     produtos_voucher = (Voucher.PRODUTO_SMIME,)
@@ -594,20 +589,6 @@ class EmissaoNvBWizardView(EmissaoWizardView):
         'tela-1': 'certificados/nvB/wizard_tela_1.html',
         'tela-confirmacao': 'certificados/nvB/wizard_tela_2_confirmacao.html'
     }
-
-    def save(self, form_list, **kwargs):
-        emissao = self.instance
-        emissao.requestor_user_id = self.request.user.pk
-        emissao.crm_hash = self.kwargs['crm_hash']
-
-        voucher = self.get_voucher()
-        emissao.voucher = voucher
-
-        if any(f.validacao_manual for f in form_list):
-            emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
-        else:
-            emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
-        emissao.save()
 
 
 class RevogacaoView(CreateView):
@@ -711,23 +692,29 @@ class ReemissaoView(UpdateView):
 
 class RevisaoEmissaoNv1WizardView(EmissaoNv1WizardView):
     revisao = True
+    done_redirect_url = 'voucher_pendentes_lista'
 
 
 class RevisaoEmissaoNv2WizardView(EmissaoNv2WizardView):
     revisao = True
+    done_redirect_url = 'voucher_pendentes_lista'
 
 
 class RevisaoEmissaoNv3WizardView(EmissaoNv3WizardView):
     revisao = True
+    done_redirect_url = 'voucher_pendentes_lista'
 
 
 class RevisaoEmissaoNv4WizardView(EmissaoNv4WizardView):
     revisao = True
+    done_redirect_url = 'voucher_pendentes_lista'
 
 
 class RevisaoEmissaoNvAWizardView(EmissaoNvAWizardView):
     revisao = True
+    done_redirect_url = 'voucher_pendentes_lista'
 
 
 class RevisaoEmissaoNvBWizardView(EmissaoNvBWizardView):
     revisao = True
+    done_redirect_url = 'voucher_pendentes_lista'

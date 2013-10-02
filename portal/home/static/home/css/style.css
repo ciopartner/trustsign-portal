@@ -68,6 +68,10 @@ textarea{
    resize: none;
 }
 
+.red{
+    color: #a33;
+}
+
 /* START BLOG CONFIG */
 img.size-thumbnail{
     float:left;

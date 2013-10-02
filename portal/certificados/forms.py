@@ -128,7 +128,7 @@ class EmissaoNv1Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmi
     def __init__(self, **kwargs):
         super(EmissaoNv1Tela2Form, self).__init__(**kwargs)
         choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
-        self.fields['emission_dcv_email'] = ChoiceField(choices=choices_email, widget=RadioSelect)
+        self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 
 class EmissaoNv2Tela1Form(EmissaoTela1Form):
@@ -173,7 +173,7 @@ class EmissaoNv3Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmi
     def __init__(self, **kwargs):
         super(EmissaoNv3Tela2Form, self).__init__(**kwargs)
         choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
-        self.fields['emission_dcv_email'] = ChoiceField(choices=choices_email, widget=RadioSelect)
+        self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 
 class EmissaoNv4Tela1Form(EmissaoTela1Form):
@@ -221,6 +221,12 @@ class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm):
 class EmissaoConfirmacaoForm(Form):
 
     confirma = CharField(widget=HiddenInput, initial='1')
+
+    def __init__(self, user=None, crm_hash=None, voucher=None, **kwargs):
+        self.user = user
+        self._crm_hash = crm_hash
+        self._voucher = voucher
+        super(EmissaoConfirmacaoForm, self).__init__(**kwargs)
 
     def clean_confirma(self):
         value = self.cleaned_data['confirma']
