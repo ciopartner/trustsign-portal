@@ -1,0 +1,45 @@
+{% extends 'certificados/wizard_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
+{% endblock %}
+
+{% block one_row %}
+    <div class="escolha-voucher">
+        <h3>Certificados pendentes de envio à Comodo</h3>
+        <table>
+            <tr>
+                <th>Cliente</th>
+                <th>Produto</th>
+                <th>Linha</th>
+                <th>Validade</th>
+                <th>Data Solicitação</th>
+                <th>Tempo de Espera</th>
+                <th>Ação Solicitada</th>
+                <th>Ação</th>
+            </tr>
+            {% for voucher in vouchers %}
+                <tr>
+                    <td>{{ voucher.customer_companyname }}</td>
+                    <td>{{ voucher.get_ssl_product_display }}</td>
+                    <td>{{ voucher.get_ssl_line_display }}</td>
+                    <td>{{ voucher.get_ssl_term_display }}</td>
+                    <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.order_data|date:"d/m/Y" }}</td>
+                    <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.tempo_em_espera }}h</td>
+                    <td>
+                    {% with emissao=voucher.emissao %}
+                        {% if emissao.emission_status == emissao.STATUS_EMISSAO_PENDENTE %}
+                            Emissão
+                        {% elif emissao.emission_status == emissao.STATUS_REVOGACAO_PENDENTE %}
+                            Revogação
+                        {% endif %}
+                    {% endwith %}
+                    </td>
+                    <td><a href="#">Analisar</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

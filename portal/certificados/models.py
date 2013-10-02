@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField
@@ -115,6 +116,22 @@ class Voucher(Model):
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
 
+    @property
+    def tempo_em_espera(self):
+        if self.ssl_product == self.PRODUTO_SSL:
+            return 48
+        if self.ssl_product == self.PRODUTO_EV:
+            return 168
+        if self.ssl_product == self.PRODUTO_SAN_UCC:
+            return 72
+        if self.ssl_product == self.PRODUTO_EV_MDC:
+            return 240
+        if self.ssl_product in (self.PRODUTO_SMIME, self.PRODUTO_CODE_SIGNING, self.PRODUTO_JRE):
+            return 24
+
+    @property
+    def sla_estourado(self):
+        return self.order_date + timedelta(hours=self.tempo_em_espera) < datetime.now()
 
 # class Pedido(Model):  # TODO: Substituir por abstract do oscar
 #     knu_html = TextField()
@@ -181,20 +198,22 @@ class Emissao(Model):
     )
 
     STATUS_NAO_EMITIDO = 0
-    STATUS_EM_EMISSAO = 1
-    STATUS_EMITIDO = 3
-    STATUS_REEMITIDO = 4
-    STATUS_REVOGADO = 5
-    STATUS_EMISSAO_PENDENTE = 6
-    STATUS_REVOGACAO_PENDENTE = 7
+    STATUS_EMISSAO_APROVACAO_PENDENTE = 1
+    STATUS_ENVIO_COMODO_PENDENTE = 2
+    STATUS_ENVIADO_COMODO = 3
+    STATUS_EMITIDO = 4
+    STATUS_REEMITIDO = 5
+    STATUS_REVOGACAO_APROVACAO_PENDENTE = 6
+    STATUS_REVOGADO = 7
     STATUS_CHOICES = (
         (STATUS_NAO_EMITIDO, 'Não Emitido'),
-        (STATUS_EM_EMISSAO, 'Em emissão'),
-        (STATUS_EMISSAO_PENDENTE, 'Ação manual pendente (emissão)'),
-        (STATUS_REVOGACAO_PENDENTE, 'Ação manual pendente (revogação)'),
-        (STATUS_EMITIDO, 'Emitido'),
-        (STATUS_REEMITIDO, 'Reemitido'),
-        (STATUS_REVOGADO, 'Revogado'),
+        (STATUS_EMISSAO_APROVACAO_PENDENTE, 'Emissão Pendente de Revisão'),
+        (STATUS_ENVIO_COMODO_PENDENTE, 'Em Processamento'),
+        (STATUS_ENVIADO_COMODO, 'Em Processamento'),
+        (STATUS_EMITIDO, 'Certificado Emitido'),
+        (STATUS_REEMITIDO, 'Certificado Reemitido'),
+        (STATUS_REVOGACAO_APROVACAO_PENDENTE, 'Revogação Pendente de Revisão'),
+        (STATUS_REVOGADO, 'Certificado Revogado'),
 
     )
 

@@ -152,9 +152,9 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             # TODO: substituir o if abaixo após tests com TQI
             # if serializer.validacao_manual:
             if False:
-                emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
+                emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
             else:
-                emissao.emission_status = emissao.STATUS_EM_EMISSAO
+                emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
                 if voucher.ssl_product not in (voucher.PRODUTO_SMIME, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_JRE):
                     # TODO: retirar o if depois que implementar API dos 3
                     try:
@@ -387,16 +387,29 @@ class EscolhaVoucherView(ListView):
 
     def get_queryset(self):
         qs = Voucher.objects.select_related('emissao').filter(
-            Q(emissao__isnull=True) | Q(emissao__emission_status__in=(
-                Emissao.STATUS_NAO_EMITIDO, Emissao.STATUS_EMITIDO,
-                Emissao.STATUS_EM_EMISSAO, Emissao.STATUS_EMISSAO_PENDENTE, Emissao.STATUS_REVOGACAO_PENDENTE
-            )))
+            Q(emissao__isnull=True) | ~Q(emissao__emission_status=Emissao.STATUS_REVOGADO))
         profile = self.request.user.get_profile()
         if profile.perfil == profile.PERFIL_CLIENTE:
             qs = qs.filter(
                 customer_cnpj=self.request.user.username
             )
         return qs
+
+
+class AprovaVoucherListView(ListView):
+    template_name = 'certificados/aprova_voucher_list.html'
+    model = Voucher
+    context_object_name = 'vouchers'
+
+    def get_queryset(self):
+        user = self.request.user
+        profile = user.get_profile()
+        if profile.perfil != profile.PERFIL_TRUSTSIGN and not user.is_superuser:
+            raise PermissionDenied
+        return Voucher.objects.select_related('emissao').filter(
+            emissao__emission_status__in=(
+                Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE, Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
+            ))
 
 
 class EmissaoWizardView(SessionWizardView):
@@ -499,9 +512,9 @@ class EmissaoWizardView(SessionWizardView):
         atualiza_voucher(voucher, dados_voucher=self.get_cleaned_data_for_step('tela-1'))
 
         if any(f.validacao_manual for f in form_list):
-            emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
+            emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
         else:
-            emissao.emission_status = emissao.STATUS_EM_EMISSAO
+            emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
             resposta = comodo.emite_certificado(emissao)
 
             emissao.comodo_order = resposta['orderNumber']
@@ -561,9 +574,9 @@ class EmissaoNvAWizardView(EmissaoWizardView):
         emissao.voucher = voucher
 
         if any(f.validacao_manual for f in form_list):
-            emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
+            emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
         else:
-            emissao.emission_status = emissao.STATUS_EM_EMISSAO
+            emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
         emissao.save()
 
 
@@ -583,9 +596,9 @@ class EmissaoNvBWizardView(EmissaoWizardView):
         emissao.voucher = voucher
 
         if any(f.validacao_manual for f in form_list):
-            emissao.emission_status = emissao.STATUS_EMISSAO_PENDENTE
+            emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
         else:
-            emissao.emission_status = emissao.STATUS_EM_EMISSAO
+            emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
         emissao.save()
 
 
@@ -623,7 +636,7 @@ class RevogacaoView(CreateView):
         revogacao.emission = emissao
         revogacao.save()
 
-        emissao.emission_status = emissao.STATUS_REVOGACAO_PENDENTE
+        emissao.emission_status = emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
         emissao.save()
 
         return HttpResponseRedirect(self.get_success_url())
