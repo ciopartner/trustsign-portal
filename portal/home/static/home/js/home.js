@@ -14,6 +14,8 @@
         window.location = $(this).find('a').attr('href');
     });
 
+    $("[rel=tooltip]").tooltip({ placement: 'bottom'});
+
 }).call(this);
 
 function abreVideo(link){

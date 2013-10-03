@@ -28,9 +28,11 @@ CODIGOS_PRODUTOS = {
 
 class ComodoError(Exception):
     code = None
+    comodo_message = None
 
     def __init__(self, *args, **kwargs):
         self.code = kwargs.pop('code', -1)
+        self.comodo_message = kwargs.pop('comodo_message', 'Error')
         super(ComodoError, self).__init__(*args, **kwargs)
 
 
@@ -116,7 +118,7 @@ def emite_certificado(emissao):
     if r['errorCode'] != '0':
         log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
     return r
 
 
@@ -137,7 +139,7 @@ def revoga_certificado(revogacao):
     if r['errorCode'] != '0':
         log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
     return r
 
 
@@ -161,5 +163,5 @@ def reemite_certificado(emissao):
     if r['errorCode'] != '0':
         log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
     return r

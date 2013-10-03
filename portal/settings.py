@@ -170,6 +170,7 @@ INSTALLED_APPS = (
     "django.contrib.sites",
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
+
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",
@@ -191,6 +192,8 @@ INSTALLED_APPS = (
     'suporte',
     'certificados',
     'rest_framework',
+
+    'periodically',
 )
 
 # List of processors used by RequestContext to populate the context.

@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.utils.timezone import now
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, TemplateView
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
@@ -15,7 +15,6 @@ from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from portal.certificados import comodo, erros
 from portal.certificados.authentication import UserPasswordAuthentication
-from portal.certificados.comodo import ComodoError, get_emails_validacao_padrao
 from portal.certificados.forms import RevogacaoForm, ReemissaoForm
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
@@ -23,8 +22,6 @@ from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Seri
     ReemissaoSerializer, EmissaoValidaSerializer
 from django.conf import settings
 import logging
-from portal.ferramentas.utils import decode_csr
-from portal.home.models import TrustSignProfile
 
 log = logging.getLogger('portal.certificados.view')
 
@@ -155,16 +152,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             if False:
                 emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
             else:
-                emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
-                if voucher.ssl_product not in (voucher.PRODUTO_SMIME, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_JRE):
-                    # TODO: retirar o if depois que implementar API dos 3
-                    try:
-                        resposta = comodo.emite_certificado(emissao)
-                    except ComodoError as e:
-                        return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
-
-                    emissao.comodo_order = resposta['orderNumber']
-                    emissao.emission_cost = resposta['totalCost']
+                emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
 
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
@@ -199,14 +187,7 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         if serializer.is_valid():
             emissao = serializer.object
 
-            try:
-                # Como o ambiente de testes não existe para reemissão...
-                if not settings.COMODO_ENVIAR_COMO_TESTE:
-                    comodo.reemite_certificado(emissao)
-            except ComodoError as e:
-                return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
-
-            emissao.emission_status = Emissao.STATUS_REEMITIDO
+            emissao.emission_status = Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE
             emissao.save()
 
             if not settings.COMODO_ENVIAR_COMO_TESTE:
@@ -241,12 +222,7 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             revogacao = serializer.object
             revogacao.emission = emissao
 
-            try:
-                comodo.revoga_certificado(revogacao)
-            except ComodoError as e:
-                return erro_rest((erros.ERRO_INTERNO_SERVIDOR, erros.get_erro_message(erros.ERRO_INTERNO_SERVIDOR) % e.code))
-
-            emissao.status = Emissao.STATUS_REVOGADO
+            emissao.status = Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
             emissao.save()
 
             self.pre_save(serializer.object)
@@ -362,11 +338,11 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
 
                 if 'dnsNames' in csr and csr.get('dnsNames'):
                     data['ssl_urls'] = [{'url': dominio,
-                                         'emission_dcv_emails': get_emails_validacao_padrao(dominio),
+                                         'emission_dcv_emails': comodo.get_emails_validacao_padrao(dominio),
                                          'primary': dominio == emissao.emission_url} for dominio in csr['dnsNames']]
                 else:
                     data['ssl_urls'] = [{'url': emissao.emission_url,
-                                         'emission_dcv_emails': get_emails_validacao_padrao(emissao.emission_url),
+                                         'emission_dcv_emails': comodo.get_emails_validacao_padrao(emissao.emission_url),
                                          'primary': True}]
                 return Response(data, status=status.HTTP_200_OK)
         except Voucher.DoesNotExist:
@@ -528,14 +504,8 @@ class EmissaoWizardView(SessionWizardView):
             if self.revisao:
                 emissao.emission_reviewer = self.request.user
         else:
-            emissao.emission_status = emissao.STATUS_ENVIO_COMODO_PENDENTE
+            emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
 
-            # TODO: passar a chamada da comodo para o cron
-
-            #resposta = comodo.emite_certificado(emissao)
-            #
-            #emissao.comodo_order = resposta['orderNumber']
-            #emissao.emission_cost = resposta['totalCost']
         emissao.save()
 
 
@@ -679,9 +649,6 @@ class ReemissaoView(UpdateView):
     def form_valid(self, form):
         emissao = self.object = form.save(commit=False)
 
-        comodo.reemite_certificado(emissao)
-
-        emissao.emission_status = emissao.STATUS_REEMITIDO
         emissao.save()
 
         voucher = self.get_voucher()
@@ -692,29 +659,48 @@ class ReemissaoView(UpdateView):
 
 class RevisaoEmissaoNv1WizardView(EmissaoNv1WizardView):
     revisao = True
-    done_redirect_url = 'voucher_pendentes_lista'
+    done_redirect_url = 'voucher-pendentes-lista'
 
 
 class RevisaoEmissaoNv2WizardView(EmissaoNv2WizardView):
     revisao = True
-    done_redirect_url = 'voucher_pendentes_lista'
+    done_redirect_url = 'voucher-pendentes-lista'
 
 
 class RevisaoEmissaoNv3WizardView(EmissaoNv3WizardView):
     revisao = True
-    done_redirect_url = 'voucher_pendentes_lista'
+    done_redirect_url = 'voucher-pendentes-lista'
 
 
 class RevisaoEmissaoNv4WizardView(EmissaoNv4WizardView):
     revisao = True
-    done_redirect_url = 'voucher_pendentes_lista'
+    done_redirect_url = 'voucher-pendentes-lista'
 
 
 class RevisaoEmissaoNvAWizardView(EmissaoNvAWizardView):
     revisao = True
-    done_redirect_url = 'voucher_pendentes_lista'
+    done_redirect_url = 'voucher-pendentes-lista'
 
 
 class RevisaoEmissaoNvBWizardView(EmissaoNvBWizardView):
     revisao = True
-    done_redirect_url = 'voucher_pendentes_lista'
+    done_redirect_url = 'voucher-pendentes-lista'
+
+
+class AprovaVoucherPendenteView(TemplateView):
+
+    def render_to_response(self, context, **response_kwargs):
+        user = self.request.user
+        if not user.get_profile().is_trustsign and not user.is_superuser:
+            raise PermissionDenied
+
+        try:
+            emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.kwargs['crm_hash'])
+        except Emissao.DoesNotExist:
+            raise Http404
+
+        emissao.aprova()
+
+        emissao.save()
+
+        return HttpResponseRedirect(reverse('voucher-pendentes-lista'))

@@ -32,3 +32,4 @@ pyOpenSSL==0.13
 PyCrypto==2.6
 djangorestframework==2.3.7
 nltk==2.0.4
+-e git+https://github.com/hzdg/django-periodically.git@ec5639b0bb5027f436d5b8ff8440a3b2fa44a63e#egg=django-periodically

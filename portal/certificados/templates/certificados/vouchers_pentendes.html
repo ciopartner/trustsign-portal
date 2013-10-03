@@ -37,7 +37,13 @@
                         {% endif %}
                     </td>
                     <td><a href="{{ voucher.get_revisao_url }}">Revisar</a>{% if emissao.emission_reviewer %},
-                       <a href="#">Aprovar</a>{% endif %}</td>
+                       <a href="{{ voucher.get_aprova_voucher_pendente_url }}">Aprovar</a>{% endif %}
+                    {% if emissao.emission_error_message %}
+                        <span class="badge badge-important" title="{{ emissao.emission_error_message }}" rel="tooltip">!</span>
+                    {% endif %}
+
+                    </td>
+
                 </tr>
                 {% endwith %}
 

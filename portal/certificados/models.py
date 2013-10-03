@@ -4,7 +4,6 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField, permalink
-from django.db.models.signals import pre_save
 #import knu
 from django.utils import timezone
 
@@ -174,6 +173,10 @@ class Voucher(Model):
         return view_name, (self.ssl_product, self.crm_hash)
 
     @permalink
+    def get_aprova_voucher_pendente_url(self):
+        return 'aprova-voucher-pendente', (), {'crm_hash': self.crm_hash}
+
+    @permalink
     def get_reemissao_url(self):
         return 'form-reemissao', (), {'crm_hash': self.crm_hash}
 
@@ -246,23 +249,41 @@ class Emissao(Model):
     )
 
     STATUS_NAO_EMITIDO = 0
+
     STATUS_EMISSAO_APROVACAO_PENDENTE = 1
-    STATUS_ENVIO_COMODO_PENDENTE = 2
-    STATUS_ENVIADO_COMODO = 3
+    STATUS_EMISSAO_ENVIO_COMODO_PENDENTE = 2
+    STATUS_EMISSAO_ENVIADO_COMODO = 3
     STATUS_EMITIDO = 4
-    STATUS_REEMITIDO = 5
-    STATUS_REVOGACAO_APROVACAO_PENDENTE = 6
-    STATUS_REVOGADO = 7
+
+    STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE = 5
+    STATUS_REEMISSAO_ENVIADO_COMODO = 6
+    STATUS_REEMITIDO = 7
+
+    STATUS_REVOGACAO_APROVACAO_PENDENTE = 8
+    STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE = 9
+    STATUS_REVOGACAO_ENVIADO_COMODO = 10
+    STATUS_REVOGADO = 10
+
+    STATUS_OCORREU_ERRO_COMODO = 11
+
     STATUS_CHOICES = (
         (STATUS_NAO_EMITIDO, 'Não Emitido'),
+
         (STATUS_EMISSAO_APROVACAO_PENDENTE, 'Emissão Pendente de Revisão'),
-        (STATUS_ENVIO_COMODO_PENDENTE, 'Em Processamento'),
-        (STATUS_ENVIADO_COMODO, 'Em Processamento'),
+        (STATUS_EMISSAO_ENVIO_COMODO_PENDENTE, 'Emissão Em Processamento'),
+        (STATUS_EMISSAO_ENVIADO_COMODO, 'Emissão Em Processamento'),
         (STATUS_EMITIDO, 'Certificado Emitido'),
+
+        (STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE, 'Reemissão Em Processamento'),
+        (STATUS_REEMISSAO_ENVIADO_COMODO, 'Reemissão Em Processamento'),
         (STATUS_REEMITIDO, 'Certificado Reemitido'),
+
         (STATUS_REVOGACAO_APROVACAO_PENDENTE, 'Revogação Pendente de Revisão'),
+        (STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE, 'Revogação Em Processamento'),
+        (STATUS_REVOGACAO_ENVIADO_COMODO, 'Revogação Em Processamento'),
         (STATUS_REVOGADO, 'Certificado Revogado'),
 
+        (STATUS_OCORREU_ERRO_COMODO, 'Ocorreu um erro interno')
     )
 
     voucher = OneToOneField(Voucher, related_name='emissao')
@@ -296,6 +317,7 @@ class Emissao(Model):
     emission_cost = DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
 
     emission_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
+    emission_error_message = CharField(max_length=256, blank=True, null=True)
 
     class Meta:
         verbose_name = 'emissão'
@@ -315,6 +337,12 @@ class Emissao(Model):
 
     def get_lista_dominios_linha(self):
         return '\n'.join(self.get_lista_dominios())
+
+    def aprova(self):
+        if self.emission_status == Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE:
+            self.emission_status = Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
+        elif self.emission_status == Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE:
+            self.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
 
 
 class Revogacao(Model):
