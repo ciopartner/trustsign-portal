@@ -10,7 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         qtd_vouchers = int(args[0]) if len(args) > 0 else 50
 
-        for crm_hash in ('SSL', 'WILDCARD', 'MDC', 'SAN', 'EV', 'EV-MDC'):
+        for crm_hash in ('SSL', 'WILDCARD', 'MDC', 'SAN', 'EV', 'EV-MDC', 'JRE', 'CODE-SIGNING', 'SMIME'):
             voucher_base = Voucher.objects.get(crm_hash=crm_hash)
 
             for i in range(qtd_vouchers):

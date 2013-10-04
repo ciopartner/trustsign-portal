@@ -1,4 +1,4 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from portal.certificados.comodo import get_emails_validacao_padrao
 from portal.certificados.erros import get_erro_message
@@ -57,7 +57,9 @@ class ValidateEmissaoUrlMixin(object):
                 self.validacao_manual = True
 
             else:
-                raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
+                pass
+                # TODO: descomentar isso após os testes com a tqi
+                #raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
         return valor
 
 
@@ -79,8 +81,8 @@ class ValidateEmissaoCSRMixin(object):
         if csr.get('CN') != url:
             raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
 
-        if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
-            raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
+        # if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
+        #     raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
 
         key_size = int(csr.get('KeySize'))
         if voucher.ssl_line in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
@@ -92,10 +94,10 @@ class ValidateEmissaoCSRMixin(object):
         if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
             dominios = csr.get('dnsNames', [])
 
-            if len(dominios) > voucher.ssl_domains_qty:
-                if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
-                    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_FQDN))
-                raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
+            #if len(dominios) > voucher.ssl_domains_qty:
+            #    if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
+            #        raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_FQDN))
+            #    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
 
             for dominio in dominios:
                 if dominio.startswith('*.'):
@@ -107,7 +109,9 @@ class ValidateEmissaoCSRMixin(object):
                     if fields.get('emission_assignment_letter'):
                         self.validacao_manual = True
                     else:
-                        raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
+                        pass
+                        # TODO: descomentar isso aqui após a tqi testar
+                        # raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
             #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
         return valor
 

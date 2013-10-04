@@ -33,3 +33,4 @@ PyCrypto==2.6
 djangorestframework==2.3.7
 nltk==2.0.4
 django-localflavor==1.0
+-e git+https://github.com/hzdg/django-periodically.git@ec5639b0bb5027f436d5b8ff8440a3b2fa44a63e#egg=django-periodically

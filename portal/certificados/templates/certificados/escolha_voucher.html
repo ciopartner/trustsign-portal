@@ -28,12 +28,12 @@
                     <td>
                     {% with emissao=voucher.emissao %}
                         {% if emissao.emission_status == emissao.STATUS_NAO_EMITIDO %}
-                            <a href="#">Emitir</a>
+                            <a href="{{ voucher.get_emissao_url }}">Emitir</a>
                         {% elif emissao.emission_status == emissao.STATUS_EM_EMISSAO or emissao.emission_status == emissao.STATUS_ACAO_MANUAL_PENDENTE %}
                             Em emissão
                         {% elif emissao.emission_status == emissao.STATUS_EMITIDO %}
-                            <a href="#">Reemitir</a>,
-                            <a href="#">Revogar</a>,
+                            <a href="{{ voucher.get_reemissao_url }}">Reemitir</a>,
+                            <a href="{{ voucher.get_revogacao_url }}">Revogar</a>,
                             <a href="#">HTML Selo</a>,
                             <a href="#">Chave Pública</a>
                         {% endif %}

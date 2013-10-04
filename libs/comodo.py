@@ -1,4 +1,4 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.conf import settings
 import requests
@@ -28,9 +28,11 @@ CODIGOS_PRODUTOS = {
 
 class ComodoError(Exception):
     code = None
+    comodo_message = None
 
     def __init__(self, *args, **kwargs):
         self.code = kwargs.pop('code', -1)
+        self.comodo_message = kwargs.pop('comodo_message', 'Error')
         super(ComodoError, self).__init__(*args, **kwargs)
 
 
@@ -114,8 +116,9 @@ def emite_certificado(emissao):
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':
+        log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
     return r
 
 
@@ -124,8 +127,8 @@ def revoga_certificado(revogacao):
     params = {
         'loginName': settings.COMODO_LOGIN_NAME,
         'loginPassword': settings.COMODO_LOGIN_PASSWORD,
-        'orderNumber': revogacao.emissao.comodo_order,
-        'revocationReason': revogacao.revogacao_motivo,
+        'orderNumber': revogacao.emission.comodo_order,
+        'revocationReason': revogacao.revoke_reason,
         'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
         'responseFormat': '1',
     }
@@ -134,8 +137,9 @@ def revoga_certificado(revogacao):
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':
+        log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
     return r
 
 
@@ -157,6 +161,7 @@ def reemite_certificado(emissao):
 
     r = url_parse(response.text)
     if r['errorCode'] != '0':
+        log.error(r)
         log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'])
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
     return r
