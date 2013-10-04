@@ -699,7 +699,7 @@ class AprovaVoucherPendenteView(TemplateView):
         except Emissao.DoesNotExist:
             raise Http404
 
-        emissao.aprova()
+        emissao.aprova(self.request.user)
 
         emissao.save()
 

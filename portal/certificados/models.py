@@ -338,11 +338,13 @@ class Emissao(Model):
     def get_lista_dominios_linha(self):
         return '\n'.join(self.get_lista_dominios())
 
-    def aprova(self):
+    def aprova(self, user):
         if self.emission_status == Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE:
             self.emission_status = Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
         elif self.emission_status == Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE:
             self.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
+
+        self.emission_approver = user
 
 
 class Revogacao(Model):
