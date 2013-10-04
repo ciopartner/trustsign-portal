@@ -26,7 +26,7 @@ import logging
 log = logging.getLogger('portal.certificados.view')
 
 
-def erro_rest(*erros):
+def erro_rest(*lista_erros):
     """
     Cria o Response com o padrão:
 
@@ -37,7 +37,7 @@ def erro_rest(*erros):
     onde a chamada seria erro_rest((X,Y), (A,B))
     """
     return Response({
-        'errors': [{'code': e[0], 'message': e[1]} for e in erros]
+        'errors': [{'code': e[0], 'message': e[1]} for e in lista_erros]
     }, status=status.HTTP_400_BAD_REQUEST)
 
 

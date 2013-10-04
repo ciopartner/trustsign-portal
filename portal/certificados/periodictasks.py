@@ -2,14 +2,15 @@
 from __future__ import unicode_literals
 from django.conf import settings
 from periodically.decorators import every
-from portal.certificados import comodo
-from portal.certificados.models import Emissao, Revogacao
 from logging import getLogger
 
 log = getLogger('portal.certificados.periodictasks')
 
 @every(minutes=5)
 def envia_comodo():
+    from portal.certificados import comodo
+    from portal.certificados.models import Emissao, Revogacao
+
     status_envio_pendente = (
         Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
         Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
