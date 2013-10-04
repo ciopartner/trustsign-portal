@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework.fields import DateTimeField, CharField, Field
+from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
@@ -17,7 +17,8 @@ class VoucherSerializer(ModelSerializer):
                   'customer_address2', 'customer_address3', 'customer_address4', 'customer_city', 'customer_state',
                   'customer_country', 'customer_registration_status', 'customer_callback_firstname',
                   'customer_callback_lastname', 'customer_callback_email', 'customer_callback_phone',
-                  'customer_callback_note', 'ssl_product', 'ssl_line', 'ssl_term', 'order_date', 'order_item_value',
+                  'customer_callback_note', 'customer_callback_title', 'ssl_code', 'ssl_product', 'ssl_line',
+                  'ssl_term', 'ssl_key_size', 'ssl_username', 'ssl_password', 'order_date', 'order_item_value',
                   'order_channel', 'order_number']
 
     def validate_crm_hash(self, attrs, source):
@@ -59,6 +60,7 @@ class EmissaoModelSerializer(ModelSerializer):
     _voucher = None
     user = None
     ValidationError = ValidationError
+    validacao = False
 
     def __init__(self, user=None, crm_hash=None, **kwargs):
         self.user = user
@@ -72,7 +74,7 @@ class EmissaoModelSerializer(ModelSerializer):
 
     def get_fields(self):
         fields = super(EmissaoModelSerializer, self).get_fields()
-        for f in self.REQUIRED_FIELDS:
+        for f in self.get_required_fields():
             fields[f].required = True
         return fields
 
@@ -80,6 +82,9 @@ class EmissaoModelSerializer(ModelSerializer):
         if not self._voucher:
             self._voucher = Voucher.objects.get(crm_hash=self._crm_hash)
         return self._voucher
+
+    def get_required_fields(self):
+        return self.REQUIRED_FIELDS
 
 
 class EmissaoNv0Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin):
@@ -145,8 +150,18 @@ class EmissaoNvASerializer(EmissaoModelSerializer):
         fields = ('crm_hash', 'emission_address_proof',)
 
 
+class EmissaoNvBSerializer(EmissaoModelSerializer):
+    REQUIRED_FIELDS = ('emission_address_proof',)
+
+    class Meta:
+        model = Emissao
+        fields = ('crm_hash', 'emission_address_proof',)
+
+
 class EmissaoValidaSerializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin):
     REQUIRED_FIELDS = ('emission_url', 'emission_csr')
+    validacao = True
+    validacao_carta_cessao_necessaria = False
 
     class Meta:
         model = Emissao

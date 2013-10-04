@@ -46,7 +46,7 @@ class Voucher(Model):
     LINHA_PRIME = 'prime'
     LINHA_CHOICES = (
         (LINHA_DEGUSTACAO, 'Degustação'),
-        (LINHA_BASIC, 'Basic'),
+        (LINHA_BASIC, 'Basico'),
         (LINHA_PRO, 'Pro'),
         (LINHA_PRIME, 'Prime'),
     )
@@ -58,9 +58,9 @@ class Voucher(Model):
     VALIDADE_ASSINATURA_SEMESTRAL = 'subscription_6m'
     VALIDADE_ASSINATURA_ANUAL = 'subscription_12m'
     VALIDADE_CHOICES = (
-        (VALIDADE_ANUAL, 'Anual'),
-        (VALIDADE_BIANUAL, 'Bianual'),
-        (VALIDADE_TRIANUAL, 'Trianual'),
+        (VALIDADE_ANUAL, '1 ano'),
+        (VALIDADE_BIANUAL, '2 anos'),
+        (VALIDADE_TRIANUAL, '3 anos'),
         (VALIDADE_ASSINATURA_MENSAL, 'Assinatura Mensal'),
         (VALIDADE_ASSINATURA_SEMESTRAL, 'Assinatura Semestral'),
         (VALIDADE_ASSINATURA_ANUAL, 'Assinatura Anual'),
@@ -94,10 +94,9 @@ class Voucher(Model):
     customer_callback_lastname = CharField(max_length=128, blank=True, default='')
     customer_callback_email = EmailField(blank=True, null=True)
     customer_callback_phone = CharField(max_length=16, blank=True, default='')
-    customer_callback_username = CharField(max_length=32, blank=True, null=True)
-    customer_callback_password = CharField(max_length=128, blank=True, null=True)
     customer_callback_note = CharField(max_length=128, blank=True, default='')
 
+    ssl_code = CharField(max_length=128)
     ssl_url = CharField(max_length=200, blank=True, null=True)
     ssl_product = CharField(max_length=16, choices=PRODUTO_CHOICES)
     ssl_line = CharField(max_length=16, choices=LINHA_CHOICES)
@@ -108,6 +107,9 @@ class Voucher(Model):
     ssl_revoked_date = DateTimeField(blank=True, null=True)
     ssl_domains_qty = IntegerField(blank=True, default=0)
     ssl_seal_html = TextField(blank=True, default='')
+    ssl_key_size = IntegerField(blank=True, null=True)
+    ssl_username = CharField(max_length=32, blank=True, null=True)
+    ssl_password = CharField(max_length=128, blank=True, null=True)
 
     order_date = DateTimeField()
     order_item_value = DecimalField(decimal_places=2, max_digits=9)

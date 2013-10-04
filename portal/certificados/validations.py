@@ -1,10 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from portal.certificados.comodo import get_emails_validacao_padrao
+from portal.certificados.comodo import get_emails_validacao_padrao, get_emails_validacao
 from portal.certificados.erros import get_erro_message
 from portal.certificados.models import Voucher
 from portal.ferramentas.utils import comparacao_fuzzy, get_razao_social_dominio
 from portal.certificados import erros as e
+
+NOMES_INTERNOS = (
+    '.test',
+    '.example',
+    '.invalid',
+    '.localhost',
+    '.local',
+    '.lan',
+    '.priv',
+    '.localdomain',
+)
 
 
 def insere_metodos_validacao(field):
@@ -41,14 +52,19 @@ def insere_metodos_validacao(field):
 class ValidateEmissaoUrlMixin(object):
 
     def _valida_emission_url(self, valor, fields):
-        razao_social = get_razao_social_dominio(valor)
-        if not razao_social:
-            raise self.ValidationError('Não foi possível conseguir a razão social apartir da url informada')
-
         try:
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
             raise self.ValidationError(get_erro_message(e.ERRO_VOUCHER_NAO_ENCONTRADO))
+        if voucher.ssl_product == Voucher.PRODUTO_SSL_WILDCARD:
+            if not valor.startswith('*.'):
+                raise self.ValidationError('A URL deve iniciar com "*.". Ex.: *.exemplo.com.br')
+        else:
+            if '*' in valor:
+                raise self.ValidationError('A URL não pode conter *.')
+        razao_social = get_razao_social_dominio(valor)
+        if not razao_social:
+            raise self.ValidationError('Não foi possível conseguir a razão social apartir da url informada')
 
         if not comparacao_fuzzy(razao_social, voucher.customer_companyname):
             if fields.get('emission_assignment_letter'):
@@ -57,9 +73,12 @@ class ValidateEmissaoUrlMixin(object):
                 self.validacao_manual = True
 
             else:
-                pass
-                # TODO: descomentar isso após os testes com a tqi
-                #raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
+                if self.validacao:
+                    self.validacao_carta_cessao_necessaria = True
+                else:
+                    pass
+                    # TODO: descomentar isso após os testes com a tqi
+                    #raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
         return valor
 
 
@@ -91,8 +110,11 @@ class ValidateEmissaoCSRMixin(object):
         if voucher.ssl_line == voucher.LINHA_PRIME and key_size != 4096:
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS))
 
-        if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
-            dominios = csr.get('dnsNames', [])
+        dominios = csr.get('dnsNames', [])
+        if not voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
+            if dominios:
+                raise self.ValidationError('Este produto possui somente um domínio')
+        else:
 
             #if len(dominios) > voucher.ssl_domains_qty:
             #    if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
@@ -100,8 +122,13 @@ class ValidateEmissaoCSRMixin(object):
             #    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
 
             for dominio in dominios:
-                if dominio.startswith('*.'):
-                    dominio = dominio[2:]
+                if '*' in dominio:
+                    raise self.ValidationError('Nenhum domínio pode conter *.')
+
+                final_dominio = '.%s' % dominio.split('.')[-1]
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
+                    continue
+
                 razao_social = get_razao_social_dominio(dominio)
                 if not razao_social:
                     raise self.ValidationError('Não foi possível conseguir a razão social apartir do domínio: %s' % dominio)
@@ -130,7 +157,7 @@ class ValidateEmissaoPrimaryDN(object):
 class ValidateEmissaoValidacaoEmail(object):
 
     def _valida_emission_dcv_emails(self, valor, fields):
-        emails = get_emails_validacao_padrao(fields['emission_url'])
+        emails = get_emails_validacao(fields['emission_url'])
         if valor not in emails:
             raise self.ValidationError('E-mail de validação inválido')
         return valor
@@ -144,13 +171,14 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
         dominios = csr['dnsNames']
         emails = valor.split(' ')
 
-        print dominios
-        print emails
-
         if len(dominios) != len(emails):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
 
         for dominio, email in zip(dominios, emails):
+            final_dominio = '.%s' % dominio.split('.')[-1]
+            if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
+                continue
+
             if email not in get_emails_validacao_padrao(dominio):
                 raise self.ValidationError('E-mail de validação inválido: %s para o domínio %s' % (email, dominio))
         return valor

@@ -77,9 +77,6 @@ AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 #
 BLOG_USE_FEATURED_IMAGE = True
 
-# If True, the south application will be automatically added to the
-# INSTALLED_APPS setting.
-USE_SOUTH = True
 
 # Change default slug method
 SLUGIFY = 'django.template.defaultfilters.slugify'
@@ -194,6 +191,10 @@ INSTALLED_APPS = (
     'rest_framework',
 
     'periodically',
+
+    'south',
+
+    'django_nose'
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -267,10 +268,16 @@ OPTIONAL_APPS = (
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+SOUTH_TESTS_MIGRATE = False
+
 # Sobrescreva com os settings globais
 from settings_global import *
 DEFAULT_DATABASE = DATABASES.get('common')
 DATABASES = {'default': DEFAULT_DATABASE}
+
+if 'test' in sys.argv:
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
 
 ##################
 # LOCAL SETTINGS #
