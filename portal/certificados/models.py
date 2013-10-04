@@ -338,6 +338,25 @@ class Emissao(Model):
     def get_lista_dominios_linha(self):
         return '\n'.join(self.get_lista_dominios())
 
+    @property
+    def em_processamento(self):
+        return self.emission_status in (
+            Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE,
+            Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
+            Emissao.STATUS_EMISSAO_ENVIADO_COMODO,
+
+            Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
+            Emissao.STATUS_REEMISSAO_ENVIADO_COMODO,
+
+            Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE,
+            Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
+            Emissao.STATUS_REVOGACAO_ENVIADO_COMODO,
+        )
+
+    @property
+    def emitido(self):
+        return self.emission_status in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO)
+
     def aprova(self, user):
         if self.emission_status == Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE:
             self.emission_status = Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE

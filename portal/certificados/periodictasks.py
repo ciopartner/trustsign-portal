@@ -26,7 +26,6 @@ def envia_comodo():
                     resposta = comodo.emite_certificado(emissao)
 
                     emissao.comodo_order = resposta['orderNumber']
-                    emissao.emission_cost = resposta['totalCost']
                     emissao.emission_status = Emissao.STATUS_EMISSAO_ENVIADO_COMODO
 
             elif emissao.emission_status == Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE:
