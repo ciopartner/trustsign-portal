@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.conf import settings
 from periodically.decorators import every
-from portal.certificados import comodo
+from libs import comodo
 from portal.certificados.models import Emissao, Revogacao
 from logging import getLogger
 
