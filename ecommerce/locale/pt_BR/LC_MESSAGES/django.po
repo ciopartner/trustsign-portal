@@ -753,7 +753,7 @@ msgstr "Data de envio"
 #: templates/oscar/checkout/thank_you.html:113
 #: templates/oscar/partials/nav_primary.html:17
 msgid "Basket"
-msgstr "Cesta"
+msgstr "Carrinho"
 
 #: apps/basket/abstract_models.py:59
 #: templates/oscar/dashboard/catalogue/product_update.html:101
@@ -4663,6 +4663,10 @@ msgstr "Atualizar"
 #: templates/oscar/search/partials/facet.html:8
 msgid "Remove"
 msgstr "Remover"
+
+#: templates/basket/partials/basket_content.html:59
+msgid "Remove from cart"
+msgstr "Remover do carrinho"
 
 #: templates/oscar/basket/partials/basket_content.html:61
 msgid "Save for later"

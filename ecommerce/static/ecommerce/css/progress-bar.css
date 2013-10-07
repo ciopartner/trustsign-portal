@@ -1,0 +1,84 @@
+.progress-bar{
+    height: 45px;
+    font-size: 0;
+    margin: 0;
+}
+
+.progress-bar li{
+    background: #dbe8f3;
+    background: -moz-linear-gradient(left, #dbe8f3 0%, #c3d6e5 100%);
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#dbe8f3), color-stop(100%,#c3d6e5));
+    background: -webkit-linear-gradient(left, #dbe8f3 0%,#c3d6e5 100%);
+    background: -o-linear-gradient(left, #dbe8f3 0%,#c3d6e5 100%);
+    background: -ms-linear-gradient(left, #dbe8f3 0%,#c3d6e5 100%);
+    background: linear-gradient(to right, #dbe8f3 0%,#c3d6e5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbe8f3', endColorstr='#c3d6e5',GradientType=1 );
+    display: inline-block;
+    font-size: 12px;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0 10px 0 35px;
+    height: 45px;
+    line-height: 45px;
+    position: relative;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #4f4949;
+}
+
+
+.progress-bar li:first-child{
+    padding: 0 10px;
+}
+
+.progress-bar li:before{
+    content: '';
+    border: 22.5px solid #c3d6e5;
+    border-right: 22.5px solid transparent;
+    border-bottom: 22.5px solid transparent;
+    border-top: 22.5px solid transparent;
+    position: absolute;
+    right: -44px;
+    z-index: 1;
+}
+
+.progress-bar li:last-child:before{
+    border: none;
+}
+
+.progress-bar li.active{
+    background: #3275aa;
+    background: -moz-linear-gradient(left, #3275aa 0%, #095799 100%);
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#3275aa), color-stop(100%,#095799));
+    background: -webkit-linear-gradient(left, #3275aa 0%,#095799 100%);
+    background: -o-linear-gradient(left, #3275aa 0%,#095799 100%);
+    background: -ms-linear-gradient(left, #3275aa 0%,#095799 100%);
+    background: linear-gradient(to right, #3275aa 0%,#095799 100%);
+    color: #FFF;
+}
+.progress-bar li.active:before{
+    border: 22.5px solid #095799;
+    border-right: 22.5px solid transparent;
+    border-bottom: 22.5px solid transparent;
+    border-top: 22.5px solid transparent;
+}
+
+.progress-bar2 li{
+    width: 50%;
+}
+
+.progress-bar3 li{
+    width: 33.3333333333333%;
+}
+
+.progress-bar4 li{
+    width: 25%;
+}
+
+.progress-bar5 li{
+    width: 20%;
+}
+
+.progress-bar6 li{
+    width: 16.666666666666%;
+}
