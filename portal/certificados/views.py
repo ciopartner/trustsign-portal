@@ -350,7 +350,7 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
             if serializer.is_valid():
                 required_fields = self.required_fields
                 if serializer.validacao_carta_cessao_necessaria:
-                    required_fields.append('emission_assignment_letter')
+                    required_fields += ('emission_assignment_letter',)
 
                 data = {
                     'required_fields': required_fields,
