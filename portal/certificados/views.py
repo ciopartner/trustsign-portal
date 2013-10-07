@@ -20,14 +20,14 @@ from portal.certificados import erros
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
     EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer, RevogacaoSerializer, \
-    ReemissaoSerializer, EmissaoValidaSerializer
+    ReemissaoSerializer, EmissaoValidaSerializer, EmissaoNvBSerializer
 from django.conf import settings
 import logging
 
 log = logging.getLogger('portal.certificados.view')
 
 
-def erro_rest(*erros):
+def erro_rest(*lista_erros):
     """
     Cria o Response com o padrão:
 
@@ -38,7 +38,7 @@ def erro_rest(*erros):
     onde a chamada seria erro_rest((X,Y), (A,B))
     """
     return Response({
-        'errors': [{'code': e[0], 'message': e[1]} for e in erros]
+        'errors': [{'code': e[0], 'message': e[1]} for e in lista_erros]
     }, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -122,8 +122,10 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             return EmissaoNv3Serializer
         if voucher.ssl_product == voucher.PRODUTO_EV_MDC:
             return EmissaoNv4Serializer
-        if voucher.ssl_product in (voucher.PRODUTO_JRE, voucher.PRODUTO_CODE_SIGNING, voucher.PRODUTO_SMIME):
+        if voucher.ssl_product in (voucher.PRODUTO_JRE, voucher.PRODUTO_CODE_SIGNING):
             return EmissaoNvASerializer
+        if voucher.ssl_product == voucher.PRODUTO_SMIME:
+            return EmissaoNvBSerializer
         log.warning('voucher #%s com produto inválido' % voucher.crm_hash)
         raise Http404()
 
@@ -286,6 +288,7 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
             return erro_rest(('---', 'Voucher não encontrado'))  # TODO: corrigir codigo erro
         serializer = self.get_serializer(self.object)
         data = serializer.data
+        voucher = self.object
 
         novo = {'contact': {}, 'customer': {}, 'product': {}, 'order': {}}
         for k, v in data.iteritems():
@@ -300,13 +303,29 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
             else:
                 novo[k] = v
 
+        novo['product']['ssl_line'] = voucher.get_ssl_line_display()
+        novo['product']['ssl_term'] = voucher.get_ssl_term_display()
+        novo['product']['ssl_product'] = voucher.get_ssl_product_display()
+
+        if voucher.ssl_product == Voucher.PRODUTO_SMIME:
+            novo['product']['ssl_password'] = '********'
+
+        if voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
+            novo['product']['ssl_username'] = voucher.ssl_username
+            novo['product']['ssl_password'] = '********'
+
         try:
             emissao = self.object.emissao
             novo['status_code'] = emissao.emission_status
             novo['status_text'] = emissao.get_emission_status_display()
-            novo['ssl_url'] = emissao.emission_url
+            novo['product']['ssl_url'] = emissao.emission_url
             if emissao.emission_fqdns:
-                novo['ssl_urls'] = emissao.emission_fqdns.split(' ')
+                novo['product']['ssl_urls'] = emissao.emission_fqdns.split(' ')
+            if emissao.emitido:
+                novo['product']['ssl_valid_from'] = voucher.ssl_valid_from
+                novo['product']['ssl_valid_to'] = voucher.ssl_valid_to
+                novo['product']['ssl_seal_html'] = voucher.ssl_seal_html
+                novo['product']['ssl_publickey'] = voucher.ssl_publickey
         except Emissao.DoesNotExist:
             novo['status_code'] = Emissao.STATUS_NAO_EMITIDO
             novo['status_text'] = dict(Emissao.STATUS_CHOICES)[Emissao.STATUS_NAO_EMITIDO]
@@ -330,10 +349,15 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
             serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
             if serializer.is_valid():
+                required_fields = self.required_fields
+                if serializer.validacao_carta_cessao_necessaria:
+                    required_fields.append('emission_assignment_letter')
+
                 data = {
-                    'required_fields': self.required_fields,
+                    'required_fields': required_fields,
                     'server_list': Emissao.SERVIDOR_TIPO_CHOICES,
                 }
+
                 emissao = serializer.object
                 csr = serializer.get_csr_decoded(emissao.emission_csr)
 
@@ -366,11 +390,9 @@ class EscolhaVoucherView(ListView):
     def get_queryset(self):
         qs = Voucher.objects.select_related('emissao').filter(
             Q(emissao__isnull=True) | ~Q(emissao__emission_status=Emissao.STATUS_REVOGADO))
-        profile = self.request.user.get_profile()
-        if profile.perfil == profile.PERFIL_CLIENTE:
-            qs = qs.filter(
-                customer_cnpj=self.request.user.username
-            )
+        user = self.request.user
+        if not user.is_superuser and user.get_profile().is_cliente:
+            qs = qs.filter(customer_cnpj=user.username)
         return qs
 
 
@@ -443,7 +465,6 @@ class EmissaoWizardView(SessionWizardView):
                 'callback_email': voucher.customer_callback_email,
                 'callback_telefone': voucher.customer_callback_phone,
                 'callback_observacao': voucher.customer_callback_note,
-                'callback_username': voucher.customer_callback_username,
             })
 
         elif step == 'tela-2' and not self.revisao:

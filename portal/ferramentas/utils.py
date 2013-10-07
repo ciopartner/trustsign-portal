@@ -103,10 +103,11 @@ EMAIL_CACHE = {}
 def get_emails_dominio(dominio):
     if dominio in EMAIL_CACHE:
         return EMAIL_CACHE[dominio]
-    resposta = commands.getoutput('whois %s | grep ^e-mail' % dominio).splitlines()
+
+    resposta = commands.getoutput('whois %s | grep \'^\(Admin Email\|Tech Email\|e-mail\)\'' % dominio).splitlines()
     emails = []
     for email in resposta:
-        r = re.match('e-mail:\s*(.+)', email)
+        r = re.match('(Admin Email|Tech Email|e-mail):\s*(.+)', email)
         if r:
             r = r.groups()[0]
             if r not in emails:

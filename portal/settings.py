@@ -85,9 +85,6 @@ ACCOUNTS_PROFILE_FORM_EXCLUDE_FIELDS = (
 #
 BLOG_USE_FEATURED_IMAGE = True
 
-# If True, the south application will be automatically added to the
-# INSTALLED_APPS setting.
-USE_SOUTH = True
 
 # Change default slug method
 SLUGIFY = 'django.template.defaultfilters.slugify'
@@ -169,7 +166,7 @@ TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 # APPLICATIONS #
 ################
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -203,7 +200,11 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'periodically',
-]
+
+    'south',
+
+    'django_nose'
+)
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
@@ -276,10 +277,16 @@ OPTIONAL_APPS = (
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+SOUTH_TESTS_MIGRATE = False
+
 # Sobrescreva com os settings globais
 from settings_global import *
 DEFAULT_DATABASE = DATABASES.get('common')
 DATABASES = {'default': DEFAULT_DATABASE}
+
+if 'test' in sys.argv:
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
 
 ##################
 # LOCAL SETTINGS #

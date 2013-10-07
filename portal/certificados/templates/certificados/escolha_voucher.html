@@ -27,15 +27,15 @@
                     <td>{{ voucher.ssl_valid_to|date:"d/m/Y" }}</td>
                     <td>
                     {% with emissao=voucher.emissao %}
-                        {% if emissao.emission_status == emissao.STATUS_NAO_EMITIDO %}
+                        {% if not emissao %}
                             <a href="{{ voucher.get_emissao_url }}">Emitir</a>
-                        {% elif emissao.emission_status == emissao.STATUS_EM_EMISSAO or emissao.emission_status == emissao.STATUS_ACAO_MANUAL_PENDENTE %}
-                            Em emissão
-                        {% elif emissao.emission_status == emissao.STATUS_EMITIDO %}
+                        {% elif emissao.em_processamento %}
+                            Em processamento
+                        {% elif emissao.emitido %}
                             <a href="{{ voucher.get_reemissao_url }}">Reemitir</a>,
                             <a href="{{ voucher.get_revogacao_url }}">Revogar</a>,
-                            <a href="#">HTML Selo</a>,
-                            <a href="#">Chave Pública</a>
+                            <a href="#">HTML Selo</a>, {# TODO: arrumar url html selo #}
+                            <a href="#">Chave Pública</a> {# TODO: arrumar url public key #}
                         {% endif %}
                     {% endwith %}
                     </td>

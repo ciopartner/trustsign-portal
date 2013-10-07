@@ -39,11 +39,12 @@ class ComodoError(Exception):
 def get_emails_validacao_padrao(dominio):
     if dominio.startswith('*.'):
         dominio = dominio[2:]
-    emails_padroes = ('admin@%s', 'administrator@%s', 'hostmaster@%s', 'postmaster@%s', 'webmaster@%s')
-    return [e % dominio for e in emails_padroes]
+    return [e % dominio for e in ('admin@%s', 'administrator@%s', 'hostmaster@%s', 'postmaster@%s', 'webmaster@%s')]
 
 
 def get_emails_validacao_whois(dominio):
+    if dominio.endswith('.br'):
+        return get_emails_dominio(dominio)
     response = requests.post(settings.COMODO_API_GET_DCV_EMAILS_URL, data={
         'loginName': settings.COMODO_LOGIN_NAME,
         'loginPassword': settings.COMODO_LOGIN_PASSWORD,
@@ -51,14 +52,6 @@ def get_emails_validacao_whois(dominio):
     })
     return [r[12:] for r in response.text.splitlines()
             if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
-
-
-def get_emails_validacao_whois(dominio):
-    """
-    Esse método esta aqui porque a API da comodo não está retornando os emails corretamente para dominios brasileiros
-    então estamos fazendo direto no whois
-    """
-    return get_emails_dominio(dominio)
 
 
 def get_emails_validacao(dominio):
