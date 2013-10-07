@@ -1762,6 +1762,10 @@ h3.title{
     border-right: 0;
 }
 
+#product-price .as-text1{
+    margin-top: 40px;
+}
+
 #product-price .nav-tabs .active a{
     background: #F0F0F0;
 }
@@ -1817,8 +1821,16 @@ h3.title{
 
 #product-price .box-price small{
     display: block;
-    margin-bottom: -5px;
-    text-decoration: line-through;
+    margin-top: -8px;
+}
+
+#product-price .box-price sup{
+    top: -0.7em;
+    font-size: 65%;
+}
+
+#product-price .box-price h3{
+    font-size: 140%;
 }
 
 #comprar-message{
