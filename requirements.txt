@@ -36,3 +36,4 @@ django-localflavor==1.0
 -e git+https://github.com/hzdg/django-periodically.git@ec5639b0bb5027f436d5b8ff8440a3b2fa44a63e#egg=django-periodically
 nose
 django-nose
+-e git+https://github.com/charlierguo/gmail.git@82372b27121234c4973509b50b30f10447f44127#egg=gmail
