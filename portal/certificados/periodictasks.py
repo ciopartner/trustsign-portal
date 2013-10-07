@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 from datetime import date
+from time import time
 import email
 import imaplib
 import os
@@ -98,7 +99,7 @@ def check_email():
                 filename = part.get_filename()
 
                 if not filename:
-                    filename = 'part-%03d%s' % (counter, 'bin')
+                    filename = 'part-%03d%s' % (counter, '.bin')
                     counter += 1
                 ano = str(date.today().year)
                 mes = str(date.today().month)
@@ -106,7 +107,13 @@ def check_email():
 
                 if not os.path.exists(directory):
                     os.makedirs(directory)
-                att_path = os.path.join(directory, filename)
+
+                timestamp = str(time()).replace('.', '')
+                s = filename.split('.')
+                filename = s[:-1]
+                ext = s[-1]
+
+                att_path = os.path.join(directory, '%s-%s.%s' % (filename, timestamp, ext))
 
                 if not os.path.isfile(att_path):
                     fp = open(att_path, 'wb')
