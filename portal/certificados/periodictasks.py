@@ -58,7 +58,7 @@ def check_email():
     m = imaplib.IMAP4_SSL("imap.gmail.com")
     m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
     m.select("[Gmail]/Todos os e-mails")
-    resp, items = m.search(None, "ALL")
+    resp, items = m.search(None, '(FROM "noreply_support@comodo.com")')
     items = items[0].split()
     for emailid in items:
         resp, data = m.fetch(emailid, "(RFC822)")
