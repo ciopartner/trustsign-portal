@@ -1,5 +1,8 @@
 # coding=utf-8
 from __future__ import unicode_literals
+import email
+import imaplib
+import os
 from django.conf import settings
 from periodically.decorators import every
 from logging import getLogger
@@ -17,7 +20,7 @@ def envia_comodo():
         Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
     )
 
-    for emissao in Emissao.objects.select_related('voucher', 'revogacao').filter(emission_status=status_envio_pendente):
+    for emissao in Emissao.objects.select_related('voucher', 'revogacao').filter(emission_status__in=status_envio_pendente):
         try:
             if emissao.emission_status == Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE:
                 voucher = emissao.voucher
@@ -26,6 +29,7 @@ def envia_comodo():
                     resposta = comodo.emite_certificado(emissao)
 
                     emissao.comodo_order = resposta['orderNumber']
+                    emissao.emission_cost = resposta['totalCost']
                     emissao.emission_status = Emissao.STATUS_EMISSAO_ENVIADO_COMODO
 
             elif emissao.emission_status == Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE:
@@ -48,3 +52,42 @@ def envia_comodo():
             emissao.emission_error_message = '%s (%s)' % (e.comodo_message, e.code)
 
         emissao.save()
+
+
+#@every(hours=1)
+def check_email():
+
+    #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
+    m = imaplib.IMAP4_SSL("imap.gmail.com")
+    m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
+    m.select("[Gmail]/Todos os e-mails")
+    resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')
+    items = items[0].split()
+    for emailid in items:
+        resp, data = m.fetch(emailid, "(RFC822)")
+        email_body = data[0][1]
+        mail = email.message_from_string(email_body)
+
+        if mail.get_content_maintype() != 'multipart':
+            continue
+
+        counter = 1
+
+        for part in mail.walk():
+            if part.get_content_maintype() == 'multipart':
+                continue
+            if part.get('Content-Disposition') is None:
+                continue
+
+            filename = part.get_filename()
+
+            if not filename:
+                filename = 'part-%03d%s' % (counter, 'bin')
+                counter += 1
+
+            att_path = os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, filename)
+
+            if not os.path.isfile(att_path):
+                fp = open(att_path, 'wb')
+                fp.write(part.get_payload(decode=True))
+                fp.close()
