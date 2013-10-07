@@ -321,6 +321,9 @@ class Emissao(Model):
     emission_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
     emission_error_message = CharField(max_length=256, blank=True, null=True)
 
+    emission_certificate = TextField(blank=True, null=True)
+    emission_mail_attachment_path = CharField(blank=True, null=True, max_length=256)
+
     class Meta:
         verbose_name = 'emissão'
         verbose_name_plural = 'emissões'
