@@ -44,3 +44,9 @@
 .basket-items a:hover{
     color: #4a4a4a;
 }
+
+#total{
+    background: #b2b2b2;
+    padding: 10px 20px 20px 20px;
+    color: #FFF;
+}

@@ -11,19 +11,19 @@ def ferramentas_processor(request, page):
         'product_code': 'ssl',
         'precos': {
             'basic': {
-                '1year': Decimal('10.20'),
-                '2years': Decimal('130.20'),
-                '3years': Decimal('1920.20')
+                'term1year': Decimal('10.20'),
+                'term2years': Decimal('130.20'),
+                'term3years': Decimal('1920.20')
             },
             'pro': {
-                '1year': Decimal('140.20'),
-                '2years': Decimal('210.20'),
-                '3years': Decimal('2510.20')
+                'term1year': Decimal('140.20'),
+                'term2years': Decimal('210.20'),
+                'term3years': Decimal('2510.20')
             },
             'prime': {
-                '1year': Decimal('610.20'),
-                '2years': Decimal('1110.20'),
-                '3years': Decimal('9140.20')
+                'term1year': Decimal('610.20'),
+                'term2years': Decimal('1110.20'),
+                'term3years': Decimal('9140.20')
             }
         }
     }

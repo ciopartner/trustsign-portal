@@ -13,21 +13,7 @@
 {##}
 
 {% block breadcrumbs %}
-    <nav id="checkoutnav" class="hidden-phone">
-        <div class="row-fluid">
-            <div class="span9">
-                <ul class="progress-bar progress-bar4">
-                    <li class="active">Carrinho de compras</li>
-                    <li>Identificação</li>
-                    <li>Pagamento</li>
-                    <li>Emissão</li>
-                </ul>
-            </div>
-            <div class="span3">
-                <a href="#" id="buy-more" class="btn btn-block">CONTINUAR COMPRANDO</a>
-            </div>
-        </div>
-    </nav>
+    {% include "partials/progress-bar.html" with carrinho=True botaoComprar=True %}
 {% endblock %}
 {##}
 {# Hide mini-basket so we don't have two baskets to keep in sync #}

@@ -42,6 +42,7 @@
 {% block one_row %}
     <div class="span12 left">
 
+
         <a href="#" class="btn btn-large" id="add-ssl-basic-1year">ADICIONAR SSL BASIC 1 ANO AO CARRINHO</a>
 
         {% editable page.product.youtube_title %}
@@ -89,7 +90,7 @@
 
         {# Inclusão da tabela de comparação de certificados #}
         <div style="margin-top:20px;">
-            {% include "includes/linhas-ssl.html" %}
+            {% include "includes/linhas-ssl.html" with precos=precos product_code=product_code %}
         </div>
 
         {# Inclusão da área 'você sabia' #}

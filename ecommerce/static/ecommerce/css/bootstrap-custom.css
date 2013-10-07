@@ -1,0 +1,19 @@
+.row-fluid.no-margin > .span3{
+    margin-left: 1px;
+    width: 25.5%;
+}
+
+.btn.btn-orange{
+    background: #cb772e;
+    background: -moz-linear-gradient(top, #cb772e 0%, #b25f11 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cb772e), color-stop(100%,#b25f11));
+    background: -webkit-linear-gradient(top, #cb772e 0%,#b25f11 100%);
+    background: -o-linear-gradient(top, #cb772e 0%,#b25f11 100%);
+    background: -ms-linear-gradient(top, #cb772e 0%,#b25f11 100%);
+    background: linear-gradient(to bottom, #cb772e 0%,#b25f11 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cb772e', endColorstr='#b25f11',GradientType=0 );
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    font-size: 14px;
+}
