@@ -53,7 +53,8 @@ urlpatterns = patterns(
     url(r'^vouchers-pendentes/$', login_required(VouchersPendentesListView.as_view()), name='voucher-pendentes-lista'),
     url(r'^aprova-vouchers-pendente/(?P<crm_hash>\w+)/$', login_required(AprovaVoucherPendenteView.as_view()), name='aprova-voucher-pendente'),
     url(r'^emissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/sucesso.html'),
-        name='certificado_emitido_sucesso')
+        name='certificado_emitido_sucesso'),
+
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

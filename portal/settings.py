@@ -73,6 +73,14 @@
 # Setting to identify a user profile
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 
+ACCOUNTS_PROFILE_FORM_CLASS = 'portal.home.forms.ProfileForm'
+ACCOUNTS_PROFILE_FORM_EXCLUDE_FIELDS = (
+    'bio',
+    'tagline',
+    'date_of_birth',
+    'perfil',
+)
+
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 BLOG_USE_FEATURED_IMAGE = True
@@ -95,6 +103,7 @@ SITE_ID = 1
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
+USE_L10N = True
 LANGUAGE_CODE = "pt_BR"
 LANGUAGES = (
     ('pt', 'Português'),
@@ -179,6 +188,7 @@ INSTALLED_APPS = (
     "mezzanine.twitter",
     "mezzanine.accounts",
     #"mezzanine.mobile",
+    'django.contrib.flatpages',
 
     'django_extensions',
 

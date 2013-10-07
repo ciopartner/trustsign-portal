@@ -21,6 +21,21 @@ body {
     padding-bottom: 0;
 }
 
+.btn.btn-orange{
+    background: #cb772e;
+    background: -moz-linear-gradient(top, #cb772e 0%, #b25f11 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cb772e), color-stop(100%,#b25f11));
+    background: -webkit-linear-gradient(top, #cb772e 0%,#b25f11 100%);
+    background: -o-linear-gradient(top, #cb772e 0%,#b25f11 100%);
+    background: -ms-linear-gradient(top, #cb772e 0%,#b25f11 100%);
+    background: linear-gradient(to bottom, #cb772e 0%,#b25f11 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cb772e', endColorstr='#b25f11',GradientType=0 );
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
 /* Overwriting h1, h2 and h3 to make the content easy */
 h1 {
     font-family:Tahoma, Geneva, sans-serif;
@@ -1739,4 +1754,75 @@ h3.title{
 
 .manual h3{
     font-weight: bold;
+}
+
+
+#product-price .nav-tabs{
+    margin-right: 0;
+    border-right: 0;
+}
+
+#product-price .nav-tabs .active a{
+    background: #F0F0F0;
+}
+
+#product-price .tab-content{
+    background: #F0F0F0;
+    min-height: 118px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+         -o-border-radius: 3px;
+            border-radius: 3px;
+}
+
+#product-price .tabbable{
+    width: 714px;
+    float: right;
+    margin-right: -9px;
+}
+
+#product-price .box-price{
+    width: 25%;
+    float: left;
+    box-sizing: border-box;
+    min-height: 116px;
+    position: relative;
+    text-align: center;
+    border-right: 1px solid #dddddd;
+}
+
+
+
+#product-price .box-price:nth-child(2n+2){
+    background: #F7F7F7;
+}
+
+#product-price .box-price:last-child{
+    border-right: 0;
+    background: #FFFFFF;
+}
+
+#product-price .box-price .btn{
+    position: absolute;
+    bottom: 10px;
+    width: 100px;
+    height: 30px;
+    line-height: 29px;
+    margin-left: -63px;
+    left: 50%;
+}
+
+#product-price .box-price small{
+    display: block;
+    margin-bottom: -5px;
+    text-decoration: line-through;
+}
+
+#comprar-message{
+    width: 614px;
+    float: right;
+    margin-right: -8px;
 }

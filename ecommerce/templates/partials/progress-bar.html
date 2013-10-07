@@ -1,0 +1,25 @@
+<nav id="checkoutnav" class="hidden-phone">
+    <div class="row-fluid">
+        <div class="span9">
+            <ul class="progress-bar progress-bar4">
+                <li {% if carrinho %}class="active"{% endif %}>
+                    Carrinho de compras
+                </li>
+                <li {% if identificacao %}class="active"{% endif %}>
+                    Identificação
+                </li>
+                <li {% if pagamento %}class="active"{% endif %}>
+                    Pagamento
+                </li>
+                <li {% if emissao %}class="active"{% endif %}>
+                    Emissão
+                </li>
+            </ul>
+        </div>
+        <div class="span3">
+            {% if botaoComprar %}
+                <a href="#" id="buy-more" class="btn btn-block">CONTINUAR COMPRANDO</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

@@ -11,7 +11,7 @@ log = getLogger('portal.certificados.periodictasks')
 
 @every(minutes=5)
 def envia_comodo():
-    from portal.certificados import comodo
+    from libs import comodo
     from portal.certificados.models import Emissao, Revogacao
 
     status_envio_pendente = (
