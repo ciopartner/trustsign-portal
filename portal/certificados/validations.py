@@ -63,10 +63,7 @@ class ValidateEmissaoUrlMixin(object):
             if '*' in valor:
                 raise self.ValidationError('A URL não pode conter *.')
         razao_social = get_razao_social_dominio(valor)
-        if not razao_social:
-            raise self.ValidationError('Não foi possível conseguir a razão social apartir da url informada')
-
-        if not comparacao_fuzzy(razao_social, voucher.customer_companyname):
+        if not razao_social or not comparacao_fuzzy(razao_social, voucher.customer_companyname):
             if fields.get('emission_assignment_letter'):
                 # se a razão social for diferente, mas o cliente enviar uma carta de cessão,
                 # será preciso validação manual
