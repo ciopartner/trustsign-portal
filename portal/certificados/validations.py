@@ -134,7 +134,10 @@ class ValidateEmissaoCSRMixin(object):
                     if fields.get('emission_assignment_letter'):
                         self.validacao_manual = True
                     else:
-                        raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
+                        if self.validacao:
+                            self.validacao_carta_cessao_necessaria = True
+                        else:
+                            raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
             #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
         return valor
 
