@@ -742,9 +742,7 @@ img.size-thumbnail{
 /*-------productpage closed---------*/
 
 .mainlogo{
-	height: 65px;
-	padding-top:10px;
-
+	padding-top:14px;
 }
 
 
@@ -1197,8 +1195,8 @@ img.size-thumbnail{
 	margin-left:5px;
 }
 
-.footer-item{
-
+.footer-item-icon{
+    margin-bottom: 20px;
 }
 
 .footer-item-text{
@@ -1207,6 +1205,7 @@ img.size-thumbnail{
 	font-size:90%;
 	line-height:100%;
 	letter-spacing:-1px;
+    padding-bottom: 5px;
 }
 
 .child-mar5 > *{
@@ -1450,7 +1449,7 @@ img.size-thumbnail{
 
 /* Style for payment methods */
 .payment-icon img{
-    width: 53px;
+    width: 51.5px
 }
 /* To hide image blogs in the home page */
 .home-text4 img,
