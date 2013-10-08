@@ -3,18 +3,18 @@
 <section class="container" style="background-color:#FFFFFF;">
     <section class="featurette" style="padding-bottom:0;">
         <section class="row">
-            <aside class="span4 logomedia">
+            <aside class="span3 logomedia">
                 <a href="/"><img src="{% static "home/img/icons/mainlogo.png" %}" class="mainlogo"/></a>
             </aside>
-            <aside class="span8 header1" style="">
+            <aside class="span9 header1" style="">
                 <div class="navbar">
                     <ul class="nav pull-right header1-text">
-                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>
-                        <li class="activa"><a href="/a-trustsign" class="limeh100x">A TRUSTSIGN</a></li>
-                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>
-                        <li class="activa"><a href="/blog" class="limeh100x">BLOG</a></li>
-                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>
-                        <li class="activoverfl"><a href="#" class="limeh100x">ENTRAR</a>
+                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
+                        <li class="activa"><a href="/a-trustsign" class="limeh85x">A TRUSTSIGN</a></li>
+                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
+                        <li class="activa"><a href="/blog" class="limeh85x">BLOG</a></li>
+                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
+                        <li class="activoverfl"><a href="#" class="limeh85x">ENTRAR</a>
 
 
                             <div class="foty ensign" style="margin-left: -151px;">
@@ -30,8 +30,8 @@
                                 </form>
                             </div>
                         </li>
-                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>
-                        <li class="activa"><a href="#" class="limeh100x dobold disabled">CARRINHO (<span id="qtd_carrinho">{{ request.basket.num_items }}</span>) <i class="icon-shopping-cart"></i></a></li>
+                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
+                        <li class="activa"><a href="#" class="limeh85x dobold disabled"><span id="qtd_carrinho" class="badge badge-info">{#{{ request.basket.num_items }} #}0</span> <i class="icon-shopping-cart"></i></a></li>
 {#                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>#}
                         <li>
                             <form action="{% url "search" %}" class="search">

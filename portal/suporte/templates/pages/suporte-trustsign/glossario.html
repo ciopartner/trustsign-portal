@@ -34,7 +34,7 @@
 {% endblock %}
 
 {% block one_row %}
-    <div class="accordion glossario" id="accordion2">
+    <div class="accordion glossario fix-row-margin" id="accordion2">
         {% for item in page.glossariopage.itens.all %}
             {% editable item.termo item.descricao %}
                 <div class="accordion-group">
