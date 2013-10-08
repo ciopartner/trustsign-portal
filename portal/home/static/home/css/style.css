@@ -649,17 +649,23 @@ img.size-thumbnail{
 
 /*   Search   */
 .search{
-    line-height:85px;
-    margin: 0 5px;
+    margin: 28px 5px;
 }
 
 .search input{
     transition: width 0.5s;
     -webkit-transition: width 0.5s;
-    width: 60px;
-    margin-top:8px;
-    padding-right: 45px;
+    width: 100px;
+    margin-top:0;
     font-size: 110%;
+    float: left;
+    border-right: 0;
+    border-radius: 4px 0 0 4px;
+    -webkit-border-radius: 4px 0 0 4px;
+       -moz-border-radius: 4px 0 0 4px;
+        -ms-border-radius: 4px 0 0 4px;
+         -o-border-radius: 4px 0 0 4px;
+            border-radius: 4px 0 0 4px;
 }
 
 .search input:focus{
@@ -668,8 +674,8 @@ img.size-thumbnail{
 
 .search .btn{
     border-radius: 0 4px 4px 0;
-    margin-top:-2px;
-    margin-left:-44px;
+    float: left;
+    margin-top:0;
 }
 
 /*    youtube home   */
