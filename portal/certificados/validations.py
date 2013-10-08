@@ -72,8 +72,6 @@ class ValidateEmissaoUrlMixin(object):
             else:
                 if self.validacao:
                     self.validacao_carta_cessao_necessaria = True
-                else:
-                    raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
         return valor
 
 
@@ -131,8 +129,6 @@ class ValidateEmissaoCSRMixin(object):
                     else:
                         if self.validacao:
                             self.validacao_carta_cessao_necessaria = True
-                        else:
-                            raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
             #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
         return valor
 

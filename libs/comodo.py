@@ -47,6 +47,7 @@ def get_emails_validacao_padrao(dominio):
 def get_emails_validacao_whois(dominio):
     if dominio.endswith('.br'):
         return get_emails_dominio(dominio)
+
     response = requests.post(settings.COMODO_API_GET_DCV_EMAILS_URL, data={
         'loginName': settings.COMODO_LOGIN_NAME,
         'loginPassword': settings.COMODO_LOGIN_PASSWORD,
