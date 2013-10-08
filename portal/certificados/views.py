@@ -67,10 +67,6 @@ def atualiza_voucher(voucher, dados_voucher):
         if v:
             voucher.customer_callback_note = v
 
-        v = dados_voucher.get('callback_username')
-        if v:
-            voucher.customer_callback_username = v
-
         v = dados_voucher.get('callback_password')
         if v:
             voucher.customer_callback_password = v
@@ -351,7 +347,7 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
             if serializer.is_valid():
                 required_fields = self.required_fields
                 if serializer.validacao_carta_cessao_necessaria:
-                    required_fields.append('emission_assignment_letter')
+                    required_fields += ('emission_assignment_letter',)
 
                 data = {
                     'required_fields': required_fields,
@@ -651,7 +647,6 @@ class ReemissaoView(UpdateView):
             'callback_email': voucher.customer_callback_email,
             'callback_telefone': voucher.customer_callback_phone,
             'callback_observacao': voucher.customer_callback_note,
-            'callback_username': voucher.customer_callback_username,
         })
         return initial
 
