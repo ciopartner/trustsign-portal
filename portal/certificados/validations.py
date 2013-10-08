@@ -125,9 +125,7 @@ class ValidateEmissaoCSRMixin(object):
                     continue
 
                 razao_social = get_razao_social_dominio(dominio)
-                if not razao_social:
-                    raise self.ValidationError('Não foi possível conseguir a razão social apartir do domínio: %s' % dominio)
-                if not comparacao_fuzzy(razao_social, voucher.customer_companyname):
+                if not razao_social or not comparacao_fuzzy(razao_social, voucher.customer_companyname):
                     if fields.get('emission_assignment_letter'):
                         self.validacao_manual = True
                     else:
