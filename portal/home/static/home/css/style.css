@@ -27,6 +27,10 @@ body {
     width: 800px;
 }
 
+.span9{
+    width: 598px;
+}
+
 .span8{
     width: 528px;
 }
@@ -142,7 +146,7 @@ img.size-thumbnail{
     margin-bottom: 0;
 }
 .featurette{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .featured-thumb{
@@ -391,7 +395,6 @@ img.size-thumbnail{
 .limeh500{
 	line-height:500%;
 }
-
 
 
 .limeh85x{
@@ -646,7 +649,7 @@ img.size-thumbnail{
 
 /*   Search   */
 .search{
-    line-height:100px;
+    line-height:85px;
     margin: 0 5px;
 }
 
@@ -656,13 +659,13 @@ img.size-thumbnail{
     width: 60px;
     margin-top:8px;
     padding-right: 45px;
+    font-size: 110%;
 }
 
-/*
 .search input:focus{
-    width: 250px;
+    width: 195px;
 }
-*/
+
 .search .btn{
     border-radius: 0 4px 4px 0;
     margin-top:-2px;
@@ -740,7 +743,7 @@ img.size-thumbnail{
 
 .mainlogo{
 	height: 65px;
-	padding-top:20px;
+	padding-top:10px;
 
 }
 
@@ -789,8 +792,8 @@ img.size-thumbnail{
 }
 
 .header2-area aside{
-    height: 35px;
-    line-height: 36px;
+    height: 28px;
+    line-height: 28px;
     padding: 10px 0;
 }
 
@@ -830,7 +833,7 @@ img.size-thumbnail{
 .header3-title-text{
 	font-family:Tahoma, Geneva, sans-serif;
     font-weight: bold;
-	font-size: 85%;
+	font-size: 95%;
 	color:#006442;
     margin-top: 5px;
 }
@@ -843,7 +846,7 @@ img.size-thumbnail{
 
 .header3-body-text{
 	font-family:Tahoma, Geneva, sans-serif;
-	font-size: 80%;
+	font-size: 90%;
 	line-height:120%;
     margin-top: 5px;
 
@@ -935,7 +938,7 @@ img.size-thumbnail{
 .all-body-text5{
 	font-family:Tahoma, Geneva, sans-serif;
 	color: #9a9a9a;
-	font-size:100%;
+	font-size:105%;
 	line-height:120%;
     margin-top: 5px;
 }
@@ -1792,10 +1795,11 @@ div.ferramentas select{
 .perguntas.ativa-5 .linha-pergunta-concluida
 {width: 100%}
 
+/*
 #tab-final .span3{
     width: 214px;
     font-size: 90%;
-}
+}*/
 
 .resposta .span5 div{
     margin-top: 30px;
