@@ -162,10 +162,15 @@ class ValidateEmissaoValidacaoEmail(object):
 class ValidateEmissaoValidacaoEmailMultiplo(object):
 
     def _valida_emission_dcv_emails(self, valor, fields):
+        voucher = self.get_voucher()
         csr = self.get_csr_decoded(valor)
 
         dominios = csr['dnsNames']
         emails = valor.split(' ')
+        url = fields['emission_url']
+
+        if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and url not in dominios:
+            dominios.insert(0, url)
 
         if len(dominios) != len(emails):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
