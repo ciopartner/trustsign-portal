@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form
+from libs.comodo import get_emails_validacao
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
     ValidateEmissaoValidacaoEmailMultiplo
