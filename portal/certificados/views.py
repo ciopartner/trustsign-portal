@@ -364,7 +364,7 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
                 if 'dnsNames' in csr and dominios:
                     data['ssl_urls'] = [{'url': dominio,
                                          'emission_dcv_emails': comodo.get_emails_validacao_padrao(dominio),
-                                         'primary': dominio == emissao.emission_url} for dominio in csr['dnsNames']]
+                                         'primary': dominio == emissao.emission_url} for dominio in dominios]
                 else:
                     data['ssl_urls'] = [{'url': emissao.emission_url,
                                          'emission_dcv_emails': comodo.get_emails_validacao_padrao(emissao.emission_url),
