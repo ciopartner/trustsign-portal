@@ -4,36 +4,46 @@
     <section class="container ">
         <section class="featurette tbm5">
             <section class="row footer-title ">
-                <aside class="span6 footer-item-icon footer-info-links">
-                    <p class="footer-item-text borderf">SOLUÇÕES</p>
-                    <a href="{% static "/certificado-digital/" %}" class="carsol"><b>&rsaquo;</b> Certicado Digital</a>
-                                        <a href="{% static "/pki/" %}" class="carsol"><b>&rsaquo;</b> PKI</a>
-                    <a href="{% static "/site-seguro/" %}" class="carsol"><b>&rsaquo;</b> Site + Seguro</a>
-                    <a href="{% static "/site-monitorado/" %}" class="carsol"><b>&rsaquo;</b> Site Monitorado</a>
+
+                <aside class="span6">
+                    <div class="row-fluid">
+                    <aside class="span6 footer-item-icon footer-info-links">
+                        <p class="footer-item-text borderf">SOLUÇÕES</p>
+                        <ul class="unstyled">
+                            <li><a href="{% static "/certificado-digital/" %}" class="carsol"><b>&rsaquo;</b> Certicado Digital</a></li>
+                            <li><a href="{% static "/pki/" %}" class="carsol"><b>&rsaquo;</b> PKI</a></li>
+                            <li><a href="{% static "/site-seguro/" %}" class="carsol"><b>&rsaquo;</b> Site + Seguro</a></li>
+                            <li><a href="{% static "/site-monitorado/" %}" class="carsol"><b>&rsaquo;</b> Site Monitorado</a></li>
+                        </ul>
+                    </aside>
+
+                    <aside class="span6 footer-item-icon">
+                        <p class="footer-item-text borderf">FORMAS DE PAGAMENTO</p>
+
+                        <p class="footer-text">Cartões de crédito</p>
+                        <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_visa.gif" %}"/></a>
+                        <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_master.gif" %}"/></a>
+                        <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_amex.gif" %}"/></a>
+
+                        <div class="row-fluid">
+                            <div class="span3">
+                                <p class="footer-text">Beleto</p>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_boleto.gif" %}"/></a>
+                            </div>
+                            <div class="span9">
+                                <p class="footer-text">Cartão de débito/Bankline</p>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_bb.gif" %}"/></a>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_itau.gif" %}"/></a>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_bradesco.gif" %}"/></a>
+                            </div>
+                        </div>
+
+                    </aside>
+                    </div>
                 </aside>
 
-                <aside class="span6 footer-item-icon">
-                    <p class="footer-item-text borderf">ACOMPANHE A TRUSTSIGN NAS REDES</p>
-                    <script src="//platform.linkedin.com/in.js" type="text/javascript">
-                     lang: pt_BR
-                    </script>
-                    <script type="IN/FollowCompany" data-id="1010622" data-counter="right"></script>
 
-                    <div class="fb-like" data-href="http://www.facebook.com/trustsign" {#  data-send="true"  #} data-layout="button_count" data-width="213" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
-                    <a href="https://twitter.com/TrustSign" class="twitter-follow-button" data-show-count="false">Follow @TrustSign</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                </aside>
 
-                <aside class="span6 footer-item-icon">
-                    <p class="footer-item-text borderf">FORMAS DE PAGAMENTO</p>
-                    <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_boleto.gif" %}"/></a>
-                    <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_bb.gif" %}"/></a>
-                    <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_itau.gif" %}"/></a>
-                    <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_bradesco.gif" %}"/></a>
-                    <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_visa.gif" %}"/></a>
-                    <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_master.gif" %}"/></a>
-                    <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_amex.gif" %}"/></a>
-                </aside>
 
                 <aside class="span6 footer-item-icon">
                     <p class="footer-item-text borderf">SEGURANÇA</p>
@@ -60,7 +70,27 @@
                     </p>
                 </aside>
 
-            </section>
+                </section>
+                <section class="footer-title">
+
+                    <aside class="footer-item-icon">
+                        <p class="footer-item-text borderf">ACOMPANHE A TRUSTSIGN NAS REDES</p>
+                        <div class="footer-info">
+                            <p>Trustsign Comercio e Serviços Em Tecnologia E Segurança Da Informação Ltda</p>
+                            <p>CNPJ: 08.365.434/0001-05</p>
+                        </div>
+                        <script src="//platform.linkedin.com/in.js" type="text/javascript">
+                         lang: pt_BR
+                        </script>
+                        <script type="IN/FollowCompany" data-id="1010622" data-counter="right"></script>
+
+                        <div class="fb-like" data-href="http://www.facebook.com/trustsign" {#  data-send="true"  #} data-layout="button_count" data-width="213" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+                        <a href="https://twitter.com/TrustSign" class="twitter-follow-button" data-show-count="false">Follow @TrustSign</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </aside>
+
+
+                </section>
         </section>
     </section>
 </footer>

@@ -1203,8 +1203,14 @@ img.size-thumbnail{
 	margin-left:5px;
 }
 
+.footer-text{
+    font-size: 60%;
+    color: #7B7B7B;
+    margin: 5px 0 0 0;
+}
+
 .footer-item-icon{
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .footer-item-text{
@@ -1214,6 +1220,17 @@ img.size-thumbnail{
 	line-height:100%;
 	letter-spacing:-1px;
     padding-bottom: 5px;
+}
+
+.footer-info{
+    float: right;
+    width: 393px;
+    line-height: 1.2;
+    color: #7B7B7B;
+    font-size: 63%;
+}
+.footer-info p{
+    margin-bottom: 0;
 }
 
 .child-mar5 > *{
@@ -1239,7 +1256,6 @@ img.size-thumbnail{
 }
 
 .footer-item-icon a > img{
-	margin-top:5px;
 	margin-bottom:5px;
 }
 
@@ -1457,7 +1473,7 @@ img.size-thumbnail{
 
 /* Style for payment methods */
 .payment-icon img{
-    width: 51.5px
+    width: 38px
 }
 /* To hide image blogs in the home page */
 .home-text4 img,
