@@ -63,10 +63,7 @@ class ValidateEmissaoUrlMixin(object):
             if '*' in valor:
                 raise self.ValidationError('A URL não pode conter *.')
         razao_social = get_razao_social_dominio(valor)
-        if not razao_social:
-            raise self.ValidationError('Não foi possível conseguir a razão social apartir da url informada')
-
-        if not comparacao_fuzzy(razao_social, voucher.customer_companyname):
+        if not razao_social or not comparacao_fuzzy(razao_social, voucher.customer_companyname):
             if fields.get('emission_assignment_letter'):
                 # se a razão social for diferente, mas o cliente enviar uma carta de cessão,
                 # será preciso validação manual
@@ -134,7 +131,10 @@ class ValidateEmissaoCSRMixin(object):
                     if fields.get('emission_assignment_letter'):
                         self.validacao_manual = True
                     else:
-                        raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
+                        if self.validacao:
+                            self.validacao_carta_cessao_necessaria = True
+                        else:
+                            raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
             #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
         return valor
 

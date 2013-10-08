@@ -1,6 +1,5 @@
 # coding=utf-8
 import commands
-from difflib import get_close_matches
 import re
 import urllib
 import urlparse
@@ -109,7 +108,7 @@ def get_emails_dominio(dominio):
     for email in resposta:
         r = re.match('(Admin Email|Tech Email|e-mail):\s*(.+)', email)
         if r:
-            r = r.groups()[0]
+            r = r.groups()[1]
             if r not in emails:
                 emails.append(r)
     if emails:
