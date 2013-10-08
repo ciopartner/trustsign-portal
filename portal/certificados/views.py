@@ -67,10 +67,6 @@ def atualiza_voucher(voucher, dados_voucher):
         if v:
             voucher.customer_callback_note = v
 
-        v = dados_voucher.get('callback_username')
-        if v:
-            voucher.customer_callback_username = v
-
         v = dados_voucher.get('callback_password')
         if v:
             voucher.customer_callback_password = v
@@ -651,7 +647,6 @@ class ReemissaoView(UpdateView):
             'callback_email': voucher.customer_callback_email,
             'callback_telefone': voucher.customer_callback_phone,
             'callback_observacao': voucher.customer_callback_note,
-            'callback_username': voucher.customer_callback_username,
         })
         return initial
 
