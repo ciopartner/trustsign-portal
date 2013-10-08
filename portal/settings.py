@@ -263,6 +263,11 @@ COMODO_API_REEMISSAO_URL = 'https://secure.comodo.net/products/!AutoReplaceSSL'
 COMODO_API_REVOGACAO_URL = 'https://secure.comodo.net/products/!AutoRevokeSSL'
 COMODO_API_GET_DCV_EMAILS_URL = 'https://secure.comodo.net/products/!GetDCVEmailAddressList'
 
+
+CERTIFICADOS_EMAIL_USERNAME = '<mudar no local_settings.py>'
+CERTIFICADOS_EMAIL_PASSWORD = '<mudar no local_settings.py>'
+CERTIFICADOS_EMAIL_PATH_ATTACHMENTS = os.path.join(PROJECT_ROOT, 'attachments')
+
 #########################
 # OPTIONAL APPLICATIONS #
 #########################

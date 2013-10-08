@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from libs.comodo import get_emails_validacao_padrao
+from libs.comodo import get_emails_validacao_padrao, get_emails_validacao
 from portal.certificados.erros import get_erro_message
 from portal.certificados.models import Voucher
 from portal.ferramentas.utils import comparacao_fuzzy, get_razao_social_dominio
@@ -76,9 +76,7 @@ class ValidateEmissaoUrlMixin(object):
                 if self.validacao:
                     self.validacao_carta_cessao_necessaria = True
                 else:
-                    pass
-                    # TODO: descomentar isso após os testes com a tqi
-                    #raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
+                    raise self.ValidationError('A entidade no registro.br não é a mesma da razão social do CNPJ, é necessária a carta de cessão.')
         return valor
 
 
@@ -136,9 +134,7 @@ class ValidateEmissaoCSRMixin(object):
                     if fields.get('emission_assignment_letter'):
                         self.validacao_manual = True
                     else:
-                        pass
-                        # TODO: descomentar isso aqui após a tqi testar
-                        # raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
+                        raise self.ValidationError('A razão social do seu CNPJ não bate com a do domínio: %s' % dominio)
             #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
         return valor
 
@@ -166,10 +162,15 @@ class ValidateEmissaoValidacaoEmail(object):
 class ValidateEmissaoValidacaoEmailMultiplo(object):
 
     def _valida_emission_dcv_emails(self, valor, fields):
+        voucher = self.get_voucher()
         csr = self.get_csr_decoded(valor)
 
         dominios = csr['dnsNames']
         emails = valor.split(' ')
+        url = fields['emission_url']
+
+        if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and url not in dominios:
+            dominios.insert(0, url)
 
         if len(dominios) != len(emails):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
