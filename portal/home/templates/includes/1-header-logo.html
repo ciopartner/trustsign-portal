@@ -31,7 +31,12 @@
                             </div>
                         </li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
-                        <li class="activa"><a href="#" class="limeh85x dobold disabled"><i class="icon-shopping-cart"></i><span id="qtd_carrinho" class="badge badge-info">{#{{ request.basket.num_items }} #}0</span></a></li>
+                        <li class="activa">
+                            <a href="#" class="limeh85x dobold disabled">
+                                <img class="custom-icon" src="{% static "home/img/icons/cart-black.png" %}" alt=""/>
+                                <span id="qtd_carrinho" class="badge badge-info">{#{{ request.basket.num_items }} #}0</span>
+                            </a>
+                        </li>
 {#                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>#}
                         <li>
                             <form action="{% url "search" %}" class="search">

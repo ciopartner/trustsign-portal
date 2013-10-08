@@ -55,7 +55,9 @@ width: 391px;
     margin-left: -17px;
 }
 
-
+.custom-icon{
+    vertical-align: middle !important;
+}
 
 [class*="span"]{
     margin-left: 17px;
@@ -1476,6 +1478,7 @@ img.size-thumbnail{
 	background: url(../img/icons/sprites.png) no-repeat;
     vertical-align: middle;
 }
+
 
 .icon-arroba{
     background: url(../img/icons/arroba.png) no-repeat;
