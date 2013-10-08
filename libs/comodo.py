@@ -7,7 +7,7 @@ from portal.ferramentas.utils import url_parse, get_emails_dominio
 
 import logging
 
-log = logging.getLogger('portal.certificados.comodo')
+log = logging.getLogger('libs.comodo')
 
 CODIGO_SSL = 488
 CODIGO_SSL_WILDCARD = 489
@@ -59,102 +59,125 @@ def get_emails_validacao(dominio):
 
 
 def emite_certificado(emissao):
-    voucher = emissao.voucher
+    try:
+        voucher = emissao.voucher
 
-    if voucher.ssl_term == voucher.VALIDADE_ANUAL:
-        validade = 1
-    elif voucher.ssl_term == voucher.VALIDADE_BIANUAL:
-        validade = 2
-    elif voucher.ssl_term == voucher.VALIDADE_TRIANUAL:
-        validade = 3
-    else:
-        raise Exception('Validade inválida para emissão de certificados', code=-1)
+        if voucher.ssl_term == voucher.VALIDADE_ANUAL:
+            validade = 1
+        elif voucher.ssl_term == voucher.VALIDADE_BIANUAL:
+            validade = 2
+        elif voucher.ssl_term == voucher.VALIDADE_TRIANUAL:
+            validade = 3
+        else:
+            raise Exception('Validade inválida para emissão de certificados', code=-1)
 
-    params = {
-        'loginName': settings.COMODO_LOGIN_NAME,
-        'loginPassword': settings.COMODO_LOGIN_PASSWORD,
-        'product': CODIGOS_PRODUTOS[voucher.ssl_product],
-        'years': validade,
-        'serverSoftware': emissao.emission_server_type,
-        'csr': emissao.emission_csr,
-        'prioritiseCSRValues': 'N',
-        'streetAddress1': voucher.customer_address1,
-        'localityName': voucher.customer_city,
-        'stateOrProvinceName': voucher.customer_state,
-        'postalCode': voucher.customer_zip,
-        'countryName': 'BR',
-        'emailAddress': 'none',
-        'isCustomerValidated': 'Y',
-        'foreignOrderNumber': emissao.crm_hash,
-        #'checkFONIsUnique': 'Y', # comentei só pra ficar mais facil de testar, senao teria q criar um voucher toda hora
-        'responseFormat': '1',
-        'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
-        'isAppRepValidated': 'Y',
-        'isCallbackCompleted': 'Y'
+        params = {
+            'loginName': settings.COMODO_LOGIN_NAME,
+            'loginPassword': settings.COMODO_LOGIN_PASSWORD,
+            'product': CODIGOS_PRODUTOS[voucher.ssl_product],
+            'years': validade,
+            'serverSoftware': emissao.emission_server_type,
+            'csr': emissao.emission_csr,
+            'prioritiseCSRValues': 'N',
+            'streetAddress1': voucher.customer_address1,
+            'localityName': voucher.customer_city,
+            'stateOrProvinceName': voucher.customer_state,
+            'postalCode': voucher.customer_zip,
+            'countryName': 'BR',
+            'emailAddress': 'none',
+            'isCustomerValidated': 'Y',
+            'foreignOrderNumber': emissao.crm_hash,
+            #'checkFONIsUnique': 'Y', # comentei só pra ficar mais facil de testar, senao teria q criar um voucher toda hora
+            'responseFormat': '1',
+            'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
+            'isAppRepValidated': 'Y',
+            'isCallbackCompleted': 'Y'
 
-    }
+        }
 
-    if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
-        params['domainNames'] = emissao.emission_fqdns
-        params['dcvEmailAddresses'] = emissao.emission_dcv_emails
-    else:
-        params['dcvEmailAddress'] = emissao.emission_dcv_emails
+        if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
+            params['domainNames'] = emissao.emission_fqdns
+            params['dcvEmailAddresses'] = emissao.emission_dcv_emails
+        else:
+            params['dcvEmailAddress'] = emissao.emission_dcv_emails
 
-    if voucher.ssl_product in (voucher.PRODUTO_EV, voucher.PRODUTO_EV_MDC):
-        params['joiLocalityName'] = voucher.customer_city
-        params['joiStateOrProvinceName'] = voucher.customer_state
-        params['joiCountryName'] = 'BR'
+        if voucher.ssl_product in (voucher.PRODUTO_EV, voucher.PRODUTO_EV_MDC):
+            params['joiLocalityName'] = voucher.customer_city
+            params['joiStateOrProvinceName'] = voucher.customer_state
+            params['joiCountryName'] = 'BR'
 
-    response = requests.post(settings.COMODO_API_EMISSAO_URL, params)
+        response = requests.post(settings.COMODO_API_EMISSAO_URL, params)
 
-    r = url_parse(response.text)
-    if r['errorCode'] != '0':
-        log.error(r)
-        log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
-    return r
+        r = url_parse(response.text)
+
+        if r['errorCode'] != '0':
+            log.error('ERRO EMISSAO > params: %s | response: %s' % (params, r))
+            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+        else:
+            log.info('EMISSAO > params: %s | response: %s' % (params, r))
+
+        return r
+
+    except Exception as e:
+        log.error('ERRO EMISSAO > erro desconhecido: %s' % e)
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
 
 def revoga_certificado(revogacao):
 
-    params = {
-        'loginName': settings.COMODO_LOGIN_NAME,
-        'loginPassword': settings.COMODO_LOGIN_PASSWORD,
-        'orderNumber': revogacao.emission.comodo_order,
-        'revocationReason': revogacao.revoke_reason,
-        'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
-        'responseFormat': '1',
-    }
+    try:
+        params = {
+            'loginName': settings.COMODO_LOGIN_NAME,
+            'loginPassword': settings.COMODO_LOGIN_PASSWORD,
+            'orderNumber': revogacao.emission.comodo_order,
+            'revocationReason': revogacao.revoke_reason,
+            'test': 'Y' if settings.COMODO_ENVIAR_COMO_TESTE else 'N',
+            'responseFormat': '1',
+        }
 
-    response = requests.post(settings.COMODO_API_REVOGACAO_URL, params)
+        response = requests.post(settings.COMODO_API_REVOGACAO_URL, params)
 
-    r = url_parse(response.text)
-    if r['errorCode'] != '0':
-        log.error(r)
-        log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
-    return r
+        r = url_parse(response.text)
+
+        if r['errorCode'] != '0':
+            log.error('ERRO REVOGAÇÃO > params: %s | response: %s' % (params, r))
+            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+        else:
+            log.info('REVOGAÇÃO > params: %s | response: %s' % (params, r))
+
+        return r
+
+    except Exception as e:
+        log.error('ERRO REVOGAÇÃO > erro desconhecido: %s' % e)
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
 
 def reemite_certificado(emissao):
 
-    params = {
-        'loginName': settings.COMODO_LOGIN_NAME,
-        'loginPassword': settings.COMODO_LOGIN_PASSWORD,
-        'orderNumber': emissao.comodo_order,
-        'csr': emissao.emission_csr,
-        'isCustomerValidated': 'Y',
-        'foreignOrderNumber': emissao.crm_hash,
-        'responseFormat': '1',
-        'isAppRepValidated': 'Y',
-        'isCallbackCompleted': 'Y'
-    }
+    try:
+        params = {
+            'loginName': settings.COMODO_LOGIN_NAME,
+            'loginPassword': settings.COMODO_LOGIN_PASSWORD,
+            'orderNumber': emissao.comodo_order,
+            'csr': emissao.emission_csr,
+            'isCustomerValidated': 'Y',
+            'foreignOrderNumber': emissao.crm_hash,
+            'responseFormat': '1',
+            'isAppRepValidated': 'Y',
+            'isCallbackCompleted': 'Y'
+        }
 
-    response = requests.post(settings.COMODO_API_REEMISSAO_URL, params)
+        response = requests.post(settings.COMODO_API_REEMISSAO_URL, params)
 
-    r = url_parse(response.text)
-    if r['errorCode'] != '0':
-        log.error(r)
-        log.error('Ocorreu um erro na chamada da COMODO, parametros: %s' % params)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
-    return r
+        r = url_parse(response.text)
+
+        if r['errorCode'] != '0':
+            log.error('ERRO REEMISSÃO > params: %s | response: %s' % (params, r))
+            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+        else:
+            log.info('REEMISSÃO > params: %s | response: %s' % (params, r))
+
+        return r
+    except Exception as e:
+        log.error('ERRO REEMISSÃO > erro desconhecido: %s' % e)
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')

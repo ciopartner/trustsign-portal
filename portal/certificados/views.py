@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from copy import copy
 import os
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.core.exceptions import PermissionDenied
@@ -146,9 +147,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.voucher = voucher
 
             # self.atualiza_voucher(voucher) TODO: TBD > o que fazer com os dados do voucher
-            # TODO: substituir o if abaixo após tests com TQI
-            # if serializer.validacao_manual:
-            if False:
+            if serializer.validacao_manual:
                 emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
             else:
                 emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
@@ -355,9 +354,14 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
                 }
 
                 emissao = serializer.object
+                voucher = serializer.get_voucher()
                 csr = serializer.get_csr_decoded(emissao.emission_csr)
+                dominios = copy(csr.get('dnsNames'))
 
-                if 'dnsNames' in csr and csr.get('dnsNames'):
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
+                    dominios.insert(0, emissao.emission_url)
+
+                if 'dnsNames' in csr and dominios:
                     data['ssl_urls'] = [{'url': dominio,
                                          'emission_dcv_emails': comodo.get_emails_validacao_padrao(dominio),
                                          'primary': dominio == emissao.emission_url} for dominio in csr['dnsNames']]
@@ -365,6 +369,7 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
                     data['ssl_urls'] = [{'url': emissao.emission_url,
                                          'emission_dcv_emails': comodo.get_emails_validacao_padrao(emissao.emission_url),
                                          'primary': True}]
+
                 return Response(data, status=status.HTTP_200_OK)
         except Voucher.DoesNotExist:
             return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,

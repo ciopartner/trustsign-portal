@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
     ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo
-from portal.ferramentas.utils import decode_csr, compare_csr
+from portal.ferramentas.utils import decode_csr, compare_csr, verifica_razaosocial_dominio
 
 
 class VoucherSerializer(ModelSerializer):
@@ -61,6 +61,7 @@ class EmissaoModelSerializer(ModelSerializer):
     user = None
     ValidationError = ValidationError
     validacao = False
+    _precisa_carta_cessao = None
 
     def __init__(self, user=None, crm_hash=None, **kwargs):
         self.user = user
@@ -84,7 +85,23 @@ class EmissaoModelSerializer(ModelSerializer):
         return self._voucher
 
     def get_required_fields(self):
+        if self.precisa_carta_cessao():
+            return self.REQUIRED_FIELDS + ('emission_assignment_letter',)
         return self.REQUIRED_FIELDS
+
+    def precisa_carta_cessao(self):
+        if self._precisa_carta_cessao is None:
+            dominio = self.init_data.get('emission_url')
+            if dominio:
+                voucher = self.get_voucher()
+                self._precisa_carta_cessao = not verifica_razaosocial_dominio(
+                    voucher.customer_companyname,
+                    dominio
+                )
+            else:
+                self._precisa_carta_cessao = False
+
+        return self._precisa_carta_cessao
 
 
 class EmissaoNv0Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin):
@@ -95,7 +112,7 @@ class EmissaoNv0Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin):
         fields = ('crm_hash', 'emission_url', 'emission_assignment_letter')
 
 
-class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr')
 
@@ -105,7 +122,7 @@ class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, Vali
                   'emission_server_type', 'emission_csr', 'emission_assignment_letter')
 
 
-class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
+class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr',)
 
@@ -115,7 +132,7 @@ class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, Vali
                   'emission_publickey_sendto', 'emission_server_type', 'emission_assignment_letter')
 
 
-class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
     validacao_manual = True
 
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
@@ -129,7 +146,7 @@ class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, Vali
                   'emission_articles_of_incorporation', 'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
 
-class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
+class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr', 'emission_articles_of_incorporation',
                        'emission_address_proof', 'emission_ccsa', 'emission_evcr')
