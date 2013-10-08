@@ -39,6 +39,8 @@ class ComodoError(Exception):
 def get_emails_validacao_padrao(dominio):
     if dominio.startswith('*.'):
         dominio = dominio[2:]
+    parts = dominio.split('.')
+    dominio = '.'.join(parts[-3:] if len(parts[-1]) == 2 else parts[-2:])
     return [e % dominio for e in ('admin@%s', 'administrator@%s', 'hostmaster@%s', 'postmaster@%s', 'webmaster@%s')]
 
 

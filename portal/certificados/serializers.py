@@ -76,7 +76,8 @@ class EmissaoModelSerializer(ModelSerializer):
     def get_fields(self):
         fields = super(EmissaoModelSerializer, self).get_fields()
         for f in self.get_required_fields():
-            fields[f].required = True
+            if f in fields:
+                fields[f].required = True
         return fields
 
     def get_voucher(self):
