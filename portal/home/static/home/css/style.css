@@ -5,11 +5,60 @@ img {box-shadow:0 0 0;}
 
 body {
     padding-top:0;
+    font-size: 11px;
 }
 
 .breadcrumb {
     padding: 0 0;
     background-color: #fff;
+}
+
+/* Bootstrap 80% */
+
+.fix-row-margin{
+    margin-left: 17px;
+}
+
+.container{
+    width: 800px;
+}
+
+.span12 {
+    width: 800px;
+}
+
+.span9{
+    width: 598px;
+}
+
+.span8{
+    width: 528px;
+}
+
+.span6 {
+width: 391px;
+}
+
+.span4{
+    width: 255px;
+}
+
+.span3{
+    width: 185px;
+}
+
+.span2 {
+    width: 119px;
+}
+
+.row{
+    margin-left: -17px;
+}
+
+
+
+[class*="span"]{
+    margin-left: 17px;
 }
 
 /* Overwriting bootstrap.css */
@@ -91,6 +140,13 @@ textarea{
 img.size-thumbnail{
     float:left;
     padding-right: 10px;
+}
+
+.featurette:first-child{
+    margin-bottom: 0;
+}
+.featurette{
+    margin-bottom: 10px;
 }
 
 .featured-thumb{
@@ -341,7 +397,6 @@ img.size-thumbnail{
 }
 
 
-
 .limeh85x{
 	line-height:85px;
 }
@@ -530,7 +585,7 @@ img.size-thumbnail{
 	border: #E6E6E6 1px solid;
 	background:#FFF;
 	text-align:left;
-    width: 940px;
+    width: 800px;
 }
 
 .hdmgmenu aside > section article > div{
@@ -561,7 +616,6 @@ img.size-thumbnail{
 
 .sortmune{
 	position:absolute;
-	margin:20px 0 0 0;
 	width:auto;
 	display:none;
 }
@@ -595,20 +649,21 @@ img.size-thumbnail{
 
 /*   Search   */
 .search{
-    line-height:100px;
+    line-height:85px;
     margin: 0 5px;
 }
 
 .search input{
     transition: width 0.5s;
     -webkit-transition: width 0.5s;
-    width: 80px;
+    width: 60px;
     margin-top:8px;
     padding-right: 45px;
+    font-size: 110%;
 }
 
 .search input:focus{
-    width: 250px;
+    width: 195px;
 }
 
 .search .btn{
@@ -635,6 +690,7 @@ img.size-thumbnail{
     z-index: 2000;
 }
 
+
 .ytube img{
     width: 150px;
     height: 100px;
@@ -647,6 +703,10 @@ img.size-thumbnail{
     width: 150px;
     height: 100px;
     pointer-events: none;
+}
+
+.ytube .span3{
+
 }
 
 /*-------productpage started---------*/
@@ -683,7 +743,7 @@ img.size-thumbnail{
 
 .mainlogo{
 	height: 65px;
-	padding-top:20px;
+	padding-top:10px;
 
 }
 
@@ -732,8 +792,8 @@ img.size-thumbnail{
 }
 
 .header2-area aside{
-    height: 35px;
-    line-height: 30px;
+    height: 28px;
+    line-height: 28px;
     padding: 10px 0;
 }
 
@@ -750,8 +810,11 @@ img.size-thumbnail{
 	line-height:100%;
 }
 .header2-text .span3{
-	margin-left: 11px;
     text-align: left;
+}
+
+.header2-text .span3:first-child{
+    margin-left: 0;
 }
 
 .header2-text-hover{
@@ -759,7 +822,7 @@ img.size-thumbnail{
 }
 
 .header2-text .atendimento-email{
-    width: 230px!important;
+    /*width: 230px!important;*/
     font-size: 99%; /* tava quebrando no firefox */
 }
 
@@ -770,7 +833,7 @@ img.size-thumbnail{
 .header3-title-text{
 	font-family:Tahoma, Geneva, sans-serif;
     font-weight: bold;
-	font-size: 85%;
+	font-size: 95%;
 	color:#006442;
     margin-top: 5px;
 }
@@ -783,7 +846,7 @@ img.size-thumbnail{
 
 .header3-body-text{
 	font-family:Tahoma, Geneva, sans-serif;
-	font-size: 80%;
+	font-size: 90%;
 	line-height:120%;
     margin-top: 5px;
 
@@ -875,7 +938,7 @@ img.size-thumbnail{
 .all-body-text5{
 	font-family:Tahoma, Geneva, sans-serif;
 	color: #9a9a9a;
-	font-size:100%;
+	font-size:105%;
 	line-height:120%;
     margin-top: 5px;
 }
@@ -1216,7 +1279,7 @@ img.size-thumbnail{
 	font-size:100%;
     font-weight: normal;
 	line-height: 140%;
-    height: 50px;
+    height: 20px;
     padding: 0 10px;
 }
 .product-tabs > .btn{
@@ -1626,11 +1689,11 @@ div.ferramentas select{
     text-align: center;
 }
 
-.perguntas .pergunta-1{width: 125px}
-.perguntas .pergunta-2{width: 175px}
-.perguntas .pergunta-3{width: 145px}
-.perguntas .pergunta-4{width: 210px}
-.perguntas .pergunta-5{width: 220px; margin-right: 0}
+.perguntas .pergunta-1{width: 105px}
+.perguntas .pergunta-2{width: 150px}
+.perguntas .pergunta-3{width: 122px}
+.perguntas .pergunta-4{width: 179px}
+.perguntas .pergunta-5{width: 187px; margin-right: 0}
 
 .perguntas li{
     margin-right: 10px;
@@ -1669,7 +1732,7 @@ div.ferramentas select{
 }
 
 .linha-pergunta-bg{
-    width: 792px;
+    width: 769px;
     height: 5px;
     position: absolute;
     background: #eee;
@@ -1680,7 +1743,7 @@ div.ferramentas select{
 
 .linha-pergunta-concluida{
     background: #aaa;
-    width: 13%;
+    width: 10.5%%;
     height: 5px;
     transition: width 1s;
 }
@@ -1701,7 +1764,7 @@ div.ferramentas select{
 .perguntas.ativa-2 .pergunta-2 a i
 {background: #aaa}
 .perguntas.ativa-2 .linha-pergunta-concluida
-{width: 34%}
+{width: 28%}
 
 .perguntas.ativa-3 .pergunta-4 b,
 .perguntas.ativa-3 .pergunta-5 b
@@ -1711,7 +1774,7 @@ div.ferramentas select{
 .perguntas.ativa-3 .pergunta-3 a i
 {background: #aaa}
 .perguntas.ativa-3 .linha-pergunta-concluida
-{width: 57%}
+{width: 47.5%}
 
 .perguntas.ativa-4 .pergunta-5 b
 {color: #fff}
@@ -1721,7 +1784,7 @@ div.ferramentas select{
 .perguntas.ativa-4 .pergunta-4 a i
 {background: #aaa}
 .perguntas.ativa-4 .linha-pergunta-concluida
-{width: 83%}
+{width: 70.5%}
 
 .perguntas.ativa-5 .pergunta-1 a i,
 .perguntas.ativa-5 .pergunta-2 a i,
@@ -1732,10 +1795,11 @@ div.ferramentas select{
 .perguntas.ativa-5 .linha-pergunta-concluida
 {width: 100%}
 
+/*
 #tab-final .span3{
     width: 214px;
     font-size: 90%;
-}
+}*/
 
 .resposta .span5 div{
     margin-top: 30px;
@@ -1783,7 +1847,7 @@ h3.title{
 }
 
 #product-price .tabbable{
-    width: 714px;
+    width: 572px;
     float: right;
     margin-right: -9px;
 }
@@ -1811,12 +1875,13 @@ h3.title{
 
 #product-price .box-price .btn{
     position: absolute;
-    bottom: 10px;
-    width: 100px;
+    bottom: 4px;
+    width: 80px;
     height: 30px;
     line-height: 29px;
-    margin-left: -63px;
+    margin-left: -52px;
     left: 50%;
+    font-size: 100%;
 }
 
 #product-price .box-price small{
