@@ -96,6 +96,9 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s [%(pathname)s:%(lineno)d %(funcName)s]'
         },
+        'verysimple': {
+            'format': '%(levelname)s %(message)s'
+        }
     },
     'filters': {
         'require_debug_false': {
@@ -121,6 +124,15 @@ LOGGING = {
             'mode': 'a',
             'maxBytes': 10485760,
             'backupCount': 5,
+        },
+        'logfile_comodo': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'formatter': 'verysimple',
+            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile-comodo.log'),
+            'mode': 'a',
+            'maxBytes': 10485760,
+            'backupCount': 50,
         }
     },
     'loggers': {
@@ -136,6 +148,10 @@ LOGGING = {
         'ecommerce': {
             'handlers': ['console', 'logfile', 'mail_admins'],
             'level': 'INFO'
+        },
+        'libs.comodo': {
+            'handlers': ['console', 'logfile_comodo'],
+            'level': 'DEBUG'
         }
     },
 }

@@ -146,9 +146,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.voucher = voucher
 
             # self.atualiza_voucher(voucher) TODO: TBD > o que fazer com os dados do voucher
-            # TODO: substituir o if abaixo após tests com TQI
-            # if serializer.validacao_manual:
-            if False:
+            if serializer.validacao_manual:
                 emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
             else:
                 emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
