@@ -15,6 +15,21 @@ body {
 
 /* Bootstrap 80% */
 
+.video-thumb{
+	float: left;
+	width: 150px;
+	margin-right: 66px;
+}
+
+.video-thumb .home-text4{
+	white-space: nowrap;
+	text-align: center;
+}
+
+.video-thumb:last-child{
+	margin-right: 0;
+}
+
 .fix-row-margin{
     margin-left: 17px;
 }
@@ -842,6 +857,7 @@ img.size-thumbnail{
 	font-size: 95%;
 	color:#006442;
     margin-top: 5px;
+    white-space: nowrap;
 }
 
 .header3-title-text.coloroff{
@@ -1214,12 +1230,17 @@ img.size-thumbnail{
 }
 
 .footer-item-text{
-	font-family:Tahoma, Geneva, sans-serif;
-	color:#227D5E;
-	font-size:90%;
-	line-height:100%;
-	letter-spacing:-1px;
-    padding-bottom: 5px;
+	font-family: Tahoma, Geneva, sans-serif;
+	color: #227D5E;
+	font-size: 90%;
+	line-height: 100%;
+	letter-spacing: -1px;
+	padding-bottom: 0;
+}
+
+.footer-social{
+	padding-top: 10px;
+	border-top: 1px solid #DDD;
 }
 
 .footer-info{
