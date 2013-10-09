@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form
 from libs.comodo import get_emails_validacao
 from portal.certificados.models import Emissao, Voucher, Revogacao
@@ -232,15 +233,30 @@ class EmissaoConfirmacaoForm(Form):
     def clean_confirma(self):
         value = self.cleaned_data['confirma']
         if value != '1':
-            raise self.ValidationError('Você precisa confirmar os dados')
+            raise ValidationError('Você precisa confirmar os dados')
         return value
 
 
 class RevogacaoForm(ModelForm):
 
+    emission_url = CharField(max_length=256)
+
     class Meta:
         model = Revogacao
         fields = ('revoke_reason',)
+
+    def __init__(self, voucher=None, **kwargs):
+        self.voucher = voucher
+        super(RevogacaoForm, self).__init__(**kwargs)
+
+    def clean_emission_url(self):
+        emission_url = self.cleaned_data['emission_url']
+
+        emissao = self.voucher.emissao
+        if emission_url != emissao.emission_url:
+            raise ValidationError('Valor não bate com a url de emissão')
+
+        return emission_url
 
 
 class ReemissaoForm(EmissaoModelForm, EmissaoCallbackForm):

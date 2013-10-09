@@ -218,10 +218,18 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
     serializer_class = RevogacaoSerializer
 
     def post(self, request, *args, **kwargs):
+        emission_url = self.request.DATA.get('emission_url')
+
+        if not emission_url:
+            return erro_rest(('---', 'emission_url: campo obrigatório'))  # TODO corrigir codigo erro
+
         try:
             emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
             return erro_rest(('---', u'Emissão não encontrada'))  # TODO corrigir codigo erro
+
+        if emissao.emission_url != emission_url:
+            return erro_rest(('---', 'emission_url: valor não bate com a url de emissão'))  # TODO corrigir codigo erro
 
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
             return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
@@ -618,6 +626,13 @@ class RevogacaoView(CreateView):
             'voucher': self.get_voucher()
         })
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super(RevogacaoView, self).get_form_kwargs()
+        kwargs.update({
+            'voucher': self.get_voucher()
+        })
+        return kwargs
 
     def get_crm_hash(self):
         return self.kwargs.get('crm_hash')

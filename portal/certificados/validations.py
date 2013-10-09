@@ -90,7 +90,7 @@ class ValidateEmissaoCSRMixin(object):
         except Voucher.DoesNotExist:
             raise self.ValidationError()
 
-        if csr.get('CN') != url:
+        if csr.get('CN') != url and voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC):
             raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
 
         # if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
@@ -104,7 +104,7 @@ class ValidateEmissaoCSRMixin(object):
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS))
 
         dominios = csr.get('dnsNames', [])
-        if not voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
+        if voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_EV_MDC):
             if dominios:
                 raise self.ValidationError('Este produto possui somente um domínio')
         else:
