@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from copy import copy
 import os
 from django.contrib.formtools.wizard.views import SessionWizardView
@@ -135,6 +136,10 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
 
         log.info('request DATA: %s ' % unicode(request.DATA))
         log.info('request FILES: %s ' % unicode(request.FILES))
+
+        if not voucher.customer_registration_status:
+            return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
+
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
@@ -342,6 +347,10 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
     def post(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+
+            voucher = serializer.get_voucher()
+            if not voucher.customer_registration_status:
+                return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
 
             if serializer.is_valid():
                 required_fields = self.required_fields
