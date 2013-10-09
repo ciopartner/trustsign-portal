@@ -152,10 +152,14 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.voucher = voucher
 
             # self.atualiza_voucher(voucher) TODO: TBD > o que fazer com os dados do voucher
-            if serializer.validacao_manual:
-                emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
+
+            if settings.API_TEST_MODE:
+                emissao.emission_status = Emissao.STATUS_EMITIDO
             else:
-                emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
+                if serializer.validacao_manual:
+                    emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
+                else:
+                    emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
 
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
@@ -190,7 +194,10 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         if serializer.is_valid():
             emissao = serializer.object
 
-            emissao.emission_status = Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE
+            if settings.API_TEST_MODE:
+                emissao.emission_status = Emissao.STATUS_REEMITIDO
+            else:
+                emissao.emission_status = Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE
             emissao.save()
 
             if not settings.COMODO_ENVIAR_COMO_TESTE:
@@ -225,7 +232,11 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             revogacao = serializer.object
             revogacao.emission = emissao
 
-            emissao.status = Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
+            if settings.API_TEST_MODE:
+                emissao.emission_status = Emissao.STATUS_REVOGADO
+            else:
+                emissao.emission_status = Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
+
             emissao.save()
 
             self.pre_save(serializer.object)
