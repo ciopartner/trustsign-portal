@@ -447,6 +447,9 @@ class EmissaoWizardView(SessionWizardView):
         voucher = self.get_voucher()
         if voucher.ssl_product not in self.produtos_voucher:
             raise Http404()
+        if not voucher.customer_registration_status:
+            log.info('Tentando emitir um voucher com situação cadastral inativa')
+            raise PermissionDenied()
         user = self.request.user
         if (voucher.customer_cnpj != user.username or user.get_profile().is_trustsign) and not user.is_superuser:
             raise PermissionDenied()
