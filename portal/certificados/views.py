@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from copy import copy
 import os
 from django.contrib.formtools.wizard.views import SessionWizardView
@@ -135,6 +136,10 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
 
         log.info('request DATA: %s ' % unicode(request.DATA))
         log.info('request FILES: %s ' % unicode(request.FILES))
+
+        if not voucher.customer_registration_status:
+            return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
+
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
@@ -147,10 +152,14 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.voucher = voucher
 
             # self.atualiza_voucher(voucher) TODO: TBD > o que fazer com os dados do voucher
-            if serializer.validacao_manual:
-                emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
+
+            if settings.API_TEST_MODE:
+                emissao.emission_status = Emissao.STATUS_EMITIDO
             else:
-                emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
+                if serializer.validacao_manual:
+                    emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
+                else:
+                    emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
 
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
@@ -185,7 +194,10 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         if serializer.is_valid():
             emissao = serializer.object
 
-            emissao.emission_status = Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE
+            if settings.API_TEST_MODE:
+                emissao.emission_status = Emissao.STATUS_REEMITIDO
+            else:
+                emissao.emission_status = Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE
             emissao.save()
 
             if not settings.COMODO_ENVIAR_COMO_TESTE:
@@ -220,7 +232,11 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             revogacao = serializer.object
             revogacao.emission = emissao
 
-            emissao.status = Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
+            if settings.API_TEST_MODE:
+                emissao.emission_status = Emissao.STATUS_REVOGADO
+            else:
+                emissao.emission_status = Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
+
             emissao.save()
 
             self.pre_save(serializer.object)
@@ -343,6 +359,10 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
         try:
             serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
+            voucher = serializer.get_voucher()
+            if not voucher.customer_registration_status:
+                return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
+
             if serializer.is_valid():
                 required_fields = self.required_fields
                 if serializer.validacao_carta_cessao_necessaria:
@@ -438,6 +458,9 @@ class EmissaoWizardView(SessionWizardView):
         voucher = self.get_voucher()
         if voucher.ssl_product not in self.produtos_voucher:
             raise Http404()
+        if not voucher.customer_registration_status:
+            log.info('Tentando emitir um voucher com situação cadastral inativa')
+            raise PermissionDenied()
         user = self.request.user
         if (voucher.customer_cnpj != user.username or user.get_profile().is_trustsign) and not user.is_superuser:
             raise PermissionDenied()
