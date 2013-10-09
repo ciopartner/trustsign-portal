@@ -1,12 +1,23 @@
 # coding=utf-8
 import commands
 import re
+import os
+from subprocess import Popen, PIPE
 import urllib
 import urlparse
+from django.core.files.temp import NamedTemporaryFile
 from django.utils.encoding import smart_unicode
 import requests
 from unicodedata import normalize
 from nltk import metrics
+
+
+def run_command(comando):
+    p = Popen(comando, shell=True, stdin=PIPE, stdout=PIPE, close_fds=True)
+    (write, read) = (p.stdin, p.stdout)
+    write.close()
+
+    return read.read()
 
 
 def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True):
@@ -65,6 +76,25 @@ def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True)
             d[key.replace(' ', '')] = value
 
     d['subject_ok'] = d.get('CN') and d.get('O') and d.get('L') and d.get('S') and d.get('C')
+
+    # Insere os dominios contidos na CSR que a comodo não retorna
+    # Foi necessário pois a comodo possui um bug onde quando o CN vai em branco (caso do MDC),
+    # ela não retorna nenhum dominio, mesmo que a CSR possua.
+
+    dnsnames = d['dnsNames']
+
+    file_in = NamedTemporaryFile(delete=False)
+    file_in.write(csr)
+    path_in = file_in.name
+    file_in.close()
+    csr_data = run_command('openssl req -in %s -noout -text | grep DNS' % path_in)
+    os.remove(path_in)
+
+    for entry in csr_data.strip().split(','):
+        if entry:
+            dns = entry.strip().split(':')[1]
+            if dns not in dnsnames:
+                dnsnames.append(dns)
 
     return d
 
