@@ -21,6 +21,11 @@ body {
 	margin-right: 66px;
 }
 
+.video-thumb .home-text4{
+	white-space: nowrap;
+	text-align: center;
+}
+
 .video-thumb:last-child{
 	margin-right: 0;
 }
@@ -852,6 +857,7 @@ img.size-thumbnail{
 	font-size: 95%;
 	color:#006442;
     margin-top: 5px;
+    white-space: nowrap;
 }
 
 .header3-title-text.coloroff{
