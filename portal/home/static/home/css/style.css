@@ -15,6 +15,16 @@ body {
 
 /* Bootstrap 80% */
 
+.video-thumb{
+	float: left;
+	width: 150px;
+	margin-right: 66px;
+}
+
+.video-thumb:last-child{
+	margin-right: 0;
+}
+
 .fix-row-margin{
     margin-left: 17px;
 }
