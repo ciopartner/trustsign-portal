@@ -145,12 +145,13 @@ table.ssltab > thead > tr > th{
 	vertical-align:middle;
 	text-align:center;
 	line-height:50%;
-	padding-top:30px;
-	padding-bottom:30px;
+	padding-top:15px;
+	padding-bottom:15px;
 }
 
 table.ssltab > thead > tr > th > p:nth-child(1){
 	font-size:65%;
+	margin-bottom: 10px;
 }
 
 table.ssltab > thead > tr > th:nth-child(1){

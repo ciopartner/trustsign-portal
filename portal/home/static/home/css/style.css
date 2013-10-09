@@ -13,6 +13,10 @@ body {
     background-color: #fff;
 }
 
+.hidden{
+	display: none;
+}
+
 /* Bootstrap 80% */
 
 .video-thumb{
@@ -186,6 +190,7 @@ img.size-thumbnail{
 
 .post-description{
     clear: both;
+    text-align: justify;
 }
 
 .shortbio{
@@ -832,6 +837,7 @@ img.size-thumbnail{
 }
 .header2-text .span3{
     text-align: left;
+    white-space: nowrap;
 }
 
 .header2-text .span3:first-child{
@@ -1879,6 +1885,10 @@ h3.title{
     background: #F0F0F0;
 }
 
+#product-price .nav-tabs a{
+	font-size: 120%;
+}
+
 #product-price .tab-content{
     background: #F0F0F0;
     min-height: 118px;
@@ -1901,6 +1911,7 @@ h3.title{
     width: 25%;
     float: left;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     min-height: 116px;
     position: relative;
     text-align: center;
@@ -1922,8 +1933,8 @@ h3.title{
     position: absolute;
     bottom: 4px;
     width: 80px;
-    height: 30px;
-    line-height: 29px;
+    height: 24px;
+    line-height: 22px;
     margin-left: -52px;
     left: 50%;
     font-size: 100%;

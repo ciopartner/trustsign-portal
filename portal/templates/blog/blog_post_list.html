@@ -36,7 +36,7 @@
 {% endblock %}
 
 {% block one_row %}
-    <section class=span9>
+    <section class=span8>
         {% block main %}{% endblock %}
         {% if tag or category or year or month or author %}
             {% block blog_post_list_filterinfo %}
@@ -125,7 +125,7 @@
     </section>
 
     {% block right_panel %}
-        <section class=span3>
+        <section class=span3 style="float: right">
             {% include "blog/includes/filter_panel.html" %}
         </section>
     {% endblock %}

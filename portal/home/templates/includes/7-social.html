@@ -1,15 +1,15 @@
 {% load i18n future mezzanine_tags blog_tags keyword_tags disqus_tags staticfiles pages_tags %}
 
 
-
+<!--
 <section class="featurette homemain">
-    <p class="as-text1 tm30" style="text-align: center;">ACOMPANHE A TRUSTSIGN NAS REDES</p>
+    <p class="as-text1" style="text-align: center; margin-top: 40px;">ACOMPANHE A TRUSTSIGN NAS REDES</p>
 </section>
-
+-->
 <!-- youtube area closed here -->
 
 
-<section class="featurette" style="display: inline-block; margin-top:20px;">
+<section class="featurette" style="display: inline-block;">
 
     <div>
         <img src="{% static "home/img/icons/youtube.png" %}" style="float:left; margin-right:10px;margin-top:-6px;">
@@ -82,7 +82,7 @@
 <section class="featurette">
     <section class="row-fluid">
         <aside class="span6" style="padding-right: 30px;">
-            <section class="">
+            <section class="tm30">
                 <div>
                     <img src="{% static "home/img/icons/blog.png" %}" style="float:left; margin-right:10px;margin-top:-6px;">
                     <h2>BLOG</h2>
@@ -91,7 +91,7 @@
                 {% for blog_post in recent_posts %}
                     <div class="margin-top" style="clear: both;">
                         <a class="home-text3" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-                        <span class="all-body-text5 line-height-140 justified">{{ blog_post.description_from_content | safe |truncatewords_html:24 }}</span>
+                        <span class="all-body-text5 line-height-140">{{ blog_post.description_from_content | safe |truncatewords_html:24 }}</span>
                         <a href="{{ blog_post.get_absolute_url }}">[Leia mais]</a>
                     </div>
                 {% endfor %}
@@ -100,7 +100,7 @@
 
 
         <aside class="span6" style="padding-left: 30px;">
-            <section class="">
+            <section class="tm30">
                 <div>
                     <img src="{% static "home/img/icons/twitter-t.png" %}" style="float:left; margin-right:10px; margin-top:-6px;">
 
