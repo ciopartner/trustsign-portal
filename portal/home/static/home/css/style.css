@@ -1214,12 +1214,17 @@ img.size-thumbnail{
 }
 
 .footer-item-text{
-	font-family:Tahoma, Geneva, sans-serif;
-	color:#227D5E;
-	font-size:90%;
-	line-height:100%;
-	letter-spacing:-1px;
-    padding-bottom: 5px;
+	font-family: Tahoma, Geneva, sans-serif;
+	color: #227D5E;
+	font-size: 90%;
+	line-height: 100%;
+	letter-spacing: -1px;
+	padding-bottom: 0;
+}
+
+.footer-social{
+	padding-top: 10px;
+	border-top: 1px solid #DDD;
 }
 
 .footer-info{
