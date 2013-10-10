@@ -4,188 +4,203 @@
 {% block title %}O especialista TrustSign orienta você a encontrar a melhor solução para seu negócio{% endblock %}
 
 {% block one_row %}
+    <div class="span9">
+        <p>Você pode voltar a qualquer pergunta a qualquer momento, clicando na pergunta desejada</p>
 
-    <p>Você pode voltar a qualquer pergunta a qualquer momento, clicando na pergunta desejada</p>
+        <div class="tabbable tabs-melhor-solucao">
 
-    <div class="tabbable tabs-melhor-solucao">
+            <ul class="nav nav-tabs perguntas ativa-1">
+                <li class="pergunta-1"><a href="#tab-pergunta-1" data-toggle="tab"><b>JÁ TEM UM SITE?</b><i></i></a><span></span></li>
+                <li class="pergunta-2"><a href="#tab-pergunta-2" data-toggle="tab"><b>É UM E-COMMERCE?</b><i></i></a><span></span></li>
+                <li class="pergunta-3"><a href="#tab-pergunta-3" data-toggle="tab"><b>É UM WEBMAIL?</b><i></i></a><span></span></li>
+                <li class="pergunta-4"><a href="#tab-pergunta-4" data-toggle="tab"><b>É UMA APLICAÇÃO WEB?</b><i></i></a><span></span></li>
+                <li class="pergunta-5"><a href="#tab-pergunta-5" data-toggle="tab"><b>É ASSINATURA DE CÓDIGO?</b><i></i></a><span></span></li>
+                <li class="pergunta-final hidden"><a href="#tab-final" data-toggle="tab"></a></li>
+                <li class="linha-pergunta-bg"><div class="linha-pergunta-concluida"></div></li>
+            </ul>
 
-        <ul class="nav nav-tabs perguntas ativa-1">
-            <li class="pergunta-1"><a href="#tab-pergunta-1" data-toggle="tab"><b>JÁ TEM UM SITE?</b><i></i></a><span></span></li>
-            <li class="pergunta-2"><a href="#tab-pergunta-2" data-toggle="tab"><b>É UM E-COMMERCE?</b><i></i></a><span></span></li>
-            <li class="pergunta-3"><a href="#tab-pergunta-3" data-toggle="tab"><b>É UM WEBMAIL?</b><i></i></a><span></span></li>
-            <li class="pergunta-4"><a href="#tab-pergunta-4" data-toggle="tab"><b>É UMA APLICAÇÃO WEB?</b><i></i></a><span></span></li>
-            <li class="pergunta-5"><a href="#tab-pergunta-5" data-toggle="tab"><b>É ASSINATURA DE CÓDIGO?</b><i></i></a><span></span></li>
-            <li class="pergunta-final hidden"><a href="#tab-final" data-toggle="tab"></a></li>
-            <li class="linha-pergunta-bg"><div class="linha-pergunta-concluida"></div></li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane active" id="tab-pergunta-1">
-                <div class="pergunta">
-                    <p>JÁ TEM UM SITE?</p>
-                    <a class="btn btn-large" id="btn-p1-sim">SIM</a>
-                    <a class="btn btn-large" id="btn-p1-nao">NÃO</a>
-                </div>
-            </div>
-            <div class="tab-pane" id="tab-pergunta-2">
-                <div class="pergunta">
-                    <p>É UM E-COMMERCE?</p>
-                    <a class="btn btn-large" id="btn-p2-sim">SIM</a>
-                    <a class="btn btn-large" id="btn-p2-nao">NÃO</a>
-                </div>
-                <div class="resposta">
-                    <h2>A MELHOR SOLUÇÃO PARA SEU E-COMMERCE</h2>
-
-                    <div class="span5">
-                        <h3 class="title">SEU E-COMMERCE PRECISA SER CONFIÁVEL PARA SEUS CLIENTES</h3>
-
-                        <div>
-                            <a href="/certificado-digital/ssl"><h3>SSL</h3></a>
-                            <p class="all-body-text5 bp10">Autenticidade e Confiabilidade para aplicações e negócios na web</p>
-                            <a href="/certificado-digital/ssl" class="btn btn-large">Conheça</a>
-                        </div>
-
-                        <div>
-                            <a href="/certificado-digital/ev-extended-validation-ssl/"><h3>EV (Extended Validation) SSL</h3></a>
-                            <p class="all-body-text5 bp10">Nível de Segurança ainda maior com barra verde</p>
-                            <a href="/certificado-digital/ev-extended-validation-ssl/" class="btn btn-large">Conheça</a>
-                        </div>
-                    </div>
-
-                    <div class="span5">
-                        <h3 class="title">ADICIONE UM ALTO NÍVEL DE PROTEÇÂO PARA SEU NEGÓCIO NA WEB</h3>
-
-                        <div>
-                            <a href="/site-seguro/"><h3>Site + Seguro</h3></a>
-                            <p class="all-body-text5 bp10">Análises diárias para identificar vulnerabilidades em seu e-commerce ou website</p>
-                            <a href="/site-seguro/" class="btn btn-large">Conheça</a>
-                        </div>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-pergunta-1">
+                    <div class="pergunta">
+                        <p>JÁ TEM UM SITE?</p>
+                        <a class="btn" id="btn-p1-sim">SIM</a>
+                        <a class="btn" id="btn-p1-nao">NÃO</a>
                     </div>
                 </div>
-            </div>
+                <div class="tab-pane" id="tab-pergunta-2">
+                    <div class="pergunta">
+                        <p>É UM E-COMMERCE?</p>
+                        <a class="btn" id="btn-p2-sim">SIM</a>
+                        <a class="btn" id="btn-p2-nao">NÃO</a>
+                    </div>
+                    <div class="resposta">
+                        <h2>A MELHOR SOLUÇÃO PARA SEU E-COMMERCE</h2>
 
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <h3 class="title">SEU E-COMMERCE PRECISA SER CONFIÁVEL PARA SEUS CLIENTES</h3>
 
-            <div class="tab-pane" id="tab-pergunta-3">
-                <div class="pergunta">
-                    <p>É UM WEBMAIL?</p>
-                    <a class="btn btn-large" id="btn-p3-sim">SIM</a>
-                    <a class="btn btn-large" id="btn-p3-nao">NÃO</a>
+                                <div>
+                                    <a href="/certificado-digital/ssl"><h3>SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Autenticidade e Confiabilidade para aplicações e negócios na web</p>
+                                    <a href="/certificado-digital/ssl" class="btn">Conheça</a>
+                                </div>
+
+                                <div>
+                                    <a href="/certificado-digital/ev-extended-validation-ssl/"><h3>EV (Extended Validation) SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Nível de Segurança ainda maior com barra verde</p>
+                                    <a href="/certificado-digital/ev-extended-validation-ssl/" class="btn">Conheça</a>
+                                </div>
+                            </div>
+
+                            <div class="span6">
+                                <h3 class="title">ADICIONE UM ALTO NÍVEL DE PROTEÇÂO PARA SEU NEGÓCIO NA WEB</h3>
+
+                                <div>
+                                    <a href="/site-seguro/"><h3>Site + Seguro</h3></a>
+                                    <p class="all-body-text5 bp10">Análises diárias para identificar vulnerabilidades em seu e-commerce ou website</p>
+                                    <a href="/site-seguro/" class="btn">Conheça</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="resposta">
-                    <h2>A MELHOR SOLUÇÃO PARA SEU WEBMAIL</h2>
 
-                    <div class="span5">
+
+                <div class="tab-pane" id="tab-pergunta-3">
+                    <div class="pergunta">
+                        <p>É UM WEBMAIL?</p>
+                        <a class="btn" id="btn-p3-sim">SIM</a>
+                        <a class="btn" id="btn-p3-nao">NÃO</a>
+                    </div>
+                    <div class="resposta">
+                        <h2>A MELHOR SOLUÇÃO PARA SEU WEBMAIL</h2>
+
                         <h3 class="title">Seu webmail precisa ser protegido!</h3>
 
-                        <div>
-                            <a href="/certificado-digital/ssl"><h3>SSL</h3></a>
-                            <p class="all-body-text5 bp10">Autenticidade e Confiabilidade para aplicações e negócios na web</p>
-                            <a href="/certificado-digital/ssl" class="btn btn-large">Conheça</a>
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <div>
+                                    <a href="/certificado-digital/ssl"><h3>SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Autenticidade e Confiabilidade para aplicações e negócios na web</p>
+                                    <a href="/certificado-digital/ssl" class="btn">Conheça</a>
+                                </div>
+                            </div>
+                            <div class="span6">
+
+                                <div>
+                                    <a href="/certificado-digital/san-ssl/"><h3>SAN SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Garanta a funcionalidade de seu Exchange com FQDNs em um único certificado</p>
+                                    <a href="/certificado-digital/san-ssl/" class="btn">Conheça</a>
+                                </div>
+                            </div>
                         </div>
 
-                        <div>
-                            <a href="/certificado-digital/san-ssl/"><h3>SAN SSL</h3></a>
-                            <p class="all-body-text5 bp10">Garanta a funcionalidade de seu Exchange com FQDNs em um único certificado</p>
-                            <a href="/certificado-digital/san-ssl/" class="btn btn-large">Conheça</a>
-                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            <div class="tab-pane" id="tab-pergunta-4">
-                <div class="pergunta">
-                    <p>É UMA APLICAÇÃO WEB?</p>
-                    <a class="btn btn-large" id="btn-p4-sim">SIM</a>
-                    <a class="btn btn-large" id="btn-p4-nao">NÃO</a>
-                </div>
-                <div class="resposta">
-                    <h2>A MELHOR SOLUÇÃO PARA SUA APLICAÇÃO WEB</h2>
-
-                    <div class="span5">
-                        <h3 class="title">SUA APLICAÇÃO WEB PRECISA DE CONFIANÇA PARA SEUS CLIENTES</h3>
-
-                        <div>
-                            <a href="/certificado-digital/ssl"><h3>SSL</h3></a>
-                            <p class="all-body-text5 bp10">Autenticidade e Confiabilidade para aplicações e negócios na web</p>
-                            <a href="/certificado-digital/ssl" class="btn btn-large">Conheça</a>
-                        </div>
-
-                        <div>
-                            <a href="/certificado-digital/ev-extended-validation-ssl/"><h3>EV (Extended Validation) SSL</h3></a>
-                            <p class="all-body-text5 bp10">Nível de Segurança ainda maior com barra verde</p>
-                            <a href="/certificado-digital/ev-extended-validation-ssl/" class="btn btn-large">Conheça</a>
-                        </div>
-
-                        <div>
-                            <a href="/certificado-digital/mdc-ssl/"><h3>MDC SSL</h3></a>
-                            <p class="all-body-text5 bp10">Certifique múltiplos domínios com um único certificado</p>
-                            <a href="/certificado-digital/mdc-ssl/" class="btn btn-large">Conheça</a>
-                        </div>
-
-                        <div>
-                            <a href="/certificado-digital/ev-mdc-ssl/"><h3>EV MDC SSL</h3></a>
-                            <p class="all-body-text5 bp10">Certifique até 100 domínios com um único certificado EV</p>
-                            <a href="/certificado-digital/ev-mdc-ssl/" class="btn btn-large">Conheça</a>
-                        </div>
-
-                        <div>
-                            <a href="/certificado-digital/wildcard-ssl/"><h3>Wildcard SSL</h3></a>
-                            <p class="all-body-text5 bp10">Certifique infinitos subdomínios com um único certificado</p>
-                            <a href="/certificado-digital/wildcard-ssl/" class="btn btn-large">Conheça</a>
-                        </div>
+                <div class="tab-pane" id="tab-pergunta-4">
+                    <div class="pergunta">
+                        <p>É UMA APLICAÇÃO WEB?</p>
+                        <a class="btn" id="btn-p4-sim">SIM</a>
+                        <a class="btn" id="btn-p4-nao">NÃO</a>
                     </div>
+                    <div class="resposta">
+                        <h2>A MELHOR SOLUÇÃO PARA SUA APLICAÇÃO WEB</h2>
 
-                    <div class="span5">
-                        <h3 class="title">ADICIONE UM ALTO NÍVEL DE PROTEÇÃO PARA SEU NEGÓCIO NA WEB</h3>
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <h3 class="title">SUA APLICAÇÃO WEB PRECISA DE CONFIANÇA PARA SEUS CLIENTES</h3>
 
-                        <div>
-                            <a href="/site-seguro/"><h3>Site + Seguro</h3></a>
-                            <p class="all-body-text5 bp10">Análise diária de milhares de vulnerabilidades e relatórios detalhados sobre como aplicar correções</p>
-                            <a href="/site-seguro/" class="btn btn-large">Conheça</a>
+                                <div>
+                                    <a href="/certificado-digital/ssl"><h3>SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Autenticidade e Confiabilidade para aplicações e negócios na web</p>
+                                    <a href="/certificado-digital/ssl" class="btn">Conheça</a>
+                                </div>
+
+                                <div>
+                                    <a href="/certificado-digital/ev-extended-validation-ssl/"><h3>EV (Extended Validation) SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Nível de Segurança ainda maior com barra verde</p>
+                                    <a href="/certificado-digital/ev-extended-validation-ssl/" class="btn">Conheça</a>
+                                </div>
+
+                                <div>
+                                    <a href="/certificado-digital/mdc-ssl/"><h3>MDC SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Certifique múltiplos domínios com um único certificado</p>
+                                    <a href="/certificado-digital/mdc-ssl/" class="btn">Conheça</a>
+                                </div>
+
+                                <div>
+                                    <a href="/certificado-digital/ev-mdc-ssl/"><h3>EV MDC SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Certifique até 100 domínios com um único certificado EV</p>
+                                    <a href="/certificado-digital/ev-mdc-ssl/" class="btn">Conheça</a>
+                                </div>
+
+                                <div>
+                                    <a href="/certificado-digital/wildcard-ssl/"><h3>Wildcard SSL</h3></a>
+                                    <p class="all-body-text5 bp10">Certifique infinitos subdomínios com um único certificado</p>
+                                    <a href="/certificado-digital/wildcard-ssl/" class="btn">Conheça</a>
+                                </div>
+                            </div>
+                            <div class="span6">
+                                <h3 class="title">ADICIONE UM ALTO NÍVEL DE PROTEÇÃO PARA SEU NEGÓCIO NA WEB</h3>
+
+                                <div>
+                                    <a href="/site-seguro/"><h3>Site + Seguro</h3></a>
+                                    <p class="all-body-text5 bp10">Análise diária de milhares de vulnerabilidades e relatórios detalhados sobre como aplicar correções</p>
+                                    <a href="/site-seguro/" class="btn">Conheça</a>
+                                </div>
+                            </div>
                         </div>
+
+
                     </div>
                 </div>
-            </div>
 
 
-            <div class="tab-pane" id="tab-pergunta-5">
-                <div class="pergunta">
-                    <p>É ASSINATURA DE CÓDIGO?</p>
-                    <a class="btn btn-large" id="btn-p5-sim">SIM</a>
-                    <a class="btn btn-large" id="btn-p5-nao">NÃO</a>
-                </div>
-                <div class="resposta">
-                    <h2>A MELHOR SOLUÇÃO PARA SUA APLICAÇÃO WEB</h2>
-
-                    <div class="span5">
+                <div class="tab-pane" id="tab-pergunta-5">
+                    <div class="pergunta">
+                        <p>É ASSINATURA DE CÓDIGO?</p>
+                        <a class="btn" id="btn-p5-sim">SIM</a>
+                        <a class="btn" id="btn-p5-nao">NÃO</a>
+                    </div>
+                    <div class="resposta">
+                        <h2>A MELHOR SOLUÇÃO PARA SUA APLICAÇÃO WEB</h2>
                         <h3 class="title">SUA APLICAÇÃO WEB PRECISA TRANSMITIR CONFIANÇA PARA OS USUÁRIOS!</h3>
 
-                        <div>
-                            <a href="/certificado-digital/code-signing/"><h3>CODE SIGNING</h3></a>
-                            <p class="all-body-text5 bp10">Mais confiabilidade em downloads de diversos códigos </p>
-                            <a href="/certificado-digital/code-signing/" class="btn btn-large">Conheça</a>
-                        </div>
+                        <div class="">
 
-                        <div>
-                            <a href="/certificado-digital/jre/"><h3>JRE</h3></a>
-                            <p class="all-body-text5 bp10">Mais confiabilidade em downloads de códigos JAVA</p>
-                            <a href="/certificado-digital/jre/" class="btn btn-large">Conheça</a>
-                        </div>
+                            <div class="row-fluid">
+                                <div class="span6">
+                                    <a href="/certificado-digital/code-signing/"><h3>CODE SIGNING</h3></a>
+                                    <p class="all-body-text5 bp10">Mais confiabilidade em downloads de diversos códigos </p>
+                                    <a href="/certificado-digital/code-signing/" class="btn">Conheça</a>
+                                </div>
 
+                                <div class="span6">
+                                    <a href="/certificado-digital/jre/"><h3>JRE</h3></a>
+                                    <p class="all-body-text5 bp10">Mais confiabilidade em downloads de códigos JAVA</p>
+                                    <a href="/certificado-digital/jre/" class="btn">Conheça</a>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
-            <div class="tab-pane" id="tab-final">
-                <h2>ENTRE EM CONTATO AGORA PARA O ESPECIALISTA TRUSTSIGN ENTENDER SEU NEGÓCIO.</h2>
-                <h3>ESCOLHA UM DOS CANAIS ABAIXO:</h3>
-                {% include 'includes/2-header-atendimento.html' %}
+                <div class="tab-pane" id="tab-final">
+                    <h2>ENTRE EM CONTATO AGORA PARA O ESPECIALISTA TRUSTSIGN ENTENDER SEU NEGÓCIO.</h2>
+                    <h3>ESCOLHA UM DOS CANAIS ABAIXO:</h3>
+                    {% include 'includes/2-header-atendimento.html' %}
+                </div>
             </div>
         </div>
     </div>
-
+    <div class="span3">
+        <img src="{% static "melhor_solucao/img/melhor_solucao.jpg" %}" alt="" class="tm50" />
+    </div>
 {% endblock %}
 
 {% block extra_js %}

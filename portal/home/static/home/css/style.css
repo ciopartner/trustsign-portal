@@ -1740,11 +1740,11 @@ div.ferramentas select{
     text-align: center;
 }
 
-.perguntas .pergunta-1{width: 105px}
-.perguntas .pergunta-2{width: 150px}
-.perguntas .pergunta-3{width: 122px}
-.perguntas .pergunta-4{width: 179px}
-.perguntas .pergunta-5{width: 187px; margin-right: 0}
+.perguntas .pergunta-1{width: 86px}
+.perguntas .pergunta-2{width: 103px}
+.perguntas .pergunta-3{width: 90px}
+.perguntas .pergunta-4{width: 119px}
+.perguntas .pergunta-5{width: 130px; margin-right: 0}
 
 .perguntas li{
     margin-right: 10px;
@@ -1758,6 +1758,10 @@ div.ferramentas select{
     margin: 0;
     padding: 0;
     border: 0;
+}
+
+.pergunta {
+    text-align: center;
 }
 
 .perguntas li a:hover,
@@ -1783,7 +1787,7 @@ div.ferramentas select{
 }
 
 .linha-pergunta-bg{
-    width: 769px;
+    width: 509px;
     height: 5px;
     position: absolute;
     background: #eee;
