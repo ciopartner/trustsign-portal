@@ -147,7 +147,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = serializer.object
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
-            emissao.emission_fqdns = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', ''))
+            emissao.emission_fqdns = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
 
             emissao.voucher = voucher
 
@@ -375,6 +375,8 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
                 required_fields = self.required_fields
                 if serializer.validacao_carta_cessao_necessaria:
                     required_fields += ('emission_assignment_letter',)
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC:
+                    required_fields += ('emission_url',)
 
                 data = {
                     'required_fields': required_fields,

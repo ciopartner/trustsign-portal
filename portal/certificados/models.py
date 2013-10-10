@@ -318,6 +318,8 @@ class Emissao(Model):
 
     emission_cost = DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
 
+    emission_revoke_password = CharField(max_length=128, blank=True, null=True)
+
     emission_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
     emission_error_message = CharField(max_length=256, blank=True, null=True)
 

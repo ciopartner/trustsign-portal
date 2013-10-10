@@ -204,20 +204,19 @@ class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios):
 class EmissaoNvATela1Form(EmissaoModelForm, EmissaoCallbackForm):
     validacao_manual = True
 
-    REQUIRED_FIELDS = ('emission_address_proof',)
+    REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof',)
 
     class Meta:
-        fields = ['emission_address_proof']
+        fields = ['emission_csr', 'emission_phone_proof']
 
 
 class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm):
     validacao_manual = True
 
-    REQUIRED_FIELDS = ('emission_id', 'callback_tratamento', 'callback_nome', 'callback_sobrenome', 'callback_email',
-                       'callback_telefone', 'callback_username', 'callback_password', 'callback_password_validacao')
+    REQUIRED_FIELDS = ('emission_id', 'emission_revoke_password' )
 
     class Meta:
-        fields = ['emission_id']
+        fields = ('emission_id', 'emission_revoke_password')
 
 
 class EmissaoConfirmacaoForm(Form):

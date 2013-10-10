@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework.fields import DateTimeField
+from rest_framework.fields import DateTimeField, CharField
 from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
@@ -124,8 +124,7 @@ class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
 
 
 class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
-    REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
-                       'emission_server_type', 'emission_csr',)
+    REQUIRED_FIELDS = ('emission_dcv_emails', 'emission_publickey_sendto', 'emission_server_type', 'emission_csr',)
 
     class Meta:
         model = Emissao
@@ -148,7 +147,7 @@ class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
 
 
 class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
-    REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
+    REQUIRED_FIELDS = ('emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr', 'emission_articles_of_incorporation',
                        'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
@@ -161,23 +160,25 @@ class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
 
 
 class EmissaoNvASerializer(EmissaoModelSerializer):
-    REQUIRED_FIELDS = ('emission_address_proof',)
+    REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof')
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_address_proof',)
+        fields = ('crm_hash', 'emission_csr', 'emission_address_proof', 'emission_phone_proof')
 
 
 class EmissaoNvBSerializer(EmissaoModelSerializer):
-    REQUIRED_FIELDS = ('emission_address_proof',)
+    REQUIRED_FIELDS = ('emission_id', 'emission_revoke_password')
+
+    emission_revoke_password2 = CharField(max_length=128)
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_address_proof',)
+        fields = ('crm_hash', 'emission_id', 'emission_revoke_password')
 
 
 class EmissaoValidaSerializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin):
-    REQUIRED_FIELDS = ('emission_url', 'emission_csr')
+    REQUIRED_FIELDS = ('emission_url', 'emission_csr', )
     validacao = True
     validacao_carta_cessao_necessaria = False
 
