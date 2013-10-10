@@ -1,8 +1,11 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import json
+import os
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from portal.certificados.models import Emissao
 from portal.certificados.tests import CSR_SAN, CSR_SSL, CSR_WILDCARD, CAMPOS_GET_VOUCHER_DATA, CSR_MDC
 
 
@@ -47,9 +50,37 @@ class VoucherAPIViewTestCase(TestCase):
         self.assertIn('ssl_urls', data)
         self.assertIn('server_list', data)
 
-        self.assertEqual(len(data['ssl_urls']), 2)
+        self.assertEqual(len(data['ssl_urls']), 4)
+
+        dominios_restantes = ['webmail.grupocrm.com.br', 'autodiscover.grupocrm.com.br', 'imap.grupocrm.com.br',
+                              'mobile.grupocrm.com.br']
 
         for url in data['ssl_urls']:
-            self.assertIn(url['url'], ('paulo.trustsign.com.br', 'sthefane.trustsign.com.br'))
-            if url['url'] == 'paulo.trustsign.com.br':
-                self.assertTrue(url['primary'])
+            self.assertIn(url['url'], dominios_restantes)
+            dominios_restantes.remove(url['url'])
+
+        self.assertEqual(len(dominios_restantes), 0)
+
+    def test_ssl_apply_mdc(self):
+        r = self.client.post(reverse('api_ssl_apply'), {
+            'username': 'admin',
+            'password': 'admin',
+            'crm_hash': 'test-MDC',
+            'emission_url': 'aaaaaaaaa',
+            'emission_csr': CSR_MDC,
+            'emission_server_type': 1,
+            'emission_dcv_emails': 'admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br',
+            'emission_publickey_sendto': 'admin@grupocrm.com.br',
+            'emission_assignment_letter': open(os.path.join(settings.PROJECT_ROOT, 'portal', 'static', 'robots.txt'), 'r')
+        })
+
+        #self.assertEquals(r.status_code, 200)
+
+        data = json.loads(r.content)
+        self.assertEqual(data, {})
+        try:
+            emissao = Emissao.objects.get(crm_hash='test-MDC')
+        except Emissao.DoesNotExist:
+            self.fail('Não criou a emissão')
+
+        self.assertEqual(emissao.emission_fqdns, 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br mobile.grupocrm.com.br')
