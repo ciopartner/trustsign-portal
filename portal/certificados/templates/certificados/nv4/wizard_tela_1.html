@@ -20,7 +20,6 @@
 
     <table>
         {% include 'certificados/includes/dados_produto.html' %}
-        <tr><th>Domínio:</th><td>{{ form.emission_url}} {{ form.emission_url.errors }}</td></tr>
         <tr><th>CSR:</th><td>{{ form.emission_csr }} {{ form.emission_csr.errors }}</td></tr>
     </table>
 {% endblock %}

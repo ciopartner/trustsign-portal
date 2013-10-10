@@ -2,6 +2,15 @@
 
 {% block coluna-esquerda %}
     {% include 'certificados/includes/dados_cliente.html' %}
+
+    <h3>Dados de Callback</h3>
+    <table>
+        <tr><th>Tratamento</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_tratamento }}"/></td></tr>
+        <tr class="nome"><th>Nome</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_nome }}"/> <input type="text" disabled="disabled" value="{{ dados_form1.callback_sobrenome }}"/></td></tr>
+        <tr><th>e-mail Corporativo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_email }}"/></td></tr>
+        <tr><th>Telefone fixo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_telefone }}"/></td></tr>
+        <tr><th>Observação:</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_observacao }}"/></td></tr>
+    </table>
 {% endblock %}
 
 {% block coluna-direita %}
@@ -11,22 +20,7 @@
 
     <table>
         {% include 'certificados/includes/dados_produto.html' %}
-        <tr><th>Comprov. Endereço</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_address_proof.name }}"/></td></tr>
         <tr><th>Comprov. Telefone</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_phone_proof.name }}"/></td></tr>
-    </table>
-
-    <h3>Dados de Callback</h3>
-    <table>
-        <tr><th>Tratamento</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_tratamento }}"/></td></tr>
-        <tr class="nome"><th>Nome</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_nome }}"/>
-        <input type="text" disabled="disabled" value="{{ dados_form1.callback_sobrenome }}"/>
-        </td></tr>
-        <tr><th>e-mail Corporativo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_email }}"/></td></tr>
-        <tr><th>Telefone fixo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_telefone }}"/></td></tr>
-        <tr><th>Tamanho da Chave</th><td><input type="text" disabled="disabled" value="2048 bits"/></td></tr>
-        <tr><th>Username</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_username }}"/></td></tr>
-        <tr><th>Senha</th><td><input type="text" disabled="disabled" value="********"/></td></tr>
-        <tr><th>Confirmação</th><td><input type="text" disabled="disabled" value="********"/></td></tr>
     </table>
 
     {{ form.confirma }}

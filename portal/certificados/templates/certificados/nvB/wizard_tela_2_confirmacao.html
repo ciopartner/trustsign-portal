@@ -11,7 +11,6 @@
 
     <table>
         {% include 'certificados/includes/dados_produto.html' %}
-        <tr><th>Doc Identif. c/ Foto</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_id.name }}"/></td></tr>
     </table>
 
     <h3>Dados de Callback</h3>
@@ -21,10 +20,13 @@
         </td></tr>
         <tr><th>e-mail Corporativo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_email }}"/></td></tr>
         <tr><th>Telefone fixo</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_telefone }}"/></td></tr>
-        <tr><th>Tamanho da Chave</th><td><input type="text" disabled="disabled" value="2048 bits"/></td></tr>
-        <tr><th>Senha</th><td><input type="text" disabled="disabled" value="********"/></td></tr>
+        <tr><th>Observação:</th><td><input type="text" disabled="disabled" value="{{ dados_form1.callback_observacao }}"/></td></tr>
+        <tr><th>Doc Identif. c/ Foto</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_id.name }}"/></td></tr>
+        <tr><th>Senha p/ Revogação*</th><td><input type="text" disabled="disabled" value="********"/></td></tr>
         <tr><th>Confirmação</th><td><input type="text" disabled="disabled" value="********"/></td></tr>
+
     </table>
+    <i class="pull-right">Sem esta senha será impossivel revogar o certificado no futuro</i>
 
     {{ form.confirma }}
 {% endblock %}
