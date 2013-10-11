@@ -146,7 +146,8 @@ class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
                   'emission_articles_of_incorporation', 'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
 
-class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
+class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin,
+                           ValidateEmissaoValidacaoEmailMultiplo):
     REQUIRED_FIELDS = ('emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr', 'emission_articles_of_incorporation',
                        'emission_address_proof', 'emission_ccsa', 'emission_evcr')
