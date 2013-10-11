@@ -649,6 +649,9 @@ class RevogacaoView(CreateView):
                 raise Http404()
         return self._voucher
 
+    def get_success_url(self):
+        return reverse('certificado_revogado_sucesso')
+
     def form_valid(self, form):
         voucher = self.get_voucher()
         revogacao = self.object = form.save(commit=False)
@@ -707,6 +710,9 @@ class ReemissaoView(UpdateView):
             except Voucher.DoesNotExist:
                 raise Http404()
         return self._voucher
+
+    def get_success_url(self):
+        return reverse('certificado_reemitido_sucesso')
 
     def form_valid(self, form):
         emissao = self.object = form.save(commit=False)
