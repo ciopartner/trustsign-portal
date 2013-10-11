@@ -7,16 +7,16 @@
 {% endblock %}
 
 {% block one_row %}
-    <div class="escolha-voucher">
+    <div class="fix-row-margin escolha-voucher">
         <h3>Escolha o produto disponível e a ação desejada</h3>
-        <table>
+        <table class="table table-bordered table-striped">
             <tr>
-                <th>Produto</th>
+                <th class="large">Produto</th>
                 <th>Linha</th>
                 <th>Validade</th>
                 <th>Saldo</th>
                 <th>Expira em</th>
-                <th>Ação</th>
+                <th></th>
             </tr>
             {% for voucher in vouchers %}
                 <tr>
@@ -27,15 +27,29 @@
                     <td>{{ voucher.ssl_valid_to|date:"d/m/Y" }}</td>
                     <td>
                     {% with emissao=voucher.emissao %}
+
+
                         {% if not emissao %}
-                            <a href="{{ voucher.get_emissao_url }}">Emitir</a>
+                            <a class="btn btn-inverse btn-orange btn-block no-uppercase" href="{{ voucher.get_emissao_url }}">Emitir</a>
                         {% elif emissao.em_processamento %}
                             Em processamento
                         {% elif emissao.emitido %}
-                            <a href="{{ voucher.get_reemissao_url }}">Reemitir</a>,
-                            <a href="{{ voucher.get_revogacao_url }}">Revogar</a>,
-                            <a href="#">HTML Selo</a>, {# TODO: arrumar url html selo #}
-                            <a href="#">Chave Pública</a> {# TODO: arrumar url public key #}
+
+                            <div class="btn-group btn-block">
+                                <button class="btn dropdown-toggle btn-block btn-inverse btn-orange no-uppercase" data-toggle="dropdown">Ação <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
+                                    <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>
+                                    <li><a href="#">HTML Selo</a></li>
+                                    <li><a href="#">Chave Pública</a></li>
+                                </ul>
+                            </div>
+
+
+{#                            <a class="btn btn-primary" href="{{ voucher.get_reemissao_url }}">Reemitir</a>#}
+{#                            <a class="btn btn-danger" href="{{ voucher.get_revogacao_url }}">Revogar</a>#}
+{#                            <a href="#">HTML Selo</a>  {# TODO: arrumar url html selo #}
+{#                            <a href="#">Chave Pública</a> {# TODO: arrumar url public key #}
                         {% endif %}
                     {% endwith %}
                     </td>

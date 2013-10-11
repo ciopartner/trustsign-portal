@@ -1,4 +1,4 @@
-.emissao table{
+/*.emissao table{
     width: 100%;
 }
 
@@ -10,7 +10,7 @@
 .emissao td{
     text-align: right;
 }
-
+*/
 .emissao input[type=text]{
     width: 270px;
 }
@@ -40,6 +40,7 @@ ul.errorlist{
     font-weight: bold;
 }
 
+/*
 .escolha-voucher table{
     width: 100%;
     border: 1px solid #bbb;
@@ -54,7 +55,11 @@ ul.errorlist{
 .escolha-voucher tr:nth-child(even) td{
     background: #efefef;
 }
+*/
 
+.escolha-voucher .large{
+    width: 200px;
+}
 #windowEscolheEmail td{
     text-align: left;
 }
