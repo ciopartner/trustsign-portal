@@ -52,8 +52,14 @@ urlpatterns = patterns(
     url(r'^escolha-voucher/$', login_required(EscolhaVoucherView.as_view()), name='escolha-voucher'),
     url(r'^vouchers-pendentes/$', login_required(VouchersPendentesListView.as_view()), name='voucher-pendentes-lista'),
     url(r'^aprova-vouchers-pendente/(?P<crm_hash>\w+)/$', login_required(AprovaVoucherPendenteView.as_view()), name='aprova-voucher-pendente'),
-    url(r'^emissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/sucesso.html'),
+    url(r'^emissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/emissao_sucesso.html'),
         name='certificado_emitido_sucesso'),
+
+    url(r'^revogacao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/revogacao_sucesso.html'),
+        name='certificado_revogado_sucesso'),
+
+    url(r'^reemissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/reemissao_sucesso.html'),
+        name='certificado_reemitido_sucesso'),
 
 )
 
