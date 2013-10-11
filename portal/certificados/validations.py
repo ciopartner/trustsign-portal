@@ -56,12 +56,17 @@ class ValidateEmissaoUrlMixin(object):
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
             raise self.ValidationError(get_erro_message(e.ERRO_VOUCHER_NAO_ENCONTRADO))
+        
+        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC):
+            return valor  # MDC não usa a emission_url
+        
         if voucher.ssl_product == Voucher.PRODUTO_SSL_WILDCARD:
             if not valor.startswith('*.'):
                 raise self.ValidationError('A URL deve iniciar com "*.". Ex.: *.exemplo.com.br')
         else:
             if '*' in valor:
                 raise self.ValidationError('A URL não pode conter *.')
+        
         razao_social = get_razao_social_dominio(valor)
         if not razao_social or not comparacao_fuzzy(razao_social, voucher.customer_companyname):
             if fields.get('emission_assignment_letter'):
