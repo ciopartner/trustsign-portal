@@ -186,6 +186,14 @@ class Voucher(Model):
     def get_revogacao_url(self):
         return 'form-revogacao', (), {'crm_hash': self.crm_hash}
 
+    @permalink
+    def get_sealcode_url(self):
+        return 'codigo-selo', (), {'crm_hash': self.crm_hash}
+
+    @permalink
+    def get_publickey_url(self):
+        return 'chave-publica', (), {'crm_hash': self.crm_hash}
+
 # class Pedido(Model):  # TODO: Substituir por abstract do oscar
 #     knu_html = TextField()
 #     crm_envio_data = DateTimeField()

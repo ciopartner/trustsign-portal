@@ -797,3 +797,7 @@ class CodigoSeloView(TemplateView):
 
     def get_crm_hash(self):
         return self.kwargs.get('crm_hash')
+
+
+class ChavePublicaView(CodigoSeloView):
+    template_name = 'certificados/chave_publica.html'
