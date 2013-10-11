@@ -12,7 +12,7 @@ from portal.certificados.models import Voucher
 from portal.certificados.views import EmissaoNv1WizardView, EmissaoNv3WizardView, EscolhaVoucherView, \
     EmissaoNv2WizardView, EmissaoNv4WizardView, EmissaoNvAWizardView, EmissaoNvBWizardView, RevogacaoView, \
     ReemissaoView, RevisaoEmissaoNv1WizardView, RevisaoEmissaoNv2WizardView, RevisaoEmissaoNv3WizardView, \
-    RevisaoEmissaoNv4WizardView, RevisaoEmissaoNvAWizardView, RevisaoEmissaoNvBWizardView, VouchersPendentesListView, AprovaVoucherPendenteView
+    RevisaoEmissaoNv4WizardView, RevisaoEmissaoNvAWizardView, RevisaoEmissaoNvBWizardView, VouchersPendentesListView, AprovaVoucherPendenteView, CodigoSeloView
 
 FORMS_NV1 = [('tela-1', EmissaoNv1Tela1Form), ('tela-2', EmissaoNv1Tela2Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
 FORMS_NV2 = [('tela-1', EmissaoNv2Tela1Form), ('tela-2', EmissaoNv2Tela2Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
@@ -52,6 +52,7 @@ urlpatterns = patterns(
     url(r'^escolha-voucher/$', login_required(EscolhaVoucherView.as_view()), name='escolha-voucher'),
     url(r'^vouchers-pendentes/$', login_required(VouchersPendentesListView.as_view()), name='voucher-pendentes-lista'),
     url(r'^aprova-vouchers-pendente/(?P<crm_hash>\w+)/$', login_required(AprovaVoucherPendenteView.as_view()), name='aprova-voucher-pendente'),
+    url(r'^codigo-do-selo/(?P<crm_hash>\w+)/', login_required(CodigoSeloView.as_view()), name='codigo-selo'),
     url(r'^emissao-de-certificado-realizada/$', TemplateView.as_view(template_name='certificados/emissao_sucesso.html'),
         name='certificado_emitido_sucesso'),
 

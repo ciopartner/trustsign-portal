@@ -772,3 +772,28 @@ class AprovaVoucherPendenteView(TemplateView):
         emissao.save()
 
         return HttpResponseRedirect(reverse('voucher-pendentes-lista'))
+
+
+class CodigoSeloView(TemplateView):
+    template_name = 'certificados/codigo_selo.html'
+    _voucher = None
+
+    def get_context_data(self, **kwargs):
+        context = super(CodigoSeloView, self).get_context_data(**kwargs)
+        context.update({
+            'voucher': self.get_voucher()
+        })
+        return context
+
+    def get_voucher(self):
+        if not self._voucher:
+            try:
+                # só é para retornar voucher que já foram emitidos
+                self._voucher = Voucher.objects.select_related('emissao').filter(emissao__isnull=False).get(
+                    crm_hash=self.get_crm_hash())
+            except Voucher.DoesNotExist:
+                raise Http404()
+        return self._voucher
+
+    def get_crm_hash(self):
+        return self.kwargs.get('crm_hash')
