@@ -137,6 +137,9 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         log.info('request DATA: %s ' % unicode(request.DATA))
         log.info('request FILES: %s ' % unicode(request.FILES))
 
+        if voucher.order_canceled_date is not None:
+            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+
         if not voucher.customer_registration_status:
             return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
 
@@ -186,6 +189,9 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         except Emissao.DoesNotExist:
             return erro_rest(('---', u'Emissão não encontrada'))  # TODO: corrigir codigo erro
 
+        if emissao.voucher.order_canceled_date is not None:
+            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
             return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
 
@@ -227,6 +233,9 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
             return erro_rest(('---', u'Emissão não encontrada'))  # TODO corrigir codigo erro
+
+        if emissao.voucher.order_canceled_date is not None:
+            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
 
         if emissao.emission_url != emission_url:
             return erro_rest(('---', 'emission_url: valor não bate com a url de emissão'))  # TODO corrigir codigo erro
@@ -293,6 +302,40 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
                             headers=headers)
 
         return self.error_response(serializer)
+
+
+class VoucherCancelAPIView(GenericAPIView):
+    authentication_classes = [UserPasswordAuthentication]
+    renderer_classes = [UnicodeJSONRenderer]
+    serializer_class = VoucherSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            voucher = Voucher.objects.select_related('emissao').get(crm_hash=self.request.DATA.get('crm_hash'))
+        except Voucher.DoesNotExist:
+            return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
+                              erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
+
+        if voucher.order_canceled_date is not None:
+            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+
+        if voucher.customer_cnpj != self.request.DATA.get('customer_cnpj'):
+            return erro_rest(('---', 'CNPJ informado não bateu com o do voucher'))  # TODO: corrigir codigo erro
+
+        try:
+            emissao = voucher.emissao
+            if emissao.emission_status != Emissao.STATUS_REVOGADO:
+                emissao.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
+                emissao.save()
+        except Emissao.DoesNotExist:
+            pass
+
+        voucher.order_canceled_date = now()
+        voucher.order_canceled_reason = self.request.DATA.get('order_cancel_reason')
+
+        voucher.save()
+
+        return Response({}, status=status.HTTP_200_OK)
 
 
 class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
@@ -368,6 +411,10 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
             serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
             voucher = serializer.get_voucher()
+
+            if voucher.order_canceled_date is not None:
+                return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+
             if not voucher.customer_registration_status:
                 return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
 

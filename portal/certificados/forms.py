@@ -5,7 +5,7 @@ from libs.comodo import get_emails_validacao
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
     ValidateEmissaoValidacaoEmailMultiplo
-from portal.ferramentas.utils import decode_csr, verifica_razaosocial_dominio, compare_csr
+from portal.ferramentas.utils import decode_csr, verifica_razaosocial_dominio, compare_csr, comparacao_fuzzy
 from django.core.exceptions import ValidationError
 
 
@@ -47,15 +47,23 @@ class EmissaoModelForm(ModelForm):
 
     def precisa_carta_cessao(self):
         if self._precisa_carta_cessao is None:
-            dominio = self.initial.get('emission_url')
-            if dominio:
-                voucher = self.get_voucher()
-                self._precisa_carta_cessao = not verifica_razaosocial_dominio(
-                    voucher.customer_companyname,
-                    dominio
-                )
+            voucher = self.get_voucher()
+
+            #TODO: Como verificar se precisa carta de cessão no MDC?
+
+            if voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
+                csr = self.get_csr_decoded(self.initial.get('emission_csr'))
+                self._precisa_carta_cessao = not comparacao_fuzzy(csr.get('CN'), voucher.customer_companyname)
             else:
-                self._precisa_carta_cessao = False
+                dominio = self.initial.get('emission_url')
+
+                if dominio:
+                    self._precisa_carta_cessao = not verifica_razaosocial_dominio(
+                        voucher.customer_companyname,
+                        dominio
+                    )
+                else:
+                    self._precisa_carta_cessao = False
 
         return self._precisa_carta_cessao
 
