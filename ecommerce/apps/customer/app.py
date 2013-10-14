@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
+from django.views import generic
+
+from oscar.apps.customer import app
+
+from apps.customer import views
+
+
+class CustomerApplication(app.CustomerApplication):        
+    order_cancel_view = views.OrderCancelView    
+    order_cancel_return_view = views.OrderCancelReturnView    
+
+    def get_urls(self): 
+        urlpatterns = super(CustomerApplication, self).get_urls()        
+        urlpatterns += patterns('', 
+            url(r'^orders/(?P<order_number>[\w-]+)/cancel/$',
+                login_required(self.order_cancel_view.as_view()),
+                name='order-cancel'),            
+            url(r'^orders/cancel/return/$',
+                self.order_cancel_return_view.as_view(),
+                name='order-cancel-return'),   
+            )        
+             
+        return self.post_process_urls(urlpatterns)
+
+application = CustomerApplication()
