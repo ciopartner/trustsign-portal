@@ -1,0 +1,41 @@
+body{
+    background: #FFFFFF;
+}
+
+.page{
+    background: inherit;
+    border-right: 0;
+    border: none;
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+        -ms-box-shadow: none;
+         -o-box-shadow: none;
+    box-shadow: none;
+}
+
+.page_inner{
+    padding: 0;
+    margin-top: 20px;
+}
+
+.price_color{
+    font-size: 10px !important;
+}
+
+.login_form form, .register_form form{
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+        -ms-box-shadow: none;
+         -o-box-shadow: none;
+            box-shadow: none;
+    border: 0;
+    border-radius: 0;
+    background: #f7f7f7;
+}
+.register_form.span8{
+    margin-left: 0.2%;
+    width: 67.8%;
+}
+.register_form form{
+    background: #f0f0f0;
+}

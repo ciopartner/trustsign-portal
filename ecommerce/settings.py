@@ -199,3 +199,11 @@ DATABASES = {'default': DEFAULT_DATABASE}
 # COBREBEM
 COBREBEM_HOST = "https://teste.aprovafacil.com/cgi-bin/APFW"
 COBREBEM_USER = "trustsign"
+
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'AKIAJB23EUFD5S4FY76Q'
+EMAIL_HOST_PASSWORD = 'AjfrHH5LIVaKku5iBMkbBs5CWM2IK0Z6ZhiXWKVQHHHV'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = OSCAR_FROM_EMAIL = 'alessandro.reichert@ciopartner.com.br'

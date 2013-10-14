@@ -14,9 +14,13 @@
     background: linear-gradient(to right, #dbe8f3 0%,#c3d6e5 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbe8f3', endColorstr='#c3d6e5',GradientType=1 );
     display: inline-block;
-    font-size: 12px;
+    font-size: 10px;
     text-align: center;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+         -o-box-sizing: border-box;
+            box-sizing: border-box;
     padding: 0 10px 0 35px;
     height: 45px;
     line-height: 45px;
@@ -25,7 +29,6 @@
     text-transform: uppercase;
     color: #4f4949;
 }
-
 
 .progress-bar li:first-child{
     padding: 0 10px;

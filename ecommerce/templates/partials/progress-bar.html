@@ -1,9 +1,14 @@
 <nav id="checkoutnav" class="hidden-phone">
     <div class="row-fluid">
+
+        {% if botaoComprar %}
         <div class="span9">
+        {% else %}
+        <div class="span12">
+        {% endif %}
             <ul class="progress-bar progress-bar4">
                 <li {% if carrinho %}class="active"{% endif %}>
-                    Carrinho de compras
+                    Carrinho
                 </li>
                 <li {% if identificacao %}class="active"{% endif %}>
                     Identificação

@@ -16,21 +16,27 @@
 
 {% block layout %}
 <div id="layout">
-    <header class="header">
-        <div class="container-fluid">
-            <div class="header-content">
-                <div>
-                    {% include "partials/brand.html" %}
-                </div>
-                <div>
-                    <p><a href="https://www.verisign.com.au" target="_blank" title="https://www.verisign.com.au"><i class="verisign"></i></a></p>
-                    <p>{% trans "We accept" %} <br/> <i class="credit-cards"></i></p>
-                </div>
-             </div>
-        </div>
-        {% block checkout-nav %}
-        {% endblock %}
-    </header>
+{#    <header class="header">#}
+{#        <div class="container-fluid">#}
+{#            <div class="header-content">#}
+{#                <div>#}
+{#                    {% include "partials/brand.html" %}#}
+{#                </div>#}
+{#                <div>#}
+{#                    <p><a href="https://www.verisign.com.au" target="_blank" title="https://www.verisign.com.au"><i class="verisign"></i></a></p>#}
+{#                    <p>{% trans "We accept" %} <br/> <i class="credit-cards"></i></p>#}
+{#                </div>#}
+{#             </div>#}
+{#        </div>#}
+{#        {% block checkout-nav %}#}
+{#        {% endblock %}#}
+{#    </header>#}
+
+    {% include "partials/1-header-logo.html" %}
+    {% include "partials/2-header-atendimento.html" %}
+    {% include "partials/3-header-produtos.html" %}
+
+    {% include "partials/progress-bar.html"  with pagamento=True %}
 
     <div class="page">
         <div class="container-fluid">

@@ -1524,6 +1524,7 @@ img.size-thumbnail{
 .icon-green-lock, .icon-digital, .icon-pki{
 	background: url(../img/icons/sprites.png) no-repeat;
     vertical-align: middle;
+    display: inline-block;
 }
 
 
@@ -1967,4 +1968,15 @@ h3.title{
     width: 614px;
     float: right;
     margin-right: -8px;
+}
+
+input[type=text], input[type=password]{
+    border-color: #acadb1;
+    border-radius: 0;
+}
+
+.panel-group .panel-title a{
+    background: #f7f7f7;
+    padding: 20px;
+    display: block;
 }
