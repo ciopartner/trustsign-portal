@@ -115,6 +115,7 @@ class Voucher(Model):
     order_item_value = DecimalField(decimal_places=2, max_digits=9)
     order_channel = CharField(max_length=64, choices=ORDERCHANNEL_CHOICES)
     order_canceled_date = DateTimeField(blank=True, null=True)
+    order_canceled_reason = TextField(blank=True, null=True)
 
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
