@@ -5,7 +5,7 @@ import os
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from portal.certificados.models import Emissao
+from portal.certificados.models import Emissao, Voucher
 from portal.certificados.tests import CSR_SAN, CSR_SSL, CSR_WILDCARD, CAMPOS_GET_VOUCHER_DATA, CSR_MDC
 
 
@@ -14,9 +14,11 @@ class VoucherAPIViewTestCase(TestCase):
     fixtures = ['test-users.json', 'test-vouchers.json']
 
     def test_get_voucher_data(self):
-        r = self.client.get(reverse('api_get_voucher_data'), {'crm_hash': 'test-SSL-emitido',
-                                                              'username': 'admin',
-                                                              'password': 'admin'})
+        r = self.client.get(reverse('api_get_voucher_data'), {
+            'crm_hash': 'test-SSL-emitido',
+            'username': 'admin',
+            'password': 'admin'
+        })
 
         self.assertEquals(r.status_code, 200, 'Status Code != 200')
 
@@ -32,6 +34,40 @@ class VoucherAPIViewTestCase(TestCase):
         self.assertIn(data_product['ssl_line'].lower(), ('basico', 'pro', 'prime'))
         self.assertIn(data_product['ssl_term'].lower(), ('1 ano', '2 anos', '3 anos'))
         self.assertEquals(data_product['ssl_product'].lower(), 'ssl')
+
+    def test_create_voucher(self):
+        r = self.client.post(reverse('api_ssl_voucher_create'), {
+            'username': 'admin',
+            'password': 'admin',
+            'crm_hash': 'testando-create',
+            'ssl_code': '100010',
+            'ssl_product': 'ssl',
+            'ssl_line': 'basic',
+            'ssl_term': '1year',
+            'order_date': '13/10/2013 14:35',
+            'order_channel': 'inside-sales',
+            'order_item_value': '200.99',
+            'customer_companyname': 'Empresa de Testes',
+            'customer_cnpj': '99.913.392/0001-93',
+            'customer_address1': 'rua de testes',
+            'customer_city': 'São Paulo',
+            'customer_state': 'SP',
+            'customer_country': 'BR',
+            'customer_zip': '04050-000'
+        })
+
+        data = json.loads(r.content)
+        if r.status_code != 200:
+            if r.status_code == 400:
+                msg = '; '.join([e['message'] for e in data['errors']])
+            else:
+                msg = 'Status code != 200'
+            self.fail(msg.encode('utf8'))
+
+        try:
+            Voucher.objects.get(crm_hash='testando-create')
+        except Voucher.DoesNotExist:
+            self.fail('não criou o voucher')
 
     def test_csr_url_validate_mdc(self):
         r = self.client.post(reverse('api_ssl_validate_url_csr'), {

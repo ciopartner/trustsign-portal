@@ -57,8 +57,9 @@ class ValidateEmissaoUrlMixin(object):
         except Voucher.DoesNotExist:
             raise self.ValidationError(get_erro_message(e.ERRO_VOUCHER_NAO_ENCONTRADO))
         
-        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC):
-            return valor  # MDC não usa a emission_url
+        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_CODE_SIGNING,
+                                   Voucher.PRODUTO_JRE, Voucher.PRODUTO_SMIME):
+            return valor  # MDC, CS, JRE, SMIME não usa a emission_url
         
         if voucher.ssl_product == Voucher.PRODUTO_SSL_WILDCARD:
             if not valor.startswith('*.'):
@@ -95,7 +96,8 @@ class ValidateEmissaoCSRMixin(object):
         except Voucher.DoesNotExist:
             raise self.ValidationError()
 
-        if csr.get('CN') != url and voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC):
+        if csr.get('CN') != url and voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC,
+                                                                Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
             raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
 
         # if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
@@ -112,6 +114,14 @@ class ValidateEmissaoCSRMixin(object):
         if voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_EV_MDC):
             if dominios:
                 raise self.ValidationError('Este produto possui somente um domínio')
+
+            if voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE) and \
+                    comparacao_fuzzy(csr.get('CN'), voucher.customer_companyname):
+                if fields.get('emission_assignment_letter'):
+                    self.validacao_manual = True
+                else:
+                    if self.validacao:
+                        self.validacao_carta_cessao_necessaria = True
         else:
 
             #if len(dominios) > voucher.ssl_domains_qty:

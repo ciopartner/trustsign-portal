@@ -295,6 +295,16 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
         return self.error_response(serializer)
 
 
+class VoucherCancelAPIView(GenericAPIView):
+    authentication_classes = [UserPasswordAuthentication]
+    renderer_classes = [UnicodeJSONRenderer]
+    serializer_class = VoucherSerializer
+
+    def post(self, request, *args, **kwargs):
+
+        return self.error
+
+
 class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
     authentication_classes = [UserPasswordAuthentication]
     renderer_classes = [UnicodeJSONRenderer]

@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
     ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo
-from portal.ferramentas.utils import decode_csr, compare_csr, verifica_razaosocial_dominio
+from portal.ferramentas.utils import decode_csr, compare_csr, verifica_razaosocial_dominio, comparacao_fuzzy
 
 
 class VoucherSerializer(ModelSerializer):
@@ -91,16 +91,22 @@ class EmissaoModelSerializer(ModelSerializer):
         return self.REQUIRED_FIELDS
 
     def precisa_carta_cessao(self):
+        #TODO: Como verificar se precisa carta de cessão no MDC?
         if self._precisa_carta_cessao is None:
-            dominio = self.init_data.get('emission_url')
-            if dominio:
-                voucher = self.get_voucher()
-                self._precisa_carta_cessao = not verifica_razaosocial_dominio(
-                    voucher.customer_companyname,
-                    dominio
-                )
+            voucher = self.get_voucher()
+
+            if voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
+                csr = self.get_csr_decoded(self.init_data.get('emission_csr'))
+                self._precisa_carta_cessao = not comparacao_fuzzy(csr.get('CN'), voucher.customer_companyname)
             else:
-                self._precisa_carta_cessao = False
+                dominio = self.init_data.get('emission_url')
+                if dominio:
+                    self._precisa_carta_cessao = not verifica_razaosocial_dominio(
+                        voucher.customer_companyname,
+                        dominio
+                    )
+                else:
+                    self._precisa_carta_cessao = False
 
         return self._precisa_carta_cessao
 

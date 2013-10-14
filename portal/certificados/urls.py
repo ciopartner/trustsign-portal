@@ -24,12 +24,13 @@ FORMS_NVB = [('tela-1', EmissaoNvBTela1Form), ('tela-confirmacao', EmissaoConfir
 urlpatterns = patterns(
     '',
     url(r'^api/v1/ssl-apply/$', csrf_exempt(views.EmissaoAPIView.as_view()), name='api_ssl_apply'),
-    url(r'^api/v1/ssl-replace/$', csrf_exempt(views.ReemissaoAPIView.as_view())),
-    url(r'^api/v1/ssl-revoke/$', csrf_exempt(views.RevogacaoAPIView.as_view())),
+    url(r'^api/v1/ssl-replace/$', csrf_exempt(views.ReemissaoAPIView.as_view()), name='api_ssl_replace'),
+    url(r'^api/v1/ssl-revoke/$', csrf_exempt(views.RevogacaoAPIView.as_view()), name='api_ssl_revoke'),
     url(r'^api/v1/ssl-validate-url-csr/$', csrf_exempt(views.ValidaUrlCSRAPIView.as_view()), name='api_ssl_validate_url_csr'),
-    url(r'^api/v1/ssl-voucher-create/$', csrf_exempt(views.VoucherCreateAPIView.as_view())),
+    url(r'^api/v1/ssl-voucher-create/$', csrf_exempt(views.VoucherCreateAPIView.as_view()), name='api_ssl_voucher_create'),
+    url(r'^api/v1/ssl-voucher-cancel/$', csrf_exempt(views.VoucherCancelAPIView.as_view()), name='api_ssl_voucher_cancel'),
     url(r'^api/v1/get-voucher-data/$', csrf_exempt(views.VoucherAPIView.as_view()), name='api_get_voucher_data'),
-    url(r'^api/v1/get-email-whois/$', csrf_exempt(views.EmailWhoisAPIView.as_view())),
+    url(r'^api/v1/get-email-whois/$', csrf_exempt(views.EmailWhoisAPIView.as_view()), name='api_get_email_whois'),
 
     url(r'^emissao/(%s|%s)/(?P<crm_hash>\w+)/$' % (Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD), login_required(EmissaoNv1WizardView.as_view(form_list=FORMS_NV1)), name='form-emissao-nv1'),
     url(r'^emissao/(%s|%s)/(?P<crm_hash>\w+)/$' % (Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC), login_required(EmissaoNv2WizardView.as_view(form_list=FORMS_NV2)), name='form-emissao-nv2'),
