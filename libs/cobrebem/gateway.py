@@ -2,7 +2,6 @@
 
 import urllib
 import requests
-import pdb
 import xml.etree.ElementTree as ET
 
 # Methods

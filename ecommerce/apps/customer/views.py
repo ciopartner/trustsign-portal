@@ -8,7 +8,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import RedirectView, View
 
-from apps.cobrebem.facade import Facade
+from libs.cobrebem.facade import Facade
 
 from oscar.apps.customer import views
 from oscar.apps.payment.models import Source, Transaction

@@ -4,7 +4,7 @@ from django import http
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from apps.cobrebem.facade import Facade
+from libs.cobrebem.facade import Facade
 
 from oscar.apps.checkout import views
 from oscar.apps.payment.forms import BankcardForm

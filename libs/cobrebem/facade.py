@@ -2,8 +2,8 @@
 
 from django.conf import settings
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
-from apps.cobrebem.exceptions import UnableToCancelTransaction
-from apps.cobrebem import gateway
+from libs.cobrebem.exceptions import UnableToCancelTransaction
+from libs.cobrebem import gateway
 
 
 class Facade(object):

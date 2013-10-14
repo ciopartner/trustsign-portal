@@ -5,7 +5,7 @@ from django.views import generic
 
 from oscar.apps.customer import app
 
-from apps.customer import views
+from ecommerce.apps.customer import views
 
 
 class CustomerApplication(app.CustomerApplication):        

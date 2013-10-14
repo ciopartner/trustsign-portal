@@ -157,8 +157,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    'apps.customer',
-    'website',
+    #'ecommerce.apps.customer',
+    #'ecommerce.apps.checkout',
+    #'website',
 
     'south',
     'compressor',
@@ -166,7 +167,8 @@ INSTALLED_APPS = [
 
 # APPS FOR OSCAR
 from oscar import get_core_apps
-INSTALLED_APPS += get_core_apps()
+
+INSTALLED_APPS += get_core_apps(['ecommerce.apps.checkout', 'ecommerce.apps.customer'])
 
 # TODO: Antes de ir para produção isso precisa ser alterado para um novo engine
 HAYSTACK_CONNECTIONS = {
@@ -194,3 +196,6 @@ from settings_global import *
 DEFAULT_DATABASE = DATABASES.get('common')
 DATABASES = {'default': DEFAULT_DATABASE}
 
+# COBREBEM
+COBREBEM_HOST = "https://teste.aprovafacil.com/cgi-bin/APFW"
+COBREBEM_USER = "trustsign"
