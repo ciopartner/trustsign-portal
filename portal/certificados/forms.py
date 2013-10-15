@@ -257,7 +257,7 @@ class RevogacaoForm(ModelForm):
         super(RevogacaoForm, self).__init__(**kwargs)
 
     def clean_emission_url(self):
-        emission_url = self.cleaned_data['emission_url']
+        #emission_url = self.cleaned_data['emission_url']
 
         emissao = self.voucher.emissao
         ## Comentada a validação abaixo por acordo com a TQI
