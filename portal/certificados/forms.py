@@ -256,15 +256,15 @@ class RevogacaoForm(ModelForm):
         self.voucher = voucher
         super(RevogacaoForm, self).__init__(**kwargs)
 
-    def clean_emission_url(self):
-        #emission_url = self.cleaned_data['emission_url']
-
-        emissao = self.voucher.emissao
-        ## Comentada a validação abaixo por acordo com a TQI
-        #if emission_url != emissao.emission_url:
-        #    raise ValidationError('Valor não bate com a url de emissão')
-
-        return emission_url
+    #def clean_emission_url(self):
+    #    emission_url = self.cleaned_data['emission_url']
+    #
+    #    emissao = self.voucher.emissao
+    #    # Comentada a validação abaixo por acordo com a TQI
+    #    if emission_url != emissao.emission_url:
+    #        raise ValidationError('Valor não bate com a url de emissão')
+    #
+    #    return emission_url
 
 
 class ReemissaoForm(EmissaoModelForm, EmissaoCallbackForm):
