@@ -167,6 +167,10 @@ table.ssltab > thead > tr > th:nth-child(1){
 	background-image: linear-gradient(to top, rgba(42,42,41,1), rgba(97,97,97,1));
 }
 
+table.ssltab.comptab > thead > tr > th:nth-child(1){
+    width: 150px;
+}
+
 table.ssltab > thead > tr > th:nth-child(2){
 	background-image: -webkit-linear-gradient(bottom,rgba(1,84,151,1),rgba(49,116,171,1));
 	background-image: -moz-linear-gradient(bottom, rgba(1,84,151,1),rgba(49,116,171,1));
