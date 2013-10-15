@@ -8,6 +8,14 @@ body {
     font-size: 11px;
 }
 
+h4{
+    font-size: 90%;
+    line-height: 1.2;
+}
+h3{
+    line-height: 1.2;
+}
+
 .breadcrumb {
     padding: 0 0;
     background-color: #fff;
@@ -213,6 +221,10 @@ img.size-thumbnail{
 }
 .lm5{
 	margin-left:5px;
+}
+
+.lm10{
+	margin-left:10px;
 }
 
 .lm20{
@@ -1173,6 +1185,7 @@ img.size-thumbnail{
 .certificado-digital h2{
     background: #f2f2f2;
     padding: 10px;
+    height: 30px;
 }
 
 .productbgw{
@@ -1258,6 +1271,8 @@ img.size-thumbnail{
     line-height: 1.2;
     color: #7B7B7B;
     font-size: 60%;
+    width: 309px;
+    text-align: justify;
 }
 .footer-info p{
     margin-bottom: 0;
@@ -1310,6 +1325,13 @@ img.size-thumbnail{
 	width: calc(20% - 2px);
 	float:left;
     margin-right: 2px;
+    padding: 10px;
+    height: 120px;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+         -o-box-sizing: border-box;
+            box-sizing: border-box;
 }
 .product-tabs:nth-child(odd){
 	background-color:#F7F7F7;
@@ -1321,10 +1343,8 @@ img.size-thumbnail{
 .product-tabs > h3{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#4B4B4B;
-	font-size:120%;
+	font-size:110%;
     line-height: 140%;
-    height: 40px;
-    padding: 10px 10px;
 }
 .product-tabs > h4{
 	font-family:Tahoma, Geneva, sans-serif;

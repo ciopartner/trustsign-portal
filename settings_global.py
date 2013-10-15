@@ -234,14 +234,20 @@ DATABASES = {
 ENVIRONMENT = os.getenv('TRUSTSIGN_ENVIRONMENT', 'DEV')
 if ENVIRONMENT == 'DEV':
     DEBUG = True
+    URL_PORTAL = 'http://localhost:8000/'
+    URL_ECOMMERCE = 'http://localhost:9000/'
     # Para que haja compartilhamento de sessions...
     SESSION_COOKIE_DOMAIN = 'localhost'
 elif ENVIRONMENT == 'QAS':
     DEBUG = True
+    URL_PORTAL = 'http://www.trustsign.ciopartner.com.br/'
+    URL_ECOMMERCE = 'http://ecommerce.trustsign.ciopartner.com.br/'
     # Para que haja compartilhamento de sessions...
     SESSION_COOKIE_DOMAIN = 'ciopartner.com.br'
 elif ENVIRONMENT == 'PRD':
     DEBUG = False
+    URL_PORTAL = 'http://www.trustsign.com.br/'
+    URL_ECOMMERCE = 'http://ecommerce.trustsign.com.br/'
     # Para que haja compartilhamento de sessions...
     SESSION_COOKIE_DOMAIN = 'trustsign.com.br'
 

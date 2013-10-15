@@ -46,12 +46,14 @@
             <h2>Lançamento em breve!</h2>
         {% endeditable %}
 
-        {% editable page.product.youtube_url %}
-            <div style="text-align: center;">
-                <iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390"
+        <div class="youtube-container">
+            {% editable page.product.youtube_url %}
+                <iframe title="YouTube video player" class="youtube-player" type="text/html" width="720" height="390"
                         src="{{ page.product.youtube_url }}?rel=0" frameborder="0" allowFullScreen></iframe>
-            </div>
-        {% endeditable %}
+            {% endeditable %}
+
+            {% include 'includes/sharebar.html' %}
+        </div>
 
         <br><br>
 
@@ -68,7 +70,7 @@
                     {% endeditable %}
                     {% editable tab.tab_short_description %}
                         <h4>{{ tab.tab_short_description }}</h4>
-                        <a class="btn btn-large" style="color: #555;" href="#{{ tab.tab_title|slugify }}" data-toggle="tab">Entenda
+                        <a class="btn" style="color: #555;" href="#{{ tab.tab_title|slugify }}" data-toggle="tab">Entenda
                         </a>
                     {% endeditable %}
                 </aside>
