@@ -234,8 +234,9 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
     def post(self, request, *args, **kwargs):
         emission_url = self.request.DATA.get('emission_url')
 
-        if not emission_url:
-            return erro_rest(('---', 'emission_url: campo obrigatório'))  # TODO corrigir codigo erro
+        # Comentado por ALR - campo nao mais obrigatorio para revogar
+        #if not emission_url:
+        #    return erro_rest(('---', 'emission_url: campo obrigatório'))  # TODO corrigir codigo erro
 
         try:
             emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.request.DATA.get('crm_hash'))
@@ -245,8 +246,9 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         if emissao.voucher.order_canceled_date is not None:
             return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
 
-        if emissao.emission_url != emission_url:
-            return erro_rest(('---', 'emission_url: valor não bate com a url de emissão'))  # TODO corrigir codigo erro
+        # Comentado por ALR - campo nao mais obrigatorio para revogar
+        #if emissao.emission_url != emission_url:
+        #    return erro_rest(('---', 'emission_url: valor não bate com a url de emissão'))  # TODO corrigir codigo erro
 
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
             return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
