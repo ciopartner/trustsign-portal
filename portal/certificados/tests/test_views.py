@@ -127,7 +127,7 @@ class VoucherAPIViewTestCase(TestCase):
             'username': 'admin',
             'password': 'admin',
             'crm_hash': 'test-MDC',
-            'emission_url': 'aaaaaaaaa',
+            'emission_urls': 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br',
             'emission_csr': CSR_MDC,
             'emission_server_type': 1,
             'emission_dcv_emails': 'admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br',
@@ -144,4 +144,4 @@ class VoucherAPIViewTestCase(TestCase):
         except Emissao.DoesNotExist:
             self.fail('Não criou a emissão')
 
-        self.assertEqual(emissao.emission_fqdns, 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br mobile.grupocrm.com.br')
+        self.assertEqual(emissao.emission_urls, 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br')

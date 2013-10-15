@@ -198,7 +198,7 @@
         "emission_approver": null,
         "emission_id": "",
         "emission_server_type": 2,
-        "emission_fqdns": "",
+        "emission_urls": "",
         "requestor_user": [
             "admin"
         ],

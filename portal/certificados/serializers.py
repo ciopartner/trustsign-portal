@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework.fields import DateTimeField, CharField
+from rest_framework.fields import DateTimeField, CharField, ModelField
 from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
@@ -62,8 +62,6 @@ class EmissaoModelSerializer(ModelSerializer):
     ValidationError = ValidationError
     validacao = False
     _precisa_carta_cessao = None
-
-    emission_urls = CharField(required=False)
 
     def __init__(self, user=None, crm_hash=None, **kwargs):
         self.user = user
@@ -134,9 +132,11 @@ class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
 class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
     REQUIRED_FIELDS = ('emission_dcv_emails', 'emission_publickey_sendto', 'emission_server_type', 'emission_csr',)
 
+    emission_urls = CharField(source='emission_urls', required=False)
+
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_url', 'emission_csr', 'emission_dcv_emails',
+        fields = ('crm_hash', 'emission_url', 'emission_urls', 'emission_csr', 'emission_dcv_emails',
                   'emission_publickey_sendto', 'emission_server_type', 'emission_assignment_letter')
 
 
@@ -162,7 +162,7 @@ class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin,
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_url', 'emission_fqdns', 'emission_publickey_sendto',
+        fields = ('crm_hash', 'emission_url', 'emission_urls', 'emission_publickey_sendto',
                   'emission_dcv_emails', 'emission_server_type', 'emission_csr',
                   'emission_assignment_letter', 'emission_articles_of_incorporation', 'emission_address_proof',
                   'emission_ccsa', 'emission_evcr')

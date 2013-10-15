@@ -134,8 +134,8 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
                               erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
 
-        log.info('request DATA: %s ' % unicode(request.DATA))
-        log.info('request FILES: %s ' % unicode(request.FILES))
+        #log.info('request DATA: %s ' % unicode(request.DATA))
+        #log.info('request FILES: %s ' % unicode(request.FILES))
 
         if voucher.order_canceled_date is not None:
             return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
@@ -152,9 +152,13 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.crm_hash = request.DATA.get('crm_hash')
 
             dominios = serializer.data.get('emission_urls')
+            print 22222222
+            print serializer.data
+            print 111111111
+            print dominios
             if not dominios:
                 dominios = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
-            emissao.emission_fqdns = dominios
+            emissao.emission_urls = dominios
 
             emissao.voucher = voucher
 
@@ -385,8 +389,8 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
             novo['status_code'] = emissao.emission_status
             novo['status_text'] = emissao.get_emission_status_display()
             novo['product']['ssl_url'] = emissao.emission_url
-            if emissao.emission_fqdns:
-                novo['product']['ssl_urls'] = emissao.emission_fqdns.split(' ')
+            if emissao.emission_urls:
+                novo['product']['ssl_urls'] = emissao.emission_urls.split(' ')
             if emissao.emitido:
                 novo['product']['ssl_valid_from'] = voucher.ssl_valid_from
                 novo['product']['ssl_valid_to'] = voucher.ssl_valid_to

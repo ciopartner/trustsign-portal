@@ -112,6 +112,10 @@ class ValidateEmissaoCSRMixin(object):
 
         dominios = fields.get('emission_urls')
 
+        print 3333333
+        print dominios
+        print 3333333
+
         if dominios:
             dominios = dominios.split(' ')
         else:
