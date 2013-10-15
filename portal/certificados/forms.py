@@ -246,7 +246,7 @@ class EmissaoConfirmacaoForm(Form):
 
 class RevogacaoForm(ModelForm):
 
-    emission_url = CharField(max_length=256, blank=True)
+    emission_url = CharField(max_length=256, required=False)
 
     class Meta:
         model = Revogacao
