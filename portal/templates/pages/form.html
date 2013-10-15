@@ -11,7 +11,10 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 
 {% block one_row %}
 {#{{ block.super }}#}
-    <div class="lm30">
+    <div class="lm30 fix-row-margin">
+
+    {% block img %}{% endblock %}
+
 {% if request.GET.sent %}
     {% editable page.form.response %}
     {{ page.form.response|richtext_filter|safe }}
@@ -25,7 +28,7 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
     <form method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
         {% fields_for form %}
         <div class="{# form-actions #}">
-            <input class="btn btn-large" type="submit" value="{{ page.form.button_text }}">
+            <input class="btn btn-orange" type="submit" value="{{ page.form.button_text }}">
         </div>
     </form>
 {% endif %}
