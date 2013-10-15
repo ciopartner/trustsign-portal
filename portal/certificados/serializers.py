@@ -63,6 +63,8 @@ class EmissaoModelSerializer(ModelSerializer):
     validacao = False
     _precisa_carta_cessao = None
 
+    emission_urls = CharField(required=False)
+
     def __init__(self, user=None, crm_hash=None, **kwargs):
         self.user = user
         self._crm_hash = crm_hash

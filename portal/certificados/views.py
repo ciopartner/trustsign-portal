@@ -150,7 +150,11 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = serializer.object
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
-            emissao.emission_fqdns = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
+
+            dominios = serializer.data.get('emission_urls')
+            if not dominios:
+                dominios = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
+            emissao.emission_fqdns = dominios
 
             emissao.voucher = voucher
 
@@ -432,13 +436,17 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
 
                 emissao = serializer.object
                 voucher = serializer.get_voucher()
-                csr = serializer.get_csr_decoded(emissao.emission_csr)
-                dominios = copy(csr.get('dnsNames'))
+                dominios = serializer.data.get('emission_urls')
+                if dominios:
+                    dominios = dominios.split(' ')
+                else:
+                    csr = serializer.get_csr_decoded(emissao.emission_csr)
+                    dominios = copy(csr.get('dnsNames'))
 
                 if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
                     dominios.insert(0, emissao.emission_url)
 
-                if 'dnsNames' in csr and dominios:
+                if dominios:
                     data['ssl_urls'] = [{'url': dominio,
                                          'emission_dcv_emails': comodo.get_emails_validacao_padrao(dominio),
                                          'primary': dominio == emissao.emission_url} for dominio in dominios]
