@@ -50,6 +50,7 @@ $(document).ready(function (e) {
 
     $('#btn-p1-nao').click(function(){
         pfinal.find('a').tab('show');
+        $('.left-menu').show();
     });
 
     function exibe_resposta(tab, content){
@@ -84,5 +85,6 @@ $(document).ready(function (e) {
     });
     $('#btn-p5-nao').click(function(){
         pfinal.find('a').tab('show');
+        $('.left-menu').show();
     });
 });
