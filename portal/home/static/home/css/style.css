@@ -8,6 +8,10 @@ body {
     font-size: 11px;
 }
 
+label, input{
+    font-size: 11px !important;
+}
+
 h4{
     font-size: 90%;
     line-height: 1.2;
@@ -21,12 +25,26 @@ h3{
     background-color: #fff;
 }
 
+.left-menu aside{
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+.left-menu aside i{
+    width: 45px;
+}
+
 .hidden{
 	display: none;
 }
 
 /* Bootstrap 80% */
-
+.form-horizontal .control-label{
+    width: 100px;
+}
+.form-horizontal .controls{
+    margin-left: 110px;
+}
 .video-thumb{
 	float: left;
 	width: 150px;
