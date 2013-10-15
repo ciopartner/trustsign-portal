@@ -452,6 +452,10 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
                 if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
                     dominios.insert(0, emissao.emission_url)
 
+                # TODO: Arrumar esta gambiarra!
+                if voucher.ssl_product == Voucher.PRODUTO_MDC or voucher.ssl_product == Voucher.PRODUTO_EV_MDC:
+                    dominios = request.DATA.get('emission_urls').split(' ')
+
                 if dominios:
                     data['ssl_urls'] = [{'url': dominio,
                                          'emission_dcv_emails': comodo.get_emails_validacao_padrao(dominio),
