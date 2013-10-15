@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework.fields import DateTimeField, CharField, ModelField
+from rest_framework.fields import DateTimeField, CharField
 from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
@@ -132,8 +132,6 @@ class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
 class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
     REQUIRED_FIELDS = ('emission_dcv_emails', 'emission_publickey_sendto', 'emission_server_type', 'emission_csr',)
 
-    emission_urls = CharField(source='emission_urls', required=False)
-
     class Meta:
         model = Emissao
         fields = ('crm_hash', 'emission_url', 'emission_urls', 'emission_csr', 'emission_dcv_emails',
@@ -194,3 +192,10 @@ class EmissaoValidaSerializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, V
     class Meta:
         model = Emissao
         fields = ('crm_hash', 'emission_url', 'emission_csr')
+
+    def get_required_fields(self):
+        voucher = self.get_voucher()
+        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_JRE,
+                                   Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_SMIME):
+            return ('emission_csr',)
+        return ('emission_url', 'emission_csr',)
