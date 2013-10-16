@@ -85,16 +85,19 @@ class ValidateEmissaoUrlMixin(object):
 class ValidateEmissaoCSRMixin(object):
 
     def _valida_emission_csr(self, valor, fields):
+        try:
+            voucher = self.get_voucher()
+        except Voucher.DoesNotExist:
+            raise self.ValidationError()
+
+        if voucher.ssl_product == Voucher.PRODUTO_SMIME:
+            return valor
+
         csr = self.get_csr_decoded(valor)
         url = fields.get('emission_url', '')
 
         if not csr['ok']:
             raise self.ValidationError('CSR Inválida')
-
-        try:
-            voucher = self.get_voucher()
-        except Voucher.DoesNotExist:
-            raise self.ValidationError()
 
         if csr.get('CN') != url and voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC,
                                                                 Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
@@ -111,10 +114,6 @@ class ValidateEmissaoCSRMixin(object):
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS))
 
         dominios = fields.get('emission_urls')
-
-        print 3333333
-        print dominios
-        print 3333333
 
         if dominios:
             dominios = dominios.split(' ')
