@@ -36,7 +36,7 @@
 {% endblock %}
 
 {% block one_row %}
-    <section class=span8>
+    <section class=span9>
         {% block main %}{% endblock %}
         {% if tag or category or year or month or author %}
             {% block blog_post_list_filterinfo %}
@@ -112,7 +112,7 @@
                 {% endblock %}
             </div>
 
-            {% if not forloop.last %}<hr>{% endif %}
+{#            {% if not forloop.last %}<hr>{% endif %}#}
         {% endfor %}
 
         {% if blog_posts %}

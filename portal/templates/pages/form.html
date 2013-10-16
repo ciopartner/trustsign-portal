@@ -17,13 +17,13 @@ $(function() {$('.middle :input:visible:enabled:first').focus();});
 
 {% if request.GET.sent %}
     {% editable page.form.response %}
-    {{ page.form.response|richtext_filter|safe }}
+        {{ page.form.response|richtext_filter|safe }}
     {% endeditable %}
 {% else %}
     {% with page.form as page_form %}
-    {% editable page_form.content %}
-    {{ page_form.content|richtext_filter|safe }}
-    {% endeditable %}
+        {% editable page_form.content %}
+        {{ page_form.content|richtext_filter|safe }}
+        {% endeditable %}
     {% endwith %}
     <form class="form-horizontal pull-left" method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
         {% fields_for form %}

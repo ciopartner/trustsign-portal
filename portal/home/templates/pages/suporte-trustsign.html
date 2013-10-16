@@ -31,13 +31,33 @@
             {{ page.richtextpage.content|richtext_filter|safe }}
         {% endeditable %}
 
-        <form action="{% url "search" %}" class="navbar-search pull-left limeh100x">
+
+        <form action="{% url "search" %}" class="navbar-search pull-left">
             <div class="input-prepend">
                 <span class="add-on"><i class="icon-search"></i></span>
                 <input class="search-query" name="q" type="text" style="border-radius: 0px;"
                        placeholder="Digite aqui a sua busca"/>
             </div>
         </form>
+
+        <div class="clearfix"></div>
+
+
+        <div class="suporte-links textac row-fluid tm20">
+            <a href="/suporte-trustsign/faq-e-manuais/" class="well span3">FAQ</a>
+            <a href="" class="well span3">Tutoriais em vídeo</a>
+            <a href="/suporte-trustsign/faq-e-manuais/" class="well span3">Manuais</a>
+            <a href="/suporte-trustsign/ferramentas/" class="well span3">Ferramentas</a>
+        </div>
+
+        <div class="tabbable ferramentas">
+            <ul class="nav nav-tabs">
+                <li><h3 class="tm10"><a href="/suporte-trustsign/faq-e-manuais/" class="">FAQ</a></h3></li>
+                <li><h3 class="tm10"><a href="" class="">Tutoriais em vídeo</a></h3></li>
+                <li><h3 class="tm10"><a href="/suporte-trustsign/faq-e-manuais/" class="">Manuais</a></h3></li>
+                <li><h3 class="tm10"><a href="/suporte-trustsign/ferramentas/" class="">Ferramentas</a></h3></li>
+            </ul>
+        </div>
 
 
 {#        <section class="featurette tblrp10" style="display: inline-block;">#}

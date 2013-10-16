@@ -188,6 +188,7 @@ textarea{
 }
 
 /* START BLOG CONFIG */
+
 img.size-thumbnail{
     float:left;
     padding-right: 10px;
@@ -208,6 +209,16 @@ img.size-thumbnail{
 
 .post{
     clear: both;
+    background: none repeat scroll 0% 0% rgb(247, 247, 247);
+    padding: 0px 20px 10px;
+    margin-top: -10px;
+}
+
+.post:nth-child(odd){
+	background-color:#F7F7F7;
+}
+.post:nth-child(even){
+	background-color:#F0F0F0;
 }
 
 .post h1{
@@ -216,6 +227,7 @@ img.size-thumbnail{
 
 .post h1 a{
     color: #005295;
+    line-height: 1.2;
 }
 
 .post-description{
@@ -1727,9 +1739,13 @@ div.ferramentas table{
 
 div.ferramentas .well{
     margin: 0;
-    width: 429px;
+    width: 363px;
     float:left;
     min-height: 496px;
+}
+
+div.ferramentas .span5{
+    width: 320px;
 }
 
 div.ferramentas .well:last-child{
