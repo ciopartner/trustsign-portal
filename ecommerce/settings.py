@@ -169,7 +169,7 @@ INSTALLED_APPS = [
 # APPS FOR OSCAR
 from oscar import get_core_apps
 
-INSTALLED_APPS += get_core_apps(['ecommerce.apps.checkout', 'ecommerce.apps.customer'])
+INSTALLED_APPS += get_core_apps(['ecommerce.apps.checkout', 'ecommerce.apps.customer', 'ecommerce.apps.catalogue'])
 
 # TODO: Antes de ir para produção isso precisa ser alterado para um novo engine
 HAYSTACK_CONNECTIONS = {

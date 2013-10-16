@@ -8,98 +8,178 @@ from logging import getLogger
 log = getLogger('libs.crm')
 
 
-class CRMError(Exception):
-    pass
+class CRMClient(object):
 
+    def __init__(self):
+        self.session_id = None
 
-def call_crm(method, rest_data, url='http://dev2.lampadaglobal.com/projects/trustsign/service/v4_1/rest.php',
-             input_type='json', response_type='json'):
+    class CRMError(Exception):
+        """
+        Ocorreu um erro na integração com o CRM
+        """
+        pass
 
-    response = requests.post(url, {
-        'method': method,
-        'input_type': input_type,
-        'response_type': response_type,
-        'rest_data': json.dumps(rest_data)
-    })
+    def call_crm(self, method, rest_data, url='http://dev2.lampadaglobal.com/projects/trustsign/service/v4_1/rest.php',
+                 input_type='json', response_type='json'):
+        """
+        Todos os métodos usam este para executar a chamada ao CRM
+        """
 
-    return response.json()
+        if not self.session_id and method != 'login':
+            raise self.CRMError('Desconectado')
 
+        response = requests.post(url, {
+            'method': method,
+            'input_type': input_type,
+            'response_type': response_type,
+            'rest_data': json.dumps(rest_data)
+        })
 
-def login(canal="Portal"):
-    response_data = call_crm('login', [
-        {
-            'user_name': 'ceo',  # settings.CRM_USERNAME,
-            'password': '26442effb42e24d42f179f343c89e419',  # settings.CRM_PASSWORD_HASH,
-        },
-        canal
-    ])
-    if 'id' not in response_data:
-        log.warning('Erro durante a chamada do metodo login do crm: %s' % response_data)
-        raise CRMError('Erro durante a chamada do método login do crm')
-    return response_data['id']
+        return response.json()
 
+    def login(self, canal="Portal"):
+        """
+        Inicia a sessão
+        """
 
-def logout(session_id):
-    call_crm('logout', [session_id])
+        response_data = self.call_crm('login', [
+            {
+                'user_name': 'ceo',  # settings.CRM_USERNAME,
+                'password': '26442effb42e24d42f179f343c89e419',  # settings.CRM_PASSWORD_HASH,
+            },
+            canal
+        ])
+        if 'id' not in response_data:
+            log.warning('Erro durante a chamada do metodo login do crm: %s' % response_data)
+            raise self.CRMError('Erro durante a chamada do método login do crm')
+        self.session_id = response_data['id']
+        return response_data['id']
 
+    def logout(self):
+        """
+        Encerra a sessão
+        """
+        self.call_crm('logout', [self.session_id])
+        self.session_id = None
 
-def get_entry_list(session_id, cnpj):
-    response_data = call_crm('get_entry_list', [
-        session_id,
-        'Accounts',
-        'accounts_cstm.corporate_tax_registry_c = \'%s\'' % cnpj,
-        '',
-        0,
-        ['id', 'name'],
-        [],
-        1,
-        0,
-        False
-    ])
-    if 'number' in response_data:
-        log.warning('Erro durante a chamada do metodo get_entry_list do crm: %s' % response_data)
-        raise CRMError('Erro durante a chamada do método get_entry_list do crm')
-    return response_data
+    def get_account(self, cnpj):
+        """
+        Retorna dados de uma Account
+        """
+        response_data = self.call_crm('get_entry_list', [
+            self.session_id,
+            'Accounts',
+            'accounts_cstm.corporate_tax_registry_c = \'%s\'' % cnpj,
+            '',
+            0,
+            ['id', 'name'],
+            [],
+            1,
+            0,
+            False
+        ])
+        if 'number' in response_data:
+            log.warning('Erro durante a chamada do metodo get_entry_list do crm: %s' % response_data)
+            raise self.CRMError('Erro durante a chamada do método get_entry_list do crm')
+        return response_data
 
+    def set_entry(self, tabela, campos):
+        """
+        Método genérico para inserir dados no CRM
+        """
+        response_data = self.call_crm('set_entry', [
+            self.session_id,
+            tabela,
+            campos
+        ])
+        if 'id' not in response_data:
+            log.warning('Erro durante a chamada do metodo set_entry do crm: %s' % response_data)
+            raise self.CRMError('Erro durante a chamada do método set_entry do crm')
+        return response_data
 
-def set_entry(session_id, tabela, campos):
-    response_data = call_crm('set_entry', [
-        session_id,
-        tabela,
-        campos
-    ])
-    if 'id' not in response_data:
-        log.warning('Erro durante a chamada do metodo set_entry do crm: %s' % response_data)
-        raise CRMError('Erro durante a chamada do método set_entry do crm')
-    return response_data
+    def set_entry_account(self, cliente):
+        """
+        Cria uma account no CRM
+        """
+        response = self.set_entry('Accounts', {
+            'corporate_tax_registry_c': cliente.cnpj,
+            'name': cliente.razaosocial,
+            'billing_address_street': cliente.logradouro,
+            'billing_address_number_c': cliente.numero,
+            'billing_address_complement_c': cliente.complemento,
+            'billing_address_neighborhood_c': cliente.bairro,
+            'billing_address_city': cliente.cidade,
+            'billing_address_state': cliente.estado,
+            'billing_address_country': cliente.pais,
+            'billing_address_postalcode': cliente.cep,
+            'sem_atividade_c': 1 if cliente.sem_atividade else 0,
+        })
 
+        return response['id']
 
-def set_entry_account(session_id, cliente):
-    response = set_entry(session_id, 'Accounts', {
-        'corporate_tax_registry_c': cliente.cnpj,
-        'name': cliente.razaosocial,
-        'billing_address_street': cliente.logradouro,
-        'billing_address_number_c': cliente.numero,
-        'billing_address_complement_c': cliente.complemento,
-        'billing_address_neighborhood_c': cliente.bairro,
-        'billing_address_city': cliente.cidade,
-        'billing_address_state': cliente.estado,
-        'billing_address_country': cliente.pais,
-        'billing_address_postalcode': cliente.cep,
-        'sem_atividade_c': 1 if cliente.sem_atividade else 0,
-    })
+    def set_entry_opportunities(self, oportunidade):
+        """
+        Cria uma opportunity no CRM
+        """
 
-    return response['id']
+        response = self.set_entry('Opportunities', {
+            'account_id': oportunidade.account_id,
+            'name': 'Oportunidade via e-commerce',
+            #'ecommerce_id_c': oportunidade.numero_pedido, TODO: não existe ainda no CRM
+            'date_closed': oportunidade.data_pedido,
+            'amount': oportunidade.valor_total,
 
+            # cartão de credito
+            'titular_c': oportunidade.pag_credito_titular,
+            'vencimento_c': oportunidade.pag_credito_vencimento,
+            'bandeira_c': oportunidade.pag_credito_bandeira,
+            'id_transacao_c': oportunidade.pag_credito_transacao_id,
+            'ultimos_digitos_c': oportunidade.pag_credito_ultimos_digitos,
 
-def set_entry_opportunities(session_id, oportunidade):
+            #cartão de débito
+            'titular_debito_c': oportunidade.pag_debito_titular,
+            'vencimento_debito_c': oportunidade.pag_debito_vencimento,
+            'bandeira_debito_c': oportunidade.pag_debito_bandeira,
+            'transaction_id_debito_c': oportunidade.pag_debito_transacao_id,
+            'ultimos_digitos_debito_c': oportunidade.pag_debito_ultimos_digitos,
 
-    return {}
+            #boleto TODO: ainda requer ajustes no layout e campos por parte do CRM
+        })
 
+        return response['id']
 
-def set_entry_products(session_id, produto):
+    def set_entry_products(self, produto):
+        """
+        Cria um product no CRM
+        """
 
-    return {}
+        response = self.set_entry('Opportunities', {
+            'account_id': produto.account_id,
+            'opportunity_id': produto.opportunity_id,
+            'vendor_part_num': produto.codigo,
+            'discount_price': produto.preco_venda,
+            'quantity': produto.quantidade,
+        })
+
+        return response['id']
+
+    def postar_compra(self, cliente, oportunidade, produtos):
+        """
+        Executa todo o processo de compra, criando account, opportunity e products quando necessário
+        """
+        self.login()
+        account_id = self.get_account(cliente.cnpj)['entry_list']
+        if account_id:
+            account_id = account_id[0]['id']
+        else:
+            account_id = self.set_entry_account(cliente)
+        oportunidade.account_id = account_id
+        opportunity_id = self.set_entry_opportunities(oportunidade)
+        for produto in produtos:
+            produto.account_id = account_id
+            produto.opportunity_id = opportunity_id
+            self.set_entry_products(produto)
+        self.logout()
 
 #print set_entry_account(
 #    cnpj='88.888.888/0001-88',
@@ -114,27 +194,14 @@ def set_entry_products(session_id, produto):
 #    cep='04050-000',
 #    sem_atividade=False
 #)
-session_id = login()
-cliente = get_entry_list(session_id, '88.888.888/0001-88')['entry_list']
-logout(session_id)
-if cliente:
-    print cliente[0]['id']
+
+client = CRMClient()
+
+client.login()
+account = client.get_account('88.888.888/0001-88')['entry_list']
+client.logout()
+
+if account:
+    print account[0]['id']
 else:
     print 'não encontrou'
-
-
-def postar_compra(cliente, oportunidade, produtos):
-    session_id = login()
-    account_id = get_entry_list(session_id, cliente.cnpj)['entry_list']
-    if account_id:
-        account_id = account_id[0]['id']
-    else:
-        account_id = set_entry_account(session_id, cliente)
-    oportunidade.account_id = account_id
-    opportunitie_id = set_entry_opportunities(session_id, oportunidade)
-    for produto in produtos:
-        produto.account_id = account_id
-        produto.opportunitie_id = opportunitie_id
-        set_entry_products(session_id, produto)
-
-    logout(session_id)
