@@ -15,8 +15,7 @@ $(document).ready(function () {
         }
 
         quantity = typeof quantity !== 'undefined' ? quantity : 1;
-        $.post(
-            '/ajax/adicionar-produto/',
+        $.post( url_ecommerce + 'ajax/adicionar-produto/',
             {product_code: product_code, quantity:quantity, line: line, term: term},
             add_success,
             'json'
