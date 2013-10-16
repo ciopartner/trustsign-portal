@@ -246,7 +246,7 @@ class EmissaoConfirmacaoForm(Form):
 
 class RevogacaoForm(ModelForm):
 
-    emission_url = CharField(max_length=256)
+    emission_url = CharField(max_length=256, required=False)
 
     class Meta:
         model = Revogacao
@@ -257,11 +257,12 @@ class RevogacaoForm(ModelForm):
         super(RevogacaoForm, self).__init__(**kwargs)
 
     def clean_emission_url(self):
-        emission_url = self.cleaned_data['emission_url']
+        emission_url = self.cleaned_data.get('emission_url')
 
         emissao = self.voucher.emissao
-        if emission_url != emissao.emission_url:
-            raise ValidationError('Valor não bate com a url de emissão')
+        # Comentada a validação abaixo por acordo com a TQI
+        #if emission_url != emissao.emission_url:
+        #    raise ValidationError('Valor não bate com a url de emissão')
 
         return emission_url
 

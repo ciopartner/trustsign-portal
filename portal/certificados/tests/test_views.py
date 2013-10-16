@@ -69,6 +69,31 @@ class VoucherAPIViewTestCase(TestCase):
         except Voucher.DoesNotExist:
             self.fail('não criou o voucher')
 
+    def test_cancel_voucher(self):
+        r = self.client.post(reverse('api_ssl_voucher_cancel'), {
+            'username': 'admin',
+            'password': 'admin',
+            'crm_hash': 'test-MDC',
+            'customer_cnpj': '51.813.518/0001-56',
+            'order_cancel_reason': 'Testando'
+        })
+
+        data = json.loads(r.content)
+        if r.status_code != 200:
+            if r.status_code == 400:
+                msg = '; '.join([e['message'] for e in data['errors']])
+            else:
+                msg = 'Status code != 200'
+            self.fail(msg.encode('utf8'))
+
+        try:
+            voucher = Voucher.objects.get(crm_hash='test-MDC')
+        except Voucher.DoesNotExist:
+            self.fail('não criou o voucher')
+
+        self.assertIsNotNone(voucher.order_canceled_date, 'Não setou o order_canceled_date')
+        self.assertEqual(voucher.order_canceled_reason, 'Testando')
+
     def test_csr_url_validate_mdc(self):
         r = self.client.post(reverse('api_ssl_validate_url_csr'), {
             'crm_hash': 'test-MDC',
@@ -102,7 +127,7 @@ class VoucherAPIViewTestCase(TestCase):
             'username': 'admin',
             'password': 'admin',
             'crm_hash': 'test-MDC',
-            'emission_url': 'aaaaaaaaa',
+            'emission_urls': 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br',
             'emission_csr': CSR_MDC,
             'emission_server_type': 1,
             'emission_dcv_emails': 'admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br',
@@ -119,4 +144,4 @@ class VoucherAPIViewTestCase(TestCase):
         except Emissao.DoesNotExist:
             self.fail('Não criou a emissão')
 
-        self.assertEqual(emissao.emission_fqdns, 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br mobile.grupocrm.com.br')
+        self.assertEqual(emissao.emission_urls, 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br')

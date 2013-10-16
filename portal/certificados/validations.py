@@ -85,16 +85,19 @@ class ValidateEmissaoUrlMixin(object):
 class ValidateEmissaoCSRMixin(object):
 
     def _valida_emission_csr(self, valor, fields):
+        try:
+            voucher = self.get_voucher()
+        except Voucher.DoesNotExist:
+            raise self.ValidationError()
+
+        if voucher.ssl_product == Voucher.PRODUTO_SMIME:
+            return valor
+
         csr = self.get_csr_decoded(valor)
         url = fields.get('emission_url', '')
 
         if not csr['ok']:
             raise self.ValidationError('CSR Inválida')
-
-        try:
-            voucher = self.get_voucher()
-        except Voucher.DoesNotExist:
-            raise self.ValidationError()
 
         if csr.get('CN') != url and voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC,
                                                                 Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
@@ -110,7 +113,13 @@ class ValidateEmissaoCSRMixin(object):
         if voucher.ssl_line == voucher.LINHA_PRIME and key_size != 4096:
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS))
 
-        dominios = csr.get('dnsNames', [])
+        dominios = fields.get('emission_urls')
+
+        if dominios:
+            dominios = dominios.split(' ')
+        else:
+            dominios = csr.get('dnsNames', [])
+
         if voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_EV_MDC):
             if dominios:
                 raise self.ValidationError('Este produto possui somente um domínio')
@@ -123,18 +132,25 @@ class ValidateEmissaoCSRMixin(object):
                     if self.validacao:
                         self.validacao_carta_cessao_necessaria = True
         else:
+            is_san = voucher.ssl_product == Voucher.PRODUTO_SAN_UCC
+            qtd_dominios_disponiveis = 5 + Voucher.objects.filter(
+                ssl_product=Voucher.PRODUTO_SSL_SAN_FQDN if is_san else Voucher.PRODUTO_SSL_MDC_DOMINIO,
+                emissao__isnull=True,
+                ssl_line=voucher.ssl_line,
+                ssl_term=voucher.ssl_term
+            ).count()
 
-            #if len(dominios) > voucher.ssl_domains_qty:
-            #    if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
-            #        raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_FQDN))
-            #    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
+            if len(dominios) > qtd_dominios_disponiveis:
+                if voucher.ssl_product == voucher.PRODUTO_SAN_UCC:
+                    raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_FQDN))
+                raise self.ValidationError(get_erro_message(e.ERRO_SEM_CREDITO_DOMINIO))
 
             for dominio in dominios:
                 if '*' in dominio:
                     raise self.ValidationError('Nenhum domínio pode conter *.')
 
                 final_dominio = '.%s' % dominio.split('.')[-1]
-                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
+                if is_san and final_dominio in NOMES_INTERNOS:
                     continue
 
                 razao_social = get_razao_social_dominio(dominio)

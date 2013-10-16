@@ -305,6 +305,7 @@ class Emissao(Model):
     requestor_timestamp = DateTimeField(auto_now_add=True)
 
     emission_url = CharField(max_length=256, blank=True, null=True)
+    emission_urls = TextField(blank=True, null=True)
     emission_csr = TextField(blank=True, null=True)
 
     emission_dcv_emails = TextField(blank=True, null=True)
@@ -314,7 +315,6 @@ class Emissao(Model):
     emission_reviewer = ForeignKey(User, related_name='emissoes_revisadas', null=True, blank=True)
     emission_approver = ForeignKey(User, related_name='emissoes_aprovadas', null=True, blank=True)
 
-    emission_fqdns = TextField(blank=True, null=True)
     emission_primary_dn = CharField(max_length=256, null=True, blank=True)
 
     emission_assignment_letter = FileField(upload_to='uploads/cartas/', blank=True, null=True)
@@ -349,7 +349,7 @@ class Emissao(Model):
         return self.emission_dcv_emails.split(' ')
 
     def get_lista_dominios(self):
-        return self.emission_fqdns.split(' ')
+        return self.emission_urls.split(' ')
 
     def get_lista_dominios_linha(self):
         return '\n'.join(self.get_lista_dominios())

@@ -134,8 +134,8 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
                               erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
 
-        log.info('request DATA: %s ' % unicode(request.DATA))
-        log.info('request FILES: %s ' % unicode(request.FILES))
+        #log.info('request DATA: %s ' % unicode(request.DATA))
+        #log.info('request FILES: %s ' % unicode(request.FILES))
 
         if voucher.order_canceled_date is not None:
             return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
@@ -150,7 +150,15 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao = serializer.object
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
-            emissao.emission_fqdns = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
+
+            dominios = serializer.data.get('emission_urls')
+            print 22222222
+            print serializer.data
+            print 111111111
+            print dominios
+            if not dominios:
+                dominios = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
+            emissao.emission_urls = dominios
 
             emissao.voucher = voucher
 
@@ -226,8 +234,9 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
     def post(self, request, *args, **kwargs):
         emission_url = self.request.DATA.get('emission_url')
 
-        if not emission_url:
-            return erro_rest(('---', 'emission_url: campo obrigatório'))  # TODO corrigir codigo erro
+        # Comentado por ALR - campo nao mais obrigatorio para revogar
+        #if not emission_url:
+        #    return erro_rest(('---', 'emission_url: campo obrigatório'))  # TODO corrigir codigo erro
 
         try:
             emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.request.DATA.get('crm_hash'))
@@ -237,8 +246,9 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         if emissao.voucher.order_canceled_date is not None:
             return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
 
-        if emissao.emission_url != emission_url:
-            return erro_rest(('---', 'emission_url: valor não bate com a url de emissão'))  # TODO corrigir codigo erro
+        # Comentado por ALR - campo nao mais obrigatorio para revogar
+        #if emissao.emission_url != emission_url:
+        #    return erro_rest(('---', 'emission_url: valor não bate com a url de emissão'))  # TODO corrigir codigo erro
 
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
             return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
@@ -381,8 +391,8 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
             novo['status_code'] = emissao.emission_status
             novo['status_text'] = emissao.get_emission_status_display()
             novo['product']['ssl_url'] = emissao.emission_url
-            if emissao.emission_fqdns:
-                novo['product']['ssl_urls'] = emissao.emission_fqdns.split(' ')
+            if emissao.emission_urls:
+                novo['product']['ssl_urls'] = emissao.emission_urls.split(' ')
             if emissao.emitido:
                 novo['product']['ssl_valid_from'] = voucher.ssl_valid_from
                 novo['product']['ssl_valid_to'] = voucher.ssl_valid_to
@@ -432,13 +442,21 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
 
                 emissao = serializer.object
                 voucher = serializer.get_voucher()
-                csr = serializer.get_csr_decoded(emissao.emission_csr)
-                dominios = copy(csr.get('dnsNames'))
+                dominios = serializer.data.get('emission_urls')
+                if dominios:
+                    dominios = dominios.split(' ')
+                else:
+                    csr = serializer.get_csr_decoded(emissao.emission_csr)
+                    dominios = copy(csr.get('dnsNames'))
 
                 if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
                     dominios.insert(0, emissao.emission_url)
 
-                if 'dnsNames' in csr and dominios:
+                # TODO: Arrumar esta gambiarra!
+                if voucher.ssl_product == Voucher.PRODUTO_MDC or voucher.ssl_product == Voucher.PRODUTO_EV_MDC:
+                    dominios = request.DATA.get('emission_urls').split(' ') if request.DATA.get('emission_urls') else []
+
+                if dominios:
                     data['ssl_urls'] = [{'url': dominio,
                                          'emission_dcv_emails': comodo.get_emails_validacao_padrao(dominio),
                                          'primary': dominio == emissao.emission_url} for dominio in dominios]

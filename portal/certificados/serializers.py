@@ -134,7 +134,7 @@ class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_url', 'emission_csr', 'emission_dcv_emails',
+        fields = ('crm_hash', 'emission_url', 'emission_urls', 'emission_csr', 'emission_dcv_emails',
                   'emission_publickey_sendto', 'emission_server_type', 'emission_assignment_letter')
 
 
@@ -160,7 +160,7 @@ class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin,
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_url', 'emission_fqdns', 'emission_publickey_sendto',
+        fields = ('crm_hash', 'emission_url', 'emission_urls', 'emission_publickey_sendto',
                   'emission_dcv_emails', 'emission_server_type', 'emission_csr',
                   'emission_assignment_letter', 'emission_articles_of_incorporation', 'emission_address_proof',
                   'emission_ccsa', 'emission_evcr')
@@ -192,3 +192,10 @@ class EmissaoValidaSerializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, V
     class Meta:
         model = Emissao
         fields = ('crm_hash', 'emission_url', 'emission_csr')
+
+    def get_required_fields(self):
+        voucher = self.get_voucher()
+        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_JRE,
+                                   Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_SMIME):
+            return ('emission_csr',)
+        return ('emission_url', 'emission_csr',)
