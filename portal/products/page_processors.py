@@ -6,6 +6,15 @@ from portal.products.models import Product
 @processor_for(Product)
 def ferramentas_processor(request, page):
 
+    sql = '''
+    SELECT * FROM
+       catalogue_product
+    inner join partner_stockrecord
+        on partner_stockrecord.product_id = catalogue_product.id where catalogue_product.product_code = '''
+
+    sql += '"' + page.product.product_code + '"'
+
+    print(sql)
 
     return {
         'product_code': 'ssl',
