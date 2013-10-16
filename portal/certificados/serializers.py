@@ -44,6 +44,16 @@ class ReemissaoSerializer(ModelSerializer):
         fields = ['crm_hash', 'emission_csr']
 
     def validate_emission_csr(self, attrs, source):
+        try:
+            crm_hash = attrs['crm_hash']
+            voucher = Voucher.objects.get(crm_hash=crm_hash)
+        except (Voucher.DoesNotExist, KeyError):
+            raise ValidationError('Voucher não encontrado')
+
+        if voucher.ssl_product == Voucher.PRODUTO_SMIME:
+            #s/mime não tem CSR
+            return attrs
+
         csr_nova = attrs.get(source)
         csr_antiga = Emissao.objects.get(pk=self.object.pk).emission_csr
 
