@@ -1,7 +1,7 @@
 from decimal import Decimal
 from mezzanine.pages.page_processors import processor_for
 from portal.products.models import Product
-
+from django.db import connection
 
 @processor_for(Product)
 def ferramentas_processor(request, page):
@@ -10,11 +10,13 @@ def ferramentas_processor(request, page):
     SELECT * FROM
        catalogue_product
     inner join partner_stockrecord
-        on partner_stockrecord.product_id = catalogue_product.id where catalogue_product.product_code = '''
+        on partner_stockrecord.product_id = catalogue_product.id where catalogue_product.product_code = %s'''
 
-    sql += '"' + page.product.product_code + '"'
+    cursor = connection.cursor()
+    cursor.execute(sql, [page.product.product_code])
 
-    print(sql)
+    for row in cursor.fetchall():
+        print(row)
 
     return {
         'product_code': 'ssl',
