@@ -30,6 +30,8 @@ class Product(Page):
     cart_add_url = models.CharField('Add to Cart URL', max_length=64, blank=True)
     order = models.IntegerField('Order', default=999)
 
+    product_code = models.CharField('Código do produto', blank=True, null=True, max_length=30)
+
     class Meta:
         verbose_name = 'Product'
         ordering = ['-order']
@@ -44,6 +46,7 @@ class Product(Page):
         if getattr(settings, 'UPDATE_SLUG', False):
             self.slug = self.get_slug()
         super(Product, self).save(*args, **kwargs)
+
 
 
 class TabContent(models.Model):
