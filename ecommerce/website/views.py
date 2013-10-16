@@ -93,7 +93,7 @@ class AdicionarProdutoView(BasketAddView, JSONFormView):
 
     def get_product_id(self, product_code, line=None, term=None):
         try:
-            return Product.objects.get(upc='-'.join(x for x in [product_code, line, term] if x)).pk
+            return Product.objects.get(product_code=product_code, product_line=line, product_term=term).pk
         except Product.DoesNotExist:
             return -1
 
