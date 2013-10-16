@@ -18,7 +18,7 @@ def ferramentas_processor(request, page):
     cursor.execute(sql, [page.product.product_code])
 
     data = {
-        'product_code': 'ssl',
+        'product_code': page.product.product_code,
         'precos': {
             'basic': {
                 'term1year': {},
@@ -49,7 +49,7 @@ def ferramentas_processor(request, page):
         data_line.setdefault('term1year', {})['discount'] = 0
         preco_1ano = data_line.get('term1year', {}).get('price', 0)
         if preco_1ano > 0:
-            data_line['term2years']['discount'] = int((1 - data_line.get('term2years', {}).get('price', 0) / 2 * preco_1ano) * 100)
-            data_line['term3years']['discount'] = int((1 - data_line.get('term3years', {}).get('price', 0) / 3 * preco_1ano) * 100)
+            data_line['term2years']['discount'] = int((1 - data_line.get('term2years', {}).get('price', 0) / (2 * preco_1ano)) * 100)
+            data_line['term3years']['discount'] = int((1 - data_line.get('term3years', {}).get('price', 0) / (3 * preco_1ano)) * 100)
 
     return data
