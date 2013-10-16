@@ -7,7 +7,7 @@ from django.db import connection
 def ferramentas_processor(request, page):
 
     sql = '''
-    SELECT * FROM
+    SELECT upc, price_excl_tax FROM
        catalogue_product
     inner join partner_stockrecord
         on partner_stockrecord.product_id = catalogue_product.id where catalogue_product.product_code = %s'''
