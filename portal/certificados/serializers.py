@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework.fields import DateTimeField, CharField
+from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
@@ -177,8 +177,6 @@ class EmissaoNvASerializer(EmissaoModelSerializer):
 class EmissaoNvBSerializer(EmissaoModelSerializer):
     REQUIRED_FIELDS = ('emission_id', 'emission_revoke_password')
 
-    emission_revoke_password2 = CharField(max_length=128)
-
     class Meta:
         model = Emissao
         fields = ('crm_hash', 'emission_id', 'emission_revoke_password')
@@ -191,7 +189,7 @@ class EmissaoValidaSerializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, V
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_url', 'emission_csr')
+        fields = ('crm_hash', 'emission_url', 'emission_urls', 'emission_csr')
 
     def get_required_fields(self):
         voucher = self.get_voucher()

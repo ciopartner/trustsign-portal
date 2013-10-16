@@ -151,14 +151,9 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
 
-            dominios = serializer.data.get('emission_urls')
-            print 22222222
-            print serializer.data
-            print 111111111
-            print dominios
-            if not dominios:
+            if not emissao.emission_urls and voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
                 dominios = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
-            emissao.emission_urls = dominios
+                emissao.emission_urls = dominios
 
             emissao.voucher = voucher
 
@@ -442,7 +437,8 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
 
                 emissao = serializer.object
                 voucher = serializer.get_voucher()
-                dominios = serializer.data.get('emission_urls')
+
+                dominios = emissao.emission_urls
                 if dominios:
                     dominios = dominios.split(' ')
                 else:
@@ -451,10 +447,6 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
 
                 if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
                     dominios.insert(0, emissao.emission_url)
-
-                # TODO: Arrumar esta gambiarra!
-                if voucher.ssl_product == Voucher.PRODUTO_MDC or voucher.ssl_product == Voucher.PRODUTO_EV_MDC:
-                    dominios = request.DATA.get('emission_urls').split(' ') if request.DATA.get('emission_urls') else []
 
                 if dominios:
                     data['ssl_urls'] = [{'url': dominio,

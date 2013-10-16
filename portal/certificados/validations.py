@@ -107,11 +107,15 @@ class ValidateEmissaoCSRMixin(object):
         #     raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
 
         key_size = int(csr.get('KeySize'))
-        if voucher.ssl_line in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
-            raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS))
+        if voucher.ssl_product in (Voucher.PRODUTO_SMIME, Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
+            if key_size != 2048:
+                raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS))
+        else:
+            if voucher.ssl_line in (voucher.LINHA_BASIC, voucher.LINHA_PRO) and key_size != 2048:
+                raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS))
 
-        if voucher.ssl_line == voucher.LINHA_PRIME and key_size != 4096:
-            raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS))
+            if voucher.ssl_line == voucher.LINHA_PRIME and key_size != 4096:
+                raise self.ValidationError(get_erro_message(e.ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS))
 
         dominios = fields.get('emission_urls')
 

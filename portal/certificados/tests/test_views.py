@@ -145,3 +145,24 @@ class VoucherAPIViewTestCase(TestCase):
             self.fail('Não criou a emissão')
 
         self.assertEqual(emissao.emission_urls, 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br')
+
+    def test_ssl_apply_smime(self):
+        r = self.client.post(reverse('api_ssl_apply'), {
+            'username': 'admin',
+            'password': 'admin',
+            'crm_hash': 'test-SMIME',
+            'emission_revoke_password': 'password',
+            'emission_id': open(os.path.join(settings.PROJECT_ROOT, 'portal', 'static', 'robots.txt'), 'r')
+        })
+
+        #self.assertEquals(r.status_code, 200)
+
+        data = json.loads(r.content)
+        self.assertEqual(data, {})
+        try:
+            emissao = Emissao.objects.get(crm_hash='test-SMIME')
+        except Emissao.DoesNotExist:
+            self.fail('Não criou a emissão')
+
+        self.assertEqual(emissao.emission_revoke_password, 'password')
+        self.assertIsNotNone(emissao.emission_id)
