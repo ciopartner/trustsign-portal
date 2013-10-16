@@ -6,7 +6,7 @@ $(document).ready(function () {
 
         function add_success(data){
             $qtd_carrinho.text(parseInt($qtd_carrinho.text()) + 1);
-            alert('funcionou');
+            location.href = url_ecommerce + 'basket/';
         }
 
         function add_fail(data){
