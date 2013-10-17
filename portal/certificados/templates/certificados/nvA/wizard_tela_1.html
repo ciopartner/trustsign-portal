@@ -3,7 +3,7 @@
 {% block coluna-esquerda %}
     {% include 'certificados/includes/dados_cliente.html' %}
 
-    <h3>Dados de Callback</h3>
+    <h2>Dados de Callback</h2>
 
     <table>
         <tr><th>Tratamento:</th><td>{{ form.callback_tratamento }} {{ form.callback_tratamento.errors }}</td></tr>
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block coluna-direita %}
-    <h3>Dados Específicos do Produto Escolhido</h3>
+    <h2>Dados Específicos do Produto Escolhido</h2>
     {{ form.non_field_errors }}
 
     <table>
