@@ -209,16 +209,25 @@ img.size-thumbnail{
 
 .post{
     clear: both;
-    background: none repeat scroll 0% 0% rgb(247, 247, 247);
     padding: 0px 20px 10px;
     margin-top: -10px;
 }
 
-.post:nth-child(odd){
+.post:nth-child(odd), .post-view{
 	background-color:#F7F7F7;
 }
-.post:nth-child(even){
+.post:nth-child(even), .shortbio{
 	background-color:#F0F0F0;
+}
+
+.post-view{
+    padding: 10px 20px;
+    text-align: justify;
+}
+
+.shortbio{
+    padding: 20px 20px 10px;
+    margin-bottom: 20px;
 }
 
 .post h1{
