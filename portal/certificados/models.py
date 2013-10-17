@@ -25,6 +25,7 @@ class Voucher(Model):
     PRODUTO_CODE_SIGNING = 'ssl-cs'
     PRODUTO_SMIME = 'ssl-smime'
     PRODUTO_SSL_MDC_DOMINIO = 'ssl-mdc-domain'
+    PRODUTO_SSL_EV_MDC_DOMINIO = 'ssl-ev-mdc-domain'
     PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
     PRODUTO_CHOICES = (
         (PRODUTO_SITE_SEGURO, 'Site + Seguro'),
@@ -277,6 +278,8 @@ class Emissao(Model):
 
     STATUS_OCORREU_ERRO_COMODO = 11
 
+    STATUS_ADICIONAL_USADO = 12
+
     STATUS_CHOICES = (
         (STATUS_NAO_EMITIDO, 'Não Emitido'),
 
@@ -294,7 +297,9 @@ class Emissao(Model):
         (STATUS_REVOGACAO_ENVIADO_COMODO, 'Revogação Em Processamento'),
         (STATUS_REVOGADO, 'Certificado Revogado'),
 
-        (STATUS_OCORREU_ERRO_COMODO, 'Ocorreu um erro interno')
+        (STATUS_OCORREU_ERRO_COMODO, 'Ocorreu um erro interno'),
+
+        (STATUS_ADICIONAL_USADO, 'Adicional usado'),
     )
 
     voucher = OneToOneField(Voucher, related_name='emissao')

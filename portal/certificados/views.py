@@ -134,6 +134,12 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
                               erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
 
+        try:
+            if voucher.emissao:
+                return erro_rest(('---', 'Cupom já emitido'))
+        except Emissao.DoesNotExist:
+            pass
+
         #log.info('request DATA: %s ' % unicode(request.DATA))
         #log.info('request FILES: %s ' % unicode(request.FILES))
 
@@ -151,9 +157,34 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = request.DATA.get('crm_hash')
 
-            if not emissao.emission_urls and voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
-                dominios = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
-                emissao.emission_urls = dominios
+            if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
+                if not emissao.emission_urls:
+                    dominios = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
+                    emissao.emission_urls = dominios
+
+            dominios_adicionais = max(0, len(emissao.emission_urls.split(' ')) - 5)
+
+            if dominios_adicionais:
+                # Emite N vouchers não emitidos do tipo dominio/fqdn adicional
+
+                vouchers_adicionais = Voucher.objects.filter(emissao__isnull=True,
+                                                             ssl_line=voucher.ssl_line,
+                                                             ssl_term=voucher.ssl_term)
+
+                if voucher.ssl_product == Voucher.PRODUTO_MDC:
+                    vouchers_adicionais = vouchers_adicionais.filter(ssl_product=Voucher.PRODUTO_SSL_MDC_DOMINIO)
+                elif voucher.ssl_product == Voucher.PRODUTO_EV_MDC:
+                    vouchers_adicionais = vouchers_adicionais.filter(ssl_product=Voucher.PRODUTO_SSL_EV_MDC_DOMINIO)
+                else:
+                    vouchers_adicionais = vouchers_adicionais.filter(ssl_product=Voucher.PRODUTO_SSL_SAN_FQDN)
+
+                for voucher_adicional in vouchers_adicionais[:dominios_adicionais]:
+                    Emissao.objects.create(
+                        voucher=voucher_adicional,
+                        crm_hash=voucher.crm_hash,
+                        requestor_user_id = self.request.user.pk,
+                        emission_status=Emissao.STATUS_ADICIONAL_USADO,
+                    )
 
             emissao.voucher = voucher
 
@@ -176,7 +207,7 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
 
     def get_voucher(self):
         if not self._voucher:
-            self._voucher = Voucher.objects.get(crm_hash=self.request.DATA.get('crm_hash'), emissao__isnull=True)
+            self._voucher = Voucher.objects.get(crm_hash=self.request.DATA.get('crm_hash'))
         return self._voucher
 
 

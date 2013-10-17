@@ -136,9 +136,15 @@ class ValidateEmissaoCSRMixin(object):
                     if self.validacao:
                         self.validacao_carta_cessao_necessaria = True
         else:
-            is_san = voucher.ssl_product == Voucher.PRODUTO_SAN_UCC
+            if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC:
+                produto_adicional = Voucher.PRODUTO_SSL_SAN_FQDN
+            elif voucher.ssl_product == Voucher.PRODUTO_MDC:
+                produto_adicional = Voucher.PRODUTO_SSL_MDC_DOMINIO
+            else:
+                produto_adicional = Voucher.PRODUTO_SSL_EV_MDC_DOMINIO
+
             qtd_dominios_disponiveis = 5 + Voucher.objects.filter(
-                ssl_product=Voucher.PRODUTO_SSL_SAN_FQDN if is_san else Voucher.PRODUTO_SSL_MDC_DOMINIO,
+                ssl_product=produto_adicional,
                 emissao__isnull=True,
                 ssl_line=voucher.ssl_line,
                 ssl_term=voucher.ssl_term
@@ -154,7 +160,7 @@ class ValidateEmissaoCSRMixin(object):
                     raise self.ValidationError('Nenhum domínio pode conter *.')
 
                 final_dominio = '.%s' % dominio.split('.')[-1]
-                if is_san and final_dominio in NOMES_INTERNOS:
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
                     continue
 
                 razao_social = get_razao_social_dominio(dominio)

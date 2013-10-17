@@ -45,6 +45,8 @@ def get_emails_validacao_padrao(dominio):
 
 
 def get_emails_validacao_whois(dominio):
+    if dominio.startswith('www.'):
+        dominio = dominio[4:]
     if dominio.endswith('.br'):
         return get_emails_dominio(dominio)
 

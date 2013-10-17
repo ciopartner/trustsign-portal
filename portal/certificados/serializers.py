@@ -43,6 +43,11 @@ class ReemissaoSerializer(ModelSerializer):
         model = Emissao
         fields = ['crm_hash', 'emission_csr']
 
+    def get_fields(self):
+        fields = super(ReemissaoSerializer, self).get_fields()
+        fields['emission_csr'].required = True
+        return fields
+
     def validate_emission_csr(self, attrs, source):
         try:
             crm_hash = attrs['crm_hash']
