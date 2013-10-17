@@ -130,7 +130,7 @@ class VoucherAPIViewTestCase(TestCase):
             'emission_urls': 'webmail.grupocrm.com.br autodiscover.grupocrm.com.br imap.grupocrm.com.br',
             'emission_csr': CSR_MDC,
             'emission_server_type': 1,
-            'emission_dcv_emails': 'admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br',
+            'emission_dcv_emails': 'admin@grupocrm.com.br admin@grupocrm.com.br admin@grupocrm.com.br',
             'emission_publickey_sendto': 'admin@grupocrm.com.br',
             'emission_assignment_letter': open(os.path.join(settings.PROJECT_ROOT, 'portal', 'static', 'robots.txt'), 'r')
         })

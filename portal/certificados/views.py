@@ -284,7 +284,7 @@ class EmailWhoisAPIView(GenericAPIView):
             if not url:
                 return erro_rest(('1321', 'Campo emission_url requerido'))  # TODO: codigo erro
             return Response({
-                'email_list': comodo.get_emails_validacao(url)
+                'email_list': comodo.get_emails_validacao_whois(url)
             })
         except Exception:
             return erro_rest(('-1', 'Erro interno do servidor'))
