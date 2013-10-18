@@ -4,44 +4,37 @@
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
-{#        <li data-target="#myCarousel" data-slide-to="2"></li>#}
+        <li data-target="#myCarousel" data-slide-to="2"></li>
         <li data-target="#myCarousel" data-slide-to="3"></li>
         <li data-target="#myCarousel" data-slide-to="4"></li>
     </ol>
     <!-- Carousel items -->
     <div class="carousel-inner">
         <div class="item active">
-            <a href="/a-trustsign/">
+            <a href={% url 'page' 'a-trustsign' %}>
                 <img src={% static "home/img/banners/1.jpg" %}>
             </a>
         </div>
         <div class="item">
-            <a href="/certificado-digital/">
+            <a href={% url 'page' 'certificado-digital' %}>
                 <img src={% static "home/img/banners/2.jpg" %}>
             </a>
         </div>
         <div class="item">
-            <a href="/pki/">
+            <a href={% url 'page' 'pki' %} >
                 <img src={% static "home/img/banners/3.jpg" %}>
             </a>
         </div>
         <div class="item">
-            <a href="/site-seguro/">
+            <a href={% url 'page' 'site-seguro' %} >
                 <img src={% static "home/img/banners/4.jpg" %}>
             </a>
         </div>
         <div class="item">
-            <a href="/site-monitorado/">
+            <a href={% url 'page' 'site-monitorado' %}>
                 <img src={% static "home/img/banners/5.jpg" %}>
             </a>
         </div>
-
-{#        <div class="item">#}
-{#            <a href="/site-monitorado/">#}
-{#                <img src={% static "home/img/banners/5.jpg" %}>#}
-{#            </a>#}
-{#        </div>#}
-
     </div>
     <!-- Carousel nav -->
     <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>

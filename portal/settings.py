@@ -71,6 +71,8 @@
 # )
 
 # Setting to identify a user profile
+SITE_PREFIX = "portal"
+
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 
 ACCOUNTS_PROFILE_FORM_CLASS = 'portal.home.forms.ProfileForm'

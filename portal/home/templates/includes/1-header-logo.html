@@ -4,35 +4,20 @@
     <section class="featurette" style="padding-bottom:0;">
         <section class="row">
             <aside class="span3 logomedia">
-                <a href="/"><img src="{% static "home/img/icons/mainlogo.png" %}" class="mainlogo"/></a>
+                <a href="/portal/" ><img src="{% static "home/img/icons/mainlogo.png" %}" class="mainlogo"/></a>
             </aside>
             <aside class="span9 header1" style="">
                 <div class="navbar">
                     <ul class="nav pull-right header1-text">
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
-                        <li class="activa"><a href="/a-trustsign" class="limeh85x">A TRUSTSIGN</a></li>
+                        <li class="activa"><a href= {% url 'page' 'a-trustsign' %} class="limeh85x">A TRUSTSIGN</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
-                        <li class="activa"><a href="/blog" class="limeh85x">BLOG</a></li>
+                        <li class="activa"><a href= {% url 'page' 'blog' %} class="limeh85x">BLOG</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
-                        <li class="activoverfl"><a href="#" class="limeh85x">ENTRAR</a>
-
-
-                            <div class="foty ensign" style="margin-left: -151px;">
-                                <form class="customsininput" id="login-form" method="post" action="/admin/">
-                                    {% csrf_token %}
-                                    <div><input id="id_username" name="username" type="text" placeholder="CNPJ"></div>
-                                    <div><input id="id_password" name="password" type="password" placeholder="Senha">
-                                    </div>
-                                    <div>
-                                        <a href="/password_forgotten">Esqueceu a senha?</a>
-                                        <button type="submit" class="btn pull-right">Entrar</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
+                        <li class="activoverfl"><a href="#" class="limeh85x">ENTRAR</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
                         <li class="activa">
-                            <a href="#" class="limeh85x dobold disabled">
+                            <a href="/ecommerce/basket/" class="limeh85x dobold disabled">
                                 <img class="custom-icon" src="{% static "home/img/icons/cart-black.png" %}" alt=""/>
                                 <span id="qtd_carrinho" class="badge badge-info">{#{{ request.basket.num_items }} #}0</span>
                             </a>
