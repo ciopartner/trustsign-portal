@@ -23,7 +23,7 @@ ALLOWED_HOSTS = [
 ]
 
 # Para evitar as URLs com problema no LIGHTTPD
-FORCE_SCRIPT_NAME = ''
+# FORCE_SCRIPT_NAME = ''
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
