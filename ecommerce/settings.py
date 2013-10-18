@@ -162,6 +162,8 @@ INSTALLED_APPS = [
     #'ecommerce.apps.checkout',
     #'website',
 
+    'portal.home',
+
     'south',
     'compressor',
 ]
@@ -192,6 +194,9 @@ OSCAR_ORDER_STATUS_PIPELINE = {
     'Cancelada': (),
 }
 
+AUTH_PROFILE_MODULE = "home.TrustSignProfile"
+
+
 # Sobrescreva com os settings globais
 from settings_global import *
 DEFAULT_DATABASE = DATABASES.get('common')
@@ -200,6 +205,7 @@ DATABASES = {'default': DEFAULT_DATABASE}
 # COBREBEM
 COBREBEM_HOST = "https://teste.aprovafacil.com/cgi-bin/APFW"
 COBREBEM_USER = "trustsign"
+
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'

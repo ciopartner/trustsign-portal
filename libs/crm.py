@@ -8,6 +8,68 @@ from logging import getLogger
 log = getLogger('libs.crm')
 
 
+class ClienteCRM(object):
+
+    def __init__(self):
+
+        self.cnpj = None
+        self.razaosocial = None
+        self.logradouro = None
+        self.numero = None
+        self.complemento = None
+        self.bairro = None
+        self.cidade = None
+        self.estado = None
+        self.pais = None
+        self.cep = None
+        self.sem_atividade = None
+
+
+class OportunidadeCRM(object):
+    def __init__(self):
+        self.account_id = None
+        self.name = 'Oportunidade via e-commerce'
+        self.numero_pedido = None
+        self.data_pedido = None
+        self.valor_total = None
+
+        # cartão de credito
+        self.pag_credito_titular = None
+        self.pag_credito_vencimento = None
+        self.pag_credito_bandeira = None
+        self.pag_credito_transacao_id = None
+        self.pag_credito_ultimos_digitos = None
+
+        #cartão de débito
+        self.pag_debito_titular = None
+        self.pag_debito_vencimento = None
+        self.pag_debito_bandeira = None
+        self.pag_debito_transacao_id = None
+        self.pag_debito_ultimos_digitos = None
+
+        #boleto
+        #TODO: dados boleto em oportunidade
+
+    def is_credito(self):
+        return self.pag_credito_ultimos_digitos is not None
+
+    def is_debito(self):
+        return self.pag_debito_ultimos_digitos is not None
+
+    def is_boleto(self):
+        return False
+
+
+class ProdutoCRM(object):
+
+    def __init__(self):
+        self.account_id = None
+        self.opportunity_id = None
+        self.codigo = None
+        self.preco_venda = None,
+        self.quantidade = None,
+
+
 class CRMClient(object):
 
     def __init__(self):
@@ -153,9 +215,9 @@ class CRMClient(object):
         Cria um product no CRM
         """
 
-        response = self.set_entry('Opportunities', {
+        response = self.set_entry('Products', {
             'account_id': produto.account_id,
-            'opportunity_id': produto.opportunity_id,
+            'opportunities_id': produto.opportunity_id,
             'vendor_part_num': produto.codigo,
             'discount_price': produto.preco_venda,
             'quantity': produto.quantidade,
@@ -168,17 +230,22 @@ class CRMClient(object):
         Executa todo o processo de compra, criando account, opportunity e products quando necessário
         """
         self.login()
-        account_id = self.get_account(cliente.cnpj)['entry_list']
-        if account_id:
-            account_id = account_id[0]['id']
-        else:
-            account_id = self.set_entry_account(cliente)
-        oportunidade.account_id = account_id
-        opportunity_id = self.set_entry_opportunities(oportunidade)
-        for produto in produtos:
-            produto.account_id = account_id
-            produto.opportunity_id = opportunity_id
-            self.set_entry_products(produto)
+        try:
+            account_id = self.get_account(cliente.cnpj)['entry_list']
+            if account_id:
+                account_id = account_id[0]['id']
+            else:
+                account_id = self.set_entry_account(cliente)
+
+            oportunidade.account_id = account_id
+            opportunity_id = self.set_entry_opportunities(oportunidade)
+
+            for produto in produtos:
+                produto.account_id = account_id
+                produto.opportunity_id = opportunity_id
+                self.set_entry_products(produto)
+        except Exception as e:
+            log.exception('Ocorreu um erro ao postar a compra')
         self.logout()
 
 #print set_entry_account(
@@ -195,13 +262,13 @@ class CRMClient(object):
 #    sem_atividade=False
 #)
 
-client = CRMClient()
-
-client.login()
-account = client.get_account('88.888.888/0001-88')['entry_list']
-client.logout()
-
-if account:
-    print account[0]['id']
-else:
-    print 'não encontrou'
+#client = CRMClient()
+#
+#client.login()
+#account = client.get_account('88.888.888/0001-88')['entry_list']
+#client.logout()
+#
+#if account:
+#    print account[0]['id']
+#else:
+#    print 'não encontrou'

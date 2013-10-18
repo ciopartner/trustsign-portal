@@ -51,6 +51,9 @@ class TrustSignProfile(Model):
 
     perfil = PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
 
+    def __unicode__(self):
+        return 'Profile: %s' % self.user
+
     @property
     def is_trustsign(self):
         return self.perfil == self.PERFIL_TRUSTSIGN

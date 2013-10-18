@@ -152,6 +152,10 @@ LOGGING = {
         'libs.comodo': {
             'handlers': ['console', 'logfile_comodo'],
             'level': 'DEBUG'
+        },
+        'oscar': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG'
         }
     },
 }

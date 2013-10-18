@@ -25,7 +25,7 @@ class Facade(object):
     def get_friendly_decline_message(self, msg):
         return u'Ocorreu um erro durante o pagamento: %s ' % msg
 
-    def approval(self,order_number, amount, bankcard, ip):
+    def approval(self, oportunidade, order_number, amount, bankcard, ip):
         if amount == 0:
             raise UnableToTakePayment("Order amount must be non-zero")
         response = self.gateway.approval(
@@ -34,8 +34,10 @@ class Facade(object):
                 amount=amount,                                
                 ccv=bankcard.ccv,
                 ip=ip)             
-        if response.is_successful():            
-            return self.capture(response['transacao'])
+        if response.is_successful():
+            transaction_id = response['transacao']
+            oportunidade.pag_credito_transacao_id = transaction_id
+            return self.capture(transaction_id)
         else:
             msg = self.get_friendly_decline_message(response['resultado_solicitacao_aprovacao'])
             raise UnableToTakePayment(msg)
