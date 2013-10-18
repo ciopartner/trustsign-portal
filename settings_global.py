@@ -240,14 +240,14 @@ if ENVIRONMENT == 'DEV':
     SESSION_COOKIE_DOMAIN = 'localhost'
 elif ENVIRONMENT == 'QAS':
     DEBUG = True
-    URL_PORTAL = 'http://www.trustsign.ciopartner.com.br/'
-    URL_ECOMMERCE = 'http://ecommerce.trustsign.ciopartner.com.br/'
+    URL_PORTAL = 'http://www.t.trustsign.com.br/'
+    URL_ECOMMERCE = 'http://ecommerce.t.trustsign.com.br/'
     # Para que haja compartilhamento de sessions...
-    SESSION_COOKIE_DOMAIN = 'ciopartner.com.br'
+    SESSION_COOKIE_DOMAIN = 't.trustsign.com.br'
 elif ENVIRONMENT == 'PRD':
     DEBUG = False
-    URL_PORTAL = 'http://www.trustsign.com.br/'
-    URL_ECOMMERCE = 'http://ecommerce.trustsign.com.br/'
+    URL_PORTAL = 'https://www.trustsign.com.br/'
+    URL_ECOMMERCE = 'https://ecommerce.trustsign.com.br/'
     # Para que haja compartilhamento de sessions...
     SESSION_COOKIE_DOMAIN = 'trustsign.com.br'
 
