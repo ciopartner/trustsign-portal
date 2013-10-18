@@ -11,10 +11,10 @@ urlpatterns = patterns('',
     # url(r'^ecommerce/', include('ecommerce.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^ecommerce/admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
-    ('^', include('website.urls')),
-    (r'', include(application.urls))
+    url(r'^ecommerce/admin/', include(admin.site.urls)),
+    ('^ecommerce/', include('website.urls')),
+    (r'^ecommerce/', include(application.urls))
 )
