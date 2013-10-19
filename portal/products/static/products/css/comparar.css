@@ -316,10 +316,10 @@ tbody > tr:nth-child(even){
 }
 
 .sslright{
-	background:url(/static/home/img/table-yes.png) 50% 50% no-repeat;
+	background:url(/static-portal/home/img/table-yes.png) 50% 50% no-repeat;
 }
 .sslwrong{
-	background:url(/static/home/img/table-no.png) 50% 50% no-repeat;
+	background:url(/static-portal/home/img/table-no.png) 50% 50% no-repeat;
 }
 
 .tdbrs{
