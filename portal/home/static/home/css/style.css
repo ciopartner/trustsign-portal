@@ -131,6 +131,9 @@ width: 391px;
     text-transform: uppercase;
     font-size: 14px;
 }
+.badge-orange{
+    background: #cb772e;
+}
 
 .no-uppercase{
     text-transform: none !important;
@@ -804,8 +807,8 @@ img.size-thumbnail{
 }
 
 .all-body-text1 > article > div > p{
-	margin-top:2px;
-	margin-bottom:2px;
+	margin-top:5px;
+	margin-bottom:10px;
 	}
 
 
@@ -1206,6 +1209,10 @@ img.size-thumbnail{
     height: auto;
 }
 
+.home .carousel{
+    margin-top: 20px;
+}
+
 .youtube-container .sharebar{
     float:left;
     margin: 35px 0 0 10px;
@@ -1365,7 +1372,7 @@ img.size-thumbnail{
 	float:left;
     margin-right: 2px;
     padding: 10px;
-    height: 120px;
+    height: 135px;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
@@ -1748,18 +1755,12 @@ div.ferramentas table{
 
 div.ferramentas .well{
     margin: 0;
-    width: 363px;
-    float:left;
-    min-height: 496px;
 }
 
 div.ferramentas .span5{
-    width: 320px;
+    width: 740px;
 }
 
-div.ferramentas .well:last-child{
-    float:right;
-}
 
 div.ferramentas select{
     width: 300px;
@@ -1926,6 +1927,11 @@ div.ferramentas select{
     margin-top: 30px;
 }
 
+.resposta .span6 div{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+}
+
 h3.title{
     margin-top: 30px;
     font-weight: bold;
@@ -2008,12 +2014,11 @@ h3.title{
     line-height: 22px;
     margin-left: -52px;
     left: 50%;
-    font-size: 100%;
+    font-size: 110%;
 }
 
 #product-price .box-price small{
     display: block;
-    margin-top: -8px;
 }
 
 #product-price .box-price sup{

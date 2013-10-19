@@ -172,7 +172,7 @@ table.ssltab.comptab > thead > tr > th:nth-child(1){
 }
 
 table.comptab .btn{
-    width: 110px;;
+    width: 110px;
 }
 
 
@@ -184,8 +184,10 @@ table.ssltab > thead > tr > th:nth-child(2){
 	background-image: linear-gradient(to top, rgba(1,84,151,1),rgba(49,116,171,1));
 }
 
-table.ssltab.comptab > thead > tr > th:nth-child(2){
-    width: 180px;
+table.ssltab.comptab > thead > tr > th:nth-child(2),
+table.ssltab.comptab > thead > tr > th:nth-child(3),
+table.ssltab.comptab > thead > tr > th:nth-child(4){
+    width: 190px;
 }
 
 table.ssltab > thead > tr > th:nth-child(3){

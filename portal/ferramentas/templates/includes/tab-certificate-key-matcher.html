@@ -9,8 +9,9 @@
             </table>
             {% csrf_token %}
         </div>
+        {% if resultado and op == 'certificate-key-matcher' %}
         <div class="well">
-            {% if resultado and op == 'certificate-key-matcher' %}
+
                 {% if resultado.ok %}
                     {% if resultado.match %}
                         <p>O certificado e a private key combinam!</p>
@@ -22,7 +23,8 @@
                 {% else %}
                     <p>Ocorreu um erro durante o processamento.</p>
                 {% endif %}
-            {% endif %}
+
         </div>
+        {% endif %}
     </form>
 </div>
