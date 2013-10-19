@@ -16,12 +16,14 @@ $(document).ready(function () {
 
         quantity = typeof quantity !== 'undefined' ? quantity : 1;
 
-        console.log(url_ecommerce + 'ajax/adicionar-produto/');
-        $.post( url_ecommerce + 'ajax/adicionar-produto/',
-            {product_code: product_code, quantity:quantity, line: line, term: term},
-            add_success,
-            'json'
-        ).fail(add_fail);
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: url_ecommerce + 'ajax/adicionar-produto/',
+            data: {product_code: product_code, quantity:quantity, line: line, term: term},
+            success: add_success,
+            error: add_fail
+        });
     }
 
     $('#add-ssl-basic-1year').click(function(){
