@@ -4,14 +4,10 @@ import urllib
 import requests
 import xml.etree.ElementTree as ET
 
-# Methods
-APPROVAL = 'APC'
-CAPTURE = 'CAP'
-CANCEL = 'CAN'
 
 class Response(object):
     """
-    Encapsulate a Cobrebem response
+    This class is responsible for assemble the gateway response
     """
 
     def __init__(self, request_url, response_xml, extract_data):
@@ -72,42 +68,53 @@ class Response(object):
     def is_declined(self):
         return self.data.get('transacao_aprovada', None) == "False"
 
+
 class Gateway(object):
+    """
+    This is an abstract class
+    """
+    # Used webservice methods
+    APPROVAL = 'APC'
+    CAPTURE = 'CAP'
+    CANCEL = 'CAN'
+
+
+class CreditCard(Gateway):
+    """
+    This class is responsible for the gateway integration.
+    """
 
     def __init__(self, host, path):        
         self._host = host
         self._path = path
 
-    def _do_request_post(self, method_name, extract_data_type, **kwargs):
+    def _do_request_post(self, method_name, extract_data_type, params):
         url = "/".join([self._host, self._path, method_name])        
-        params = urllib.urlencode(kwargs)        
+        params = urllib.urlencode(params)
         req = requests.post(url,params=params)        
         response = Response(req.url, req.text, extract_data_type)
         return response        
 
-    def approval(self, **kwargs):        
-        kwargs['QuantidadeParcelas'] = "01"        
-        kwargs['ValorDocumento'] = kwargs['amount']
-        kwargs['NumeroCartao'] = kwargs['card_number']
-        kwargs['MesValidade'] = kwargs['expiry_date'].strftime("%m")
-        kwargs['AnoValidade'] = kwargs['expiry_date'].strftime("%y")        
-        kwargs['CodigoSeguranca'] = kwargs['ccv']
-        kwargs['EnderecoIPComprador'] = kwargs['ip']
-        del kwargs['ip']
-        del kwargs['ccv']
-        del kwargs['card_number']
-        del kwargs['expiry_date']
-        del kwargs['amount']        
-        return self._do_request_post(APPROVAL, "_extract_data_approval", **kwargs)
+    def approval(self, **kwargs):
+        approval = {}
+        approval['NumeroDocumento'] = kwargs.get('order_number')
+        approval['QuantidadeParcelas'] = "01"
+        approval['ValorDocumento'] = kwargs.get('amount')
+        approval['NumeroCartao'] = kwargs.get('card_number')
+        approval['MesValidade'] = kwargs.get('expiry_date').strftime("%m")
+        approval['AnoValidade'] = kwargs.get('expiry_date').strftime("%y")
+        approval['CodigoSeguranca'] = kwargs.get('ccv')
+        approval['EnderecoIPComprador'] = kwargs.get('ip')
+        return self._do_request_post(self.APPROVAL, "_extract_data_approval", params=approval)
 
     def capture(self, **kwargs):
-        kwargs['Transacao']  = kwargs['transaction']        
-        del kwargs['transaction']
-        return self._do_request_post(CAPTURE, "_extract_data_capture", **kwargs)
+        capture={}
+        capture['Transacao']  = kwargs['transaction']
+        return self._do_request_post(self.CAPTURE, "_extract_data_capture", capture)
 
     def cancel(self, **kwargs):
-        kwargs['Transacao']  = kwargs['transaction']        
-        del kwargs['transaction']
-        return self._do_request_post(CANCEL, "_extract_data_cancel", **kwargs)
+        cancel = {}
+        cancel['Transacao']  = kwargs['transaction']
+        return self._do_request_post(self.CANCEL, "_extract_data_cancel", cancel)
 
     

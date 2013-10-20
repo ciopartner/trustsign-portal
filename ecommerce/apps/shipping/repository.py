@@ -8,7 +8,8 @@ METHODS = (
 
 class Repository(CoreRepository):
 
-    def get_shipping_methods(self, user, basket, shipping_addr=None, **kwargs):
+    def get_shipping_methods(self, user, basket, shipping_addr=None,
+                             request=None, **kwargs):
         return self.prime_methods(basket, METHODS)
 
     def find_by_code(self, code, basket):

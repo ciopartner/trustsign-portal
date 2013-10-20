@@ -7,14 +7,25 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from libs.cobrebem.facade import Facade
 
+from oscar.apps.payment.exceptions import UnableToTakePayment
 from oscar.apps.checkout import views
 from oscar.apps.payment.forms import BankcardForm
 from oscar.apps.payment.models import SourceType, Source
 from libs import crm
 
 
-# Customise the core PaymentDetailsView to integrate Datacash
 class PaymentDetailsView(views.PaymentDetailsView):
+    """
+    For taking the details of payment and creating the order
+
+    The class is deliberately split into fine-grained methods, responsible for
+    only one thing.  This is to make it easier to subclass and override just
+    one component of functionality.
+
+    All projects will need to subclass and customise this class.
+    """
+
+    preview = False
 
     def __init__(self, *args, **kwargs):
         self.cliente = crm.ClienteCRM()
@@ -29,10 +40,15 @@ class PaymentDetailsView(views.PaymentDetailsView):
         return ctx
 
     def post(self, request, *args, **kwargs):
-        if request.POST.get('action', '') == 'place_order':
-            return self.do_place_order(request)
+        """
+        This method is designed to be overridden by subclasses which will
+        validate the forms from the payment details page.  If the forms are
+        valid then the method can call submit()
+        """
+        error_response = self.get_error_response()
+        if error_response:
+            return error_response
 
-        # Check bankcard form is valid
         bankcard_form = BankcardForm(request.POST)
         if not bankcard_form.is_valid():
             # Bancard form invalid, re-render the payment details template
@@ -41,12 +57,43 @@ class PaymentDetailsView(views.PaymentDetailsView):
             ctx['bankcard_form'] = bankcard_form
             return self.render_to_response(ctx)
 
-        # Render preview page (with completed bankcard form hidden).
-        # Note, we don't write the bankcard details to the session or DB
-        # as a security precaution.
+        if self.preview:
+            # We use a custom parameter to indicate if this is an attempt to
+            # place an order.  Without this, we assume a payment form is being
+            # submitted from the payment-details page
+            if request.POST.get('action', '') == 'place_order':
+                # We pull together all the things that are needed to place an
+                # order.
+                payment_kwargs = self.build_payment_kwargs(request)
+                submission = self.build_submission(payment_kwargs=payment_kwargs)
+                return self.submit(**submission)
+            return self.render_preview(request, bankcard_form=bankcard_form)
+
+        #Render preview page (with completed bankcard form hidden).
+        #Note, we don't write the bankcard details to the session or DB
+        #as a security precaution.
         return self.render_preview(request, bankcard_form=bankcard_form)
 
-    def do_place_order(self, request):
+        ## Posting to payment-details isn't the right thing to do
+        #return self.get(request, *args, **kwargs)
+
+    def build_submission(self, **kwargs):
+        """
+        Author: Alessandro Reichert
+        Return a dict of data to submitted to pay for, and create an order
+        ** Update the payment_kwargs which is not treated in the standard oscar
+        """
+        submission = super(PaymentDetailsView, self).build_submission(**kwargs)
+        payment_kwargs = kwargs.get('payment_kwargs')
+        submission.update({'payment_kwargs': payment_kwargs})
+        return submission
+
+    def build_payment_kwargs(self, request, *args, **kwargs):
+        """
+        Author: Alessandro Reichert
+        This method is responsible for generating the payment information (bankcard),
+         which will be sent to handle_payment and can be used for the submission to CobreBem
+        """
         # Double-check the bankcard data is still valid
         bankcard_form = BankcardForm(request.POST)
         if not bankcard_form.is_valid():
@@ -54,12 +101,42 @@ class PaymentDetailsView(views.PaymentDetailsView):
             return http.HttpResponseRedirect(
                 reverse('checkout:payment-details'))
 
-        # Call oscar's submit method, passing through the bankcard object so it
-        # gets passed to the 'handle_payment' method and can be used for the
-        # submission to Datacash.
         bankcard = bankcard_form.bankcard
-        return self.submit(request.basket,
-                           payment_kwargs={'bankcard': bankcard})
+        payment_kwargs={'bankcard': bankcard}
+        return payment_kwargs
+
+    #def post(self, request, *args, **kwargs):
+    #    if request.POST.get('action', '') == 'place_order':
+    #        return self.do_place_order(request)
+    #
+    #    # Check bankcard form is valid
+    #    bankcard_form = BankcardForm(request.POST)
+    #    if not bankcard_form.is_valid():
+    #        # Bancard form invalid, re-render the payment details template
+    #        self.preview = False
+    #        ctx = self.get_context_data(**kwargs)
+    #        ctx['bankcard_form'] = bankcard_form
+    #        return self.render_to_response(ctx)
+    #
+    #    # Render preview page (with completed bankcard form hidden).
+    #    # Note, we don't write the bankcard details to the session or DB
+    #    # as a security precaution.
+    #    return self.render_preview(request, bankcard_form=bankcard_form)
+
+    #def do_place_order(self, request):
+    #    # Double-check the bankcard data is still valid
+    #    bankcard_form = BankcardForm(request.POST)
+    #    if not bankcard_form.is_valid():
+    #        messages.error(request, _("Invalid submission"))
+    #        return http.HttpResponseRedirect(
+    #            reverse('checkout:payment-details'))
+    #
+    #    # Call oscar's submit method, passing through the bankcard object so it
+    #    # gets passed to the 'handle_payment' method and can be used for the
+    #    # submission to Datacash.
+    #    bankcard = bankcard_form.bankcard
+    #    return self.submit(request.basket,
+    #                       payment_kwargs={'bankcard': bankcard})
 
     def handle_payment(self, order_number, total_incl_tax, **kwargs):
         bankcard = kwargs['bankcard']
@@ -69,15 +146,11 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # raised and handled by the parent PaymentDetail view)
         ip = self.request.META['REMOTE_ADDR']
         facade = Facade()
-        cobrebem_ref = facade.approval(self.oportunidade, order_number, total_incl_tax, bankcard, ip)
-
-        self.oportunidade.data_pedido = now().strftime('%Y-%m-%d')
-        self.oportunidade.valor_total = str(total_incl_tax)
-        self.oportunidade.pag_credito_titular = 'Titular Teste'  # TODO: bankcard.cardholder
-        self.oportunidade.pag_credito_vencimento = bankcard.expiry_month()
-        self.oportunidade.pag_credito_bandeira = 'Bandeira Teste'  # TODO: bankcard.flag
-        self.oportunidade.pag_credito_ultimos_digitos = bankcard.card_number[-4:]
-
+        transaction_id = facade.approval(order_number, total_incl_tax.incl_tax, bankcard, ip)
+        if transaction_id:
+            msg = facade.capture(transaction_id)
+            if transaction_id != msg:
+                raise UnableToTakePayment(msg)
 
         # Request was successful - record the "payment source".  As this
         # request was a 'pre-auth', we set the 'amount_allocated' - if we had
@@ -85,14 +158,25 @@ class PaymentDetailsView(views.PaymentDetailsView):
         source_type, _ = SourceType.objects.get_or_create(name='Cobrebem')
         source = Source(source_type=source_type,
                         currency='R$',
-                        amount_allocated=total_incl_tax,
-                        reference=cobrebem_ref)
-        source.create_deferred_transaction("Approval", total_incl_tax, reference=cobrebem_ref, status=1)
+                        amount_allocated=total_incl_tax.incl_tax,
+                        reference=transaction_id)
+        # TODO: rever o parametro 1 e 4 desta birosca
+        source.create_deferred_transaction("Approval", total_incl_tax.incl_tax, reference=transaction_id, status=1)
         self.add_payment_source(source)
-       
+
         # Also record payment event
+        # TODO: rever o parametro 1 e 4 desta birosca
         self.add_payment_event(
-            'approval', total_incl_tax, reference=cobrebem_ref)
+            'approval', total_incl_tax.incl_tax, reference=transaction_id)
+
+        # Registrar a oportunidade no CRM
+        self.oportunidade.pag_credito_transacao_id = transaction_id
+        self.oportunidade.data_pedido = now().strftime('%Y-%m-%d')
+        self.oportunidade.valor_total = str(total_incl_tax.incl_tax)
+        self.oportunidade.pag_credito_titular = 'Titular Teste'  # TODO: bankcard.cardholder
+        self.oportunidade.pag_credito_vencimento = bankcard.expiry_month()
+        self.oportunidade.pag_credito_bandeira = bankcard.card_type
+        self.oportunidade.pag_credito_ultimos_digitos = bankcard.card_number[-4:]
 
     def handle_successful_order(self, order):
         """
@@ -127,8 +211,6 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
         client = crm.CRMClient()
         client.postar_compra(self.cliente, self.oportunidade, self.produtos)
-
-        return None
 
         self.send_confirmation_message(order)
 

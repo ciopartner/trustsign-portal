@@ -219,3 +219,15 @@ EMAIL_HOST_USER = 'AKIAJB23EUFD5S4FY76Q'
 EMAIL_HOST_PASSWORD = 'AjfrHH5LIVaKku5iBMkbBs5CWM2IK0Z6ZhiXWKVQHHHV'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = OSCAR_FROM_EMAIL = 'alessandro.reichert@ciopartner.com.br'
+
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_settings import *
+except ImportError:
+    pass
