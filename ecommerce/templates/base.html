@@ -1,6 +1,12 @@
 {% extends 'oscar/base.html' %}
 {% load i18n compress %}
 {% load staticfiles %}
+{% block extrastyles %}
+    {{ block.super }}
+    <script type="text/javascript">
+        url_ecommerce = "{{ url_ecommerce }}";
+    </script>
+{% endblock %}
 
 {% block mainstyles %}
 

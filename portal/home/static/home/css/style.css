@@ -38,6 +38,20 @@ h3{
 	display: none;
 }
 
+
+.cart-btn{
+    background: rgb(203, 119, 46);
+    height: 40px;
+    line-height: 40px;
+    margin-top: 24px;
+    border-radius: 30px 30px 30px 30px;
+    margin-left: 10px;
+}
+
+.cart-btn a{
+    line-height: 40px;
+}
+
 /* Bootstrap 80% */
 .form-horizontal .control-label{
     width: 100px;
@@ -134,6 +148,10 @@ width: 391px;
 .badge-orange{
     background: #cb772e;
 }
+.badge-white{
+    background: #FFF;
+    color: #999;
+}
 
 .no-uppercase{
     text-transform: none !important;
@@ -212,24 +230,15 @@ img.size-thumbnail{
 
 .post{
     clear: both;
-    padding: 0px 20px 10px;
     margin-top: -10px;
-}
-
-.post:nth-child(odd), .post-view{
-	background-color:#F7F7F7;
-}
-.post:nth-child(even), .shortbio{
-	background-color:#F0F0F0;
+    border-bottom: 1px solid #DDD;
 }
 
 .post-view{
-    padding: 10px 20px;
     text-align: justify;
 }
 
 .shortbio{
-    padding: 20px 20px 10px;
     margin-bottom: 20px;
 }
 
@@ -1611,6 +1620,7 @@ img.size-thumbnail{
     background-position: -151px 0;
     width: 26px;
     height: 29px;
+    margin-left: 15px;
 }
 .icon-lupa{
     background-position: -199px 0;
@@ -1655,6 +1665,10 @@ img.size-thumbnail{
 .div-facebook{
     float: left;
     margin-top: 2px;
+}
+
+.div-facebook > *{
+    width: 167px;
 }
 
 /*   FAQ   */
@@ -1970,6 +1984,9 @@ h3.title{
     min-height: 118px;
     border: 1px solid #ddd;
     box-sizing: border-box;
+    width: 473px;
+    float: right;
+    overflow: inherit;
     -moz-box-sizing: border-box;
     -webkit-border-radius: 3px;
        -moz-border-radius: 3px;
@@ -2012,9 +2029,10 @@ h3.title{
     width: 80px;
     height: 24px;
     line-height: 22px;
-    margin-left: -52px;
+    margin-left: -51px;
     left: 50%;
     font-size: 110%;
+    top: 124px;
 }
 
 #product-price .box-price small{
@@ -2022,16 +2040,18 @@ h3.title{
 }
 
 #product-price .box-price sup{
-    top: -0.7em;
+    top: 0;
     font-size: 65%;
 }
 
 #product-price .box-price h3{
-    font-size: 140%;
+    font-size: 155%;
+    margin-top: 36px;
 }
 
 #comprar-message{
-    width: 614px;
+    width: 572px;
     float: right;
     margin-right: -8px;
+    margin-top: 30px;
 }

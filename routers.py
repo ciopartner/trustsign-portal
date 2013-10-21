@@ -37,7 +37,7 @@ class UserSessionRouter(object):
     """
 
     # Apps para o banco 'common'
-    APPS = ['auth', 'accounts', 'sessions', 'app_label', 'sites', 'permission', 'contenttypes', 'auth_permission']
+    APPS = ['auth', 'customer', 'sessions', 'app_label', 'sites', 'permission', 'contenttypes', 'auth_permission']
 
     def db_for_read(self, model, **hints):
         if not hasattr(request_cfg, 'admin'):

@@ -1706,7 +1706,7 @@ msgstr "Ativo"
 #: apps/customer/abstract_models.py:65
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
-"instead of deleting accounts."
+"instead of deleting customer."
 msgstr ""
 
 #: apps/customer/abstract_models.py:67

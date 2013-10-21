@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.contrib.auth import get_user_model
 from django.forms import CharField, TextInput
 from localflavor.br.forms import BRCNPJField
 from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm
+
+User = get_user_model()
 
 
 class TextInputDisabled(TextInput):
@@ -35,6 +38,10 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
     nome = CharField(max_length=128)
     sobrenome = CharField(max_length=128)
     telefone_principal = CharField(max_length=16)
+
+    class Meta:
+        model = User
+        fields = ('nome', 'sobrenome', 'telefone_principal','email',)
 
     def save(self, commit=True):
         user = super(EmailUserCreationForm, self).save()

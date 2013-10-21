@@ -200,7 +200,7 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 }
 
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
-LOGIN_URL = "/ecommerce/accounts/login"
+LOGIN_URL = "/ecommerce/customer/login"
 
 # Sobrescreva com os settings globais
 from settings_global import *

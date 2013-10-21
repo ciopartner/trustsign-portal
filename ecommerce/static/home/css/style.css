@@ -1389,7 +1389,7 @@ img.size-thumbnail{
 }
 
 .nossa-diferenca .suporte-especializado {
-    background: url(../img/diferenca/suporte.png) 15px 10px no-repeat;
+    background: url("../img/diferenca/suporte.png") 15px 10px no-repeat;
     line-height: 100%;
     font-size: 80%;
     font-weight: bold;
@@ -1979,4 +1979,10 @@ input[type=text], input[type=password]{
     background: #f7f7f7;
     padding: 20px;
     display: block;
+}
+
+#total h3{
+    font-size: 170%;
+    float: right;
+    margin-top: -28px;
 }

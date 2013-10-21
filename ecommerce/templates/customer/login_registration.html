@@ -2,6 +2,13 @@
 {% load url from future %}
 {% load currency_filters %}
 {% load i18n %}
+{% load staticfiles %}
+
+{% block extrascripts %}
+    {{  block.super }}
+    <script src="{% static 'ecommerce/js/custom.js' %}"></script>
+    <script src="{% static 'ecommerce/js/customer/registration.js' %}"></script>
+{% endblock %}
 
 {% block breadcrumbs %}
     {% include "partials/progress-bar.html" with identificacao=True %}
@@ -20,7 +27,7 @@
             </form>
         </div>
         <div class="span8 register_form">
-            <form id="register_form" action="{{ request.get_full_path }}" method="post" class="form-stacked">
+            <form id="register_form" action="{{ request.get_full_path }}" method="post" class="form-horizontal">
                 <h4>{% trans 'Register' %}</h4>
                 {% csrf_token %}
                 {% include "partials/form_fields.html" with form=registration_form %}

@@ -239,7 +239,7 @@ ENVIRONMENT = os.getenv('TRUSTSIGN_ENVIRONMENT', 'DEV')
 if ENVIRONMENT == 'DEV':
     DEBUG = True
     URL_PORTAL = 'http://localhost:8000/'
-    URL_ECOMMERCE = 'http://localhost:9000/'
+    URL_ECOMMERCE = 'http://localhost:9000/ecommerce/'
     # Para que haja compartilhamento de sessions...
     SESSION_COOKIE_DOMAIN = 'localhost'
 elif ENVIRONMENT == 'QAS':

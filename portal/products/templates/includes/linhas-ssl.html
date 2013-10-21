@@ -274,17 +274,15 @@
           <div class="tab-content">
             <div class="tab-pane active" id="lA">
                 <div class="box-price tblrp10">
-                    <h3>R$ {{ precos.basic.term1year.price_tpl.0 }}<sup>,{{ precos.basic.term1year.price_tpl.1 }}</sup></h3>
+                    <h3>R$ {{ precos.prime.term1year.price_tpl.0 }}<sup>,{{ precos.prime.term1year.price_tpl.1 }}</sup></h3>
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="1year" class="btn btn-orange">Comprar</a>
                 </div>
                 <div class="box-price tblrp10">
-                    <h3>R$ {{ precos.basic.term2years.price_tpl.0 }}<sup>,{{ precos.basic.term2years.price_tpl.1 }}</sup></h3>
-                    <small>{{ precos.basic.term2years.discount }}% de desconto</small>
+                    <h3>R$ {{ precos.pro.term1year.price_tpl.0 }}<sup>,{{ precos.pro.term1year.price_tpl.1 }}</sup></h3>
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="1year" class="btn btn-orange">Comprar</a>
                 </div>
                 <div class="box-price tblrp10">
-                    <h3>R$ {{ precos.basic.term3years.price_tpl.0 }}<sup>,{{ precos.basic.term3years.price_tpl.1 }}</sup></h3>
-                    <small>{{ precos.basic.term3years.discount }}% de desconto</small>
+                    <h3>R$ {{ precos.basic.term1year.price_tpl.0 }}<sup>,{{ precos.basic.term1year.price_tpl.1 }}</sup></h3>
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="1year" class="btn btn-orange">Comprar</a>
                 </div>
                 <div class="box-price tblrp10">
@@ -294,8 +292,9 @@
             </div>
             <div class="tab-pane" id="lB">
                 <div class="box-price tblrp10">
-                    <h3>R$ {{ precos.pro.term1year.price_tpl.0 }}<sup>,{{ precos.pro.term1year.price_tpl.1 }}</sup></h3>
+                    <h3>R$ {{ precos.prime.term2years.price_tpl.0 }}<sup>,{{ precos.prime.term2years.price_tpl.1 }}</sup></h3>
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="2years" class="btn btn-orange">Comprar</a>
+                    <small>{{ precos.prime.term2years.discount }}% de desconto</small>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.pro.term2years.price_tpl.0 }}<sup>,{{ precos.pro.term2years.price_tpl.1 }}</sup></h3>
@@ -303,8 +302,8 @@
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="2years" class="btn btn-orange">Comprar</a>
                 </div>
                 <div class="box-price tblrp10">
-                    <h3>R$ {{ precos.pro.term3years.price_tpl.0 }}<sup>,{{ precos.pro.term3years.price_tpl.1 }}</sup></h3>
-                    <small>{{ precos.pro.term3years.discount }}% de desconto</small>
+                    <h3>R$ {{ precos.basic.term2years.price_tpl.0 }}<sup>,{{ precos.basic.term2years.price_tpl.1 }}</sup></h3>
+                    <small>{{ precos.basic.term2years.discount }}% de desconto</small>
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="2years" class="btn btn-orange">Comprar</a>
                 </div>
                 <div class="box-price tblrp10">
@@ -314,18 +313,19 @@
             </div>
             <div class="tab-pane" id="lC">
                 <div class="box-price tblrp10">
-                    <h3>R$ {{ precos.prime.term1year.price_tpl.0 }}<sup>,{{ precos.prime.term1year.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="2years" class="btn btn-orange">Comprar</a>
-                </div>
-                <div class="box-price tblrp10">
-                    <h3>R$ {{ precos.prime.term2years.price_tpl.0 }}<sup>,{{ precos.prime.term2years.price_tpl.1 }}</sup></h3>
-                    <small>{{ precos.prime.term2years.discount }}% de desconto</small>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="2years" class="btn btn-orange">Comprar</a>
-                </div>
-                <div class="box-price tblrp10">
                     <h3>R$ {{ precos.prime.term3years.price_tpl.0 }}<sup>,{{ precos.prime.term3years.price_tpl.1 }}</sup></h3>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="3years" class="btn btn-orange">Comprar</a>
                     <small>{{ precos.prime.term3years.discount }}% de desconto</small>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="2years" class="btn btn-orange">Comprar</a>
+                </div>
+                <div class="box-price tblrp10">
+                    <h3>R$ {{ precos.pro.term3years.price_tpl.0 }}<sup>,{{ precos.pro.term3years.price_tpl.1 }}</sup></h3>
+                    <small>{{ precos.pro.term3years.discount }}% de desconto</small>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="3years" class="btn btn-orange">Comprar</a>
+                </div>
+                <div class="box-price tblrp10">
+                    <h3>R$ {{ precos.basic.term3years.price_tpl.0 }}<sup>,{{ precos.basic.term3years.price_tpl.1 }}</sup></h3>
+                    <small>{{ precos.basic.term3years.discount }}% de desconto</small>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="3years" class="btn btn-orange">Comprar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>1 mês grátis</h3>
@@ -343,7 +343,7 @@
 </div>
 
 <div class="clearfix"></div>
-
+<br/><br/>
 <small>
 * Condição não aplicável às compras pelo site  ** Não se aplica para certificados SAN e MDC
 </small>

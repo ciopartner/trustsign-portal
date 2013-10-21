@@ -72,7 +72,7 @@
                                 {#    {% endwith %}#}
                                 {#</div>#}
                                 <h4><a href="{{ form.instance.product.get_absolute_url }}">{{ form.instance.description }}</a></h4>
-                                <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>
+{#                                <p class="availability {{ form.instance.product.stockrecord.availability_code }}">{{ form.instance.product.stockrecord.availability }}</p>#}
                                 <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="remove" class="inline">
                                     <img src="{%  static "ecommerce/img/icons/trash.png" %}" alt=""/>
                                     {% trans "Remove from cart" %}
@@ -81,10 +81,10 @@
                             <div class="span3">
                                 <div class="checkout-quantity control-group {% if form.errors %}error{% endif %}">
                                     {{ form.quantity }}
-                                    <button class="btn" type="submit">{% trans "Update" %}</button>
-                                    {% if request.user.is_authenticated %}
-                                        | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>
-                                    {% endif %}
+                                    <button class="btn icon-refresh" type="submit"></button>
+{#                                    {% if request.user.is_authenticated %}#}
+{#                                        | <a href="#" data-id="{{ forloop.counter0 }}" data-behaviours="save" class="inline">{% trans "Save for later" %}</a>#}
+{#                                    {% endif %}#}
                                     <div style="display:none">
                                         {{ form.save_for_later }}
                                         {{ form.DELETE }}
@@ -116,29 +116,25 @@
             <a href="{% url 'checkout:index' %}" class="btn btn-orange btn-large btn-block">Finalizar compra</a>
         </div>
     {% endblock %}
-{##}
-{#    <div class="row-fluid">#}
-{#        {% block vouchers %}#}
-{#            <div class="span6">#}
-{#                <div class="sub-header">#}
-{#                    <h2>{% trans "Voucher/promo code" %}</h2>#}
-{#                </div>#}
-{#                <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>#}
-{##}
-{#                <div id="voucher_form_container" style="display:none">#}
-{#                    <h4>{% trans "Voucher code" %}</h4>#}
-{#                    <form action="{% url 'basket:vouchers-add' %}" method="post" class="form-horizontal">#}
-{#                        {% csrf_token %}#}
-{#                        {% include "partials/form_fields.html" with form=voucher_form %}#}
-{#                        <div class="form-actions">#}
-{#                            <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>#}
-{#                            {% trans "or" %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>#}
-{#                        </div>#}
-{#                    </form>#}
-{#                </div>#}
-{#            </div>#}
-{#        {% endblock vouchers %}#}
-{##}
+
+    <div class="row-fluid">
+        {% block vouchers %}
+            <div class="span6">
+                <p id="voucher_form_link"><a href="#voucher" class="btn btn-full">{% trans "I have a voucher code..." %}</a></p>
+
+                <div id="voucher_form_container" style="display:none">
+                    <form action="{% url 'basket:vouchers-add' %}" method="post" class="form-horizontal">
+                        {% csrf_token %}
+                        {% include "partials/form_fields.html" with form=voucher_form %}
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-info">{% trans "Add voucher" %}</button>
+                            {% trans "or" %} <a href="#" id="voucher_form_cancel">{% trans "cancel" %}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endblock vouchers %}
+
         {% block baskettotals %}
             {# Ocultar conteúdo #}
 {#            <div class="span6">#}

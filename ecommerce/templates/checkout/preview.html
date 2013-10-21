@@ -2,10 +2,12 @@
 {% load currency_filters %}
 {% load i18n %}
 
+{% block shipping_address %}{% endblock %}
+
 {% block payment_method %}
-<div class="span6">
-    <h3>{% trans "Payment" %}</h3>
-	<div class="well well-success" data-behaviours="match-height">
+<div class="span12">
+	<div class="well" data-behaviours="match-height">
+        <h2>{% trans "Payment" %}</h2>
 		<p>{% blocktrans with amount=order_total_incl_tax|currency %}{{ amount }} will be debited from your bankcard.{% endblocktrans %}</p>
 		<div class="alert-actions">
 			<a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
@@ -23,7 +25,7 @@
 
     {% comment %}
     When submitting sensitive data on the payment details page (eg a bankcard)
-    we don't want to save the data and so we pass the bound form to the preview 
+    we don't want to save the data and so we pass the bound form to the preview
     template and render it in a hidden div.  Then the payment information will
     get re-submitted when the user confirms the order.
     {% endcomment %}
@@ -35,3 +37,59 @@
 	<button id='place-order' type="submit" class="pull-right btn btn-primary btn-large js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
 </form>
 {% endblock place_order %}
+
+
+
+{% block order_contents %}
+    <h3>{% trans "Order contents" %}</h3>
+    <div class="row">
+        <div class="span9">
+            <div class="basket-title">
+                <div class="row-fluid">
+                    <h4 class="span8">{% trans "Items in basket" %}</h4>
+                    <h4 class="span2 align-center">{% trans "Quantity" %}</h4>
+                    <h4 class="span2">{% trans "Price" %}</h4>
+                </div>
+            </div>
+            {% for line in basket.all_lines %}
+                <div class="basket-items">
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <h4>{{ line.product.stockrecord.partner.name }}</h4>
+                            <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
+                        </div>
+                        <div class="span2 align-center">
+                            {{ line.quantity }}
+                        </div>
+                        <div class="span2">
+                            <h3 class="price_color">{{ line.line_price_incl_tax|currency }}</h3>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="span3">
+            <div class="row-fluid">
+                <div>
+
+                    <div class="basket-title hidden-phone">
+                        <div class="row-fluid">
+                            <h4 class="span12"> RESUMO DO PEDIDO </h4>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="total">
+                    <h4>
+                        Total
+                    </h4>
+                    <h3>{{ basket.total_incl_tax|currency }}</h3>
+                    <a href="{% url 'basket:summary' %}" class="btn btn-orange btn-large btn-block">Editar pedido</a>
+                </div>
+
+                        </div>
+        </div>
+    </div>
+{% endblock order_contents %}

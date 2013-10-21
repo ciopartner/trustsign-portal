@@ -168,13 +168,20 @@ table.ssltab > thead > tr > th:nth-child(1){
 }
 
 table.ssltab.comptab > thead > tr > th:nth-child(1){
-    width: 100px;
+    width: 80px;
+    text-align: center;
 }
 
+table.ssltab.comptab > tbody > tr > td:nth-child(1){
+    width: 80px;
+    text-align: center;
+}
 table.comptab .btn{
-    width: 110px;
+    width: 70px;
 }
-
+table.ssltab.comptab > tbody > tr > td{
+    vertical-align: middle;
+}
 
 table.ssltab > thead > tr > th:nth-child(2){
 	background-image: -webkit-linear-gradient(bottom,rgba(1,84,151,1),rgba(49,116,171,1));
