@@ -7,4 +7,5 @@ class Product(AbstractProduct):
     product_line = CharField(max_length=16, blank=True, null=True)
     product_term = CharField(max_length=16, blank=True, null=True)
 
+
 from oscar.apps.catalogue.models import *

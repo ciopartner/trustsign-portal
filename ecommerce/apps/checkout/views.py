@@ -163,9 +163,10 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # TODO: rever o parametro 1 e 4 desta birosca
         source.create_deferred_transaction("Approval", total_incl_tax.incl_tax, reference=transaction_id, status=1)
         self.add_payment_source(source)
+        # TODO: criar um transaction que fica ligado ao source
 
         # Also record payment event
-        # TODO: rever o parametro 1 e 4 desta birosca
+        # TODO: rever o parametro 1 desta birosca
         self.add_payment_event(
             'approval', total_incl_tax.incl_tax, reference=transaction_id)
 
@@ -173,7 +174,8 @@ class PaymentDetailsView(views.PaymentDetailsView):
         self.oportunidade.pag_credito_transacao_id = transaction_id
         self.oportunidade.data_pedido = now().strftime('%Y-%m-%d')
         self.oportunidade.valor_total = str(total_incl_tax.incl_tax)
-        self.oportunidade.pag_credito_titular = 'Titular Teste'  # TODO: bankcard.cardholder
+        self.oportunidade.pag_credito_titular = 'Titular Teste'
+        # TODO: bankcard.cardholder
         self.oportunidade.pag_credito_vencimento = bankcard.expiry_month()
         self.oportunidade.pag_credito_bandeira = bankcard.card_type
         self.oportunidade.pag_credito_ultimos_digitos = bankcard.card_number[-4:]
@@ -188,6 +190,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
         """
         # Send confirmation message (normally an email)
 
+        #TODO: Separar tudo do CRM em um novo método. Chamar este método aqui mesmo
         profile = self.request.user.get_profile()
 
         self.cliente.cnpj = profile.cliente_cnpj
