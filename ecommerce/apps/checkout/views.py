@@ -2,8 +2,6 @@
 from django.contrib import messages
 from django import http
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from libs.cobrebem.facade import Facade
 
@@ -11,10 +9,10 @@ from oscar.apps.payment.exceptions import UnableToTakePayment
 from oscar.apps.checkout import views
 from oscar.apps.payment.forms import BankcardForm
 from oscar.apps.payment.models import SourceType, Source
-from libs import crm
+from libs.crm.mixins import OscarToCRMMixin
 
 
-class PaymentDetailsView(views.PaymentDetailsView):
+class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
     """
     For taking the details of payment and creating the order
 
@@ -26,12 +24,6 @@ class PaymentDetailsView(views.PaymentDetailsView):
     """
 
     preview = False
-
-    def __init__(self, *args, **kwargs):
-        self.cliente = crm.ClienteCRM()
-        self.oportunidade = crm.OportunidadeCRM()
-        self.produtos = []
-        super(PaymentDetailsView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         # Add bankcard form to the template context
@@ -157,7 +149,7 @@ class PaymentDetailsView(views.PaymentDetailsView):
         # performed an 'auth' request, then we would set 'amount_debited'.
         source_type, _ = SourceType.objects.get_or_create(name='Cobrebem')
         source = Source(source_type=source_type,
-                        currency='R$',
+                        currency='BRL',
                         amount_allocated=total_incl_tax.incl_tax,
                         reference=transaction_id)
         # TODO: rever o parametro 1 e 4 desta birosca
@@ -170,59 +162,23 @@ class PaymentDetailsView(views.PaymentDetailsView):
         self.add_payment_event(
             'approval', total_incl_tax.incl_tax, reference=transaction_id)
 
-        # Registrar a oportunidade no CRM
-        self.oportunidade.pag_credito_transacao_id = transaction_id
-        self.oportunidade.data_pedido = now().strftime('%Y-%m-%d')
-        self.oportunidade.valor_total = str(total_incl_tax.incl_tax)
-        self.oportunidade.pag_credito_titular = 'Titular Teste'
-        # TODO: bankcard.cardholder
-        self.oportunidade.pag_credito_vencimento = bankcard.expiry_month()
-        self.oportunidade.pag_credito_bandeira = bankcard.card_type
-        self.oportunidade.pag_credito_ultimos_digitos = bankcard.card_number[-4:]
-
-    def handle_successful_order(self, order):
+    def handle_order_placement(self, order_number, basket, total_incl_tax,
+                               total_excl_tax, user=None, **kwargs):
         """
-        Handle the various steps required after an order has been successfully
-        placed.
+        Write out the order models and return the appropriate HTTP response
 
-        Override this view if you want to perform custom actions when an
-        order is submitted.
+        We deliberately pass the basket in here as the one tied to the request
+        isn't necessarily the correct one to use in placing the order.  This
+        can happen when a basket gets frozen.
         """
-        # Send confirmation message (normally an email)
+        order = self.place_order(
+            order_number, basket, total_incl_tax,
+            total_excl_tax, user, **kwargs)
+        basket.submit()
 
-        #TODO: Separar tudo do CRM em um novo método. Chamar este método aqui mesmo
-        profile = self.request.user.get_profile()
+        bankcard = kwargs['payment_kwargs']['bankcard']
 
-        self.cliente.cnpj = profile.cliente_cnpj
-        self.cliente.razaosocial = profile.cliente_razaosocial
-        self.cliente.logradouro = profile.cliente_logradouro
-        self.cliente.numero = profile.cliente_numero
-        self.cliente.complemento = profile.cliente_complemento
-        self.cliente.bairro = profile.cliente_bairro
-        self.cliente.cidade = profile.cliente_cidade
-        self.cliente.estado = profile.cliente_uf
-        self.cliente.pais = 'BR'
-        self.cliente.cep = profile.cliente_cep
-        self.cliente.sem_atividade = profile.cliente_situacao_cadastral.strip().lower() == 'ativa'
+        # * Send the order and payment info to the CRM
+        self.send_order_to_crm(order, bankcard)
 
-        for line in order.lines.all():
-            produto = crm.ProdutoCRM()
-            produto.codigo = line.partner_sku
-            produto.quantidade = line.quantity
-            produto.preco_venda = str(line.line_price_incl_tax)
-            self.produtos.append(produto)
-
-        client = crm.CRMClient()
-        client.postar_compra(self.cliente, self.oportunidade, self.produtos)
-
-        self.send_confirmation_message(order)
-
-        # Flush all session data
-        self.checkout_session.flush()
-
-        # Save order id in session so thank-you page can load it
-        self.request.session['checkout_order_id'] = order.id
-
-        response = HttpResponseRedirect(self.get_success_url())
-        self.send_signal(self.request, response, order)
-        return response
+        return self.handle_successful_order(order)

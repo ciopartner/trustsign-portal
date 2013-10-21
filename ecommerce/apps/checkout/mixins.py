@@ -1,4 +1,7 @@
+from django.utils.timezone import now
 from oscar.apps.checkout.mixins import *
+from libs import crm
+
 
 class OrderPlacementMixin(OrderPlacementMixin):
     """
@@ -15,6 +18,7 @@ class OrderPlacementMixin(OrderPlacementMixin):
         """
         # Create saved shipping address instance from passed in unsaved
         # instance
+
         if shipping_method.code != 'no-shipping-required':
             shipping_address = self.create_shipping_address(user, shipping_address)
 
