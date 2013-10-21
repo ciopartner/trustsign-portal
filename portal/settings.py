@@ -202,7 +202,7 @@ INSTALLED_APPS = (
     'certificados',
     'rest_framework',
 
-    'periodically',
+    'django_cron',
 
     'south',
 
@@ -273,6 +273,20 @@ COMODO_API_GET_DCV_EMAILS_URL = 'https://secure.comodo.net/products/!GetDCVEmail
 CERTIFICADOS_EMAIL_USERNAME = '<mudar no local_settings.py>'
 CERTIFICADOS_EMAIL_PASSWORD = '<mudar no local_settings.py>'
 CERTIFICADOS_EMAIL_PATH_ATTACHMENTS = os.path.join(PROJECT_ROOT, 'attachments')
+
+
+CRON_CLASSES = [
+    'certificados.crons.EnviaComodoJob',
+    'certificados.crons.CheckEmailJob',
+
+    # This example cron check last cron jobs results. If they were unsuccessfull 10 times in row, it sends email to user
+    'django_cron.cron.FailedRunsNotificationCronJob'
+]
+FAILED_RUNS_CRONJOB_EMAIL_PREFIX = "[CronJob Error]: "
+
+# Precisa colocar no cron do linux:
+# python manage.py runcrons
+
 
 #########################
 # OPTIONAL APPLICATIONS #

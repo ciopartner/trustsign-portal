@@ -1,7 +1,9 @@
 # coding=utf-8
 from __future__ import unicode_literals
 from django.core.cache import cache
+from django.forms import ValidationError
 from django.http import Http404
+from localflavor.br.forms import BRCNPJField
 from oscar.apps.basket.views import BasketAddView
 from oscar.apps.catalogue.models import Product
 from ecommerce.website.forms import AdicionarProdutoForm
@@ -13,6 +15,9 @@ log = getLogger('ecommerce.website.views')
 
 
 class GetCNPJDataView(JSONView):
+    """
+    Retorna dados da empresa de acordo com o CNPJ informado por ajax
+    """
 
     def get_context_data(self, **kwargs):
         cnpj = self.request.POST.get('cnpj')
@@ -26,13 +31,19 @@ class GetCNPJDataView(JSONView):
         return super(GetCNPJDataView, self).render_to_response(context, **response_kwargs)
 
     def get_cnpj_data(self, cnpj):
+        try:
+            BRCNPJField().clean(cnpj)
+        except ValidationError:
+            return {
+                'erro': 'CNPJ inválido!'
+            }
         data = cache.get('cnpj-%s' % cnpj)
         if data is None:
-            # TODO: Usar knu
+            # TODO: Descomentar para usar KNU para buscar os dados do CNPJ
             #r = knu.receitaCNPJ(cnpj)
             #if r.cod_erro != 0:
             #    log.warning('Erro na requisição da knu: (%d) %s' % (r.cod_erro, r.desc_erro))
-            #    return {}
+            #    return {'erro': 'Erro interno'}
             #data = {
             #    'cnpj': cnpj,
             #    'razao_social': r.nome_empresarial,
@@ -65,6 +76,9 @@ class GetCNPJDataView(JSONView):
 
 
 class AdicionarProdutoView(BasketAddView, JSONFormView):
+    """
+    Adiciona produtos ao carrinho por ajax
+    """
     form_class = AdicionarProdutoForm
 
     def get(self, request, *args, **kwargs):
@@ -93,7 +107,12 @@ class AdicionarProdutoView(BasketAddView, JSONFormView):
 
     def get_product_id(self, product_code, line=None, term=None):
         try:
-            return Product.objects.get(product_code=product_code, product_line=line, product_term=term).pk
+            qs = Product.objects.filter(product_code=product_code)
+            if line:
+                qs = qs.filter(product_line=line)
+            if term:
+                qs = qs.filter(product_term=term)
+            return qs.get().pk
         except Product.DoesNotExist:
             return -1
 

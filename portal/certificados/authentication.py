@@ -8,6 +8,9 @@ User = get_user_model()
 
 
 class UserPasswordAuthentication(BaseAuthentication):
+    """
+    Faz a autenticação usando username e password no GET ou POST
+    """
     def authenticate(self, request):
         if request.method == 'GET':
             username = request.GET.get('username')

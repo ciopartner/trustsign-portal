@@ -88,7 +88,7 @@ class ValidateEmissaoCSRMixin(object):
         try:
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
-            raise self.ValidationError()
+            raise self.ValidationError('Voucher não encontrado')
 
         if voucher.ssl_product == Voucher.PRODUTO_SMIME:
             return valor
