@@ -63,3 +63,7 @@ function RegistrationForm(obj, cnpj){
     self.hideDisableFields();
 
 }
+
+$(function(){
+    new RegistrationForm($("#register_form"));
+})
