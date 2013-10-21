@@ -19,6 +19,9 @@ class GetCNPJDataView(JSONView):
     Retorna dados da empresa de acordo com o CNPJ informado por ajax
     """
 
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         cnpj = self.request.POST.get('cnpj')
         if cnpj:
