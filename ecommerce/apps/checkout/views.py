@@ -3,13 +3,16 @@ from django.contrib import messages
 from django import http
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from oscar.core.loading import get_class
 from libs.cobrebem.facade import Facade
 
 from oscar.apps.payment.exceptions import UnableToTakePayment
 from oscar.apps.checkout import views
-from oscar.apps.payment.forms import BankcardForm
-from oscar.apps.payment.models import SourceType, Source
 from libs.crm.mixins import OscarToCRMMixin
+
+BankcardForm = get_class('payment.forms', 'BankcardForm')
+SourceType = get_class('payment.models', 'SourceType')
+Source = get_class('payment.models', 'Source')
 
 
 class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
@@ -77,7 +80,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         """
         submission = super(PaymentDetailsView, self).build_submission(**kwargs)
         payment_kwargs = kwargs.get('payment_kwargs')
-        submission.update({'payment_kwargs': payment_kwargs})
+        submission.update({'payment_kwargs': payment_kwargs, 'order_kwargs': payment_kwargs})
         return submission
 
     def build_payment_kwargs(self, request, *args, **kwargs):
@@ -162,8 +165,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         self.add_payment_event(
             'approval', total_incl_tax.incl_tax, reference=transaction_id)
 
-    def handle_order_placement(self, order_number, basket, total_incl_tax,
-                               total_excl_tax, user=None, **kwargs):
+    def handle_order_placement(self, order_number, user, basket, shipping_address, shipping_method, total, **kwargs):
         """
         Write out the order models and return the appropriate HTTP response
 
@@ -171,12 +173,12 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         isn't necessarily the correct one to use in placing the order.  This
         can happen when a basket gets frozen.
         """
-        order = self.place_order(
-            order_number, basket, total_incl_tax,
-            total_excl_tax, user, **kwargs)
+        bankcard = kwargs.pop('bankcard')
+
+        order = self.place_order(order_number, user, basket, shipping_address, shipping_method, total, **kwargs)
         basket.submit()
 
-        bankcard = kwargs['payment_kwargs']['bankcard']
+
 
         # * Send the order and payment info to the CRM
         self.send_order_to_crm(order, bankcard)

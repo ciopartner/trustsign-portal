@@ -175,6 +175,7 @@ INSTALLED_APPS += get_core_apps([
     'ecommerce.apps.checkout',
     'ecommerce.apps.customer',
     'ecommerce.apps.catalogue',
+    'ecommerce.apps.payment',
     'ecommerce.apps.shipping',
 ])
 

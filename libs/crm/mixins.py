@@ -41,7 +41,7 @@ class OscarToCRMMixin(object):
         oportunidade.pag_credito_transacao_id = transaction_id
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
         oportunidade.valor_total = str(source.amount_allocated)
-        oportunidade.pag_credito_titular = 'Titular Teste' # TODO: bankcard.cardholder
+        oportunidade.pag_credito_titular = bankcard.name
         oportunidade.pag_credito_vencimento = bankcard.expiry_month()
         oportunidade.pag_credito_bandeira = bankcard.card_type
         oportunidade.pag_credito_ultimos_digitos = bankcard.card_number[-4:]
