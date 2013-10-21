@@ -25,7 +25,7 @@ class GetCNPJDataView(JSONView):
     def get_context_data(self, **kwargs):
         cnpj = self.request.POST.get('cnpj')
         if cnpj:
-            return self.get_context_data(cnpj)
+            return self.get_cnpj_data(cnpj)
         return {'erro': 'cnpj não encontrado'}
 
     def render_to_response(self, context, **response_kwargs):
