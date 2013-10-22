@@ -1984,5 +1984,10 @@ input[type=text], input[type=password]{
 #total h3{
     font-size: 170%;
     float: right;
-    margin-top: -28px;
+    margin-top: -42px;
+}
+
+.price_color{
+    color: #666;
+    font-weight: normal;
 }
