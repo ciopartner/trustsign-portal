@@ -72,4 +72,4 @@ def create_profile(sender, **kwargs):
         profile = TrustSignProfile(user=kwargs['instance'])
         profile.save()
 
-post_save.connect(create_profile, sender=User)
+post_save.connect(create_profile, sender=User, dispatch_uid='home.models.create_profile')
