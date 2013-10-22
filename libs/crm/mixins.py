@@ -1,6 +1,8 @@
+# coding=utf-8
 from django.utils.timezone import now
+from oscar.core.loading import get_class
 import crm
-
+Bankcard = get_class('payment.models', 'Bankcard')
 
 class OscarToCRMMixin(object):
     def send_order_to_crm(self, order, bankcard):
@@ -34,8 +36,12 @@ class OscarToCRMMixin(object):
         return cliente
 
     @staticmethod
-    def get_oportunidade_crm(order, bankcard):
+    def get_oportunidade_crm(order):
         source = order.sources.all()[0]
+        try:
+            bankcard = source.bankcard
+        except Bankcard.DoesNotExists:
+            raise crm.CRMClient.CRMError('Falta os dados do cartão de crédito')
         transaction_id = source.reference
         oportunidade = crm.OportunidadeCRM()
         oportunidade.pag_credito_transacao_id = transaction_id
@@ -44,7 +50,7 @@ class OscarToCRMMixin(object):
         oportunidade.pag_credito_titular = bankcard.name
         oportunidade.pag_credito_vencimento = bankcard.expiry_month()
         oportunidade.pag_credito_bandeira = bankcard.card_type
-        oportunidade.pag_credito_ultimos_digitos = bankcard.card_number[-4:]
+        oportunidade.pag_credito_ultimos_digitos = bankcard.number[-4:]
 
         return oportunidade
 
