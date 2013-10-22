@@ -2,6 +2,7 @@
 from django.contrib import messages
 from django import http
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
 from libs.cobrebem.facade import Facade
@@ -64,7 +65,9 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
                 # We pull together all the things that are needed to place an
                 # order.
                 payment_kwargs = self.build_payment_kwargs(request)
-                return self.build_submission(payment_kwargs=payment_kwargs)
+                submission = self.build_submission(payment_kwargs=payment_kwargs)
+
+                return self.submit(**submission)
 
             return self.render_preview(request, bankcard_form=bankcard_form)
 
@@ -84,7 +87,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         """
         submission = super(PaymentDetailsView, self).build_submission(**kwargs)
         payment_kwargs = kwargs.get('payment_kwargs')
-        submission.update({'payment_kwargs': payment_kwargs})#, 'order_kwargs': payment_kwargs})
+        submission.update({'payment_kwargs': payment_kwargs})
         return submission
 
     def build_payment_kwargs(self, request, *args, **kwargs):
@@ -151,6 +154,9 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
             if transaction_id != msg:
                 raise UnableToTakePayment(msg)
 
+        bankcard.user = self.request.user
+        bankcard.save()
+
         # Request was successful - record the "payment source".  As this
         # request was a 'pre-auth', we set the 'amount_allocated' - if we had
         # performed an 'auth' request, then we would set 'amount_debited'.
@@ -158,7 +164,8 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         source = Source(source_type=source_type,
                         currency='BRL',
                         amount_allocated=total_incl_tax.incl_tax,
-                        reference=transaction_id)
+                        reference=transaction_id,
+                        bankcard=bankcard)
         # TODO: rever o parametro 1 e 4 desta birosca
         source.create_deferred_transaction("Approval", total_incl_tax.incl_tax, reference=transaction_id, status=1)
         self.add_payment_source(source)
@@ -166,8 +173,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 
         # Also record payment event
         # TODO: rever o parametro 1 desta birosca
-        self.add_payment_event(
-            'approval', total_incl_tax.incl_tax, reference=transaction_id)
+        self.add_payment_event('approval', total_incl_tax.incl_tax, reference=transaction_id)
 
     def handle_order_placement(self, order_number, user, basket, shipping_address, shipping_method, total, **kwargs):
         """
@@ -180,3 +186,19 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         order = self.place_order(order_number, user, basket, shipping_address, shipping_method, total, **kwargs)
         basket.submit()
         return self.handle_successful_order(order)
+
+
+class ShippingAddressView(views.ShippingAddressView):
+
+    def get(self, request, *args, **kwargs):
+        # Check that the user's basket is not empty
+        if request.basket.is_empty:
+            messages.error(request, _("You need to add some items to your basket to checkout"))
+            return HttpResponseRedirect(reverse('basket:summary'))
+
+        # Check that guests have entered an email address
+        if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
+            messages.error(request, _("Please either sign in or enter your email address"))
+            return HttpResponseRedirect(reverse('checkout:index'))
+
+        return super(ShippingAddressView, self).get(request, *args, **kwargs)
