@@ -29,7 +29,7 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
     logradouro = CharFieldDisabled(max_length=128)
     numero = CharFieldDisabled(max_length=16, label='Número')
     complemento = CharFieldDisabled(max_length=64)
-    cep = CharFieldDisabled(max_length=8, help_text='Somente números', label='CEP')
+    cep = CharFieldDisabled(max_length=8, help_text=None, label='CEP')
     bairro = CharFieldDisabled(max_length=128)
     cidade = CharFieldDisabled(max_length=128)
     uf = CharFieldDisabled(max_length=128, label='UF')
