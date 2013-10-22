@@ -194,6 +194,8 @@ INSTALLED_APPS = (
 
     'django_extensions',
 
+    "mezzanine_custom",
+
     "home",
     "ferramentas",
     "products",
@@ -273,6 +275,9 @@ COMODO_API_GET_DCV_EMAILS_URL = 'https://secure.comodo.net/products/!GetDCVEmail
 CERTIFICADOS_EMAIL_USERNAME = '<mudar no local_settings.py>'
 CERTIFICADOS_EMAIL_PASSWORD = '<mudar no local_settings.py>'
 CERTIFICADOS_EMAIL_PATH_ATTACHMENTS = os.path.join(PROJECT_ROOT, 'attachments')
+
+
+CRM_OPORTUNITY_ASSIGNED_USER_ID = '<mudar no local_settings.py>'
 
 
 CRON_CLASSES = [
