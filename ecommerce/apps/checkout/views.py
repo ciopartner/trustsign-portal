@@ -52,16 +52,20 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
             ctx['bankcard_form'] = bankcard_form
             return self.render_to_response(ctx)
 
+        # If preview = True, the last 'confirmation' screen must be shown
         if self.preview:
             # We use a custom parameter to indicate if this is an attempt to
             # place an order.  Without this, we assume a payment form is being
             # submitted from the payment-details page
-            if request.POST.get('action', '') == 'place_order':
+
+            # In our case we do not want to show the preview page so we comment the next line
+            #if request.POST.get('action', '') == 'place_order':
+            if True:
                 # We pull together all the things that are needed to place an
                 # order.
                 payment_kwargs = self.build_payment_kwargs(request)
-                submission = self.build_submission(payment_kwargs=payment_kwargs)
-                return self.submit(**submission)
+                return self.build_submission(payment_kwargs=payment_kwargs)
+
             return self.render_preview(request, bankcard_form=bankcard_form)
 
         #Render preview page (with completed bankcard form hidden).
@@ -80,7 +84,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         """
         submission = super(PaymentDetailsView, self).build_submission(**kwargs)
         payment_kwargs = kwargs.get('payment_kwargs')
-        submission.update({'payment_kwargs': payment_kwargs, 'order_kwargs': payment_kwargs})
+        submission.update({'payment_kwargs': payment_kwargs})#, 'order_kwargs': payment_kwargs})
         return submission
 
     def build_payment_kwargs(self, request, *args, **kwargs):
@@ -173,14 +177,6 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         isn't necessarily the correct one to use in placing the order.  This
         can happen when a basket gets frozen.
         """
-        bankcard = kwargs.pop('bankcard')
-
         order = self.place_order(order_number, user, basket, shipping_address, shipping_method, total, **kwargs)
         basket.submit()
-
-
-
-        # * Send the order and payment info to the CRM
-        self.send_order_to_crm(order, bankcard)
-
         return self.handle_successful_order(order)

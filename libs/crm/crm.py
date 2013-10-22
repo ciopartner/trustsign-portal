@@ -28,7 +28,7 @@ class ClienteCRM(object):
 class OportunidadeCRM(object):
     def __init__(self):
         self.account_id = None
-        self.name = 'Oportunidade via e-commerce'
+        self.name = 'Oportunidade via e-commerce ({})'.format(self.numero_pedido)
         self.numero_pedido = None
         self.data_pedido = None
         self.valor_total = None

@@ -13,7 +13,7 @@ class BankcardForm(ModelForm):
 
     class Meta:
         model = Bankcard
-        fields = ('number', 'name', 'expiry_month', 'ccv')
+        fields = ('name', 'number', 'expiry_month', 'ccv')
 
     def save(self, *args, **kwargs):
         # It doesn't really make sense to save directly from the form as saving
