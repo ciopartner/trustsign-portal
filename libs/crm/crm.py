@@ -1,6 +1,7 @@
 # coding=utf-8
 #from django.conf import settings
 from __future__ import unicode_literals
+from django.conf import settings
 import requests
 import json
 from logging import getLogger
@@ -186,6 +187,7 @@ class CRMClient(object):
 
         response = self.set_entry('Opportunities', {
             'account_id': oportunidade.account_id,
+            'assigned_user_id': settings.CRM_OPORTUNITY_ASSIGNED_USER_ID,
             'name': 'Oportunidade via e-commerce',
             #'ecommerce_id_c': oportunidade.numero_pedido, TODO: não existe ainda no CRM
             'date_closed': oportunidade.data_pedido,

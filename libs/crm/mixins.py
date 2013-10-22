@@ -4,10 +4,11 @@ from oscar.core.loading import get_class
 import crm
 Bankcard = get_class('payment.models', 'Bankcard')
 
+
 class OscarToCRMMixin(object):
-    def send_order_to_crm(self, order, bankcard):
-        cliente = self.get_cliente_crm(self.request.user)
-        oportunidade = self.get_oportunidade_crm(order, bankcard)
+    def send_order_to_crm(self, order):
+        cliente = self.get_cliente_crm(order.user)
+        oportunidade = self.get_oportunidade_crm(order)
         produtos = self.get_produtos_crm(order)
 
         client = crm.CRMClient()

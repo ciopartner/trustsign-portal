@@ -191,14 +191,10 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 class ShippingAddressView(views.ShippingAddressView):
 
     def get(self, request, *args, **kwargs):
-        # Check that the user's basket is not empty
-        if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your basket to checkout"))
-            return HttpResponseRedirect(reverse('basket:summary'))
 
-        # Check that guests have entered an email address
-        if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
-            messages.error(request, _("Please either sign in or enter your email address"))
-            return HttpResponseRedirect(reverse('checkout:index'))
-
-        return super(ShippingAddressView, self).get(request, *args, **kwargs)
+        r = super(ShippingAddressView, self).get(request, *args, **kwargs)
+        storage = messages.get_messages(request)
+        for message in storage._queued_messages:
+            if message.message == u'Sua cesta não requer um endereço para ser submetida':
+                storage._queued_messages.remove(message)
+        return r
