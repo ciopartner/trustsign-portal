@@ -2,9 +2,9 @@
 from django.contrib import messages
 from django import http
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
+from ecommerce.website.utils import remove_message
 from libs.cobrebem.facade import Facade
 
 from oscar.apps.payment.exceptions import UnableToTakePayment
@@ -193,8 +193,5 @@ class ShippingAddressView(views.ShippingAddressView):
     def get(self, request, *args, **kwargs):
 
         r = super(ShippingAddressView, self).get(request, *args, **kwargs)
-        storage = messages.get_messages(request)
-        for message in storage._queued_messages:
-            if message.message == u'Sua cesta não requer um endereço para ser submetida':
-                storage._queued_messages.remove(message)
+        remove_message(request, u'Sua cesta não requer um endereço para ser submetida')
         return r
