@@ -96,14 +96,14 @@ class TrustSignProfile(Model):
     cliente_uf = CharField(max_length=128, blank=True, default='')
     cliente_situacao_cadastral = CharField(max_length=128, blank=True, default='')
 
-    callback_nome = CharField(max_length=128, blank=True, default='')
-    callback_sobrenome = CharField(max_length=128, blank=True, default='')
-    callback_email_corporativo = EmailField(blank=True, default='')
-    callback_telefone_principal = CharField(max_length=16, blank=True, default='')
+    callback_nome = CharField(max_length=128, blank=True, default='', verbose_name='nome')
+    callback_sobrenome = CharField(max_length=128, blank=True, default='', verbose_name='sobrenome')
+    callback_email_corporativo = EmailField(blank=True, default='', verbose_name='e-mail corporativo')
+    callback_telefone_principal = CharField(max_length=16, blank=True, default='', verbose_name='telefone principal')
 
-    cliente_ecommerce = BooleanField(default=False, verbose_name='e-commerce', help_text='Seu site realiza operações de e-commerce?')
-    cliente_tipo_negocio = CharField(max_length=128, verbose_name='tipo do negócio', choices=TIPO_NEGOCIO_CHOICES, default='Other')
-    cliente_fonte_potencial = CharField(max_length=128, verbose_name='fonte do potencial', choices=FONTE_POTENCIAL_CHOICES, default='Website')
+    cliente_ecommerce = BooleanField(default=False, verbose_name='e-commerce', help_text='Seu site realiza operações de e-commerce?', blank=True)
+    cliente_tipo_negocio = CharField(max_length=128, verbose_name='tipo do negócio', choices=TIPO_NEGOCIO_CHOICES, default='Other', blank=True)
+    cliente_fonte_potencial = CharField(max_length=128, verbose_name='fonte do potencial', choices=FONTE_POTENCIAL_CHOICES, default='Website', blank=True)
 
     perfil = PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
 

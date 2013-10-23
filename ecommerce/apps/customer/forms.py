@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
-from django.forms import CharField, TextInput
+from django.forms import CharField, TextInput, BooleanField, ChoiceField
 from localflavor.br.forms import BRCNPJField
-from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm
+from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm, ProfileForm as CoreProfileForm
 from ecommerce.website.utils import get_dados_empresa
+from portal.home.models import TrustSignProfile
 
 User = get_user_model()
 
@@ -24,7 +25,7 @@ class CharFieldDisabled(CharField):
 
 
 class EmailUserCreationForm(CoreEmailUserCreationForm):
-    cnpj = BRCNPJField(label='CNPJ')
+    cnpj = BRCNPJField(label='CNPJ', widget=TextInput(attrs={'class': 'mask-cnpj'}))
 
     razao_social = CharFieldDisabled(max_length=128, label='Razão Social')
     logradouro = CharFieldDisabled(max_length=128)
@@ -40,10 +41,15 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
     sobrenome = CharField(max_length=128)
     telefone_principal = CharField(max_length=16)
 
+    cliente_ecommerce = BooleanField(label='e-commerce', help_text='Seu site realiza operações de e-commerce?')
+    cliente_tipo_negocio = ChoiceField(label='Tipo do Negócio', choices=TrustSignProfile.TIPO_NEGOCIO_CHOICES)
+    cliente_fonte_potencial = ChoiceField(label='Fonte do Potencial', choices=TrustSignProfile.FONTE_POTENCIAL_CHOICES)
+
     class Meta:
         model = User
         fields = ('cnpj', 'razao_social', 'logradouro', 'numero', 'complemento', 'cep', 'bairro', 'cidade', 'uf',
-                  'situacao_cadastral', 'nome', 'sobrenome', 'telefone_principal', 'email',)
+                  'situacao_cadastral', 'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_ecommerce', 'nome',
+                  'sobrenome', 'telefone_principal', 'email',)
 
     def save(self, commit=True):
         user = super(EmailUserCreationForm, self).save()
@@ -63,6 +69,10 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
         profile.cliente_uf = data_empresa['uf']
         profile.cliente_situacao_cadastral = data_empresa['situacao_cadastral']
 
+        profile.cliente_ecommerce = data['cliente_ecommerce']
+        profile.cliente_tipo_negocio = data['cliente_tipo_negocio']
+        profile.cliente_fonte_potencial = data['cliente_fonte_potencial']
+
         profile.callback_nome = data['nome']
         profile.callback_sobrenome = data['sobrenome']
         profile.callback_email_corporativo = user.email
@@ -70,4 +80,36 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
 
         profile.save()
 
+        user.first_name = profile.callback_nome
+        user.last_name = profile.callback_sobrenome
+        user.save()
+
         return user
+
+
+class ProfileForm(CoreProfileForm):
+
+    class Meta(CoreProfileForm.Meta):
+        exclude = ['user', 'date_of_birth', 'perfil', 'cliente_cnpj',
+                   'cliente_razaosocial', 'cliente_logradouro', 'cliente_numero', 'cliente_complemento', 'cliente_cep',
+                   'cliente_bairro', 'cliente_cidade', 'cliente_uf', 'cliente_situacao_cadastral', 'bio', 'tagline']
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+
+        # adicionados dinamicamente no super:
+        del self.fields['email']
+        del self.fields['first_name']
+        del self.fields['last_name']
+
+        self.user_field_names = ()
+
+    def save(self, *args, **kwargs):
+        profile = super(ProfileForm, self).save(*args, **kwargs)
+
+        user = profile.user
+        user.first_name = profile.callback_nome
+        user.last_name = profile.callback_sobrenome
+        user.save()
+
+        return profile

@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView, View
+from oscar.apps.customer.views import ProfileUpdateView as CoreProfileUpdateView
 
 from libs.cobrebem.facade import Facade
 
 from oscar.apps.payment.models import Source
 from oscar.apps.order.models import Order
+
+User = get_user_model()
 
 
 class OrderCancelView(RedirectView):
@@ -45,3 +49,18 @@ class OrderCancelReturnView(View):
             order = get_object_or_404(Order, number=order_number)
             order.set_status('Cancelado')
         return HttpResponse("OK")
+
+
+class ProfileUpdateView(CoreProfileUpdateView):
+
+    def form_valid(self, form):
+
+        # Retirada a verificação se o email mudou, pois não alteramos o email do usuario, somente do profile
+
+        form.save()
+
+        messages.success(self.request, "Profile updated")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('customer:profile-view')
