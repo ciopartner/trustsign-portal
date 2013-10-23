@@ -35,7 +35,7 @@ function RegistrationForm(obj, cnpj){
      * Função de retorno da função getCNPJData em caso de erro.
      */
     var getCPNJFailCallback = function(){
-        // Todo: Implementar metodo de erro.
+        //alert("CNPJ não econtrado");
         loading = false;
     }
 
@@ -52,7 +52,7 @@ function RegistrationForm(obj, cnpj){
     // --------------------------------------------
     cnpj = cnpj || obj.find('#id_registration-cnpj');
 
-    cnpj.on('keyup keydown', function(evt){
+    cnpj.on('keyup keydown', function(){
 
         if(!loading && cnpj.val().length == 14){
             self.getCPNJData();
@@ -66,4 +66,4 @@ function RegistrationForm(obj, cnpj){
 
 $(function(){
     new RegistrationForm($("#register_form"));
-})
+});

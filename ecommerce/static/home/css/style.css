@@ -82,6 +82,7 @@ width: 391px;
     margin-left: 17px;
 }
 
+
 /* Overwriting bootstrap.css */
 .table td.center {
     text-align: center;
@@ -108,6 +109,11 @@ width: 391px;
 
 .no-uppercase{
     text-transform: none !important;
+}
+
+.accordion-heading{
+    padding: 10px 0;
+    background: #dddddd;
 }
 
 /* Overwriting h1, h2 and h3 to make the content easy */

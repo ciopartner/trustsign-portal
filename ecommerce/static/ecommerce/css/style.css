@@ -40,3 +40,12 @@ body{
 .register_form form{
     background: #f0f0f0;
 }
+
+#voucher_form_container{
+    margin-top: 20px;
+    padding-bottom: 0px;
+}
+
+#voucher_form_container label{
+    margin-right: 20px;
+}
