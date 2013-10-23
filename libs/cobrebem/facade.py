@@ -33,7 +33,7 @@ class Facade(object):
             raise UnableToTakePayment("Order amount must be non-zero")
         response = self.gateway.approval(
                 order_number=order_number,
-                card_number=bankcard.card_number,
+                card_number=bankcard.number,
                 expiry_date=bankcard.expiry_date,
                 amount=amount,                                
                 ccv=bankcard.ccv,

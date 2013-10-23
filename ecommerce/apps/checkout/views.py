@@ -2,9 +2,9 @@
 from django.contrib import messages
 from django import http
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
+from ecommerce.website.utils import remove_message
 from libs.cobrebem.facade import Facade
 
 from oscar.apps.payment.exceptions import UnableToTakePayment
@@ -191,14 +191,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 class ShippingAddressView(views.ShippingAddressView):
 
     def get(self, request, *args, **kwargs):
-        # Check that the user's basket is not empty
-        if request.basket.is_empty:
-            messages.error(request, _("You need to add some items to your basket to checkout"))
-            return HttpResponseRedirect(reverse('basket:summary'))
 
-        # Check that guests have entered an email address
-        if not request.user.is_authenticated() and not self.checkout_session.get_guest_email():
-            messages.error(request, _("Please either sign in or enter your email address"))
-            return HttpResponseRedirect(reverse('checkout:index'))
-
-        return super(ShippingAddressView, self).get(request, *args, **kwargs)
+        r = super(ShippingAddressView, self).get(request, *args, **kwargs)
+        remove_message(request, u'Sua cesta não requer um endereço para ser submetida')
+        return r

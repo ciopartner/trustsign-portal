@@ -1,13 +1,12 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from django.core.cache import cache
 from django.forms import ValidationError
 from django.http import Http404
 from localflavor.br.forms import BRCNPJField
 from oscar.apps.basket.views import BasketAddView
 from oscar.apps.catalogue.models import Product
 from ecommerce.website.forms import AdicionarProdutoForm
-from libs import knu
+from ecommerce.website.utils import get_dados_empresa
 from portal.portal.utils import JSONView, JSONFormView
 from logging import getLogger
 
@@ -40,42 +39,8 @@ class GetCNPJDataView(JSONView):
             return {
                 'erro': 'CNPJ inválido!'
             }
-        data = cache.get('cnpj-%s' % cnpj)
-        if data is None:
-            # TODO: Descomentar para usar KNU para buscar os dados do CNPJ
-            #r = knu.receitaCNPJ(cnpj)
-            #if r.cod_erro != 0:
-            #    log.warning('Erro na requisição da knu: (%d) %s' % (r.cod_erro, r.desc_erro))
-            #    return {'erro': 'Erro interno'}
-            #data = {
-            #    'cnpj': cnpj,
-            #    'razao_social': r.nome_empresarial,
-            #    'logradouro': r.logradouro,
-            #    'numero': r.numero,
-            #    'complemento': r.complemento,
-            #    'cep': r.cep,
-            #    'bairro': r.bairro,
-            #    'cidade': r.municipio,
-            #    'uf': r.uf,
-            #    'situacao_cadastral': r.situacao_cadastral,
-            #    'knu_html': r.html
-            #}
 
-            data = {
-                'cnpj': cnpj,
-                'razao_social': 'CIO Partner',
-                'logradouro': 'Av. Dr. Candido Motta Filho',
-                'numero': '856',
-                'complemento': '1º andar',
-                'cep': '05351010',
-                'bairro': 'Vila São Francisco',
-                'cidade': 'São Paulo',
-                'uf': 'SP',
-                'situacao_cadastral': 'ativa',
-                'knu_html': '<html></html>'
-            }
-            cache.set('cnpj-%s' % cnpj, data, 2592000)  # cache de 30 dias
-        return data
+        return get_dados_empresa(cnpj)
 
 
 class AdicionarProdutoView(BasketAddView, JSONFormView):
