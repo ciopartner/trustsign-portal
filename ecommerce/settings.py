@@ -204,10 +204,6 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 LOGIN_URL = "/ecommerce/accounts/login"
 
-# Sobrescreva com os settings globais
-from settings_global import *
-DEFAULT_DATABASE = DATABASES.get('common')
-DATABASES = {'default': DEFAULT_DATABASE}
 
 # COBREBEM
 COBREBEM_HOST = "https://teste.aprovafacil.com/cgi-bin/APFW"
@@ -221,6 +217,15 @@ EMAIL_HOST_USER = 'AKIAJB23EUFD5S4FY76Q'
 EMAIL_HOST_PASSWORD = 'AjfrHH5LIVaKku5iBMkbBs5CWM2IK0Z6ZhiXWKVQHHHV'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = OSCAR_FROM_EMAIL = 'alessandro.reichert@ciopartner.com.br'
+
+USAR_KNU = False  # Usado para retornar um dummy dict em vez de chamar a KNU para desenvolvimento
+
+
+# Sobrescreva com os settings globais
+from settings_global import *
+DEFAULT_DATABASE = DATABASES.get('common')
+DATABASES = {'default': DEFAULT_DATABASE}
+
 
 ##################
 # LOCAL SETTINGS #
