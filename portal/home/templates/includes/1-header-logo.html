@@ -14,7 +14,12 @@
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
                         <li class="activa"><a href= {% url 'page' 'blog' %} class="limeh85x">BLOG</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
-                        <li class="activa"><a href="#" class="limeh85x">ENTRAR</a></li>
+
+                        {%  if user.is_authenticated %}
+                            <li class="activa"><a href="{{ url_ecommerce }}accounts/profile/" class="limeh85x">MINHA CONTA</a>
+                        {% else %}
+                            <li class="activa"><a href="{{ url_portal }}accounts/login/" class="limeh85x">ENTRAR</a>
+                        {% endif %}
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
                         <li class="cart-btn">
                             <a href="/ecommerce/basket/" class="limeh85x dobold disabled">

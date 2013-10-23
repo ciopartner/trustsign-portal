@@ -25,10 +25,10 @@
                             <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
                         </div>
                         <div class="span2 align-center">
-                            {{ line.quantity }}
+                            <h3>{{ line.quantity }}</h3>
                         </div>
                         <div class="span2">
-                            <h3 class="price_color">{{ line.line_price_incl_tax|currency }}</h3>
+                            <h3>{{ line.line_price_incl_tax|currency }}</h3>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     Total
                 </h4>
                 <h3>{{ basket.total_incl_tax|currency }}</h3>
-                <a href="{% url 'basket:summary' %}" class="btn btn-orange btn-large btn-block">Editar pedido</a>
+                <a href="{% url 'basket:summary' %}" class="btn btn-large btn-block">Editar pedido</a>
             </div>
         </div>
     </div>
@@ -55,59 +55,53 @@
 
     {% block payment_details_content %}
 
-        <div class="panel-group" id="accordion">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                    Cartão de crédito
-                </a>
-              </h4>
-            </div>
-            <div id="collapseOne" class="panel-collapse collapse in">
-              <div class="panel-body">
-                <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
-                    <div class="">
-                        {% csrf_token %}
-                        {% include 'partials/form_fields.html' with form=bankcard_form %}
-{#                        <div class="alert alert-warning">#}
-{#                            <h4>{% trans "Demo site help" %}</h4>#}
-{#                            <p>{% trans "You can use a magic card number of 1000010000000007 together with an CVV number." %}</p>#}
-{#                        </div>#}
+        <div class="accordion" id="accordion">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                        Cartão de crédito
+                    </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse in">
+                    <div class="accordion-inner">
+                        <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
+                            <div class="">
+                                {% csrf_token %}
+                                {% include 'partials/form_fields.html' with form=bankcard_form %}
+                                {#<div class="alert alert-warning">#}
+                                {#<h4>{% trans "Demo site help" %}</h4>#}
+                                    {#<p>{% trans "You can use a magic card number of 1000010000000007 together with an CVV number." %}</p>#}
+                                {#</div>#}
+                            </div>
+                            <button type="submit" class="pull-right btn btn-orange btn-large">Confirmar pagamento</button>
+                        </form>
                     </div>
-                    <button type="submit" class="pull-right btn btn-orange btn-large">{% trans "Continue" %}</button>
-                </form>
-              </div>
+                </div>
             </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                  Boleto online
-                </a>
-              </h4>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        Boleto bancário
+                    </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        Conteúdo para boleto
+                    </div>
+                </div>
             </div>
-            <div id="collapseTwo" class="panel-collapse collapse">
-              <div class="panel-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        Transferência bancária
+                    </a>
+                </div>
+                <div id="collapseThree" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        Conteúdo para transferência
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                  Débito online/Transferência eletrônica
-                </a>
-              </h4>
-            </div>
-            <div id="collapseThree" class="panel-collapse collapse">
-              <div class="panel-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-            </div>
-          </div>
         </div>
 
 

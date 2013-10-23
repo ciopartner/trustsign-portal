@@ -12,6 +12,13 @@
 {#{% endblock %}#}
 {##}
 
+{% block extrascripts %}
+    {{  block.super }}
+    <script src="{% static 'ecommerce/js/custom.js' %}"></script>
+    <script src="{% static 'ecommerce/js/basket/quantity.js' %}"></script>
+{% endblock %}
+
+
 {% block breadcrumbs %}
     {% include "partials/progress-bar.html" with carrinho=True botaoComprar=True %}
 {% endblock %}

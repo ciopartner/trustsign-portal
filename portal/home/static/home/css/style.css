@@ -114,6 +114,16 @@ width: 391px;
     margin-left: -17px;
 }
 
+.form-horizontal .form-actions {
+    padding-left: 110px;
+}
+
+.btn{
+    font-size: 12px;
+    line-height: 16px;
+}
+
+
 .custom-icon{
     vertical-align: middle !important;
 }
