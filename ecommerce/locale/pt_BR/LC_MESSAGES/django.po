@@ -7830,3 +7830,11 @@ msgstr "Form inválido"
 #, python-format
 msgid "You need to select some %ss"
 msgstr "Você precisa selecionar algum %ss"
+
+msgid "Back"
+msgstr "Voltar"
+
+
+
+msgid "Change Password"
+msgstr "Alterar senha"
