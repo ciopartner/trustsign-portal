@@ -32,3 +32,8 @@ Executar uma vez para o portal e outra para o e-commerce
 - apt-get install libssl-dev
 - apt-get install whois
 
+7) Settings local:
+- CRM_USERNAME = 'usuario de acesso ao CRM'
+- CRM_PASSWORD_HASH = 'senha de acesso ao CRM'
+- CRM_OPORTUNITY_ASSIGNED_USER_ID = 'hash do assigned_user na oportunidade'
+- CRM_OPORTUNITY_MANUFACTURERS_ID = 'hash do manufacturers na oportunidade'

@@ -91,13 +91,13 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(asctime)-15s %(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(message)s [%(pathname)s:%(lineno)d %(funcName)s]'
+            'format': '%(asctime)-15s %(levelname)s %(message)s [%(pathname)s:%(lineno)d %(funcName)s]'
         },
         'verysimple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(asctime)-15s %(levelname)s %(message)s'
         }
     },
     'filters': {
@@ -133,6 +133,15 @@ LOGGING = {
             'mode': 'a',
             'maxBytes': 10485760,
             'backupCount': 50,
+        },
+        'logfile_crm': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'formatter': 'verysimple',
+            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile-crm.log'),
+            'mode': 'a',
+            'maxBytes': 10485760,
+            'backupCount': 50,
         }
     },
     'loggers': {
@@ -148,6 +157,10 @@ LOGGING = {
         'ecommerce': {
             'handlers': ['console', 'logfile', 'mail_admins'],
             'level': 'INFO'
+        },
+        'libs.crm': {
+            'handlers': ['console', 'logfile_crm'],
+            'level': 'DEBUG'
         },
         'libs.comodo': {
             'handlers': ['console', 'logfile_comodo'],

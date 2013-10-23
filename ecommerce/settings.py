@@ -158,11 +158,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    #'ecommerce.apps.customer',
-    #'ecommerce.apps.checkout',
     #'website',
 
     'portal.home',
+
+    'django_cron',
 
     'south',
     'compressor',
@@ -191,18 +191,19 @@ OSCAR_DEFAULT_CURRENCY = 'BRL'
 OSCAR_SHOP_NAME = 'TrustSign e-commerce'
 
 # STATUS DAS ORDENS
-OSCAR_INITIAL_ORDER_STATUS = 'Pendente'
-OSCAR_INITIAL_LINE_STATUS = 'Pendente'
+OSCAR_INITIAL_ORDER_STATUS = 'Pendente de Pagamento'
+OSCAR_INITIAL_LINE_STATUS = 'Pendente de Pagamento'
 OSCAR_ORDER_STATUS_PIPELINE = {
-    'Pendente': ('Em processamento', 'Cancelada',),
-    'Em processamento': ('Pagamento Aprovado', 'Cancelada',),
-    'Pagamento Aprovado': ('Concluído',),
+    'Pendente de Pagamento': ('Pago', 'Cancelado',),
+    'Pago': ('Em Processamento', 'Estornado',),
+    'Em processamento': ('Concluído', 'Estornado',),
     'Concluído': (),
-    'Cancelada': (),
+    'Cancelado': (),
+    'Estornado': (),
 }
 
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
-LOGIN_URL = "/ecommerce/accounts/login"
+LOGIN_URL = "/ecommerce/accounts/login/"
 
 
 # COBREBEM
@@ -219,6 +220,22 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = OSCAR_FROM_EMAIL = 'alessandro.reichert@ciopartner.com.br'
 
 USAR_KNU = False  # Usado para retornar um dummy dict em vez de chamar a KNU para desenvolvimento
+
+CRM_USERNAME = '<mudar no local_settings.py>'
+CRM_PASSWORD_HASH = '<mudar no local_settings.py>'
+CRM_OPORTUNITY_ASSIGNED_USER_ID = '<mudar no local_settings.py>'
+CRM_OPORTUNITY_MANUFACTURERS_ID = '<mudar no local_settings.py>'
+
+CRON_CLASSES = [
+    'website.crons.EnviaOrdersCRMCronJob',
+
+    # This example cron check last cron jobs results. If they were unsuccessfull 10 times in row, it sends email to user
+    'django_cron.cron.FailedRunsNotificationCronJob'
+]
+FAILED_RUNS_CRONJOB_EMAIL_PREFIX = "[CronJob Error]: "
+
+# Precisa colocar no cron do linux:
+# python manage.py runcrons
 
 
 # Sobrescreva com os settings globais

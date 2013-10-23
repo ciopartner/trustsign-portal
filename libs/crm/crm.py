@@ -1,5 +1,4 @@
 # coding=utf-8
-#from django.conf import settings
 from __future__ import unicode_literals
 from django.conf import settings
 import requests
@@ -10,6 +9,58 @@ log = getLogger('libs.crm')
 
 
 class ClienteCRM(object):
+
+    TIPOS_NEGOCIO = (
+        ('Alimentos', 'Alimentos'),
+        ('Environmental', 'Ambiental'),
+        ('Banking', 'Banco'),
+        ('Biotechnology', 'Biotecnologia'),
+        ('Communications', 'Comunicações'),
+        ('Construction', 'Construção'),
+        ('Consulting', 'Consultoria'),
+        ('ECommerce', 'E-Commerce'),
+        ('Electronics', 'Electrônicos'),
+        ('Energy', 'Energia'),
+        ('Engineering', 'Engenharia'),
+        ('Education', 'Ensino'),
+        ('Entertainment', 'Entretenimento'),
+        ('Finance', 'Financeira'),
+        ('Government', 'Governo'),
+        ('Hospitality', 'Hotelaria'),
+        ('Internet', 'Internet'),
+        ('Manufacturing', 'Manufatura'),
+        ('Machinery', 'Maquinaria'),
+        ('Media', 'Meios de Comunicação'),
+        ('Shipping', 'Navegação'),
+        ('Other', 'Outros'),
+        ('Chemicals', 'Química'),
+        ('Recreation', 'Recreação'),
+        ('Healthcare', 'Saúde'),
+        ('Insurance', 'Seguros'),
+        ('Not For Profit', 'Sem Fins Lucrativos'),
+        ('Servicos', 'Serviços'),
+        ('Utilities', 'Serviços Públicos'),
+        ('Technology', 'Tecnologia'),
+        ('Telecommunications', 'Telecomunicações'),
+        ('Apparel', 'Têxtil'),
+        ('Transportation', 'Transportes'),
+        ('Turismo', 'Turismo'),
+        ('Retail', 'Varejo'),
+    )
+
+    FONTES_DO_POTENCIAL = (
+        ('Abraweb', 'Abraweb'),
+        ('Acoes de Marketing', 'Ações de Marketing'),
+        ('Buscadores', 'Buscadores'),
+        ('Canal', 'Canal'),
+        ('Chat', 'Chat'),
+        ('ECommerce Brasil', 'E-Commerce Brasil'),
+        ('Eventos', 'Eventos'),
+        ('Inside Sales', 'Inside Sales'),
+        ('Parceiro', 'Parceiro'),
+        ('Site de Clientes', 'Site de Clientes'),
+        ('Website', 'Website'),
+    )
 
     def __init__(self):
 
@@ -24,15 +75,22 @@ class ClienteCRM(object):
         self.pais = None
         self.cep = None
         self.sem_atividade = None
+        self.tipo_negocio = None
+        self.is_ecommerce = None
+        self.fonte_do_potencial = None
 
 
 class OportunidadeCRM(object):
+    TIPO_CARTAO_CREDITO = 'cartao_credito'
+    TIPO_CARTAO_DEBITO = 'cartao_debito'
+    TIPO_BOLETO = 'boleto_bancario'
+
     def __init__(self):
         self.account_id = None
-        self.name = 'Oportunidade via e-commerce ({})'.format(self.numero_pedido)
         self.numero_pedido = None
         self.data_pedido = None
         self.valor_total = None
+        self.tipo_pagamento = None
 
         # cartão de credito
         self.pag_credito_titular = None
@@ -49,16 +107,21 @@ class OportunidadeCRM(object):
         self.pag_debito_ultimos_digitos = None
 
         #boleto
-        #TODO: dados boleto em oportunidade
+        self.nosso_numero = None
+        self.data_pagamento_boleto = None
+
+    @property
+    def name(self):
+        return 'Oportunidade via e-commerce ({})'.format(self.numero_pedido)
 
     def is_credito(self):
-        return self.pag_credito_ultimos_digitos is not None
+        return self.tipo_pagamento == self.TIPO_CARTAO_CREDITO
 
     def is_debito(self):
-        return self.pag_debito_ultimos_digitos is not None
+        return self.tipo_pagamento == self.TIPO_CARTAO_DEBITO
 
     def is_boleto(self):
-        return False
+        return self.tipo_pagamento == self.TIPO_BOLETO
 
 
 class ProdutoCRM(object):
@@ -69,6 +132,15 @@ class ProdutoCRM(object):
         self.codigo = None
         self.preco_venda = None,
         self.quantidade = None,
+
+
+class ContatoCRM(object):
+
+    def __init__(self):
+        self.nome = None
+        self.sobrenome = None
+        self.telefone = None
+        self.email = None
 
 
 class CRMClient(object):
@@ -107,8 +179,8 @@ class CRMClient(object):
 
         response_data = self.call_crm('login', [
             {
-                'user_name': 'ceo',  # settings.CRM_USERNAME,
-                'password': '26442effb42e24d42f179f343c89e419',  # settings.CRM_PASSWORD_HASH,
+                'user_name': settings.CRM_USERNAME,
+                'password': settings.CRM_PASSWORD_HASH,
             },
             canal
         ])
@@ -176,6 +248,10 @@ class CRMClient(object):
             'billing_address_country': cliente.pais,
             'billing_address_postalcode': cliente.cep,
             'sem_atividade_c': 1 if cliente.sem_atividade else 0,
+            'account_type': 'Cliente',
+            'industry': cliente.tipo_negocio,
+            'e_commerce_c': cliente.is_ecommerce,
+            'lead_source': cliente.fonte_do_potencial,
         })
 
         return response['id']
@@ -185,30 +261,42 @@ class CRMClient(object):
         Cria uma opportunity no CRM
         """
 
-        response = self.set_entry('Opportunities', {
+        data = {
             'account_id': oportunidade.account_id,
             'assigned_user_id': settings.CRM_OPORTUNITY_ASSIGNED_USER_ID,
+            'manufacturers_id': settings.CRM_OPORTUNITY_MANUFACTURERS_ID,
             'name': 'Oportunidade via e-commerce',
             #'ecommerce_id_c': oportunidade.numero_pedido, TODO: não existe ainda no CRM
             'date_closed': oportunidade.data_pedido,
             'amount': oportunidade.valor_total,
+            'tipo_pagamento_c': oportunidade.tipo_pagamento,
+            'sales_stage': 'Closed Won',
+            'opportunity_type': 'New Business',
+        }
 
-            # cartão de credito
-            'titular_c': oportunidade.pag_credito_titular,
-            'vencimento_c': oportunidade.pag_credito_vencimento,
-            'bandeira_c': oportunidade.pag_credito_bandeira,
-            'id_transacao_c': oportunidade.pag_credito_transacao_id,
-            'ultimos_digitos_c': oportunidade.pag_credito_ultimos_digitos,
+        response = self.set_entry('Opportunities', data)
 
-            #cartão de débito
-            'titular_debito_c': oportunidade.pag_debito_titular,
-            'vencimento_debito_c': oportunidade.pag_debito_vencimento,
-            'bandeira_debito_c': oportunidade.pag_debito_bandeira,
-            'transaction_id_debito_c': oportunidade.pag_debito_transacao_id,
-            'ultimos_digitos_debito_c': oportunidade.pag_debito_ultimos_digitos,
-
-            #boleto TODO: ainda requer ajustes no layout e campos por parte do CRM
-        })
+        if oportunidade.is_credito():
+            data.update({
+                'titular_c': oportunidade.pag_credito_titular,
+                'vencimento_c': oportunidade.pag_credito_vencimento,
+                'bandeira_c': oportunidade.pag_credito_bandeira,
+                'id_transacao_c': oportunidade.pag_credito_transacao_id,
+                'ultimos_digitos_c': oportunidade.pag_credito_ultimos_digitos,
+            })
+        elif oportunidade.is_debito():
+            data.update({
+                'titular_debito_c': oportunidade.pag_debito_titular,
+                'vencimento_debito_c': oportunidade.pag_debito_vencimento,
+                'bandeira_debito_c': oportunidade.pag_debito_bandeira,
+                'transaction_id_debito_c': oportunidade.pag_debito_transacao_id,
+                'ultimos_digitos_debito_c': oportunidade.pag_debito_ultimos_digitos,
+            })
+        elif oportunidade.is_boleto():
+            data.update({
+                'nosso_numero_c': oportunidade.nosso_numero,
+                'data_pgto_c': oportunidade.data_pagamento_boleto
+            })
 
         return response['id']
 
@@ -227,7 +315,23 @@ class CRMClient(object):
 
         return response['id']
 
-    def postar_compra(self, cliente, oportunidade, produtos):
+    def set_entry_contact(self, contato):
+        """
+        Cria um contact no CRM
+        """
+        response = self.set_entry('Products', {
+            'first_name': contato.nome,
+            'last_name': contato.sobrenome,
+            'phone_work': contato.telefone,
+            'email1': contato.email
+            #'phone_mobile': contato.celular,
+            #'title': contato.cargo,
+            #'department': contato.departamento
+        })
+
+        return response['id']
+
+    def postar_compra(self, cliente, contato, oportunidade, produtos):
         """
         Executa todo o processo de compra, criando account, opportunity e products quando necessário
         """
@@ -238,6 +342,7 @@ class CRMClient(object):
                 account_id = account_id[0]['id']
             else:
                 account_id = self.set_entry_account(cliente)
+                contact_id = self.set_entry_contact(contato)
 
             oportunidade.account_id = account_id
             opportunity_id = self.set_entry_opportunities(oportunidade)
@@ -249,28 +354,3 @@ class CRMClient(object):
         except Exception as e:
             log.exception('Ocorreu um erro ao postar a compra')
         self.logout()
-
-#print set_entry_account(
-#    cnpj='88.888.888/0001-88',
-#    razaosocial='Teste',
-#    logradouro='rua teste',
-#    numero='123',
-#    complemento='complemento',
-#    bairro='bairro teste',
-#    cidade='cidade teste',
-#    estado='SP',
-#    pais='BR',
-#    cep='04050-000',
-#    sem_atividade=False
-#)
-
-#client = CRMClient()
-#
-#client.login()
-#account = client.get_account('88.888.888/0001-88')['entry_list']
-#client.logout()
-#
-#if account:
-#    print account[0]['id']
-#else:
-#    print 'não encontrou'

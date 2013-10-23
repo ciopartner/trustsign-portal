@@ -7,12 +7,16 @@ Bankcard = get_class('payment.models', 'Bankcard')
 
 class OscarToCRMMixin(object):
     def send_order_to_crm(self, order):
+        """
+        Send the order to CRM
+        """
         cliente = self.get_cliente_crm(order.user)
+        contato = self.get_contato_crm(order.user)
         oportunidade = self.get_oportunidade_crm(order)
         produtos = self.get_produtos_crm(order)
 
         client = crm.CRMClient()
-        client.postar_compra(cliente, oportunidade, produtos)
+        client.postar_compra(cliente, contato, oportunidade, produtos)
 
     @staticmethod
     def get_cliente_crm(user):
@@ -34,10 +38,32 @@ class OscarToCRMMixin(object):
         cliente.cep = profile.cliente_cep
         cliente.sem_atividade = profile.cliente_situacao_cadastral.strip().lower() == 'ativa'
 
+        cliente.tipo_negocio = profile.cliente_tipo_negocio
+        cliente.is_ecommerce = profile.cliente_ecommerce
+        cliente.fonte_do_potencial = profile.cliente_fonte_potencial
+
         return cliente
 
     @staticmethod
+    def get_contato_crm(user):
+        """
+        Return a Contact to send to CRM
+        """
+        profile = user.get_profile()
+        contato = crm.ContatoCRM()
+
+        contato.nome = profile.callback_nome
+        contato.sobrenome = profile.callback_sobrenome
+        contato.email = profile.callback_email_corporativo
+        contato.telefone = profile.callback_telefone_principal
+
+        return contato
+
+    @staticmethod
     def get_oportunidade_crm(order):
+        """
+        Return a oportunity to send to CRM
+        """
         source = order.sources.all()[0]
         try:
             bankcard = source.bankcard
@@ -48,6 +74,9 @@ class OscarToCRMMixin(object):
         oportunidade.pag_credito_transacao_id = transaction_id
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
         oportunidade.valor_total = str(source.amount_allocated)
+
+        #TODO: colocar if quando implementar os outros meios de pagamento
+        oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_CREDITO
         oportunidade.pag_credito_titular = bankcard.name
         oportunidade.pag_credito_vencimento = bankcard.expiry_month()
         oportunidade.pag_credito_bandeira = bankcard.card_type
@@ -57,6 +86,9 @@ class OscarToCRMMixin(object):
 
     @staticmethod
     def get_produtos_crm(order):
+        """
+        Return a list of products to send to CRM
+        """
         produtos = []
 
         for line in order.lines.all():

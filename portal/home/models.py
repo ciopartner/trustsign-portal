@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.contrib.auth.models import User
-from django.db.models import OneToOneField, DateField, TextField, PositiveSmallIntegerField, CharField, Model, EmailField
+from django.db.models import OneToOneField, DateField, TextField, PositiveSmallIntegerField, CharField, Model, EmailField, BooleanField
 from django.db.models.signals import post_save
 
 # The members of Page will be inherited by the Author model, such
@@ -28,6 +29,57 @@ class TrustSignProfile(Model):
         (PERFIL_TRUSTSIGN, 'Trustsign'),
     )
 
+    TIPO_NEGOCIO_CHOICES = (
+        ('Alimentos', 'Alimentos'),
+        ('Environmental', 'Ambiental'),
+        ('Banking', 'Banco'),
+        ('Biotechnology', 'Biotecnologia'),
+        ('Communications', 'Comunicações'),
+        ('Construction', 'Construção'),
+        ('Consulting', 'Consultoria'),
+        ('ECommerce', 'E-Commerce'),
+        ('Electronics', 'Electrônicos'),
+        ('Energy', 'Energia'),
+        ('Engineering', 'Engenharia'),
+        ('Education', 'Ensino'),
+        ('Entertainment', 'Entretenimento'),
+        ('Finance', 'Financeira'),
+        ('Government', 'Governo'),
+        ('Hospitality', 'Hotelaria'),
+        ('Internet', 'Internet'),
+        ('Manufacturing', 'Manufatura'),
+        ('Machinery', 'Maquinaria'),
+        ('Media', 'Meios de Comunicação'),
+        ('Shipping', 'Navegação'),
+        ('Other', 'Outros'),
+        ('Chemicals', 'Química'),
+        ('Recreation', 'Recreação'),
+        ('Healthcare', 'Saúde'),
+        ('Insurance', 'Seguros'),
+        ('Not For Profit', 'Sem Fins Lucrativos'),
+        ('Servicos', 'Serviços'),
+        ('Utilities', 'Serviços Públicos'),
+        ('Technology', 'Tecnologia'),
+        ('Telecommunications', 'Telecomunicações'),
+        ('Apparel', 'Têxtil'),
+        ('Transportation', 'Transportes'),
+        ('Turismo', 'Turismo'),
+        ('Retail', 'Varejo'),
+    )
+    FONTE_POTENCIAL_CHOICES = (
+        ('Abraweb', 'Abraweb'),
+        ('Acoes de Marketing', 'Ações de Marketing'),
+        ('Buscadores', 'Buscadores'),
+        ('Canal', 'Canal'),
+        ('Chat', 'Chat'),
+        ('ECommerce Brasil', 'E-Commerce Brasil'),
+        ('Eventos', 'Eventos'),
+        ('Inside Sales', 'Inside Sales'),
+        ('Parceiro', 'Parceiro'),
+        ('Site de Clientes', 'Site de Clientes'),
+        ('Website', 'Website'),
+    )
+
     user = OneToOneField(User)
     date_of_birth = DateField(blank=True, null=True)
     bio = TextField(blank=True, default='')
@@ -48,6 +100,10 @@ class TrustSignProfile(Model):
     callback_sobrenome = CharField(max_length=128, blank=True, default='')
     callback_email_corporativo = EmailField(blank=True, default='')
     callback_telefone_principal = CharField(max_length=16, blank=True, default='')
+
+    cliente_ecommerce = BooleanField(default=False, verbose_name='e-commerce', help_text='Seu site realiza operações de e-commerce?')
+    cliente_tipo_negocio = CharField(max_length=128, verbose_name='tipo do negócio', choices=TIPO_NEGOCIO_CHOICES, default='Other')
+    cliente_fonte_potencial = CharField(max_length=128, verbose_name='fonte do potencial', choices=FONTE_POTENCIAL_CHOICES, default='Website')
 
     perfil = PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
 

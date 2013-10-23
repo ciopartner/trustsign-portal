@@ -278,7 +278,10 @@ CERTIFICADOS_EMAIL_PASSWORD = '<mudar no local_settings.py>'
 CERTIFICADOS_EMAIL_PATH_ATTACHMENTS = os.path.join(PROJECT_ROOT, 'attachments')
 
 
+CRM_USERNAME = '<mudar no local_settings.py>'
+CRM_PASSWORD_HASH = '<mudar no local_settings.py>'
 CRM_OPORTUNITY_ASSIGNED_USER_ID = '<mudar no local_settings.py>'
+CRM_OPORTUNITY_MANUFACTURERS_ID = '<mudar no local_settings.py>'
 
 
 CRON_CLASSES = [

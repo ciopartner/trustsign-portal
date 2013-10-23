@@ -10,10 +10,13 @@ from libs.cobrebem.facade import Facade
 from oscar.apps.payment.exceptions import UnableToTakePayment
 from oscar.apps.checkout import views
 from libs.crm.mixins import OscarToCRMMixin
+import logging
 
 BankcardForm = get_class('payment.forms', 'BankcardForm')
 SourceType = get_class('payment.models', 'SourceType')
 Source = get_class('payment.models', 'Source')
+
+log = logging.getLogger('ecommerce.checkout.views')
 
 
 class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
@@ -185,7 +188,17 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         """
         order = self.place_order(order_number, user, basket, shipping_address, shipping_method, total, **kwargs)
         basket.submit()
+
+        self.set_status_pago(order)
+
         return self.handle_successful_order(order)
+
+
+    def set_status_pago(self, order):
+        sources = order.sources.all()
+        if sources and sources[0].reference:  # somente deve setar se existir um transaction_id(reference)
+            order.set_status('Pago')
+            log.info('Order #%s: alterado status para Pago' % order.pk)
 
 
 class ShippingAddressView(views.ShippingAddressView):
