@@ -204,8 +204,8 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 LOGIN_REDIRECT_URL = '/ecommerce/accounts/profile/'
-LOGIN_URL = '/portal/accounts/login/'
-LOGOUT_URL = '/portal/accounts/logout/'
+LOGIN_URL = '/ecommerce/accounts/login/'
+LOGOUT_URL = '/ecommerce/accounts/logout/'
 
 
 # COBREBEM
