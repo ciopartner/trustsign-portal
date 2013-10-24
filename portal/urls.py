@@ -19,7 +19,7 @@ urlpatterns = patterns(
     # admin interface, which would be marginally more secure.
     ('^portal/admin/', include(admin.site.urls)),
 
-    ('^', include('portal.certificados.urls')),
+    ('^portal/', include('portal.certificados.urls')),
 
     # We don't want to presume how your homepage works, so here are a
     # few patterns you can use to set it up.
