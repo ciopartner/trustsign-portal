@@ -75,6 +75,10 @@ SITE_PREFIX = "portal"
 
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 
+LOGIN_REDIRECT_URL = '/ecommerce/accounts/profile/'
+LOGIN_URL = '/portal/accounts/login/'
+LOGOUT_URL = '/portal/accounts/logout/'
+
 ACCOUNTS_PROFILE_FORM_CLASS = 'portal.home.forms.ProfileForm'
 ACCOUNTS_PROFILE_FORM_EXCLUDE_FIELDS = (
     'bio',
