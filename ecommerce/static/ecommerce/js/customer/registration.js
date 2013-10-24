@@ -3,6 +3,7 @@ function RegistrationForm(obj, cnpj){
     // Private Variables
     var self = this;
     var loading = false;
+    var CNPJNotFoundHTML = "<div class=\"alert alert-error\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Não foi possível localizar o CNPJ.</div>";
 
     /**
      * Oculta campos desativos
@@ -21,7 +22,7 @@ function RegistrationForm(obj, cnpj){
     /**
      * Função de retorno da função getCNPJData
      */
-    var getCPNJCallback = function(data){
+    var CPNJCallback = function(data){
 
         for(field in data)
             $("#id_registration-" + field).val(data[field]);
@@ -34,8 +35,8 @@ function RegistrationForm(obj, cnpj){
     /**
      * Função de retorno da função getCNPJData em caso de erro.
      */
-    var getCPNJFailCallback = function(){
-        //alert("CNPJ não econtrado");
+    var CPNJFailCallback = function(){
+        obj.find('h4').after(CNPJNotFoundHTML);
         loading = false;
     }
 
@@ -43,8 +44,8 @@ function RegistrationForm(obj, cnpj){
      * Obtém CNPJ
      */
     self.getCPNJData = function(){
-        var xhr = $.post(url_ecommerce + 'ajax/get-cnpj-data/', { cnpj : cnpj.val() }, getCPNJCallback);
-        xhr.fail(getCPNJFailCallback);
+        var xhr = $.post(url_ecommerce + 'ajax/get-cnpj-data/', { cnpj : cnpj.val() }, CPNJCallback);
+        xhr.fail(CPNJFailCallback);
     }
 
     // --------------------------------------------
@@ -52,13 +53,18 @@ function RegistrationForm(obj, cnpj){
     // --------------------------------------------
     cnpj = cnpj || obj.find('#id_registration-cnpj');
 
-    cnpj.on('keyup keydown', function(){
+    //    cnpj.on('keyup keydown', function(){
+    //
+    //        if(!loading && cnpj.val().length == 14){
+    //            self.getCPNJData();
+    //            loading = true;
+    //        }
+    //    });
 
-        if(!loading && cnpj.val().length == 14){
-            self.getCPNJData();
-            loading = true;
-        }
+    cnpj.mask("99.999.999/9999-99").mask("99.999.999/9999-99", {
+        completed : self.getCPNJData
     });
+
 
     self.hideDisableFields();
 
