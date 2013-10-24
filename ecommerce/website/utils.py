@@ -18,8 +18,16 @@ def remove_message(request, message_text):
             storage._queued_messages.remove(message)
 
 
+def limpa_cnpj(cnpj):
+    return re.sub('[./-]', '', cnpj)
+
+
+def formata_cnpj(cnpj):
+    return '%s.%s.%s/%s-%s' % (cnpj[0:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:14])
+
+
 def get_dados_empresa(cnpj):
-    cnpj = re.sub('[./-]', '', cnpj)
+    cnpj = limpa_cnpj(cnpj)
     data = cache.get('cnpj-%s' % cnpj)
     if data is None:
         if settings.USAR_KNU:

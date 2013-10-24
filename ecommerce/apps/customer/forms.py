@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.forms import CharField, TextInput, BooleanField, ChoiceField
 from localflavor.br.forms import BRCNPJField
-from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm, ProfileForm as CoreProfileForm
-from ecommerce.website.utils import get_dados_empresa
+from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm, \
+    ProfileForm as CoreProfileForm, EmailAuthenticationForm as CoreEmailAuthenticationForm
+from ecommerce.website.utils import get_dados_empresa, limpa_cnpj
 from portal.home.models import TrustSignProfile
 
 User = get_user_model()
@@ -24,6 +26,14 @@ class CharFieldDisabled(CharField):
         self.required = False
 
 
+class EmailAuthenticationForm(CoreEmailAuthenticationForm):
+    username = BRCNPJField(label='CNPJ', widget=TextInput(attrs={'class': 'mask-cnpj'}))
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        return limpa_cnpj(username)
+
+
 class EmailUserCreationForm(CoreEmailUserCreationForm):
     cnpj = BRCNPJField(label='CNPJ', widget=TextInput(attrs={'class': 'mask-cnpj'}))
 
@@ -41,7 +51,7 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
     sobrenome = CharField(max_length=128)
     telefone_principal = CharField(max_length=16)
 
-    cliente_ecommerce = BooleanField(label='e-commerce', help_text='Seu site realiza operações de e-commerce?')
+    cliente_ecommerce = BooleanField(label='e-commerce', help_text='Seu site realiza operações de e-commerce?', required=False)
     cliente_tipo_negocio = ChoiceField(label='Tipo do Negócio', choices=TrustSignProfile.TIPO_NEGOCIO_CHOICES)
     cliente_fonte_potencial = ChoiceField(label='Fonte do Potencial', choices=TrustSignProfile.FONTE_POTENCIAL_CHOICES)
 
@@ -51,12 +61,26 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
                   'situacao_cadastral', 'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_ecommerce', 'nome',
                   'sobrenome', 'telefone_principal', 'email',)
 
-    def save(self, commit=True):
-        user = super(EmailUserCreationForm, self).save()
-        profile = user.get_profile()
-        data = self.cleaned_data
+    def clean_cnpj(self):
+        cnpj = self.cleaned_data['cnpj']
 
+        if User.objects.filter(username=limpa_cnpj(cnpj)).exists():
+            raise ValidationError('Já existe um usuário cadastrado com esse CNPJ')
+
+        return cnpj
+
+    def save(self, commit=True):
+        data = self.cleaned_data
         data_empresa = get_dados_empresa(data['cnpj'])
+
+        user = super(EmailUserCreationForm, self).save(commit=False)
+
+        user.username = data_empresa['cnpj']  # cnpj sem mascara
+        user.first_name = data['nome']
+        user.last_name = data['sobrenome']
+        user.save()
+
+        profile = user.get_profile()
 
         profile.cliente_cnpj = data_empresa['cnpj']
         profile.cliente_razaosocial = data_empresa['razao_social']
@@ -79,10 +103,6 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
         profile.callback_telefone_principal = data['telefone_principal']
 
         profile.save()
-
-        user.first_name = profile.callback_nome
-        user.last_name = profile.callback_sobrenome
-        user.save()
 
         return user
 
