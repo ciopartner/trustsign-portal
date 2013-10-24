@@ -116,6 +116,11 @@ width: 391px;
     background: #dddddd;
 }
 
+
+.accordion-inner{
+    margin-bottom: -30px;
+}
+
 /* Overwriting h1, h2 and h3 to make the content easy */
 h1 {
     font-family:Tahoma, Geneva, sans-serif;
