@@ -116,6 +116,7 @@ width: 391px;
     background: #dddddd;
 }
 
+
 /* Overwriting h1, h2 and h3 to make the content easy */
 h1 {
     font-family:Tahoma, Geneva, sans-serif;
@@ -1996,4 +1997,8 @@ input[type=text], input[type=password]{
 .price_color{
     color: #666;
     font-weight: normal;
+}
+
+.error .help-block{
+    color: rgb(185, 74, 72);
 }

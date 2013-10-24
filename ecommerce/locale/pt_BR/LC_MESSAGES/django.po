@@ -5590,6 +5590,9 @@ msgstr "Preço da linha com impostos"
 msgid "Re-order"
 msgstr "Comprar novamente"
 
+msgid "Re-order all items"
+msgstr "Comprar novamente todos os items"
+
 #: templates/oscar/customer/order.html:88
 msgid "Not available anymore"
 msgstr "Não está mais disponível"
@@ -7834,7 +7837,8 @@ msgstr "Você precisa selecionar algum %ss"
 msgid "Back"
 msgstr "Voltar"
 
-
-
 msgid "Change Password"
 msgstr "Alterar senha"
+
+msgid "Filter orders"
+msgstr "Filtrar pedidos"
