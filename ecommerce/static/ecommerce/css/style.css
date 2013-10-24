@@ -49,3 +49,8 @@ body{
 #voucher_form_container label{
     margin-right: 20px;
 }
+
+#form-history-filter input[type=text]{
+    width: 90px;
+    margin: 0 15px 0 10px;
+}

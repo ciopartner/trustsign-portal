@@ -1,9 +1,10 @@
-function RegistrationForm(obj, cnpj){
+function RegistrationForm(obj, cnpj, phone){
 
     // Private Variables
     var self = this;
     var loading = false;
-    var CNPJNotFoundHTML = "<div class=\"alert alert-error\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Não foi possível localizar o CNPJ.</div>";
+    var CNPJNotFoundHTML = "<div class=\"alert alert-error  pull-left tm10\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Não foi possível localizar o CNPJ.</div>";
+    var invalidPhone = "<div class=\"alert alert-error pull-left tm10\" ><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Telefone inválido! Apenas telefones fixos.</div>";
 
     /**
      * Oculta campos desativos
@@ -36,7 +37,7 @@ function RegistrationForm(obj, cnpj){
      * Função de retorno da função getCNPJData em caso de erro.
      */
     var CPNJFailCallback = function(){
-        obj.find('h4').after(CNPJNotFoundHTML);
+        cnpj.after(CNPJNotFoundHTML);
         loading = false;
     }
 
@@ -48,10 +49,18 @@ function RegistrationForm(obj, cnpj){
         xhr.fail(CPNJFailCallback);
     }
 
+    self.validadePhone = function(){
+        var val = phone.val();
+
+        if(parseInt(val[5]) < 2 || parseInt(val[5]) > 5)
+            phone.after(invalidPhone);
+    }
+
     // --------------------------------------------
     // Constructor
     // --------------------------------------------
     cnpj = cnpj || obj.find('#id_registration-cnpj');
+    phone = phone || obj.find("#id_registration-telefone_principal");
 
     //    cnpj.on('keyup keydown', function(){
     //
@@ -63,6 +72,10 @@ function RegistrationForm(obj, cnpj){
 
     cnpj.mask("99.999.999/9999-99").mask("99.999.999/9999-99", {
         completed : self.getCPNJData
+    });
+
+    phone.mask("(99) 9999-9999", {
+        completed: self.validadePhone
     });
 
 
