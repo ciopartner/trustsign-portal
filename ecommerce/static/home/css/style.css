@@ -1998,3 +1998,7 @@ input[type=text], input[type=password]{
     color: #666;
     font-weight: normal;
 }
+
+.error .help-block{
+    color: rgb(185, 74, 72);
+}
