@@ -489,7 +489,7 @@ msgstr "Visualizações"
 
 #: apps/analytics/abstract_models.py:23 apps/analytics/abstract_models.py:51
 msgid "Basket Additions"
-msgstr "Adições na cesta"
+msgstr "Adições no carrinho"
 
 #: apps/analytics/abstract_models.py:25 apps/analytics/reports.py:23
 #: templates/oscar/dashboard/catalogue/product_update.html:105
@@ -593,7 +593,7 @@ msgstr "%(user)s pesquisou por '%(query)s'"
 #: templates/oscar/dashboard/reports/partials/product_report.html:10
 #: templates/oscar/dashboard/reports/partials/user_report.html:13
 msgid "Basket additions"
-msgstr "Adições na cesta"
+msgstr "Adições no carrinho"
 
 #: apps/analytics/reports.py:40
 msgid "Product analytics"
@@ -638,7 +638,7 @@ msgstr "Nome"
 #: templates/oscar/dashboard/reports/partials/user_report.html:11
 #: templates/oscar/dashboard/users/index.html:71
 msgid "Date registered"
-msgstr "Data de registro"
+msgstr "Data de cadastro"
 
 #: apps/analytics/reports.py:64
 #: templates/oscar/dashboard/reports/partials/user_report.html:12
@@ -679,7 +679,7 @@ msgstr "Aberta - compra em andamento"
 
 #: apps/basket/abstract_models.py:34
 msgid "Merged - superceded by another basket"
-msgstr "Combinada - substituída por outra cesta"
+msgstr "Combinada - substituída por outro carrinho"
 
 #: apps/basket/abstract_models.py:35
 msgid "Saved - for items to be purchased later"
@@ -687,7 +687,7 @@ msgstr "Salva - para ítens que serão comprados mais tarde"
 
 #: apps/basket/abstract_models.py:36
 msgid "Frozen - the basket cannot be modified"
-msgstr "Congelada - a cesta não pode ser modificada"
+msgstr "Congelada - o carrinho não pode ser modificada"
 
 #: apps/basket/abstract_models.py:37
 msgid "Submitted - has been ordered at the checkout"
@@ -758,12 +758,12 @@ msgstr "Carrinho"
 #: apps/basket/abstract_models.py:59
 #: templates/oscar/dashboard/catalogue/product_update.html:101
 msgid "Baskets"
-msgstr "Cestas"
+msgstr "Carrinhos"
 
 #: apps/basket/abstract_models.py:78
 #, python-format
 msgid "%(status)s basket (owner: %(owner)s, lines: %(num_lines)d)"
-msgstr "%(status)s cesta (dono: %(owner)s, linhas: %(num_lines)d)"
+msgstr "%(status)s carrinho (dono: %(owner)s, linhas: %(num_lines)d)"
 
 #: apps/basket/abstract_models.py:106
 #, python-format
@@ -803,21 +803,21 @@ msgstr "Preço com impostos"
 
 #: apps/basket/abstract_models.py:499
 msgid "Basket line"
-msgstr "Linha da cesta"
+msgstr "Linha do carrinho"
 
 #: apps/basket/abstract_models.py:500
 msgid "Basket lines"
-msgstr "Linhas da cesta"
+msgstr "Linhas do carrinho"
 
 #: apps/basket/abstract_models.py:504
 #, python-format
 msgid "Basket #%(basket_id)d, Product #%(product_id)d, quantity %(quantity)d"
-msgstr "Cesta #%(basket_id)d, Produto #%(product_id)d, quantidade %(quantity)d"
+msgstr "Carrinho #%(basket_id)d, Produto #%(product_id)d, quantidade %(quantity)d"
 
 #: apps/basket/abstract_models.py:515
 #, python-format
 msgid "You cannot modify a %s basket"
-msgstr "Você não pode modificar a cesta %s"
+msgstr "Você não pode modificar o carrinho %s"
 
 #: apps/basket/abstract_models.py:712 apps/order/abstract_models.py:605
 #: apps/order/abstract_models.py:632 apps/order/abstract_models.py:737
@@ -853,7 +853,7 @@ msgstr "Salvar para depois"
 
 #: apps/basket/forms.py:45
 msgid "Move to Basket"
-msgstr "Mover para cesta"
+msgstr "Mover para o carrinho"
 
 #: apps/basket/forms.py:93 apps/catalogue/abstract_models.py:647
 #: apps/catalogue/abstract_models.py:924 apps/customer/abstract_models.py:114
@@ -886,7 +886,7 @@ msgstr "Por favor, selecione um produto válido"
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order. Your basket currently has %(basket)d items."
-msgstr "Devido a limitações técnicas não somos capazes de engregar mais que %(threshold)d itens em um pedido. Sua cesta tem atualmente %(basket)d itens."
+msgstr "Devido a limitações técnicas não somos capazes de engregar mais que %(threshold)d itens em um pedido. Seu carrinho tem atualmente %(basket)d itens."
 
 #: apps/basket/forms.py:199
 msgid "Variant"
@@ -913,7 +913,7 @@ msgstr "E-mail"
 
 #: apps/basket/reports.py:21 apps/basket/reports.py:81
 msgid "Basket status"
-msgstr "Status da cesta"
+msgstr "Status do carrinho"
 
 #: apps/basket/reports.py:22 apps/basket/reports.py:82
 #: templates/oscar/dashboard/reports/partials/open_basket_report.html:10
@@ -940,7 +940,7 @@ msgstr "Tempo desde a criação"
 
 #: apps/basket/reports.py:60
 msgid "Open baskets"
-msgstr "Cesta abertas"
+msgstr "Carrinhos abertos"
 
 #: apps/basket/reports.py:86
 #: templates/oscar/dashboard/reports/partials/submitted_basket_report.html:14
@@ -949,7 +949,7 @@ msgstr "Tempo entre criação e envio"
 
 #: apps/basket/reports.py:115
 msgid "Submitted baskets"
-msgstr "Cestas enviadas"
+msgstr "Carrinhos enviados"
 
 #: apps/basket/views.py:191
 msgid "You can't save an item for later if you're not logged in!"
@@ -957,7 +957,7 @@ msgstr "Você não pode salvar um item para depois se você não estiver logado!
 
 #: apps/basket/views.py:252
 msgid "Your basket couldn't be updated"
-msgstr "Sua cesta não pode ser atualizada"
+msgstr "Seu carrinho não pode ser atualizada"
 
 #: apps/basket/views.py:348
 #, python-format
@@ -966,17 +966,17 @@ msgstr "O cupom '%(code)s' expirou"
 
 #: apps/basket/views.py:377
 msgid "Your basket does not qualify for a voucher discount"
-msgstr "Sua cesta não mais está qualificada para um cupom de desconto"
+msgstr "Seu carrinho não mais está qualificada para um cupom de desconto"
 
 #: apps/basket/views.py:382
 #, python-format
 msgid "Voucher '%(code)s' added to basket"
-msgstr "Cupom de desconto '%(code)s' adicionado a cesta"
+msgstr "Cupom de desconto '%(code)s' adicionado ao carrinho"
 
 #: apps/basket/views.py:394
 #, python-format
 msgid "You have already added the '%(code)s' voucher to your basket"
-msgstr "Você já adicionou o cupom '%(code)s' a sua cesta"
+msgstr "Você já adicionou o cupom '%(code)s' ao seu carrinho"
 
 #: apps/basket/views.py:402
 #, python-format
@@ -995,7 +995,7 @@ msgstr "Nenhum cupom de desconto encontrado para o id '%d'"
 #: apps/basket/views.py:435
 #, python-format
 msgid "Voucher '%s' removed from basket"
-msgstr "Cupom de desconto '%s' removido da sua cesta"
+msgstr "Cupom de desconto '%s' removido da seu carrinho"
 
 #: apps/catalogue/abstract_models.py:33 apps/catalogue/abstract_models.py:75
 #: apps/catalogue/abstract_models.py:218 apps/catalogue/abstract_models.py:279
@@ -1157,7 +1157,7 @@ msgid ""
 "Options are values that can be associated with a item when it is added to a "
 "customer's basket.  This could be something like a personalised message to "
 "be printed on a T-shirt."
-msgstr "Opções são valores que podem ser associados com um item quando ele for adicionado a uma cesta de cliente. Isto pode ser por exemplo uma mensagem personalizada a ser impressa em uma camiseta."
+msgstr "Opções são valores que podem ser associados com um item quando ele for adicionado a um carrinho de cliente. Isto pode ser por exemplo uma mensagem personalizada a ser impressa em uma camiseta."
 
 #: apps/catalogue/abstract_models.py:304
 msgid "Related Products"
@@ -1607,7 +1607,7 @@ msgstr "Você precisa primeiro completar este passo para fechar a compra"
 
 #: apps/checkout/decorators.py:35
 msgid "You must add some products to your basket before checking out"
-msgstr "Você precisa adicionar produtos a sua cesta antes de fechar a compra"
+msgstr "Você precisa adicionar produtos a seu carrinho antes de fechar a compra"
 
 #: apps/checkout/forms.py:35
 msgid "My email address is"
@@ -1634,7 +1634,7 @@ msgstr "Crie sua conta e depois você será redirecionado de volta para o proces
 #: apps/checkout/views.py:122 apps/checkout/views.py:241
 #: apps/checkout/views.py:322 apps/checkout/views.py:393
 msgid "You need to add some items to your basket to checkout"
-msgstr "Você precisa adicionar alguns itens a sua cesta para fechar a compra"
+msgstr "Você precisa adicionar alguns itens a seu carrinho para fechar a compra"
 
 #: apps/checkout/views.py:127
 msgid "Please either sign in or enter your email address"
@@ -1642,7 +1642,7 @@ msgstr "Por favor, entre com suas credenciais ou especifique seu email"
 
 #: apps/checkout/views.py:133
 msgid "Your basket does not require a shipping address to be submitted"
-msgstr "Sua cesta não requer um endereço para ser submetida"
+msgstr "seu carrinho não requer um endereço para ser submetida"
 
 #: apps/checkout/views.py:165
 msgid "Address deleted from your address book"
@@ -1926,7 +1926,7 @@ msgstr "Alerta cancelado"
 #, python-format
 msgid ""
 "All available lines from order %(number)s have been added to your basket"
-msgstr "Todas as linhas disponíveis do pedido %(number)s foram adicionadas a sua cesta"
+msgstr "Todas as linhas disponíveis do pedido %(number)s foram adicionadas a seu carrinho"
 
 #: apps/customer/views.py:493
 #, python-format
@@ -1938,12 +1938,12 @@ msgstr "Não é possível refazer o pedido %(number)s pois nenhuma das suas linh
 #: apps/customer/views.py:531
 #, python-format
 msgid "%(qty)d copies of '%(product)s' have been added to your basket"
-msgstr "%(qty)d cópias do produto '%(product)s' foram adicionadas a sua cesta"
+msgstr "%(qty)d cópias do produto '%(product)s' foram adicionadas ao seu carrinho"
 
 #: apps/customer/views.py:534
 #, python-format
 msgid "'%s' has been added to your basket"
-msgstr "'%s' foi adicionado a sua cesta"
+msgstr "'%s' foi adicionado ao seu carrinho"
 
 #: apps/customer/views.py:567
 msgid "Add a new address"
@@ -3004,7 +3004,7 @@ msgstr "Cupom removido"
 
 #: apps/offer/models.py:46
 msgid "This is displayed within the customer's basket"
-msgstr "Isto é exibido dentro da cesta do cliente"
+msgstr "Isto é exibido dentro do carrinho do cliente"
 
 #: apps/offer/models.py:49
 msgid "This is displayed on the offer browsing page"
@@ -3070,11 +3070,11 @@ msgstr "O número de vezes um único usuário pode usar esta oferta"
 
 #: apps/offer/models.py:115
 msgid "Max basket applications"
-msgstr "Número máximo de aplicações de cesta"
+msgstr "Número máximo de aplicações de carrinho"
 
 #: apps/offer/models.py:117
 msgid "The number of times this offer can be applied to a basket (and order)"
-msgstr "O número de vezes que esta oferta pode ser aplicada para uma cesta (e pedido)"
+msgstr "O número de vezes que esta oferta pode ser aplicada para um carrinho (e pedido)"
 
 #: apps/offer/models.py:123
 msgid "Max discount"
@@ -3130,12 +3130,12 @@ msgstr "Limitado a %(total)d usos por usuário"
 
 #: apps/offer/models.py:326
 msgid "Limited to 1 use per basket"
-msgstr "Limitado a 1 uso por cesta"
+msgstr "Limitado a 1 uso por carrinho"
 
 #: apps/offer/models.py:329
 #, python-format
 msgid "Limited to %(total)d uses per basket"
-msgstr "Limitado a %(total)d usos por cesta"
+msgstr "Limitado a %(total)d usos por carrinho"
 
 #: apps/offer/models.py:344
 #, python-format
@@ -3159,11 +3159,11 @@ msgstr "Limitado a um custo de %(max)s"
 
 #: apps/offer/models.py:395
 msgid "Depends on number of items in basket that are in condition range"
-msgstr "Depende do número de itens na cesta que estão na lista condicional"
+msgstr "Depende do número de itens no carrinho que estão na lista condicional"
 
 #: apps/offer/models.py:397
 msgid "Depends on value of items in basket that are in condition range"
-msgstr "Depende do valor dos itens na cesta que estão na lista condicional"
+msgstr "Depende do valor dos itens no carrinho que estão na lista condicional"
 
 #: apps/offer/models.py:399
 msgid ""
@@ -3214,7 +3214,7 @@ msgstr "Número máximo de itens afetados"
 msgid ""
 "Set this to prevent the discount consuming all items within the range that "
 "are in the basket."
-msgstr "Defina para evitar com que o desconto seja aplicado para todos os itens de uma lista que estejam na cesta."
+msgstr "Defina para evitar com que o desconto seja aplicado para todos os itens de uma lista que estejam no carrinho."
 
 #: apps/offer/models.py:536
 msgid "Benefits"
@@ -3291,7 +3291,7 @@ msgstr "Categorias incluídas"
 #: apps/offer/models.py:825
 #, python-format
 msgid "Basket includes %(count)d item(s) from %(range)s"
-msgstr "Cesta inclui %(count)d item(s) de %(range)s"
+msgstr "Carrinho inclui %(count)d item(s) de %(range)s"
 
 #: apps/offer/models.py:841
 msgid "Count Condition"
@@ -3311,7 +3311,7 @@ msgstr[1] "Compra mais %(delta)d produtos da lista %(range)s"
 #: apps/offer/models.py:911
 #, python-format
 msgid "Basket includes %(count)d distinct item(s) from %(range)s"
-msgstr "Cesta inclue %(count)d produto(s) distinto(s) da lista %(range)s"
+msgstr "Carrinho inclue %(count)d produto(s) distinto(s) da lista %(range)s"
 
 #: apps/offer/models.py:927
 msgid "Coverage Condition"
@@ -3324,7 +3324,7 @@ msgstr "Condições de cobertura"
 #: apps/offer/models.py:1011
 #, python-format
 msgid "Basket includes %(amount)s from %(range)s"
-msgstr "Cesta inclui %(amount)s da lista %(range)s"
+msgstr "Carrinho inclui %(amount)s da lista %(range)s"
 
 #: apps/offer/models.py:1027
 msgid "Value Condition"
@@ -3453,7 +3453,7 @@ msgstr "Site"
 
 #: apps/order/abstract_models.py:23
 msgid "Basket ID"
-msgstr "ID da cesta"
+msgstr "ID do carrinho"
 
 #: apps/order/abstract_models.py:28
 msgid "Billing Address"
@@ -3816,7 +3816,7 @@ msgstr "Desconto de %(amount)r do pedido %(order)s"
 #: apps/order/processing.py:85 apps/order/processing.py:96
 #, python-format
 msgid "The selected quantity for line #%(line_id)s is too large"
-msgstr ""
+msgstr "A quantidade selecionada para a linha #%(line_id)s é muito grande"
 
 #: apps/order/reports.py:21
 #: templates/oscar/dashboard/reports/partials/order_report.html:13
@@ -3836,7 +3836,7 @@ msgstr "Pedidos alocados"
 
 #: apps/order/utils.py:51
 msgid "Empty baskets cannot be submitted"
-msgstr "Cestas vazias não podem ser submetidas"
+msgstr "Carrinhos vazias não podem ser submetidas"
 
 #: apps/order/utils.py:67
 #, python-format
@@ -4359,7 +4359,7 @@ msgstr "Custo máximo"
 msgid ""
 "This is the charge when the weight of the basket is greater than all the "
 "weight bands"
-msgstr "Este é o custo quando o peso da cesta é maior que todas as faixas de peso"
+msgstr "Este é o custo quando o peso do carrinho é maior que todas as faixas de peso"
 
 #: apps/shipping/models.py:105
 msgid "Default Weight"
@@ -4413,7 +4413,7 @@ msgstr "Você precisa definir algum método de entrega"
 #: apps/voucher/abstract_models.py:20
 msgid ""
 "This will be shown in the checkout and basket once the voucher is entered"
-msgstr "Isto será exibido no fechamento do pedido e na cesta assim que o cupom for digitado"
+msgstr "Isto será exibido no fechamento do pedido e no carrinho assim que o cupom for digitado"
 
 #: apps/voucher/abstract_models.py:24
 msgid "Case insensitive / No spaces allowed"
@@ -4433,7 +4433,7 @@ msgstr "Pode ser usado apenas uma vez por cliente"
 
 #: apps/voucher/abstract_models.py:44
 msgid "Times added to basket"
-msgstr "Número de vezes que foi adicionado à uma cesta"
+msgstr "Número de vezes que foi adicionado à um carrinho"
 
 #: apps/voucher/abstract_models.py:45
 msgid "Times on orders"
@@ -4472,7 +4472,7 @@ msgstr "'%(voucher)s' usado por '%(user)s'"
 #: apps/voucher/reports.py:20
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:10
 msgid "Added to a basket"
-msgstr "Adicionado à cesta"
+msgstr "Adicionado ao carrinho"
 
 #: apps/voucher/reports.py:21
 #: templates/oscar/dashboard/reports/partials/voucher_report.html:11
@@ -4560,7 +4560,7 @@ msgid ""
 "\n"
 "    <strong>%(title)s</strong> has been added to your basket.\n"
 "    "
-msgstr "\nO produto <strong>%(title)s</strong> foi adicionado à sua cesta."
+msgstr "\nO produto <strong>%(title)s</strong> foi adicionado ao seu carrinho."
 
 #: templates/oscar/basket/messages/addition.html:8
 #, python-format
@@ -4569,14 +4569,14 @@ msgid ""
 "    <strong>%(quantity)s</strong> copies of <strong>%(title)s</strong>\n"
 "    have been added to your basket.\n"
 "    "
-msgstr "\n<strong>%(quantity)s</strong unidades do produto <strong>%(title)s</strong> foram adicionados à sua cesta."
+msgstr "\n<strong>%(quantity)s</strong unidades do produto <strong>%(title)s</strong> foram adicionados ao seu carrinho."
 
 #: templates/oscar/basket/messages/line_restored.html:3
 #, python-format
 msgid ""
 "\n"
 "<strong>%(title)s</strong> has been moved back to your basket.\n"
-msgstr "\nO produto <strong>%(title)s</strong> foi readicionado à sua cesta.\n"
+msgstr "\nO produto <strong>%(title)s</strong> foi readicionado ao seu carrinho.\n"
 
 #: templates/oscar/basket/messages/line_saved.html:3
 #, python-format
@@ -4587,7 +4587,7 @@ msgstr "\nO produto <strong>%(title)s</strong> foi deixado para outra compra.\n"
 
 #: templates/oscar/basket/messages/new_total.html:7
 msgid "Your basket is now empty"
-msgstr "Sua cesta está vazia"
+msgstr "Seu carrinho está vazia"
 
 #: templates/oscar/basket/messages/new_total.html:9
 #, python-format
@@ -4595,11 +4595,11 @@ msgid ""
 "\n"
 "        Basket total now <strong>%(total)s</strong>.\n"
 "        "
-msgstr "\nSua cesta agora custa <strong>%(total)s</strong>."
+msgstr "\nSeu carrinho está custando <strong>%(total)s</strong>."
 
 #: templates/oscar/basket/messages/new_total.html:17
 msgid "View basket"
-msgstr "Visualizar cesta"
+msgstr "Visualizar carrinho"
 
 #: templates/oscar/basket/messages/new_total.html:18
 msgid "Checkout now"
@@ -4623,7 +4623,7 @@ msgstr "\nVocê não pode mais aproveitar a promoção\n<strong>%(name)s</strong
 
 #: templates/oscar/basket/partials/basket_content.html:7
 msgid "Important messages about items in your basket"
-msgstr "Mensagens importantes sobre itens na sua cesta"
+msgstr "Mensagens importantes sobre itens no seu cararinho"
 
 #: templates/oscar/basket/partials/basket_content.html:15
 msgid "You could be missing out on offers!"
@@ -4766,7 +4766,7 @@ msgstr "Finalizar pedido"
 #: templates/oscar/basket/partials/basket_content.html:124
 #: templates/oscar/basket/partials/basket_quick.html:36
 msgid "Your basket is empty."
-msgstr "Sua cesta está vazia."
+msgstr "Seu carrinho está vazia."
 
 #: templates/oscar/basket/partials/basket_content.html:125
 #: templates/oscar/checkout/thank_you.html:208
@@ -4783,7 +4783,7 @@ msgstr "Itens"
 
 #: templates/oscar/basket/partials/basket_content.html:163
 msgid "Move to basket"
-msgstr "Mover para cesta"
+msgstr "Mover para o carrinho"
 
 #: templates/oscar/basket/partials/basket_quick.html:25
 msgid "Qty"
@@ -4801,7 +4801,7 @@ msgstr "Total:"
 #: templates/oscar/basket/partials/basket_quick.html:32
 #: templates/oscar/partials/mini_basket.html:8
 msgid "View Basket"
-msgstr "Ver cesta"
+msgstr "Ver Carrinho"
 
 #: templates/oscar/basket/partials/basket_quick.html:33
 #: templates/oscar/checkout/checkout.html:8
@@ -4811,7 +4811,7 @@ msgstr "Fechamento do pedido"
 #: templates/oscar/basket/partials/basket_totals.html:15
 #: templates/oscar/checkout/thank_you.html:118
 msgid "Basket total (before discounts)"
-msgstr "Total da cesta (sem descontos)"
+msgstr "Total do carrinho (sem descontos)"
 
 #: templates/oscar/basket/partials/basket_totals.html:22
 #: templates/oscar/basket/partials/basket_totals.html:97
@@ -4831,14 +4831,14 @@ msgstr "Desconto"
 #: templates/oscar/basket/partials/basket_totals.html:53
 #: templates/oscar/checkout/thank_you.html:128
 msgid "Basket total (after discounts)"
-msgstr "Total da cesta (com descontos)"
+msgstr "Total do carrinho (com descontos)"
 
 #: templates/oscar/basket/partials/basket_totals.html:59
 #: templates/oscar/checkout/thank_you.html:133
 #: templates/oscar/customer/order.html:115
 #: templates/oscar/dashboard/orders/order_detail.html:161
 msgid "Basket total"
-msgstr "Total da cesta"
+msgstr "Total do carrinho"
 
 #: templates/oscar/basket/partials/basket_totals.html:72
 #: templates/oscar/basket/partials/basket_totals.html:81
@@ -4983,7 +4983,7 @@ msgstr "Itens recomendados"
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:12
 #: templates/oscar/catalogue/partials/add_to_basket_form_compact.html:12
 msgid "Add to basket"
-msgstr "Adicionar à cesta"
+msgstr "Adicionar ao carinho"
 
 #: templates/oscar/catalogue/partials/add_to_basket_form.html:20
 msgid "You have an active stock alert for this product."
@@ -5148,7 +5148,7 @@ msgstr "Conteúdo do pedido"
 
 #: templates/oscar/checkout/checkout.html:105
 msgid "Items in basket"
-msgstr "Itens na cesta"
+msgstr "Itens no carrinho"
 
 #: templates/oscar/checkout/checkout.html:143
 msgid "Edit order contents"
@@ -5291,7 +5291,7 @@ msgstr "Ou um endereço novo?"
 
 #: templates/oscar/checkout/shipping_address.html:60
 msgid "return to basket"
-msgstr "retornar pra cesta"
+msgstr "retornar pra o carrinho"
 
 #: templates/oscar/checkout/shipping_methods.html:22
 msgid "Choose a shipping method"
@@ -5495,7 +5495,7 @@ msgstr "Preço da linha com impostos"
 
 #: templates/oscar/customer/anon_order.html:88
 msgid "Basket total (inc. tax)"
-msgstr "Total da cesta (com impostos)"
+msgstr "Total do carrinho (com impostos)"
 
 #: templates/oscar/customer/change_password_form.html:19
 #: templates/oscar/customer/change_password_form.html:24
@@ -5597,12 +5597,12 @@ msgstr "Não está mais disponível"
 #: templates/oscar/customer/order.html:97
 #: templates/oscar/dashboard/orders/order_detail.html:137
 msgid "Basket total (excl. discounts)"
-msgstr "Total da cesta (sem descontos)"
+msgstr "Total do carrinho (sem descontos)"
 
 #: templates/oscar/customer/order.html:110
 #: templates/oscar/dashboard/orders/order_detail.html:154
 msgid "Basket total (inc. discounts)"
-msgstr "Total da cesta (com descontos)"
+msgstr "Total do carrinho (com descontos)"
 
 #: templates/oscar/customer/order.html:123
 #: templates/oscar/dashboard/orders/order_detail.html:171
@@ -5875,7 +5875,7 @@ msgstr "preço:"
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:10
 #: templates/oscar/partials/mini_basket.html:17
 msgid "Basket total:"
-msgstr "Total da cesta:"
+msgstr "Total do carrinho:"
 
 #: templates/oscar/customer/emails/commtype_order_placed_body.html:18
 #: templates/oscar/customer/emails/commtype_order_placed_body.txt:11
@@ -6068,7 +6068,7 @@ msgstr "abrir"
 #: templates/oscar/dashboard/index.html:100
 #: templates/oscar/dashboard/index.html:118
 msgid "baskets"
-msgstr "cestas"
+msgstr "Carrinhos"
 
 #: templates/oscar/dashboard/index.html:110
 msgid "Total customers"
@@ -7585,7 +7585,7 @@ msgstr "Cupom '%(name)s'"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:49
 msgid "Number of basket additions"
-msgstr "Quantidade de adições à cestas"
+msgstr "Quantidade de adições ao carrinho"
 
 #: templates/oscar/dashboard/vouchers/voucher_detail.html:50
 msgid "Number of orders"
@@ -7613,7 +7613,7 @@ msgstr "Criar novo cupom"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:55
 msgid "Num baskets"
-msgstr "Nro de cestas"
+msgstr "Nro de carrinhos"
 
 #: templates/oscar/dashboard/vouchers/voucher_list.html:56
 msgid "Num orders"
