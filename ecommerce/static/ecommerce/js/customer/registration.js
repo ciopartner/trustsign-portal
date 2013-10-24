@@ -3,8 +3,8 @@ function RegistrationForm(obj, cnpj, phone){
     // Private Variables
     var self = this;
     var loading = false;
-    var CNPJNotFoundHTML = "<div class=\"alert alert-error  pull-left tm10\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Não foi possível localizar o CNPJ.</div>";
-    var invalidPhone = "<div class=\"alert alert-error pull-left tm10\" ><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Telefone inválido! Apenas telefones fixos.</div>";
+    var CNPJNotFoundHTML = "<div class=\"alert alert-error  pull-left tm10\" id=\"invalidCPNJ\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Não foi possível localizar o CNPJ.</div>";
+    var invalidPhone = "<div class=\"alert alert-error pull-left tm10\" id=\"invalidPhone\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Telefone inválido! Apenas telefones fixos.</div>";
 
     /**
      * Oculta campos desativos
@@ -26,9 +26,10 @@ function RegistrationForm(obj, cnpj, phone){
     var CPNJCallback = function(data){
 
         for(field in data)
-            $("#id_registration-" + field).val(data[field]);
+            if(field !== 'cnpj')
+                $("#id_registration-" + field).val(data[field]);
 
-
+        $("#invalidCPNJ").remove();
         self.showDisableFields();
         loading = false;
     }
@@ -54,6 +55,8 @@ function RegistrationForm(obj, cnpj, phone){
 
         if(parseInt(val[5]) < 2 || parseInt(val[5]) > 5)
             phone.after(invalidPhone);
+        else
+            $("#invalidPhone").remove();
     }
 
     // --------------------------------------------
