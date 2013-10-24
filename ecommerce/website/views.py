@@ -75,12 +75,26 @@ class AdicionarProdutoView(BasketAddView, JSONFormView):
 
     def get_product_id(self, product_code, line=None, term=None):
         try:
-            qs = Product.objects.filter(product_code=product_code)
-            if line:
-                qs = qs.filter(product_line=line)
-            if term:
-                qs = qs.filter(product_term=term)
-            return qs.get().pk
+            produtos = Product.objects.filter(
+                attribute_values__attribute__code='ssl_code',
+                attribute_values__value_option__option=product_code
+            )
+
+            print produtos
+
+            for produto in produtos:
+                product_line = str(produto.attr.ssl_line)
+                product_term = str(produto.attr.ssl_term)
+                if line:
+                    if line != product_line or (term and term != product_term):  # se line ou term forem diferentes vai pro proximo
+                        continue
+                    return produto.pk
+                if term and term != product_term:
+                    continue
+                return produto.pk
+
+            return -1  # não encontrou o produto com a line e term desejados,
+            # retorna -1 para falhar na validação do oscar
         except Product.DoesNotExist:
             return -1
 
