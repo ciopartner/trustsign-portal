@@ -229,6 +229,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.tz",
     'ecommerce.website.context_processors.url',
+    'ecommerce.website.context_processors.quantidade_carrinho',
     "mezzanine.conf.context_processors.settings",
 )
 
