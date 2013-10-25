@@ -10,9 +10,9 @@
                 <div class="navbar">
                     <ul class="nav pull-right header1-text">
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
-                        <li class="activa"><a href= {% url 'page' 'a-trustsign' %} class="limeh85x">A TRUSTSIGN</a></li>
+                        <li class="activa"><a href="{{ url_portal }}a-trustsign/" class="limeh85x">A TRUSTSIGN</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
-                        <li class="activa"><a href= {% url 'page' 'blog' %} class="limeh85x">BLOG</a></li>
+                        <li class="activa"><a href= "{{ url_portal }}blog/" class="limeh85x">BLOG</a></li>
                         <li class="divider-vertical" style="margin-left:0; margin-right:0; height:85px;"></li>
 
                         {%  if user.is_authenticated %}
@@ -29,7 +29,7 @@
                         </li>
 {#                        <li class="divider-vertical" style="margin-left:0; margin-right:0; height:100px;"></li>#}
                         <li>
-                            <form action="{% url "search" %}" class="search">
+                            <form action="{{ url_portal }}search/" class="search">
                                 <input id="appendedInputButton" class="span2" type="text" width="350" name="q"
                                        placeholder="{% trans "Search" %}" value="{{ request.REQUEST.q }}">
                                 <button class="btn spfox2" type="button" onclick="submit()"><i class="icon-search"></i></button>
