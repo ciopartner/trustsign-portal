@@ -260,6 +260,8 @@ MIDDLEWARE_CLASSES = (
 API_TEST_MODE = True
 USAR_KNU = False  # Usado para retornar um dummy dict em vez de chamar a KNU para desenvolvimento
 
+OSCAR_BASKET_COOKIE_OPEN = 'oscar_open_basket'
+
 # Store these package names here as they may change in the future since
 # at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
