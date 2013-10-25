@@ -2,6 +2,10 @@ body{
     background: #FFFFFF;
 }
 
+h4{
+    font-size: 130%;
+}
+
 .page{
     background: inherit;
     border-right: 0;
@@ -53,4 +57,14 @@ body{
 #form-history-filter input[type=text]{
     width: 90px;
     margin: 0 15px 0 10px;
+}
+
+.basket-items .price_color{
+    font-weight: normal;
+    color: rgb(74, 74, 74);
+}
+.accordion-heading {
+    border-bottom: 0px none;
+    background: #DDD;
+    padding: 10px 0;
 }

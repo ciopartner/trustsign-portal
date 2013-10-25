@@ -51,3 +51,14 @@
     padding: 10px 20px 20px 20px;
     color: #FFF;
 }
+
+#total h4{
+    font-size: 150%;
+}
+
+#total h3{
+    text-align: right;
+    margin-top: -40px;
+    margin-bottom: 20px;
+    font-size: 170%;
+}
