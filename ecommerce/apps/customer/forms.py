@@ -109,22 +109,24 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
 
 class ProfileForm(CoreProfileForm):
 
-    cnpj = CharFieldDisabled(label='CNPJ', widget=TextInputDisabled(attrs={'class': 'mask-cnpj'}))
+    cliente_cnpj = CharFieldDisabled(label='CNPJ', widget=TextInputDisabled(attrs={'class': 'mask-cnpj'}))
 
-    razao_social = CharFieldDisabled(max_length=128, label='Razão Social')
-    logradouro = CharFieldDisabled(max_length=128)
-    numero = CharFieldDisabled(max_length=16, label='Número')
-    complemento = CharFieldDisabled(max_length=64)
-    cep = CharFieldDisabled(max_length=8, help_text=None, label='CEP')
-    bairro = CharFieldDisabled(max_length=128)
-    cidade = CharFieldDisabled(max_length=128)
-    uf = CharFieldDisabled(max_length=128, label='UF')
-    situacao_cadastral = CharFieldDisabled(max_length=128, label='Situação Cadastral')
+    cliente_razaosocial = CharFieldDisabled(max_length=128, label='Razão Social')
+    cliente_logradouro = CharFieldDisabled(max_length=128, label='Logradouro')
+    cliente_numero = CharFieldDisabled(max_length=16, label='Número')
+    cliente_complemento = CharFieldDisabled(max_length=64, label='Complemento')
+    cliente_cep = CharFieldDisabled(max_length=8, help_text=None, label='CEP')
+    cliente_bairro = CharFieldDisabled(max_length=128, label='Bairro')
+    cliente_cidade = CharFieldDisabled(max_length=128, label='Cidade')
+    cliente_uf = CharFieldDisabled(max_length=128, label='UF')
+    cliente_situacao_cadastral = CharFieldDisabled(max_length=128, label='Situação Cadastral')
 
     class Meta(CoreProfileForm.Meta):
-        exclude = ['user', 'date_of_birth', 'perfil', 'cliente_cnpj',
-                   'cliente_razaosocial', 'cliente_logradouro', 'cliente_numero', 'cliente_complemento', 'cliente_cep',
-                   'cliente_bairro', 'cliente_cidade', 'cliente_uf', 'cliente_situacao_cadastral', 'bio', 'tagline']
+        exclude = ['user', 'date_of_birth', 'perfil', 'bio', 'tagline']
+        fields = ['callback_nome', 'callback_sobrenome', 'callback_email', 'callback_telefone', 'cliente_ecommerce',
+                  'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_cnpj',
+                  'cliente_razaosocial', 'cliente_logradouro', 'cliente_numero', 'cliente_complemento', 'cliente_cep',
+                  'cliente_bairro', 'cliente_cidade', 'cliente_uf', 'cliente_situacao_cadastral']
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
