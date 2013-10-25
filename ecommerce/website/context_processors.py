@@ -25,7 +25,7 @@ def quantidade_carrinho(request):
 
     if user.is_authenticated():
         # se tiver logado ele pode ter diversas baskets que o oscar vai fazer um merge
-        cursor.execute("SELECT id FROM basket_basket WHERE status='Open' owner_id=%s", [user.pk])
+        cursor.execute("SELECT id FROM basket_basket WHERE status='Open' AND owner_id=%s", [user.pk])
         for row in cursor.fetchall():
             ids.append(str(row[0]))
 
