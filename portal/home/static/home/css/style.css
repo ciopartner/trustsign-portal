@@ -39,18 +39,7 @@ h3{
 }
 
 
-.cart-btn{
-    background: rgb(203, 119, 46);
-    height: 40px;
-    line-height: 40px;
-    margin-top: 24px;
-    border-radius: 30px 30px 30px 30px;
-    margin-left: 10px;
-}
 
-.cart-btn a{
-    line-height: 40px;
-}
 
 /* Bootstrap 80% */
 .form-horizontal .control-label{
@@ -630,6 +619,23 @@ img.size-thumbnail{
 
 	}
 
+.navbar .nav > li{
+    height: 85px;
+}
+
+.navbar .nav > li.cart-btn{
+    background: rgb(203, 119, 46);
+    height: 32px;
+    line-height: 32px;
+    margin-top: 28px;
+    border-radius: 30px 30px 30px 30px;
+    margin-left: 10px;
+}
+
+.navbar .nav > li.cart-btn a{
+    line-height: 32px;
+}
+
 .ensign{
 	position:absolute;
 	width:200px;
@@ -775,6 +781,7 @@ img.size-thumbnail{
     border-radius: 0 4px 4px 0;
     float: left;
     margin-top:0;
+    padding: 6px;
 }
 
 /*    youtube home   */
@@ -1608,6 +1615,7 @@ img.size-thumbnail{
 .icon-green-lock, .icon-digital, .icon-pki{
 	background: url(../img/icons/sprites.png) no-repeat;
     vertical-align: middle;
+    display: inline-block;
 }
 
 

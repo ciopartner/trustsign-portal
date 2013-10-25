@@ -1,10 +1,10 @@
-{% load pages_tags mezzanine_tags staticfiles %}
+{% load staticfiles %}
 
 <section class="featurette">
     <section class="textac tbm5 fiximh">
         <section class="row">
             <aside class="span2">
-                <a href= {% url 'page' 'site-seguro' %} >
+                <a href="{{ url_portal }}site-seguro" >
                     <div class="tbm2"><div class="icon-green-lock"></div></div>
                     <div class="tbm2 header3-title-text">SITE + SEGURO</div>
                 </a>
@@ -13,7 +13,7 @@
             </aside>
 
             <aside class="span2">
-                <a href= {% url 'page' 'site-monitorado' %} >
+                <a href="{{ url_portal }}site-monitorado" >
                     <div class="tbm2"><div class="icon-h-3-2nd"></div></div>
                     <div class="tbm2 header3-title-text">SITE MONITORADO</div>
                 </a>
@@ -22,7 +22,7 @@
             </aside>
 
             <aside class="span2">
-                <a href= {% url 'page' 'pki' %}>
+                <a href="{{ url_portal }}pki">
                     <div class="tbm2"><div class="icon-pki"></div></div>
                     <div class="tbm2 header3-title-text">PKI</div>
                 </a>
@@ -31,7 +31,7 @@
             </aside>
 
             <aside class="span2 terg-hdmgmenu">
-                <a href= {% url 'page' 'certificado-digital' %} >
+                <a href="{{ url_portal }}certificado-digital" >
                     <div class="tbm2"><div class="icon-digital" style="height: 30px"></div></div>
                     <div class="tbm2 header3-title-text">CERTIFICADO DIGITAL</div>
                 </a>
@@ -40,7 +40,7 @@
             </aside>
 
             <aside class="span2">
-                <a href= {% url 'page' 'melhor-solucao' %} >
+                <a href="{{ url_portal }}melhor-solucao" >
                     <div class="tbm2"><div class="icon-h-3-5th" style="height: 30px"></div></div>
                     <div class="tbm2 header3-title-text {# coloroff #}">
                         MELHOR SOLUÇÃO
@@ -51,7 +51,7 @@
             </aside>
 
             <aside class="span2 sort-menu-parent">
-                <a href= {% url 'page' 'suporte-trustsign' %} >
+                <a href="{{ url_portal }}suporte-trustsign" >
                     <div class="tbm2"><div class="icon-h-3-6th" style="height: 30px"></div></div>
                     <div class="tbm2 header3-title-text">SUPORTE</div>
                 </a>
