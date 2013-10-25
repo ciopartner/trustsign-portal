@@ -245,7 +245,6 @@ from settings_global import *
 DEFAULT_DATABASE = DATABASES.get('common')
 DATABASES = {'default': DEFAULT_DATABASE}
 
-
 ##################
 # LOCAL SETTINGS #
 ##################
