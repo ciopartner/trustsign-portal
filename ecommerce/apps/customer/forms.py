@@ -109,6 +109,18 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
 
 class ProfileForm(CoreProfileForm):
 
+    cnpj = CharFieldDisabled(label='CNPJ', widget=TextInputDisabled(attrs={'class': 'mask-cnpj'}))
+
+    razao_social = CharFieldDisabled(max_length=128, label='Razão Social')
+    logradouro = CharFieldDisabled(max_length=128)
+    numero = CharFieldDisabled(max_length=16, label='Número')
+    complemento = CharFieldDisabled(max_length=64)
+    cep = CharFieldDisabled(max_length=8, help_text=None, label='CEP')
+    bairro = CharFieldDisabled(max_length=128)
+    cidade = CharFieldDisabled(max_length=128)
+    uf = CharFieldDisabled(max_length=128, label='UF')
+    situacao_cadastral = CharFieldDisabled(max_length=128, label='Situação Cadastral')
+
     class Meta(CoreProfileForm.Meta):
         exclude = ['user', 'date_of_birth', 'perfil', 'cliente_cnpj',
                    'cliente_razaosocial', 'cliente_logradouro', 'cliente_numero', 'cliente_complemento', 'cliente_cep',
