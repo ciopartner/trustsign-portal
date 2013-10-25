@@ -4,8 +4,8 @@ function RegistrationForm($obj, settings){
     var self = this;
     var loading = false;
     var CNPJNotFoundHTML = "<div class=\"error tm10\"  id=\"invalidCNPJ\"><span class=\"help-block error\"><i class=\"icon-exclamation-sign\"></i>Não foi possível localizar o CNPJ.</span></div>";
-    var invalidPhone = "<div class=\"error tm10\" id=\"invalidPhone\"><span class=\"help-block\"><i class=\"icon-exclamation-sign\"></i>Telefone inválido! Apenas telefones fixos.</span></div>";
-    var invalidEmail = "<div class=\"error tm10\" id=\"invalidEmail\"><span class=\"help-block\"><i class=\"icon-exclamation-sign\"></i>Use apenas teleones corporativos.</span></div>";
+    var invalidPhone = "<div class=\"error tm10\" id=\"invalidPhone\"><span class=\"help-block\"><i class=\"icon-exclamation-sign\"></i>Telefone inválido. Apenas telefones fixos.</span></div>";
+    var invalidEmail = "<div class=\"error tm10\" id=\"invalidEmail\"><span class=\"help-block\"><i class=\"icon-exclamation-sign\"></i>Use apenas email corporativo.</span></div>";
     var emailBlackList = new Array('gmail', 'yahoo', 'hotmail', 'outlook', 'ymail');
 
     settings = settings || {};
