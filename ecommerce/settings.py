@@ -143,6 +143,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'oscar.apps.customer.notifications.context_processors.notifications',
     'oscar.core.context_processors.metadata',
     'ecommerce.website.context_processors.url',
+    'ecommerce.website.context_processors.quantidade_carrinho',
 )
 
 # Python dotted path to the WSGI application used by Django's runserver.
