@@ -123,8 +123,8 @@ class ProfileForm(CoreProfileForm):
 
     class Meta(CoreProfileForm.Meta):
         exclude = ['user', 'date_of_birth', 'perfil', 'bio', 'tagline']
-        fields = ['callback_nome', 'callback_sobrenome', 'callback_email', 'callback_telefone', 'cliente_ecommerce',
-                  'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_cnpj',
+        fields = ['callback_nome', 'callback_sobrenome', 'callback_email_corporativo', 'callback_telefone_principal',
+                  'cliente_ecommerce', 'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_cnpj',
                   'cliente_razaosocial', 'cliente_logradouro', 'cliente_numero', 'cliente_complemento', 'cliente_cep',
                   'cliente_bairro', 'cliente_cidade', 'cliente_uf', 'cliente_situacao_cadastral']
 
