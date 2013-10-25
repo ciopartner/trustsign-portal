@@ -13,6 +13,7 @@ def quantidade_carrinho(request):
     user = request.user
     from django.db import connection
     cursor = connection.cursor()
+    qtd = 0
 
     if cookie_key in request.COOKIES:
         # se o usuario tem uma basket de quando estava sem login
@@ -32,7 +33,8 @@ def quantidade_carrinho(request):
     if ids:
         cursor.execute("SELECT SUM(quantity) FROM basket_line WHERE basket_id IN (%s)" % ','.join(ids))
         row = cursor.fetchone()
-        return {'qtd_itens_carrinho': row[0]}
+        if row[0]:
+            qtd = row[0]
 
-    return {'qtd_itens_carrinho': 0}
+    return {'qtd_itens_carrinho': qtd}
 
