@@ -1,0 +1,25 @@
+{% load i18n staticfiles %}
+<div style="max-width: 600px; margin: 0 auto; border: 1px solid #DDD">
+    {% block header %}
+        <div style="padding: 10px; float: left; margin-right: 20px;">
+            <img src="http://www.trustsign.com.br/static/home/img/icons/mainlogo.png" alt="" width="200px" valign="middle" />
+            <h1 style="color: #333333; font-size: 18px; margin-top: 25px;">
+                {% block title %}{% endblock %}
+            </h1>
+        </div>
+        <div style="background: #4c4c4c; color: #FFFFFF; padding: 10px; text-align: center;">
+            Este é um e-mail automático. Não é necessário respondê-lo.
+        </div>
+    {% endblock %}
+
+    <div style="padding: 10px;">
+        {% block body %}{% endblock %}
+    </div>
+
+    <div style="padding: 10px;">
+        {% block footer %}
+            <p>{% trans "Thanks for using our site!" %}</p>
+            <p>{% blocktrans with name=site.name %}The {{ name }} team{% endblocktrans %}</p>
+        {% endblock %}
+    </div>
+</div>

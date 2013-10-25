@@ -1,0 +1,40 @@
+{% extends "customer/emails/base.html" %}
+{% load currency_filters i18n %}
+
+{% block title %}PEDIDO REALIZADO COM SUCESSO!{% endblock %}
+
+{% block body %}<p xmlns="http://www.w3.org/1999/html">{% trans 'Hello,' %}</p>
+
+<p>{% blocktrans with order_number=order.number %}We are pleased to confirm your order {{ order_number }} has been received and
+will be processed shortly.{% endblocktrans %}</p>
+
+<p>{% trans 'Your order contains:' %}</p>
+
+<table style="width: 100%" cellspacing="0" cellpadding="0">
+    <tr>
+        <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF">Produto:</th>
+        <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'quantity:' %}</th>
+        <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'price:' %}</th>
+    </tr>
+    {% for line in order.lines.all %}
+        <tr>
+            <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd">{{ line.title }}</td>
+            <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd">{{ line.quantity }}</td>
+            <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd">{{ line.line_price_incl_tax|currency:order.currency }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<p>
+{#{% trans 'Basket total:' %} {{ order.basket_total_incl_tax|currency:order.currency }}</br>#}
+{#{% trans 'Shipping:' %} {{ order.shipping_incl_tax|currency:order.currency }}</br>#}
+{% trans 'Order Total:' %} {{ order.total_incl_tax|currency:order.currency }}
+</p>
+
+<p>{% trans 'Shipping address:' %}</p>
+<p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>
+{% endfor %}</p>
+
+{% if status_url %}
+<p>{% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}</p>
+{% endif %}{% endblock %}
