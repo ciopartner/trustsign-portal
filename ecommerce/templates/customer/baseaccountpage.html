@@ -23,11 +23,12 @@
                 <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
             </li>
             <li>
-                {%  for group in user.groups.all %}
-                    {% if group.name == 'trustsign-admin' or group.name == 'trustsign-sales' or group.name == 'trustsign-cliente' %}
-                        <a href="{{ url_portal }}escolha-voucher/">Processo de emissão</a>
-                    {% endif %}
-                {% endfor %}
+                {% if perms.certificados.do_emission_process %}
+                    <a href="{{ url_portal }}escolha-voucher/">Processo de emissão</a>
+                {% endif %}
+                {% if perms.certificados.view_pending_emission %}
+                    <a href="{{ url_portal }}vouchers-pendentes/">Pendências de Emissão</a>
+                {% endif %}
             </li>
 {#            <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>#}
 {#                <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>#}
