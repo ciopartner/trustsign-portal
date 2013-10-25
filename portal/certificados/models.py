@@ -343,6 +343,10 @@ class Emissao(Model):
     class Meta:
         verbose_name = 'emissão'
         verbose_name_plural = 'emissões'
+        permissions = (
+            ("do_emission_process", "Can do emission precess"),
+            ("view_pending_emission", "Can view pending emission"),
+        )
 
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)

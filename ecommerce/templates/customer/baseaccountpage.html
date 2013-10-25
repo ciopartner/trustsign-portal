@@ -23,7 +23,11 @@
                 <a href="{% url 'customer:notifications-inbox' %}">{% trans "Notifications" %}</a>
             </li>
             <li>
-                <a href="{{ url_portal }}escolha-voucher/">Processo de emissão</a>
+                {%  for group in user.groups.all %}
+                    {% if group.name == 'trustsign-admin' or group.name == 'trustsign-sales' or group.name == 'trustsign-cliente' %}
+                        <a href="{{ url_portal }}escolha-voucher/">Processo de emissão</a>
+                    {% endif %}
+                {% endfor %}
             </li>
 {#            <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>#}
 {#                <a href="{% url 'customer:wishlists-list' %}">{% trans "Wish Lists" %}</a>#}
