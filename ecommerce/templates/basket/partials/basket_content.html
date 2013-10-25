@@ -35,8 +35,8 @@
                 <div class="row-fluid">
                     <h4 class="span5">Itens no Carrinho</h4>
                     <h4 class="span3">{% trans "Quantity" %}</h4>
-                    <h4 class="span2">{% trans "Price" %}</h4>
-                    <h4 class="span2">{% trans "Total" %}</h4>
+                    <h4 class="span2 align-right">{% trans "Price" %}</h4>
+                    <h4 class="span2 align-right">{% trans "Total" %}</h4>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
                                             {% endfor %}
                                         </div>
                                     </div>
-                                    <div class="span2">
+                                    <div class="span2 align-right">
                                         <input type="hidden" name="line_price" value="{% if session.price.is_tax_known %}{{ session.price.incl_tax }}{% else %}{{ session.price.excl_tax }}{% endif %}" />
                                         <p class="price_color">
                                             {% if session.price.is_tax_known %}
@@ -118,7 +118,7 @@
                                         </p>
 
                                     </div>
-                                    <div class="span2">
+                                    <div class="span2 align-right">
                                         <p class="price_color price_total"></p>
 {#                                        <p class="price_color align-right">{{ form.instance.line_price_incl_tax|currency}}</p>#}
                                     </div>
