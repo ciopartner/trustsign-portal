@@ -1,11 +1,43 @@
-from django.contrib.auth import get_user_model
-from django.forms import HiddenInput, CharField, ModelForm
+from django.contrib.auth import get_user_model, authenticate
+from django.core.exceptions import ValidationError
+from django.forms import HiddenInput, CharField, ModelForm, PasswordInput, Form, TextInput
 from mezzanine.accounts import get_profile_model
 from mezzanine.accounts.forms import ProfileForm as ProfileFormMezzanine
 from django.utils.translation import ugettext as _
+from mezzanine.core.forms import Html5Mixin
+from ecommerce.website.utils import limpa_cnpj
 
 User = get_user_model()
 Profile = get_profile_model()
+
+
+class LoginForm(Html5Mixin, Form):
+    """
+    Fields for login.
+    """
+    username = CharField(label='CNPJ', widget=TextInput(attrs={'class': 'mask-cnpj'}))
+    password = CharField(label=_("Password"), widget=PasswordInput(render_value=False))
+
+    def clean(self):
+        """
+        Authenticate the given username/email and password. If the fields
+        are valid, store the authenticated user for returning via save().
+        """
+        username = self.cleaned_data.get("username")
+        username = limpa_cnpj(username)
+        password = self.cleaned_data.get("password")
+        self._user = authenticate(username=username, password=password)
+        if self._user is None:
+            raise ValidationError(_("Invalid username/email and password"))
+        elif not self._user.is_active:
+            raise ValidationError(_("Your account is inactive"))
+        return self.cleaned_data
+
+    def save(self):
+        """
+        Just return the authenticated user - used for logging in.
+        """
+        return getattr(self, "_user", None)
 
 
 if Profile is not None:

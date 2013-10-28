@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 
 from mezzanine.core.views import direct_to_template
+from home.views import login
 
 
 admin.autodiscover()
@@ -33,6 +34,8 @@ urlpatterns = patterns(
 
     #url('^/$', direct_to_template, {'template': 'index.html'}, name='home'),
     url('^portal/$', direct_to_template, {'template': 'index.html'}, name='home'),
+
+    url('^portal/accounts/login/$', login),
 
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE
     # ---------------------------------------------
