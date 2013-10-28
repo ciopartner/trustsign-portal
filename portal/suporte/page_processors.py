@@ -3,28 +3,34 @@ from StringIO import StringIO
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
 from portal.suporte.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
-from portal.suporte.models import FerramentasPage, FAQPage, TaggedItem, ManualPage, GlossarioPage, Tag
+from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag
 
 
 @processor_for(FAQPage)
 def faq_processor(request, page):
-    tags = Tag.objects.filter(itens__question__in=page.faqpage.questions.all()).distinct()
+    questions = page.faqpage.questions.prefetch_related('tags__tag').all()
+    tags = Tag.objects.filter(itens__question__in=questions).distinct()
     return {
-        'tags': tags
+        'tags': tags,
+        'questions': questions
     }
 
 @processor_for(ManualPage)
 def faq_processor(request, page):
-    tags = Tag.objects.filter(itens__manual__in=page.manualpage.manuais.all()).distinct()
+    manuais = page.manualpage.manuais.prefetch_related('tags__tag').all()
+    tags = Tag.objects.filter(itens__manual__in=manuais).distinct()
     return {
-        'tags': tags
+        'tags': tags,
+        'manuais': manuais
     }
 
 @processor_for(GlossarioPage)
 def faq_processor(request, page):
-    tags = Tag.objects.filter(itens__item__in=page.glossariopage.itens.all()).distinct()
+    itens = page.glossariopage.itens.prefetch_related('tags__tag').all()
+    tags = Tag.objects.filter(itens__item__in=itens).distinct()
     return {
-        'tags': tags
+        'tags': tags,
+        'itens': itens
     }
 
 @processor_for(FerramentasPage)
