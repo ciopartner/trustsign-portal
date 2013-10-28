@@ -8,6 +8,10 @@ body {
     font-size: 11px;
 }
 
+.text-home{
+    min-height: 50px;
+}
+
 label, input{
     font-size: 11px !important;
 }
@@ -1742,7 +1746,7 @@ div.ferramentas ul.nav-tabs li{
     width: calc(25% - 2px);
     margin-right: 2px;
     text-align: center;
-    height: 115px;
+    height: 155px;
 }
 
 div.ferramentas ul.nav-tabs li:nth-child(even){
