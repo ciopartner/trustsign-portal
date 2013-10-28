@@ -14,7 +14,7 @@
 <fieldset>
     <form class="form-horizontal" method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
     {% fields_for form %}
-    <div class="form-actions">
+    <div class="form-actions no-color">
         <input class="btn btn-primary" type="submit" value="{{ title }}">
         <a class="btn" href="{{ url_portal }}account/password/reset/">Esqueci minha senha</a>
     </div>
