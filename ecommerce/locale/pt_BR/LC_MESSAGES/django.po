@@ -5694,6 +5694,9 @@ msgstr "Alertas"
 msgid "Edit profile"
 msgstr "Editar perfil"
 
+msgid "Edit Profile"
+msgstr "Editar Perfil"
+
 #: templates/oscar/customer/profile.html:133
 msgid "View order history"
 msgstr "Visualizar histórico de pedidos"
@@ -5701,6 +5704,12 @@ msgstr "Visualizar histórico de pedidos"
 #: templates/oscar/customer/profile.html:136
 msgid "You haven't placed any orders yet."
 msgstr "Você ainda não fez nenhum pedido."
+
+msgid "You haven't placed any orders."
+msgstr "Você ainda não fez nenhum pedido."
+
+msgid "You haven't placed any orders"
+msgstr "Você ainda não fez nenhum pedido"
 
 #: templates/oscar/customer/profile.html:149
 msgid "Number of addresses in addressbook"
@@ -7842,3 +7851,10 @@ msgstr "Alterar senha"
 
 msgid "Filter orders"
 msgstr "Filtrar pedidos"
+
+msgid "password"
+msgstr "senha"
+
+msgid "No e-mails found"
+msgstr "Nenhum email enviado até o momento"
+

@@ -14,6 +14,7 @@
     <!--[if lte IE 7]><script src="{% static "demo/fonts/lte-ie7.js" %}"></script><![endif]-->
 {% endblock %}
 
+
 {% block layout %}
 <div id="layout">
 {#    <header class="header">#}
@@ -36,7 +37,7 @@
     {% include "partials/2-header-atendimento.html" %}
     {% include "partials/3-header-produtos.html" %}
 
-    {% include "partials/progress-bar.html"  with pagamento=True %}
+
 
     <div class="page">
         <div class="container-fluid">
@@ -44,6 +45,8 @@
             {% block header %}{% endblock %}
 
            <div class="page_inner">
+
+                {% include "partials/progress-bar.html"  with pagamento=True %}
                 <!-- The main nav on checkout pages contain links to modal flatpages -->
                 {% block modal %}
                     {% load flatpages %}

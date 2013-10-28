@@ -43,10 +43,10 @@ h3{
 
 /* Bootstrap 80% */
 .form-horizontal .control-label{
-    width: 100px;
+    width: 150px;
 }
 .form-horizontal .controls{
-    margin-left: 110px;
+    margin-left: 160px;
 }
 .video-thumb{
 	float: left;
@@ -104,7 +104,11 @@ width: 391px;
 }
 
 .form-horizontal .form-actions {
-    padding-left: 110px;
+    padding-left: 160px;
+}
+
+.form-actions.no-color{
+    background-color: transparent;
 }
 
 .btn{
@@ -1258,6 +1262,10 @@ img.size-thumbnail{
     background: #f2f2f2;
     padding: 10px;
     height: 30px;
+}
+
+.certificado-digital h3{
+    font-weight: bold;
 }
 
 .productbgw{

@@ -4,8 +4,8 @@
     {% if includes_files %}enctype="multipart/form-data"{% endif %}>
     {% if not method == "get" %}{% csrf_token %}{% endif %}
     {% include 'partials/form_fields.html' %}
-    <div class="form-actions">
+    <div class="form-actions no-color">
         <button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
-        <a href="#" class="btn" onclick="history.go(-1);return false" >{% trans "cancel" %}</a>
+        <a href="#" class="btn" onclick="history.go(-1);return false" >{% trans "Cancel" %}</a>
     </div>
 </form>

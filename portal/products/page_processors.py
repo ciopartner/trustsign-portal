@@ -6,13 +6,31 @@ from django.db import connection
 @processor_for(Product)
 def ferramentas_processor(request, page):
 
+    #sql = '''
+    #SELECT p.upc, p.product_line, p.product_term, s.price_excl_tax
+    #FROM
+    #   catalogue_product p
+    #inner join partner_stockrecord s
+    #    on s.product_id = p.id
+    #where p.product_code = %s'''
+
     sql = '''
-    SELECT p.upc, p.product_line, p.product_term, s.price_excl_tax
-    FROM
-       catalogue_product p
-    inner join partner_stockrecord s
-        on s.product_id = p.id
-    where p.product_code = %s'''
+        select cp.upc, cao_line.option, cao_term.option, s.price_excl_tax from catalogue_product as cp
+           inner join catalogue_productattribute as cpa on cp.product_class_id =  cpa.product_class_id
+           inner join catalogue_productattributevalue as cpav on cpa.id = cpav.attribute_id and cp.id = cpav.product_id
+           inner join catalogue_attributeoption as cao on cao.id = cpav.value_option_id
+
+           inner join catalogue_productattribute as cpa_line on cp.product_class_id =  cpa_line.product_class_id
+           inner join catalogue_productattributevalue as cpav_line on cpa_line.id = cpav_line.attribute_id and cp.id = cpav_line.product_id
+           inner join catalogue_attributeoption as cao_line on cao_line.id = cpav_line.value_option_id
+
+           inner join catalogue_productattribute as cpa_term on cp.product_class_id =  cpa_term.product_class_id
+           inner join catalogue_productattributevalue as cpav_term on cpa_term.id = cpav_term.attribute_id and cp.id = cpav_term.product_id
+           inner join catalogue_attributeoption as cao_term on cao_term.id = cpav_term.value_option_id
+
+           inner join partner_stockrecord s  on s.product_id = cp.id
+        where cpa.code='ssl_code' and cpa_line.code='ssl_line' and cpa_term.code='ssl_term' and cao.option=%s
+    '''
 
     cursor = connection.cursor()
     cursor.execute(sql, [page.product.product_code])
@@ -34,11 +52,17 @@ def ferramentas_processor(request, page):
                 'term1year': {},
                 'term2years': {},
                 'term3years': {},
+            },
+            'trial': {
+                'termtrial': {}
             }
         }
     }
 
     for upc, product_line, product_term, price in cursor.fetchall():
+        if price is None:
+            price = Decimal(0)
+
         price = price.quantize(Decimal('0.01'))
         x = data['precos'][product_line]['term%s' % product_term]
         x['price_tpl'] = str(price).split('.')

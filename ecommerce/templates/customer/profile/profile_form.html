@@ -1,5 +1,11 @@
 {% extends "customer/baseaccountpage.html" %}
-{% load i18n %}
+{% load i18n staticfiles %}
+
+{% block extrascripts %}
+    {{  block.super }}
+    <script src="{% static 'ecommerce/js/custom.js' %}"></script>
+    <script src="{% static 'ecommerce/js/customer/registration.js' %}"></script>
+{% endblock %}
 
 {% block tabcontent %}
 	<form id="profile_form" action="." method="post" class="form-horizontal">
