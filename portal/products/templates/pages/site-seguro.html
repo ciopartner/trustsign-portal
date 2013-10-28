@@ -85,6 +85,134 @@
             {% endfor %}
         </div>
 
+        <section class="featurette tabmid">
+            <table class="table ssltab">
+                <thead>
+                    <tr>
+                        <th>ENTENDA NOSSAS LINHAS</th>
+                        <th>PRIME</th>
+                        <th>PRO</th>
+                        <th>BASIC</th>
+                        <th class="tdbrs">GRÁTIS</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr class="all-body-text5 bbs">
+                        <td class="tdbls"><b>Benefícios</b></td>
+                        <td class="tdbls">Scan para uma URL/IP até 25 páginas</td>
+                        <td class="tdbls">Scan para uma URL/IP de 26 a 99 páginas</td>
+                        <td class="tdbls">Scan para uma URL/IP acima de 100 páginas</td>
+                        <td class="tdbls"></td>
+                    </tr>
+
+                    <tr class="all-body-text5 bbs">
+                        <td class="tdbls"><b>SaaS (zero impacto na implantação)</b></td>
+                        <td class="tdbls sslright"></td>
+                        <td class="tdbls sslright"></td>
+                        <td class="tdbls sslright"></td>
+                        <td class="tdbls sslright"></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div id="product-price" class="container">
+
+                <div class="tblrp10">
+                    <div class="tabbable tabs-left">
+                      <ul class="nav nav-tabs">
+                        <li class="active"><a href="#lA" data-toggle="tab">1 ano</a></li>
+                        <li><a href="#lB" data-toggle="tab">2 anos</a></li>
+                        <li><a href="#lC" data-toggle="tab">3 anos</a></li>
+                      </ul>
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="lA">
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.prime.term1year.price_tpl.0 }}<sup>,{{ precos.prime.term1year.price_tpl.1 }}</sup></h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="1year" class="btn btn-orange">Comprar</a>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.pro.term1year.price_tpl.0 }}<sup>,{{ precos.pro.term1year.price_tpl.1 }}</sup></h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="1year" class="btn btn-orange">Comprar</a>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.basic.term1year.price_tpl.0 }}<sup>,{{ precos.basic.term1year.price_tpl.1 }}</sup></h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="1year" class="btn btn-orange">Comprar</a>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>1 mês grátis</h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="free" data-term="1year" class="btn">Experimente</a>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="lB">
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.prime.term2years.price_tpl.0 }}<sup>,{{ precos.prime.term2years.price_tpl.1 }}</sup></h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="2years" class="btn btn-orange">Comprar</a>
+                                <small>Economia de {{ precos.prime.term2years.discount }}%</small>
+                            </div>
+
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.pro.term2years.price_tpl.0 }}<sup>,{{ precos.pro.term2years.price_tpl.1 }}</sup></h3>
+                                <small>Economia de {{ precos.pro.term2years.discount }}%</small>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="2years" class="btn btn-orange">Comprar</a>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.basic.term2years.price_tpl.0 }}<sup>,{{ precos.basic.term2years.price_tpl.1 }}</sup></h3>
+                                <small>Economia de {{ precos.basic.term2years.discount }}%</small>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="2years" class="btn btn-orange">Comprar</a>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>1 mês grátis</h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="free" data-term="2years" class="btn">Experimente</a>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="lC">
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.prime.term3years.price_tpl.0 }}<sup>,{{ precos.prime.term3years.price_tpl.1 }}</sup></h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="3years" class="btn btn-orange">Comprar</a>
+                                <small>Economia de {{ precos.prime.term3years.discount }}%</small>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.pro.term3years.price_tpl.0 }}<sup>,{{ precos.pro.term3years.price_tpl.1 }}</sup></h3>
+                                <small>Economia de {{ precos.pro.term3years.discount }}%</small>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="3years" class="btn btn-orange">Comprar</a>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>R$ {{ precos.basic.term3years.price_tpl.0 }}<sup>,{{ precos.basic.term3years.price_tpl.1 }}</sup></h3>
+                                <small>Economia de {{ precos.basic.term3years.discount }}%</small>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="3years" class="btn btn-orange">Comprar</a>
+                            </div>
+                            <div class="box-price tblrp10">
+                                <h3>1 mês grátis</h3>
+                                <a href="" data-comprar-produto="{{ product_code }}" data-line="free" data-term="3years" class="btn">Experimente</a>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div id="comprar-message"></div>
+
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <br/><br/>
+            <small>
+            * Condição não aplicável às compras pelo site  ** Não se aplica para certificados SAN e MDC
+            </small>
+
+            </section>
+            <div class="site-body-text2 pull-right btn btn-large" style="display:none;">
+                <a href='#'>ENTENDA NOSSO PROCESSO DE COMPRA ON-LINE</a>
+            </div>
+
+            <div style='margin-top: 40px;'>
+                <a href="{% url 'page' 'certificado-digital' %}">Conheça a linha completa de certificados digitais</a>
+            </div>
+
         {# Inclusão da área 'você sabia' #}
         <div style="margin-top:20px;">
 {#            {% include "includes/voce-sabia.html" %}#}

@@ -143,10 +143,20 @@ table.ssltab > thead > tr > th{
 	color:#FFF;
 	font-size:150%;
 	vertical-align:middle;
-	text-align:center;
-	line-height:50%;
-	padding-top:15px;
+    text-align:center;
+    line-height:50%;
+    padding-top:15px;
 	padding-bottom:15px;
+    width: 140px;
+}
+
+table.ssltab .sslsubtitle td{
+    border-left: 1px solid #DDD;
+
+}
+
+table.ssltab .sslsubtitle{
+    border-bottom: 1px solid #DDDDDD;
 }
 
 table.ssltab > thead > tr > th > p:nth-child(1){
@@ -165,6 +175,13 @@ table.ssltab > thead > tr > th:nth-child(1){
 	background-image: -o-linear-gradient(bottom, rgba(42,42,41,1), rgba(97,97,97,1));
 	background-image: -ms-linear-gradient(bottom, rgba(42,42,41,1), rgba(97,97,97,1));
 	background-image: linear-gradient(to top, rgba(42,42,41,1), rgba(97,97,97,1));
+}
+
+table.ssltab small{
+    font-size: 70%;
+    display: block;
+    line-height: 1.2;
+    margin-top: 5px;
 }
 
 table.ssltab.comptab > thead > tr > th:nth-child(1){
