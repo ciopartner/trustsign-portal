@@ -159,7 +159,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    #'website',
+    'website',
 
     'portal.home',
 

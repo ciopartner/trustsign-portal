@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.forms import CharField, TextInput, BooleanField, ChoiceField
@@ -8,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from localflavor.br.forms import BRCNPJField
 from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm, \
     ProfileForm as CoreProfileForm, EmailAuthenticationForm as CoreEmailAuthenticationForm
+from ecommerce.website.models import DominioInvalidoEmail
 from ecommerce.website.utils import get_dados_empresa, limpa_cnpj
 from portal.home.models import TrustSignProfile
 from passwords.fields import PasswordField
@@ -77,7 +77,7 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
     def clean_telefone_principal(self):
         telefone = self.cleaned_data['telefone_principal']
         if len(telefone) != 14:
-            raise ValidationError('Tamanho inválido')
+            raise ValidationError('Telefone deve estar no formato (xx) xxxx-xxxx')
         if telefone[5] not in '2345':
             raise ValidationError('O Telefone deve ser fixo')
         return telefone
@@ -86,7 +86,9 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
         email = super(EmailUserCreationForm, self).clean_email()
 
         _, dominio = email.split('@')
-        if dominio in settings.DOMINIOS_INVALIDOS_PARA_EMAIL:
+
+        dominios_invalidos = [d.nome for d in DominioInvalidoEmail.objects.all()]
+        if dominio in dominios_invalidos:
             raise ValidationError('Domínio de e-mail não permitido')
 
         return email
