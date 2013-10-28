@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import logging
+
 from django.conf import settings
 import requests
-from portal.certificados.models import Voucher
-from portal.ferramentas.utils import url_parse, get_emails_dominio
 
-import logging
+from portal.certificados.models import Voucher
+from portal.suporte.utils import url_parse, get_emails_dominio
+
 
 log = logging.getLogger('libs.comodo')
 

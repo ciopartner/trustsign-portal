@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
     ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo
-from portal.ferramentas.utils import decode_csr, compare_csr, verifica_razaosocial_dominio, comparacao_fuzzy
+from portal.suporte.utils import decode_csr, compare_csr, verifica_razaosocial_dominio, comparacao_fuzzy
 
 
 class VoucherSerializer(ModelSerializer):

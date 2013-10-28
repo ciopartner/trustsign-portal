@@ -2,8 +2,8 @@
 from StringIO import StringIO
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
-from portal.ferramentas.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
-from portal.ferramentas.models import FerramentasPage
+from portal.suporte.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
+from portal.suporte.models import FerramentasPage
 
 
 @processor_for(FerramentasPage)

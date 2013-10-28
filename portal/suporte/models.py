@@ -51,3 +51,7 @@ class Question(Model):
     question = TextField()
     answer = TextField()
     page = ForeignKey(FAQPage, related_name="questions")
+
+
+class FerramentasPage(Page):
+    pass

@@ -1,17 +1,19 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from Crypto.Util import asn1
 from datetime import date
 import os
 import urllib
+from hashlib import md5
+
+from Crypto.Util import asn1
 import OpenSSL
 from OpenSSL.crypto import load_certificate, FILETYPE_PEM, dump_certificate, FILETYPE_ASN1, load_pkcs12, PKCS12, dump_privatekey, load_privatekey
 from django.core.exceptions import ValidationError
 from django.core.files.temp import NamedTemporaryFile
 from django.forms import Form, CharField, HiddenInput, Textarea, FileField, ChoiceField, PasswordInput, TextInput
 import requests
-from hashlib import md5
-from portal.ferramentas.utils import decode_csr, url_parse, run_command
+
+from portal.suporte.utils import decode_csr, url_parse, run_command
 
 
 def string_to_date(valor):

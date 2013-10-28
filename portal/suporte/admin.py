@@ -1,6 +1,6 @@
 from django.contrib import admin
 from mezzanine.pages.admin import PageAdmin
-from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question
+from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question, FerramentasPage
 
 
 class ManualAdminInline(admin.TabularInline):
@@ -30,3 +30,4 @@ class FAQPageAdmin(PageAdmin):
 admin.site.register(FAQPage, FAQPageAdmin)
 admin.site.register(ManualPage, ManualPageAdmin)
 admin.site.register(GlossarioPage, GlossarioPageAdmin)
+admin.site.register(FerramentasPage, PageAdmin)

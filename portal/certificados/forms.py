@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form
+from django.core.exceptions import ValidationError
+
 from libs.comodo import get_emails_validacao
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
     ValidateEmissaoValidacaoEmailMultiplo
-from portal.ferramentas.utils import decode_csr, verifica_razaosocial_dominio, compare_csr, comparacao_fuzzy
-from django.core.exceptions import ValidationError
+from portal.suporte.utils import decode_csr, verifica_razaosocial_dominio, compare_csr, comparacao_fuzzy
 
 
 class EmissaoModelForm(ModelForm):

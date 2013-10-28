@@ -201,7 +201,6 @@ INSTALLED_APPS = (
     "mezzanine_custom",
 
     "home",
-    "ferramentas",
     "products",
     "melhor_solucao",
     'suporte',

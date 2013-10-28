@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
-import datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'FerramentasPage'
-        db.create_table(u'ferramentas_ferramentaspage', (
-            (u'page_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['pages.Page'], unique=True, primary_key=True)),
-        ))
-        db.send_create_signal(u'ferramentas', ['FerramentasPage'])
-
+        """
+        existia uma app chamada ferramentas que passou para o suporte, se migrar do zero essa migration não vai funcionar
+        """
+        db.rename_table('ferramentas_ferramentaspage', 'suporte_ferramentaspage')
 
     def backwards(self, orm):
-        # Deleting model 'FerramentasPage'
-        db.delete_table(u'ferramentas_ferramentaspage')
-
+        db.rename_table('suporte_ferramentaspage', 'ferramentas_ferramentaspage')
 
     models = {
         u'contenttypes.contenttype': {
@@ -27,10 +21,6 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'ferramentas.ferramentaspage': {
-            'Meta': {'ordering': "('_order',)", 'object_name': 'FerramentasPage', '_ormbases': [u'pages.Page']},
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['pages.Page']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'generic.assignedkeyword': {
             'Meta': {'ordering': "('_order',)", 'object_name': 'AssignedKeyword'},
@@ -52,6 +42,7 @@ class Migration(SchemaMigration):
             '_meta_title': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             '_order': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'content_model': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True'}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'expiry_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'gen_description': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
@@ -68,14 +59,53 @@ class Migration(SchemaMigration):
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'titles': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True'})
+            'titles': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True'}),
+            'updated': ('django.db.models.fields.DateTimeField', [], {'null': 'True'})
         },
         u'sites.site': {
             'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},
             'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+        },
+        u'suporte.faqpage': {
+            'Meta': {'ordering': "('_order',)", 'object_name': 'FAQPage', '_ormbases': [u'pages.Page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['pages.Page']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'suporte.ferramentaspage': {
+            'Meta': {'ordering': "('_order',)", 'object_name': 'FerramentasPage', '_ormbases': [u'pages.Page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['pages.Page']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'suporte.glossariopage': {
+            'Meta': {'ordering': "('_order',)", 'object_name': 'GlossarioPage', '_ormbases': [u'pages.Page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['pages.Page']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'suporte.item': {
+            'Meta': {'ordering': "('termo',)", 'object_name': 'Item'},
+            'descricao': ('django.db.models.fields.TextField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'pagina': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'itens'", 'to': u"orm['suporte.GlossarioPage']"}),
+            'termo': ('django.db.models.fields.CharField', [], {'max_length': '128'})
+        },
+        u'suporte.manual': {
+            'Meta': {'object_name': 'Manual'},
+            'arquivo': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
+            'descricao': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'pagina': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'manuais'", 'to': u"orm['suporte.ManualPage']"}),
+            'titulo': ('django.db.models.fields.CharField', [], {'max_length': '128'})
+        },
+        u'suporte.manualpage': {
+            'Meta': {'ordering': "('_order',)", 'object_name': 'ManualPage', '_ormbases': [u'pages.Page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['pages.Page']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'suporte.question': {
+            'Meta': {'object_name': 'Question'},
+            'answer': ('django.db.models.fields.TextField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'questions'", 'to': u"orm['suporte.FAQPage']"}),
+            'question': ('django.db.models.fields.TextField', [], {})
         }
     }
 
-    complete_apps = ['ferramentas']
+    complete_apps = ['suporte']

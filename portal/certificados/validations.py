@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from libs.comodo import get_emails_validacao_padrao, get_emails_validacao
 from portal.certificados.erros import get_erro_message
 from portal.certificados.models import Voucher
-from portal.ferramentas.utils import comparacao_fuzzy, get_razao_social_dominio
+from portal.suporte.utils import comparacao_fuzzy, get_razao_social_dominio
 from portal.certificados import erros as e
 
 NOMES_INTERNOS = (
