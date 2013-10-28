@@ -159,7 +159,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
-    #'website',
+    'website',
 
     'portal.home',
 
@@ -256,6 +256,7 @@ PASSWORD_COMPLEXITY = {  # You can ommit any or all of these for no limit for th
     "WORDS": 0         # Words (substrings seperates by a whitespace)
 }
 
+DOMINIOS_INVALIDOS_PARA_EMAIL = ('gmail.com', 'yahoo.com', 'hotmail.com', )
 
 # Sobrescreva com os settings globais
 from settings_global import *
