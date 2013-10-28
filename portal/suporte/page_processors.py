@@ -15,6 +15,7 @@ def faq_processor(request, page):
         'questions': questions
     }
 
+
 @processor_for(ManualPage)
 def faq_processor(request, page):
     manuais = page.manualpage.manuais.prefetch_related('tags__tag').all()
@@ -24,6 +25,7 @@ def faq_processor(request, page):
         'manuais': manuais
     }
 
+
 @processor_for(GlossarioPage)
 def faq_processor(request, page):
     itens = page.glossariopage.itens.prefetch_related('tags__tag').all()
@@ -32,6 +34,7 @@ def faq_processor(request, page):
         'tags': tags,
         'itens': itens
     }
+
 
 @processor_for(FerramentasPage)
 def ferramentas_processor(request, page):

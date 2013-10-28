@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.contenttypes.generic import GenericTabularInline
-from django.forms import ModelForm, CharField, ModelMultipleChoiceField
+from django.forms import ModelForm, ModelMultipleChoiceField
 from mezzanine.pages.admin import PageAdmin
 from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question, FerramentasPage, \
     TaggedItem, Tag
@@ -43,8 +43,10 @@ class QuestionForm(ModelForm):
         tags = self.cleaned_data['tags_field']
 
         question.tags.exclude(tag__in=tags).delete()
+
         for tag in tags:
-            question.tags.create(tag=tag)
+            if not question.tags.filter(tag=tag).exists():
+                question.tags.create(tag=tag)
 
         return question
 
