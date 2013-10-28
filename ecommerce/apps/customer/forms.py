@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.forms import CharField, TextInput, BooleanField, ChoiceField
@@ -72,6 +73,23 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
             raise ValidationError('Já existe um usuário cadastrado com esse CNPJ')
 
         return cnpj
+
+    def clean_telefone_principal(self):
+        telefone = self.cleaned_data['telefone_principal']
+        if len(telefone) != 14:
+            raise ValidationError('Tamanho inválido')
+        if telefone[5] not in '2345':
+            raise ValidationError('O Telefone deve ser fixo')
+        return telefone
+
+    def clean_email(self):
+        email = super(EmailUserCreationForm, self).clean_email()
+
+        _, dominio = email.split('@')
+        if dominio in settings.DOMINIOS_INVALIDOS_PARA_EMAIL:
+            raise ValidationError('Domínio de e-mail não permitido')
+
+        return email
 
     def save(self, commit=True):
         data = self.cleaned_data
