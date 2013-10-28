@@ -3,11 +3,13 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.forms import CharField, TextInput, BooleanField, ChoiceField
+from django.utils.translation import ugettext_lazy as _
 from localflavor.br.forms import BRCNPJField
 from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm, \
     ProfileForm as CoreProfileForm, EmailAuthenticationForm as CoreEmailAuthenticationForm
 from ecommerce.website.utils import get_dados_empresa, limpa_cnpj
 from portal.home.models import TrustSignProfile
+from passwords.fields import PasswordField
 
 User = get_user_model()
 
@@ -35,6 +37,8 @@ class EmailAuthenticationForm(CoreEmailAuthenticationForm):
 
 
 class EmailUserCreationForm(CoreEmailUserCreationForm):
+    password1 = PasswordField(label=_('Password'))
+
     cnpj = BRCNPJField(label='CNPJ', widget=TextInput(attrs={'class': 'mask-cnpj'}))
 
     razao_social = CharFieldDisabled(max_length=128, label='Razão Social')
