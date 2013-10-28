@@ -154,29 +154,35 @@ class CRMClient(object):
         """
         pass
 
-    def call_crm(self, method, rest_data, url='http://dev2.lampadaglobal.com/projects/trustsign/service/v4_1/rest.php',
-                 input_type='json', response_type='json'):
+    def call_crm(self, method, rest_data, input_type='json', response_type='json'):
         """
         Todos os métodos usam este para executar a chamada ao CRM
         """
+        response = None
 
         if not self.session_id and method != 'login':
             raise self.CRMError('Desconectado')
 
-        response = requests.post(url, {
-            'method': method,
-            'input_type': input_type,
-            'response_type': response_type,
-            'rest_data': json.dumps(rest_data)
-        })
+        try:
+            response = requests.post(settings.CRM_URL, {
+                'method': method,
+                'input_type': input_type,
+                'response_type': response_type,
+                'rest_data': json.dumps(rest_data)
+            })
 
-        return response.json()
+            resposta = response.json()
+
+        except Exception as e:
+            log.exception('Ocorreu um erro na chamada do crm: %s' % response.text if response is not None else '')
+            raise self.CRMError('Ocorreu um erro na chamada do metodo %s na CRM, verifique o log' % method)
+
+        return resposta
 
     def login(self, canal="Portal"):
         """
         Inicia a sessão
         """
-
         response_data = self.call_crm('login', [
             {
                 'user_name': settings.CRM_USERNAME,
@@ -335,6 +341,7 @@ class CRMClient(object):
         """
         Executa todo o processo de compra, criando account, opportunity e products quando necessário
         """
+        log.info('Iniciando a postagem do pedido #%s' % oportunidade.numero_pedido)
         self.login()
         try:
             account_id = self.get_account(cliente.cnpj)['entry_list']
@@ -351,6 +358,8 @@ class CRMClient(object):
                 produto.account_id = account_id
                 produto.opportunity_id = opportunity_id
                 self.set_entry_products(produto)
+            self.logout()
         except Exception as e:
             log.exception('Ocorreu um erro ao postar a compra')
-        self.logout()
+            raise self.CRMError('Ocorreu um erro ao postar a compra, verifique o log')
+        log.info('Finalizando a postagem do pedido #%s' % oportunidade.numero_pedido)

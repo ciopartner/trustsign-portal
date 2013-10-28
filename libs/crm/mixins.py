@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from django.utils.timezone import now
 from oscar.core.loading import get_class
 import crm
@@ -10,20 +11,20 @@ class OscarToCRMMixin(object):
         """
         Send the order to CRM
         """
-        cliente = self.get_cliente_crm(order.user)
-        contato = self.get_contato_crm(order.user)
+        cliente = self.get_cliente_crm(order)
+        contato = self.get_contato_crm(order)
         oportunidade = self.get_oportunidade_crm(order)
         produtos = self.get_produtos_crm(order)
 
-        client = crm.CRMClient()
-        client.postar_compra(cliente, contato, oportunidade, produtos)
+        crm_client = crm.CRMClient()
+        crm_client.postar_compra(cliente, contato, oportunidade, produtos)
 
     @staticmethod
-    def get_cliente_crm(user):
+    def get_cliente_crm(order):
         """
         Return a ClientCRM to send to CRM
         """
-        profile = user.get_profile()
+        profile = order.user.get_profile()
         cliente = crm.ClienteCRM()
 
         cliente.cnpj = profile.cliente_cnpj
@@ -45,11 +46,11 @@ class OscarToCRMMixin(object):
         return cliente
 
     @staticmethod
-    def get_contato_crm(user):
+    def get_contato_crm(order):
         """
         Return a Contact to send to CRM
         """
-        profile = user.get_profile()
+        profile = order.user.get_profile()
         contato = crm.ContatoCRM()
 
         contato.nome = profile.callback_nome
@@ -65,12 +66,16 @@ class OscarToCRMMixin(object):
         Return a oportunity to send to CRM
         """
         source = order.sources.all()[0]
+
         try:
             bankcard = source.bankcard
         except Bankcard.DoesNotExists:
             raise crm.CRMClient.CRMError('Falta os dados do cartão de crédito')
+
         transaction_id = source.reference
+
         oportunidade = crm.OportunidadeCRM()
+        oportunidade.numero_pedido = 100000 + order.pk
         oportunidade.pag_credito_transacao_id = transaction_id
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
         oportunidade.valor_total = str(source.amount_allocated)

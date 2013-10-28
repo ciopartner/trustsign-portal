@@ -284,7 +284,7 @@ CERTIFICADOS_EMAIL_USERNAME = '<mudar no local_settings.py>'
 CERTIFICADOS_EMAIL_PASSWORD = '<mudar no local_settings.py>'
 CERTIFICADOS_EMAIL_PATH_ATTACHMENTS = os.path.join(PROJECT_ROOT, 'attachments')
 
-
+CRM_URL = 'http://dev2.lampadaglobal.com/projects/trustsign/service/v4_1/rest.php'
 CRM_USERNAME = '<mudar no local_settings.py>'
 CRM_PASSWORD_HASH = '<mudar no local_settings.py>'
 CRM_OPORTUNITY_ASSIGNED_USER_ID = '<mudar no local_settings.py>'

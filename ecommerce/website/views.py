@@ -74,6 +74,9 @@ class AdicionarProdutoView(BasketAddView, JSONFormView):
         return kwargs
 
     def get_product_id(self, product_code, line=None, term=None):
+        """
+        retorna o id do produto no oscar usando o code, line e term, para usar o metodo padrão de adicionar na basket
+        """
         try:
             produtos = Product.objects.filter(
                 attribute_values__attribute__code='ssl_code',
