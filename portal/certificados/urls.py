@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from functools import partial
+from django.conf import settings
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -20,6 +22,9 @@ FORMS_NV3 = [('tela-1', EmissaoNv3Tela1Form), ('tela-2', EmissaoNv3Tela2Form), (
 FORMS_NV4 = [('tela-1', EmissaoNv4Tela1Form), ('tela-2', EmissaoNv4Tela2Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
 FORMS_NVA = [('tela-1', EmissaoNvATela1Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
 FORMS_NVB = [('tela-1', EmissaoNvBTela1Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
+
+
+login_required = partial(login_required, login_url='/%s%s' % (settings.SITE_PREFIX, settings.LOGIN_URL))
 
 urlpatterns = patterns(
     '',

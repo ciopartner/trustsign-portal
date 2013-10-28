@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth.models import User
-from django.db.models import OneToOneField, DateField, TextField, PositiveSmallIntegerField, CharField, Model, EmailField, BooleanField
+from django.db.models import OneToOneField, DateField, TextField, PositiveSmallIntegerField, CharField, Model, EmailField, BooleanField, ImageField
 from django.db.models.signals import post_save
 
 # The members of Page will be inherited by the Author model, such
@@ -81,6 +81,7 @@ class TrustSignProfile(Model):
     )
 
     user = OneToOneField(User)
+    foto = ImageField(upload_to='profiles/fotos', blank=True, null=True)
     date_of_birth = DateField(blank=True, null=True)
     bio = TextField(blank=True, default='')
     tagline = TextField(blank=True, default='')

@@ -76,8 +76,8 @@ SITE_PREFIX = "portal"
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 
 LOGIN_REDIRECT_URL = '/ecommerce/accounts/profile/'
-LOGIN_URL = 'accounts/login/'
-LOGOUT_URL = 'accounts/logout/'
+LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/accounts/logout/'
 
 ACCOUNTS_PROFILE_FORM_CLASS = 'portal.home.forms.ProfileForm'
 ACCOUNTS_PROFILE_FORM_EXCLUDE_FIELDS = (
@@ -85,6 +85,7 @@ ACCOUNTS_PROFILE_FORM_EXCLUDE_FIELDS = (
     'tagline',
     'date_of_birth',
     'perfil',
+    'foto',
 )
 
 # Setting to turn on featured images for blog posts. Defaults to False.
