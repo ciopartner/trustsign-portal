@@ -49,7 +49,7 @@
     <form action="." method="get" class="form-inline" id="form-history-filter">
 {#        {% include "partials/form_fields.html" with form=form %}#}
         {{ form }}
-        <div class="form-actions">
+        <div class="form-actions no-color">
             <button type="submit" class="btn btn-primary">{% trans 'Filter results' %}</button>
             <a href="{% url 'customer:order-list' %}" class="btn">{% trans 'Reset' %}</a>
         </div>

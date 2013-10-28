@@ -7829,3 +7829,6 @@ msgstr "Você precisa selecionar algum %ss"
 
 msgid "Back"
 msgstr "Voltar"
+
+msgid "password"
+msgstr "senha"

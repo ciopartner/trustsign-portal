@@ -113,4 +113,7 @@ function RegistrationForm($obj, settings){
 
 $(function(){
     new RegistrationForm($("#register_form"));
+    new RegistrationForm($("#profile_form"),{
+        phone : $("#id_callback_telefone_principal")
+    });
 });
