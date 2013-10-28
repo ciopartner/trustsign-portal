@@ -85,6 +85,7 @@ ACCOUNTS_PROFILE_FORM_EXCLUDE_FIELDS = (
     'tagline',
     'date_of_birth',
     'perfil',
+    'foto',
 )
 
 # Setting to turn on featured images for blog posts. Defaults to False.
