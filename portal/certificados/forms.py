@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form
+from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form, TextInput
 from django.core.exceptions import ValidationError
 
 from libs.comodo import get_emails_validacao
@@ -32,10 +32,10 @@ class EmissaoModelForm(ModelForm):
 
         for f in self.REQUIRED_FIELDS:
             self.fields[f].required = True
-        if self.precisa_carta_cessao():
-            f = self.fields.get('emission_assignment_letter')
-            if f:
-                f.required = True
+
+        f = self.fields.get('emission_assignment_letter')
+        if f and self.precisa_carta_cessao():
+            f.required = True
 
     def get_voucher(self):
         if not self._voucher:
@@ -75,7 +75,7 @@ class EmissaoCallbackForm(ModelForm):
     callback_nome = CharField()
     callback_sobrenome = CharField()
     callback_email = EmailField()
-    callback_telefone = CharField()
+    callback_telefone = CharField(widget=TextInput(attrs={'class': 'mask-phone'}))
     callback_observacao = CharField(required=False)
     callback_username = CharField(required=False)
     callback_password = CharField(widget=PasswordInput, required=False)
@@ -84,7 +84,11 @@ class EmissaoCallbackForm(ModelForm):
     def clean_callback_telefone(self):
         valor = self.cleaned_data['callback_telefone']
 
-        #TODO: Validar se é telefone fixo
+        if len(valor) != 14:
+            raise ValidationError('Telefone deve estar no formato (xx) xxxx-xxxx')
+
+        if valor[5] not in '2345':
+            raise ValidationError('Telefone deve ser fixo')
 
         return valor
 
