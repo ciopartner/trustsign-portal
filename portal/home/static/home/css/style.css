@@ -2069,13 +2069,17 @@ h3.title{
     display: block;
 }
 
-#product-price .box-price sup{
+.price-color sub, #product-price .box-price sup{
     top: 0;
     font-size: 65%;
 }
 
-#product-price .box-price h3{
+.price-color, #product-price .box-price h3{
     font-size: 155%;
+    color: #333;
+    font-weight: bold;
+}
+#product-price .box-price h3{
     margin-top: 36px;
 }
 
