@@ -336,4 +336,5 @@ $('.sortmune*').mouseleave(function (event) {
 $(function(){
     // Masks
     $('.mask-cnpj').mask("99.999.999/9999-99");
+    $('.mask-phone').mask("(99) 9999-9999");
 })
