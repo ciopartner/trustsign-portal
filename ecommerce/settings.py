@@ -14,7 +14,7 @@ SITE_ID = 1
 USE_I18N = True
 LANGUAGE_CODE = "pt_BR"
 LANGUAGES = (
-    ('pt', 'Português'),
+    ('pt-br', 'Português'),
     ('en', 'English'),
 )
 

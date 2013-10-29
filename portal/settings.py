@@ -113,7 +113,7 @@ USE_I18N = True
 USE_L10N = True
 LANGUAGE_CODE = "pt_BR"
 LANGUAGES = (
-    ('pt', 'Português'),
+    ('pt-br', 'Português'),
     ('en', 'English'),
 )
 
