@@ -101,7 +101,7 @@ class EmissaoCallbackForm(ModelForm):
         return cleaned_data
 
 
-class EmissaoTela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin):
+class EmissaoTela1Form(EmissaoModelForm, ValidateEmissaoCSRMixin):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr')
 
@@ -109,7 +109,7 @@ class EmissaoTela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSR
         fields = ['emission_url', 'emission_csr']
 
 
-class EmissaoTela2MultiplosDominios(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
+class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
     _fqdns = None
 
     def get_domains_csr(self):
@@ -128,7 +128,7 @@ class EmissaoNv1Tela1Form(EmissaoTela1Form):
     pass
 
 
-class EmissaoNv1Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type')
@@ -170,7 +170,7 @@ class EmissaoNv3Tela1Form(EmissaoTela1Form):
     validacao_manual = True
 
 
-class EmissaoNv3Tela2Form(EmissaoModelForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_articles_of_incorporation', 'emission_address_proof',
@@ -236,6 +236,7 @@ class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm):
 class EmissaoConfirmacaoForm(Form):
 
     confirma = CharField(widget=HiddenInput, initial='1')
+    validacao_manual = False
 
     def __init__(self, user=None, crm_hash=None, voucher=None, **kwargs):
         self.user = user
