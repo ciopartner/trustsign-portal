@@ -5,63 +5,66 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 
 $(document).ready(function () {
+    var count = 0;
+    var fqdn = '';
+
     var $window = $('#windowEscolheEmail'),
         $campo_emails= $('#lista-fqdns').find('input[type=hidden]'),
         email_atual='fqdn-0',
         total_fqdn=$('.fqdn-table tr').length - 1;
+    var $windowModel = $('#windowEscolheEmail .modal-body');
+    var $form = $('form.emissao');
 
     function next_email(){
-        var i = parseInt(email_atual.slice(5));
-        i++;
-        if (i < total_fqdn){
-            email_atual = 'fqdn-' + i;
-            atualiza_window()
-        }
+        count = (count + 1) % $windowModel.length;
+        atualiza_fqdn();
+        atualiza_window();
     }
 
     function prev_email(){
-        var i = parseInt(email_atual.slice(5));
-        i--;
-        if (i >= 0){
-            email_atual = 'fqdn-' + i;
-            atualiza_window()
-        }
+        count = (count - 1) % $windowModel.length;
+        atualiza_fqdn();
+        atualiza_window();
     }
 
-    function seleciona_email(){
 
-
-        var i = parseInt(email_atual.slice(5)),
-            email_selecionado = $campo_emails.val().split(' ')[i];
-        if (email_selecionado.startsWith('admin@')){
-            $window.find('#email1').attr('checked', true);
-        } else if (email_selecionado.startsWith('administrator@')){
-            $window.find('#email2').attr('checked', true);
-        } else if (email_selecionado.startsWith('hostmaster@')){
-            $window.find('#email3').attr('checked', true);
-        } else if (email_selecionado.startsWith('postmaster@')){
-            $window.find('#email4').attr('checked', true);
-        } else if (email_selecionado.startsWith('webmaster@')){
-            $window.find('#email5').attr('checked', true);
-        }
+    function atualiza_fqdn(){
+        fqdn = $windowModel.eq(count).data('fqdn');
     }
 
     function atualiza_window(){
-        var $tr = $('#' + email_atual),
-            dominio = $tr.find('td:first-child').text();
+        $windowModel.hide();
+        $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').show();
+    }
 
-        if (dominio.startsWith('*.')){
-            dominio = dominio.slice(2);
+    function completo(){
+        var lista = $campo_emails.val().split(' ');
+
+        console.log(lista);
+        for(var i=0; i < lista.length; i++){
+            console.log(lista[i]);
+
+            if(lista[i].length == 0)
+                return false;
         }
 
-        $window.find('.dominio').text(dominio);
-        $window.find('label.email-1').text('admin@' + dominio);
-        $window.find('label.email-2').text('administrator@' + dominio);
-        $window.find('label.email-3').text('hostmaster@' + dominio);
-        $window.find('label.email-4').text('postmaster@' + dominio);
-        $window.find('label.email-5').text('webmaster@' + dominio);
-        $window.find('input[type=radio]').attr('checked', false);
-        seleciona_email()
+        return true;
+    }
+
+    function atualizar_tabela(){
+        var lista = $campo_emails.val().split(' ');
+
+        for(var i=0; i < lista.length; i++){
+
+            var val = lista[i];
+            var $tr = $('.fqdn-table tr').eq(i + 1);
+            var fqdn = $tr.data('fqdn');
+
+            console.log($tr);
+
+            $tr.find('span').text(val);
+            $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').find('input[value="' + val + '"]');
+        }
     }
 
     $('.fqdn-table a').click(function(){
@@ -70,15 +73,15 @@ $(document).ready(function () {
     });
 
     $window.find('input[type=radio]').click(function(){
-        var i = parseInt(email_atual.slice(5)),
-            lista = $campo_emails.val().split(' '),
-            $tr = $('#' + email_atual);
+        var i = $('.fqdn-table tr[data-fqdn="' + fqdn + '"]').index() - 1;
+        var lista = $campo_emails.val().split(' ');
 
-        lista[i]= $(this).parent().text();
+        lista[i] = $(this).parent().find('span').text().trim();
         $campo_emails.val(lista.join(' '));
 
-        $tr.find('span').text(lista[i])
+        atualizar_tabela();
     });
+
 
     $window.find('.prev-icon').click(function(){
         prev_email();
@@ -87,5 +90,21 @@ $(document).ready(function () {
     $window.find('.next-icon').click(function(){
         next_email();
     });
+
+    $(".fqdn-table a").click(function(e){
+       fqdn = $(this).data('fqdn');
+       atualiza_window();
+    });
+
+    $form.submit(function(e){
+
+        if(!completo()){
+            e.preventDefault();
+            alert('Escolha todos os emails.');
+        }
+
+    });
+
+    atualizar_tabela();
 });
 
