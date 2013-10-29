@@ -37,6 +37,8 @@ urlpatterns = patterns(
     url(r'^api/v1/get-voucher-data/$', csrf_exempt(views.VoucherAPIView.as_view()), name='api_get_voucher_data'),
     url(r'^api/v1/get-email-whois/$', csrf_exempt(views.EmailWhoisAPIView.as_view()), name='api_get_email_whois'),
 
+    url(r'^ajax/get-email-whois/$', views.EmailWhoisAPIAjaxView.as_view(), name='ajax_get_email_whois'),
+
     url(r'^emissao/(%s|%s)/(?P<crm_hash>\w+)/$' % (Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD), login_required(EmissaoNv1WizardView.as_view(form_list=FORMS_NV1)), name='form-emissao-nv1'),
     url(r'^emissao/(%s|%s)/(?P<crm_hash>\w+)/$' % (Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC), login_required(EmissaoNv2WizardView.as_view(form_list=FORMS_NV2)), name='form-emissao-nv2'),
     url(r'^emissao/(%s)/(?P<crm_hash>\w+)/$' % Voucher.PRODUTO_EV, login_required(EmissaoNv3WizardView.as_view(form_list=FORMS_NV3)), name='form-emissao-nv3'),

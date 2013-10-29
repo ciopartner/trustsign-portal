@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import re
 
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form, TextInput
 from django.core.exceptions import ValidationError
 
-from libs.comodo import get_emails_validacao
+from libs.comodo import get_emails_validacao_padrao, get_emails_validacao
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
     ValidateEmissaoValidacaoEmailMultiplo
@@ -20,6 +21,7 @@ class EmissaoModelForm(ModelForm):
     ValidationError = ValidationError
     REQUIRED_FIELDS = ()
     validacao_manual = False
+    validacao = False
 
     class Meta:
         model = Emissao
@@ -84,7 +86,7 @@ class EmissaoCallbackForm(ModelForm):
     def clean_callback_telefone(self):
         valor = self.cleaned_data['callback_telefone']
 
-        if len(valor) != 14:
+        if not re.match('\([0-9]{2}\) [0-9]{4}-[0-9]{4}', valor):
             raise ValidationError('Telefone deve estar no formato (xx) xxxx-xxxx')
 
         if valor[5] not in '2345':
@@ -123,6 +125,13 @@ class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, Valid
         kwargs.setdefault('initial', {})['emission_dcv_emails'] = ' ' * (len(self.get_domains_csr()) - 1)
         super(EmissaoTela2MultiplosDominios, self).__init__(**kwargs)
 
+    def get_dict_domains_email(self):
+        d = {}
+        for dominio in self.get_domains_csr():
+            d[dominio] = get_emails_validacao(dominio)
+        return d
+
+
 
 class EmissaoNv1Tela1Form(EmissaoTela1Form):
     pass
@@ -143,7 +152,7 @@ class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     def __init__(self, **kwargs):
         super(EmissaoNv1Tela2Form, self).__init__(**kwargs)
-        choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
+        choices_email = [(email, email) for email in get_emails_validacao_padrao(self.initial['emission_url'])]
         self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 
@@ -188,7 +197,7 @@ class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     def __init__(self, **kwargs):
         super(EmissaoNv3Tela2Form, self).__init__(**kwargs)
-        choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
+        choices_email = [(email, email) for email in get_emails_validacao_padrao(self.initial['emission_url'])]
         self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 

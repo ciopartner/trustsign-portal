@@ -21,11 +21,11 @@
         <tr><th>Tipo do Servidor:</th><td>{{ form.emission_server_type }} {{ form.emission_server_type.errors }}</td></tr>
         <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
         <tr id="lista-fqdns">
-            <th>Lista de {% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN's{% else %}domínios{% endif %}:</th>
+            <th>Lista de {% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN's{% else %}domínios{% endif %}:</th>
             <td>
                 <table class="fqdn-table">
                     <tr>
-                        <th>{% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
+                        <th>{% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
                         <th>E-mail</th>
                     </tr>
                     {% for fqdn in form.get_domains_csr %}

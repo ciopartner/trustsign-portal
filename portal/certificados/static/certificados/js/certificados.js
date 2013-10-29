@@ -6,7 +6,7 @@ if (typeof String.prototype.startsWith != 'function') {
 
 $(document).ready(function () {
     var $window = $('#windowEscolheEmail'),
-        $campo_emails= $('#lista-dqdns').find('input[type=hidden]'),
+        $campo_emails= $('#lista-fqdns').find('input[type=hidden]'),
         email_atual='fqdn-0',
         total_fqdn=$('.fqdn-table tr').length - 1;
 
@@ -29,6 +29,8 @@ $(document).ready(function () {
     }
 
     function seleciona_email(){
+
+
         var i = parseInt(email_atual.slice(5)),
             email_selecionado = $campo_emails.val().split(' ')[i];
         if (email_selecionado.startsWith('admin@')){
@@ -69,10 +71,13 @@ $(document).ready(function () {
 
     $window.find('input[type=radio]').click(function(){
         var i = parseInt(email_atual.slice(5)),
-            lista = $campo_emails.val().split(' ');
+            lista = $campo_emails.val().split(' '),
+            $tr = $('#' + email_atual);
 
         lista[i]= $(this).parent().text();
         $campo_emails.val(lista.join(' '));
+
+        $tr.find('span').text(lista[i])
     });
 
     $window.find('.prev-icon').click(function(){
