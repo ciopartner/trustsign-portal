@@ -1,0 +1,20 @@
+{% extends 'pages/product.html' %}
+
+{% block price %}
+    <div class="box-price tblrp10 well pull-right tm30">
+        <h3 class="textac">3 anos</h3>
+        <h2 class="textac price-color">R$ {{ precos.na.term3years.price_tpl.0 }},<sub>{{ precos.na.term3years.price_tpl.1 }}</sub></h2>
+        <a href="" data-comprar-produto="{{ product_code }}" data-line="na" data-term="3years" class="btn btn-orange">Comprar</a>
+    </div>
+    <div class="box-price tblrp10 well pull-right tm30">
+        <h3 class="textac">2 anos</h3>
+        <h2 class="textac price-color">R$ {{ precos.na.term2years.price_tpl.0 }},<sub>{{ precos.na.term2years.price_tpl.1 }}</sub></h2>
+        <a href="" data-comprar-produto="{{ product_code }}" data-line="na" data-term="2years" class="btn btn-orange">Comprar</a>
+    </div>
+    <div class="box-price tblrp10 well pull-right tm30">
+        <h3 class="textac">1 ano</h3>
+        <h2 class="textac price-color">R$ {{ precos.na.term1year.price_tpl.0 }},<sub>{{ precos.na.term1year.price_tpl.1 }}</sub></h2>
+        <a href="" data-comprar-produto="{{ product_code }}" data-line="na" data-term="1year" class="btn btn-orange">Comprar</a>
+    </div>
+{% endblock %}
+{% block linhas_ssl %}{% endblock %}

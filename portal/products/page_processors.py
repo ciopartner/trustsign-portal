@@ -4,7 +4,7 @@ from portal.products.models import Product
 from django.db import connection
 
 @processor_for(Product)
-def ferramentas_processor(request, page):
+def product_processor(request, page):
 
     #sql = '''
     #SELECT p.upc, p.product_line, p.product_term, s.price_excl_tax
@@ -39,25 +39,35 @@ def ferramentas_processor(request, page):
         'product_code': page.product.product_code,
         'precos': {
             'basic': {
+                'termsubscription_1m': {},
                 'term1year': {},
                 'term2years': {},
                 'term3years': {},
             },
             'pro': {
+                'termsubscription_1m': {},
                 'term1year': {},
                 'term2years': {},
                 'term3years': {},
             },
             'prime': {
+                'termsubscription_1m': {},
                 'term1year': {},
                 'term2years': {},
                 'term3years': {},
             },
             'trial': {
                 'termtrial': {}
+            },
+            'na': {
+                'termsubscription_1m': {},
+                'term1year': {},
+                'term2years': {},
+                'term3years': {}
             }
         }
     }
+
 
     for upc, product_line, product_term, price in cursor.fetchall():
         if price is None:
@@ -68,12 +78,15 @@ def ferramentas_processor(request, page):
         x['price_tpl'] = str(price).split('.')
         x['price'] = price
 
-    for line in ('basic', 'pro', 'prime'):
+    for line in ('basic', 'pro', 'prime', 'na'):
+
         data_line = data.setdefault('precos', {})[line]
         data_line.setdefault('term1year', {})['discount'] = 0
         preco_1ano = data_line.get('term1year', {}).get('price', 0)
+
         if preco_1ano > 0:
             data_line['term2years']['discount'] = int((1 - data_line.get('term2years', {}).get('price', 0) / (2 * preco_1ano)) * 100)
             data_line['term3years']['discount'] = int((1 - data_line.get('term3years', {}).get('price', 0) / (3 * preco_1ano)) * 100)
 
+    print(data)
     return data

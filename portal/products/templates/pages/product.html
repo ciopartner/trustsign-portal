@@ -30,6 +30,7 @@
 {% endblock %}
 
 {% block title %}
+
     {% editable page.product.title %}
         {{ page.product.title }}
     {% endeditable %}
@@ -37,6 +38,7 @@
         <span style="color:#ddd; margin: 0 10px;">|</span>
         <span class=h1-complement>{{ page.product.subtitle }}</span>
     {% endeditable %}
+
 {% endblock %}
 
 {% block one_row %}
@@ -54,7 +56,10 @@
 
             {% include 'includes/sharebar.html' %}
         </div>
+
         <br><br>
+
+        <div class="clearfix"></div>
 
         {% editable page.product.tab_title %}
             <h2>{{ page.product.tab_title }}</h2>
@@ -85,10 +90,14 @@
             {% endfor %}
         </div>
 
-        {# Inclusão da tabela de comparação de certificados #}
-        <div style="margin-top:20px;">
-            {% include "includes/linhas-ssl.html" with precos=precos product_code=product_code %}
-        </div>
+        {% block price %}{% endblock %}
+
+        {% block linhas_ssl %}
+            {# Inclusão da tabela de comparação de certificados #}
+            <div style="margin-top:20px;">
+                {% include "includes/linhas-ssl.html" with precos=precos product_code=product_code %}
+            </div>
+        {% endblock %}
 
         {# Inclusão da área 'você sabia' #}
         <div style="margin-top:20px;">
