@@ -553,12 +553,15 @@ class EmissaoWizardView(SessionWizardView):
             if Emissao.objects.filter(crm_hash=self.kwargs.get('crm_hash')).exists():
                 raise Http404()  # Não é possível emitir duas vezes o mesmo voucher
             self.instance = self.model()
+
         voucher = self.get_voucher()
         if voucher.ssl_product not in self.produtos_voucher:
             raise Http404()
+
         if not voucher.customer_registration_status:
-            log.info('Tentando emitir um voucher com situação cadastral inativa')
+            log.info('Tentando emitir um voucher com situação cadastral inativa (#%s)' % voucher.pk)
             raise PermissionDenied()
+
         user = self.request.user
         if (voucher.customer_cnpj != user.username or user.get_profile().is_trustsign) and not user.is_superuser:
             raise PermissionDenied()
@@ -578,8 +581,9 @@ class EmissaoWizardView(SessionWizardView):
     def get_form_initial(self, step):
         initial = super(EmissaoWizardView, self).get_form_initial(step)
 
-        if step == 'tela-1':
+        if step == 'tela-2':
             voucher = self.get_voucher()
+
             initial.update({
                 'callback_tratamento': voucher.customer_callback_title,
                 'callback_nome': voucher.customer_callback_firstname,
@@ -589,10 +593,10 @@ class EmissaoWizardView(SessionWizardView):
                 'callback_observacao': voucher.customer_callback_note,
             })
 
-        elif step == 'tela-2' and not self.revisao:
-            cd = self.get_cleaned_data_for_step('tela-1')
-            initial['emission_url'] = cd['emission_url']
-            initial['emission_csr'] = cd['emission_csr']
+            if not self.revisao:
+                cd = self.get_cleaned_data_for_step('tela-1')
+                initial['emission_url'] = cd['emission_url']
+                initial['emission_csr'] = cd['emission_csr']
 
         return initial
 
@@ -636,12 +640,14 @@ class EmissaoWizardView(SessionWizardView):
 
     def save(self, form_list, **kwargs):
         emissao = self.instance
+
         if not self.revisao:
             emissao.requestor_user_id = self.request.user.pk
             emissao.crm_hash = self.kwargs['crm_hash']
             emissao.voucher = self.get_voucher()
 
-        atualiza_voucher(emissao.voucher, dados_voucher=self.get_cleaned_data_for_step('tela-1'))
+        voucher = self.get_voucher_atualizado(emissao.voucher)
+        voucher.save()
 
         if self.revisao or any(f.validacao_manual for f in form_list):
             emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
@@ -651,6 +657,13 @@ class EmissaoWizardView(SessionWizardView):
             emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
 
         emissao.save()
+
+    def get_voucher_atualizado(self, voucher):
+        step_dados_callback = 'tela-2' if 'tela-2' in self.templates else 'tela-1'
+        dados_form_callback = self.get_cleaned_data_for_step(step_dados_callback)
+
+        atualiza_voucher(voucher, dados_voucher=dados_form_callback)
+        return voucher
 
 
 class EmissaoNv1WizardView(EmissaoWizardView):

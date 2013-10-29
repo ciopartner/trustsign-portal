@@ -196,28 +196,6 @@ class Voucher(Model):
     def get_publickey_url(self):
         return 'chave-publica', (), {'crm_hash': self.crm_hash}
 
-# class Pedido(Model):  # TODO: Substituir por abstract do oscar
-#     knu_html = TextField()
-#     crm_envio_data = DateTimeField()
-#     order_canceled_date = DateTimeField(blank=True, null=True)
-#
-#     customer_cnpj = CharField(max_length=32)
-#     customer_companyname = CharField(max_length=128)
-#     customer_zip = CharField(max_length=16)
-#     customer_address1 = CharField(max_length=128)
-#     customer_address2 = CharField(max_length=8)
-#     customer_address3 = CharField(max_length=32)
-#     customer_address4 = CharField(max_length=64)
-#     customer_city = CharField(max_length=64)
-#     customer_state = CharField(max_length=2)
-#     customer_country = CharField(max_length=64)
-#
-#     customer_registration_status = CharField(max_length=128)
-#     customer_callback_firstname = CharField(max_length=128)
-#     customer_callback_email = EmailField()
-#     customer_callback_phone = CharField(max_length=16)
-#     contato_observacao = CharField(max_length=128)
-
 
 class Emissao(Model):
     SERVIDOR_TIPO_CHOICES = (
