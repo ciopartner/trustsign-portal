@@ -31,4 +31,4 @@ Executar uma vez para o portal e outra para o e-commerce
 # apt-get install openssl
 # apt-get install libssl-dev
 # apt-get install whois
-# apt-get install libxml2-dev
+# apt-get install libxml2-dev libxslt1-dev
