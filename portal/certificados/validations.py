@@ -101,7 +101,7 @@ class ValidateEmissaoCSRMixin(object):
 
         if csr.get('CN') != url and voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC,
                                                                 Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
-            raise self.ValidationError('O campo Common Name(CN) deve conter o domínio escolhido')
+            raise self.ValidationError('O campo domínio deve ser idêntico ao campo CN da CSR')
 
         # if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
         #     raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
@@ -126,7 +126,7 @@ class ValidateEmissaoCSRMixin(object):
 
         if voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_EV_MDC):
             if dominios:
-                raise self.ValidationError('Este produto possui somente um domínio')
+                raise self.ValidationError('A CSR deste produto deve conter o domínio no campo CN e o DNS deve estar vazio')
 
             if voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE) and \
                     comparacao_fuzzy(csr.get('CN'), voucher.customer_companyname):
