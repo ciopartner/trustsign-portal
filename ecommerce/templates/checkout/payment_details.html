@@ -13,15 +13,16 @@
         <div class="span9">
             <div class="basket-title">
                 <div class="row-fluid">
-                    <h4 class="span8">{% trans "Items in basket" %}</h4>
+                    <h4 class="span6">{% trans "Items in basket" %}</h4>
                     <h4 class="span2 align-right">{% trans "Quantity" %}</h4>
                     <h4 class="span2 align-right">{% trans "Price" %}</h4>
+                    <h4 class="span2 align-right">{% trans "Total" %}</h4>
                 </div>
             </div>
             {% for line in basket.all_lines %}
                 <div class="basket-items">
                     <div class="row-fluid">
-                        <div class="span8">
+                        <div class="span6">
 {#                            <h4>{{ line.product.stockrecord.partner.name }}</h4>#}
                             <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
                         </div>
@@ -29,26 +30,31 @@
                             <h3>{{ line.quantity }}</h3>
                         </div>
                         <div class="span2 align-right">
+                            <h3>{{  line.unit_price_incl_tax|currency }}</h3>
+                        </div>
+                        <div class="span2 align-right">
                             <h3>{{ line.line_price_incl_tax|currency }}</h3>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+
         </div>
 
-        <div class="span3">
+        <div class="span3" style="margin-left: 1px; width: 201px;">
             <div class="basket-title hidden-phone">
                 <div class="row-fluid">
-                    <h4 class="span12">RESUMO DO PEDIDO </h4>
+                    <h4 class="span12 align-right">RESUMO DO CARRINHO</h4>
                 </div>
-
             </div>
             <div id="total">
                 <h4>
                     Total
                 </h4>
                 <h3>{{ basket.total_incl_tax|currency }}</h3>
-                <a href="{% url 'basket:summary' %}" class="btn btn-large btn-block">Editar pedido</a>
+                <a href="{% url 'basket:summary' %}" class="btn btn-large btn-orange btn-block">FINALIZAR COMPRA</a>
+                <a href="{% url 'basket:summary' %}" class="pull-right tm10">Editar pedido</a>
+                <div class="clearfix"></div>
             </div>
         </div>
     </div>
