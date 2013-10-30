@@ -333,8 +333,9 @@ $('.sortmune*').mouseleave(function (event) {
 ///////////////////////////////////////////////////////
 //headersearchcon();
 
-$(function(){
-    // Masks
-    $('.mask-cnpj').mask("99.999.999/9999-99");
-    $('.mask-phone').mask("(99) 9999-9999");
-})
+
+// Masks
+$('.mask-cnpj').mask("99.999.999/9999-99");
+$('.mask-phone').mask("(99) 9999-9999");
+$('[data-toggle="tooltip"]').tooltip();
+console.log($('[data-toggle="tooltip"]'));

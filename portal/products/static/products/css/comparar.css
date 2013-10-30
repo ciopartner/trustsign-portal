@@ -138,6 +138,16 @@ aside.videoas2 > ul > li{
 	text-align:center;
 }
 
+table.ssltab .subtitle, table.ssltab .subtitle td{
+    background: #F5F5F5;
+    color: #999;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.2;
+    border-right: 1px solid #DDD;
+}
+
 table.ssltab > thead > tr > th{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#FFF;
@@ -375,8 +385,21 @@ tbody > tr:nth-child(even){
 }
 
 .sslcolor{
-	background-color:#F0F0F0;
-	width:100%
+	background-color:#F5F5F5;
+	width:100%;
+    margin-bottom: 20px;
+}
+
+.sslcolor aside.span4{
+    border-right: 3px solid #ffffff;
+    min-height: 170px;
+}
+.sslcolor aside .as-text1{
+    min-height: 30px;
+}
+
+.sslcolor aside .all-body-text5{
+    min-height: 70px;
 }
 
 .minidrop{

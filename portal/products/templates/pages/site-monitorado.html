@@ -89,20 +89,20 @@
             <table class="table ssltab">
                 <thead>
                     <tr>
-                        <th>ENTENDA NOSSAS LINHAS</th>
+                        <th rowspan="2">
+                            <div class="textac">ENTENDA NOSSAS LINHAS</div>
+                        </th>
                         <th>BASIC</th>
                         <th>PRO</th>
                         <th>PRIME</th>
                     </tr>
-                </thead>
-                <tbody>
-
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Benefícios</b></td>
+                    <tr class="all-body-text5 bbs subtitle">
                         <td class="tdbls">Para pequenas e médias empresas</td>
                         <td class="tdbls">Para aplicaçoes criticas. Link de 10MB</td>
                         <td class="tdbls tdbrs">Para grandes empresas ou e-commerces. Link a partir de 20MB</td>
                     </tr>
+                </thead>
+                <tbody>
 
                     <tr class="all-body-text5 bbs">
                         <td class="tdbls"><b>SaaS (zero impacto na implantação)</b></td>
@@ -226,12 +226,12 @@
                     <tr class="all-body-text5  price">
                         <td class=""></td>
                         <td class="tdbls bbs">
-                            <h3 class="textac">1 mês</h3>
+                            <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.basic.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.basic.termsubscription_1m.price_tpl.1 }}</sub></h2>
                             <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="basic" data-comprar-produto="site-monitorado" href="">Comprar</a>
                         </td>
                         <td class="tdbls bbs">
-                            <h3 class="textac">1 mês</h3>
+                            <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.pro.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.pro.termsubscription_1m.price_tpl.1 }}</sub></h2>
                             <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="pro" data-comprar-produto="site-monitorado" href="">Comprar</a>
                         </td>
@@ -266,7 +266,7 @@
                 <section class="container">
                     <section class="featurette boderhide">
 
-                        <aside class="bordowns tdbrs boderhide">
+                        <aside class="">
                             <section class="row-fluid">
 
                                 <aside class="span4">
@@ -276,14 +276,14 @@
                                     <div class="site-body-text2 tblrp10 "><a href='{{ url_portal }}site-monitorado/voce-sabia/'>Entenda</a></div>
                                 </aside>
 
-                                <aside class="span4 tdbls">
+                                <aside class="span4">
                                     <div class="as-text1 tblrp10" style="margin-bottom: -10px">ATAQUES DDOS</div>
                                     <div class="all-body-text5 tblrp10">Ataques de DdoS podem afetar diferentes plataformas assim como várias camadas de infraestrutura de rede diferentes.</div>
                                     <div class="site-body-text2 tblrp10 "><a href='{{ url_portal }}site-monitorado/ataque-de-ddos/'>Entenda</a></div>
                                 </aside>
 
 
-                                <aside class="span4 tdbls">
+                                <aside class="span4">
                                     <div class="as-text1 tblrp10" style="margin-bottom: -10px">51% DO TRÁFEGO SÃO BOTS</div>
                                     <div class="all-body-text5 tblrp10">Mais da metade do tráfego de um site é formado por visitantes não humanos e as ferramentas de gestão de acessos não mostram essa informação</div>
                                     <div class="site-body-text2 tblrp10"><a href="{{ url_portal }}site-monitorado/51-do-trafego-sao-bots/">Entenda</a></div>
