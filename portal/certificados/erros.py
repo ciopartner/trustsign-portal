@@ -17,7 +17,7 @@ ERRO_CSR_INVALIDA_CHAVE_COMPROMETIDA = -40
 ERRO_CERTIFICADO_REJEITADO = -20
 ERRO_CERTIFICADO_REVOGADO = -21
 ERRO_CERTIFICADO_EM_PROCESSO_EMISSAO = -26
-ERRO_CERTIFICADO_JA_EXPIROU = -0
+ERRO_CERTIFICADO_JA_EXPIROU = -36
 ERRO_CSR_INVALIDA_NAO_CONTEM_URL_DIGITADA = -100
 ERRO_DADOS_CONTATO_TODOS_OS_DADOS_SAO_NECESSARIOS = -101
 ERRO_DADOS_CONTATO_TELEFONE_PRECISA_SER_FIXO = -102
@@ -25,6 +25,7 @@ ERRO_CAMPO_DOMINIO_OBRIGATORIO = -103
 ERRO_CAMPO_CSR_OBRIGATORIO = -104
 ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS = -105
 ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS = -106
+ERRO_EMAIL_CONTATO_DOMINIO_DIFERENTE = -107
 ERRO_SITUACAO_CADASTRAL_INATIVA = -108
 ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ = -109
 ERRO_CSR_ENDERECO_DIFERENTE_CNPJ = -110
@@ -45,6 +46,22 @@ ERRO_CAMPO_MOTIVO_REVOGACAO_OBRIGATORIO = -124
 ERRO_CAMPO_COMPROV_IDENT_OBRIGATORIO = -125
 ERRO_CAMPO_SENHA_OBRIGATORIO = -126
 ERRO_CAMPO_SENHA_NAO_SEGURA = -127
+ERRO_VOUCHER_JA_EXISTENTE = -128
+ERRO_VOUCHER_NAO_EXISTENTE = -129
+ERRO_VOUCHER_JA_CANCELADO = -130
+ERRO_CSR_REEMISSAO_CHAVE_PUBLICA = -131
+ERRO_OBTER_RAZAOSOCIAL_DOMINIO = -132
+ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO = -133
+ERRO_CSR_INVALIDA_DOMINIO_NAO_CONTIDO_NA_CSR = -134
+ERRO_EMISSAO_NAO_EXISTENTE = -135
+ERRO_VOUCHER_CNPJ_DIFERENTE = -136
+ERRO_EMISSAO_STATUS_INVALIDO = -137
+ERRO_DOMINIO_SEM_WILDCARD = -138
+ERRO_DOMINIO_COM_WILDCARD = -139
+ERRO_CSR_INVALIDA_DNS_PREECHIDO = -140
+ERRO_EMAIL_VALIDACAO_INVALIDO = -141
+ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO = -142
+
 
 
 ERROS = {
@@ -73,6 +90,7 @@ ERROS = {
     ERRO_CAMPO_CSR_OBRIGATORIO: 'O campo CSR é obrigatório',
     ERRO_CSR_PRODUTO_EXIGE_CHAVE_2048_BITS: 'Erro na CSR: para este produto o tamanho da chave obrigatoriamente deve ser 2048 bits',
     ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS: 'Erro na CSR: para este produto o tamanho da chave obrigatoriamente deve ser 4096 bits',
+    ERRO_EMAIL_CONTATO_DOMINIO_DIFERENTE: 'O e-mail de contato obrigatoriamente precisa pertencer ao domínio do certificado a ser emitido (ou de um dos domínios no caso de certificado para múltiplos domínios)',
     ERRO_SITUACAO_CADASTRAL_INATIVA: 'A situação cadastral da empresa cliente não está ativa na Receita Federal do Brasil. Favor entrar em contato com o suporte.',
     ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que o campo ORGANIZATION da CSR seja idêntico ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
     ERRO_CSR_ENDERECO_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que os campos de endereço da CSR sejam idênticos ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
@@ -93,11 +111,34 @@ ERROS = {
     ERRO_CAMPO_COMPROV_IDENT_OBRIGATORIO: 'É obrigatório o envio de documento de identificação com foto',
     ERRO_CAMPO_SENHA_OBRIGATORIO: 'É obrigatório o preenchimento de uma senha para este certificado',
     ERRO_CAMPO_SENHA_NAO_SEGURA: 'Esta senha não é considerada segura, favor tentar outra senha',
+
+    ERRO_VOUCHER_JA_EXISTENTE: 'Este Cupom de Emissão já existe no sistema',
+    ERRO_VOUCHER_NAO_EXISTENTE: 'Este Cupom de Emissão não existe no sistema',
+    ERRO_VOUCHER_JA_CANCELADO: 'Este Cupom de Emissão já se encontra cancelado',
+    ERRO_CSR_REEMISSAO_CHAVE_PUBLICA: 'Na CSR do processo de reemissão só é possível alterar a chave pública',
+    ERRO_OBTER_RAZAOSOCIAL_DOMINIO: 'Não foi possível recuperar a Razão Social a partir do domínio informado (possível problema no whois, contacte o suporte)',
+    ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO: 'Erro na CSR: O campo COMMON NAME (CN) deve conter o nome de um domínio',
+    ERRO_CSR_INVALIDA_DOMINIO_NAO_CONTIDO_NA_CSR: 'O domínio ou FQDN primário deve estar contido na lista de domínios da CSR',
+
+    ERRO_EMISSAO_NAO_EXISTENTE: 'Emissão não existente',
+    ERRO_VOUCHER_CNPJ_DIFERENTE: 'CNPJ informado não é o mesmo do cupom de emissão',
+    ERRO_EMISSAO_STATUS_INVALIDO: 'Status da emissão inválido para este procedimento',
+    ERRO_DOMINIO_SEM_WILDCARD: 'O domínio deve iniciar com "*.". Ex.: *.exemplo.com.br',
+    ERRO_DOMINIO_COM_WILDCARD: 'O domínio não pode conter *.',
+    ERRO_CSR_INVALIDA_DNS_PREECHIDO: 'A CSR deste produto deve ter o campo DNS vazio',
+    ERRO_EMAIL_VALIDACAO_INVALIDO: 'E-mail de validação inválido',
+    ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO: 'E-mail de validação inválido: %s para o domínio %s',
 }
+
+ERROS_CODIGO = {v: k for k, v in ERROS.iteritems()}
 
 
 def get_erro_message(codigo):
     return ERROS[codigo]
+
+
+def get_erro_tuple(codigo):
+    return codigo, get_erro_message(codigo)
 
 
 class APIError(Exception):

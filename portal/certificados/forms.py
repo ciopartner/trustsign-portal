@@ -4,11 +4,13 @@ import re
 
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form, TextInput
 from django.core.exceptions import ValidationError
+from passwords.fields import PasswordField
 
 from libs.comodo import get_emails_validacao_padrao, get_emails_validacao
+from portal.certificados import erros as e
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
-    ValidateEmissaoValidacaoEmailMultiplo
+    ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR, ValidateEmissaoPhoneProof, ValidateEmissaoID
 from portal.suporte.utils import decode_csr, verifica_razaosocial_dominio, compare_csr, comparacao_fuzzy
 
 
@@ -79,28 +81,16 @@ class EmissaoCallbackForm(ModelForm):
     callback_email = EmailField()
     callback_telefone = CharField(widget=TextInput(attrs={'class': 'mask-phone'}))
     callback_observacao = CharField(required=False)
-    callback_username = CharField(required=False)
-    callback_password = CharField(widget=PasswordInput, required=False)
-    callback_password_validacao = CharField(widget=PasswordInput, required=False)
+    callback_username = CharField(required=False, error_messages={})
 
     def clean_callback_telefone(self):
+        self.clean()
         valor = self.cleaned_data['callback_telefone']
 
-        if not re.match('\([0-9]{2}\) [0-9]{4}-[0-9]{4}', valor):
-            raise ValidationError('Telefone deve estar no formato (xx) xxxx-xxxx')
-
-        if valor[5] not in '2345':
-            raise ValidationError('Telefone deve ser fixo')
+        if not re.match('\([0-9]{2}\) [0-9]{4}-[0-9]{4}', valor) or valor[5] not in '2345':
+            raise ValidationError(e.get_erro_message(e.ERRO_DADOS_CONTATO_TELEFONE_PRECISA_SER_FIXO))
 
         return valor
-
-    def clean(self):
-        cleaned_data = super(EmissaoCallbackForm, self).clean()
-        password = cleaned_data['callback_password']
-        password2 = cleaned_data['callback_password_validacao']
-        if password != password2:
-            raise ValidationError('As senhas não são iguais')
-        return cleaned_data
 
 
 class EmissaoTela1Form(EmissaoModelForm, ValidateEmissaoCSRMixin):
@@ -132,12 +122,12 @@ class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, Valid
         return d
 
 
-
 class EmissaoNv1Tela1Form(EmissaoTela1Form):
     pass
 
 
-class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail,
+                          ValidateEmissaoAssignmentLetter):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type')
@@ -160,7 +150,7 @@ class EmissaoNv2Tela1Form(EmissaoTela1Form):
     pass
 
 
-class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios):
+class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignmentLetter):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type')
@@ -179,7 +169,9 @@ class EmissaoNv3Tela1Form(EmissaoTela1Form):
     validacao_manual = True
 
 
-class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail,
+                          ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation,
+                          ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_articles_of_incorporation', 'emission_address_proof',
@@ -205,7 +197,9 @@ class EmissaoNv4Tela1Form(EmissaoTela1Form):
     validacao_manual = True
 
 
-class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios):
+class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignmentLetter,
+                          ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA,
+                          ValidateEmissaoEVCR):
 
     validacao_manual = True
 
@@ -224,7 +218,7 @@ class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios):
         }
 
 
-class EmissaoNvATela1Form(EmissaoModelForm, EmissaoCallbackForm):
+class EmissaoNvATela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoPhoneProof):
     validacao_manual = True
 
     REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof',)
@@ -233,10 +227,14 @@ class EmissaoNvATela1Form(EmissaoModelForm, EmissaoCallbackForm):
         fields = ['emission_csr', 'emission_phone_proof']
 
 
-class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm):
+class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoID):
     validacao_manual = True
 
-    REQUIRED_FIELDS = ('emission_id', 'emission_revoke_password' )
+    REQUIRED_FIELDS = ('emission_id', 'emission_revoke_password')
+
+    emission_revoke_password = PasswordField()
+
+    emission_revoke_password_confirmation = CharField(widget=PasswordInput)
 
     class Meta:
         fields = ('emission_id', 'emission_revoke_password')
@@ -275,8 +273,9 @@ class RevogacaoForm(ModelForm):
     def clean_emission_url(self):
         emission_url = self.cleaned_data.get('emission_url')
 
-        emissao = self.voucher.emissao
+        # TODO: checar essa validação no futuro
         # Comentada a validação abaixo por acordo com a TQI
+        #emissao = self.voucher.emissao
         #if emission_url != emissao.emission_url:
         #    raise ValidationError('Valor não bate com a url de emissão')
 

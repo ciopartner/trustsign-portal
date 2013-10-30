@@ -2,9 +2,10 @@
 from __future__ import unicode_literals
 from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, ValidationError
+from portal.certificados import erros as e
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
-    ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo
+    ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR, ValidateEmissaoPhoneProof, ValidateEmissaoID
 from portal.suporte.utils import decode_csr, compare_csr, verifica_razaosocial_dominio, comparacao_fuzzy
 
 
@@ -24,7 +25,7 @@ class VoucherSerializer(ModelSerializer):
     def validate_crm_hash(self, attrs, source):
         crm_hash = attrs.get(source)
         if Voucher.objects.filter(crm_hash=crm_hash).exists():
-            raise ValidationError('CRM Hash já existente!')
+            raise ValidationError(e.get_erro_message(e.ERRO_VOUCHER_JA_EXISTENTE))
         return attrs
 
 
@@ -53,7 +54,7 @@ class ReemissaoSerializer(ModelSerializer):
             crm_hash = attrs['crm_hash']
             voucher = Voucher.objects.get(crm_hash=crm_hash)
         except (Voucher.DoesNotExist, KeyError):
-            raise ValidationError('Voucher não encontrado')
+            raise ValidationError(e.get_erro_message(e.ERRO_VOUCHER_NAO_EXISTENTE))
 
         if voucher.ssl_product == Voucher.PRODUTO_SMIME:
             #s/mime não tem CSR
@@ -63,7 +64,7 @@ class ReemissaoSerializer(ModelSerializer):
         csr_antiga = Emissao.objects.get(pk=self.object.pk).emission_csr
 
         if not compare_csr(decode_csr(csr_nova), decode_csr(csr_antiga)):
-            raise ValidationError('Único campo que pode mudar na CSR de reemissão é a chave pública')
+            raise ValidationError(e.get_erro_message(e.ERRO_CSR_REEMISSAO_COM_CSR_DIFERENTE))
 
         return attrs
 
@@ -134,7 +135,8 @@ class EmissaoNv0Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin):
         fields = ('crm_hash', 'emission_url', 'emission_assignment_letter')
 
 
-class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
+                           ValidateEmissaoValidacaoEmail, ValidateEmissaoAssignmentLetter):
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr')
 
@@ -144,7 +146,8 @@ class EmissaoNv1Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
                   'emission_server_type', 'emission_csr', 'emission_assignment_letter')
 
 
-class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
+class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
+                           ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter):
     REQUIRED_FIELDS = ('emission_dcv_emails', 'emission_publickey_sendto', 'emission_server_type', 'emission_csr',)
 
     class Meta:
@@ -153,7 +156,10 @@ class EmissaoNv2Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
                   'emission_publickey_sendto', 'emission_server_type', 'emission_assignment_letter')
 
 
-class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail):
+class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
+                           ValidateEmissaoValidacaoEmail, ValidateEmissaoAssignmentLetter,
+                           ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA,
+                           ValidateEmissaoEVCR):
     validacao_manual = True
 
     REQUIRED_FIELDS = ('emission_url', 'emission_dcv_emails', 'emission_publickey_sendto',
@@ -168,7 +174,9 @@ class EmissaoNv3Serializer(EmissaoModelSerializer, ValidateEmissaoUrlMixin, Vali
 
 
 class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin,
-                           ValidateEmissaoValidacaoEmailMultiplo):
+                           ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter,
+                           ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA,
+                           ValidateEmissaoEVCR):
     REQUIRED_FIELDS = ('emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_csr', 'emission_articles_of_incorporation',
                        'emission_address_proof', 'emission_ccsa', 'emission_evcr')
@@ -181,15 +189,15 @@ class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin,
                   'emission_ccsa', 'emission_evcr')
 
 
-class EmissaoNvASerializer(EmissaoModelSerializer):
+class EmissaoNvASerializer(EmissaoModelSerializer, ValidateEmissaoAddressProof, ValidateEmissaoPhoneProof):
     REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof')
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_csr', 'emission_address_proof', 'emission_phone_proof')
+        fields = ('crm_hash', 'emission_csr', 'emission_phone_proof')
 
 
-class EmissaoNvBSerializer(EmissaoModelSerializer):
+class EmissaoNvBSerializer(EmissaoModelSerializer, ValidateEmissaoID):
     REQUIRED_FIELDS = ('emission_id', 'emission_revoke_password')
 
     class Meta:
