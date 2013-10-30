@@ -14,7 +14,7 @@
         <td>Para pequenas empresas</td>
         <td>Para médias e grandes empresas</td>
         <td>Para grandes empresas ou aplicações críticas</td>
-        <td>Experimente</td>
+        <td>Teste</td>
     </tr>
 </thead>
 <tbody>
@@ -51,7 +51,7 @@
 </tr>
 
 <tr class="all-body-text5 bbs">
-    <td class="tdbls"><b>Emissão Antes do Pagamento</b>*</td>
+    <td class="tdbls"><b>Emissão Antes do Pagamento</b><span data-toggle="tooltip" title="Condição não aplicável às compras pelo site">*</span></td>
     <td class="tdbls sslright"></td>
     <td class="tdbls sslright"></td>
     <td class="tdbls sslright"></td>
@@ -134,7 +134,7 @@
 {# Benefícios abaixo escondidos até clicar em 'mais benefícios' #}
 
 <tr class="all-body-text5 bbs mais_beneficios">
-    <td class="tdbls"><b>Valor do Seguro</b>**</td>
+    <td class="tdbls"><b>Valor do Seguro</b><span data-toggle="tooltip" title="Não se aplica para certificados SAN e MDC">**</span></td>
     <td class="tdblrs tdbrs center">Até US$ 250.000</td>
     <td class="tdbls center">Até US$ 250.000</td>
     <td class="tdbls center">Até US$ 250.000</td>
@@ -351,10 +351,6 @@
 </div>
 
 <div class="clearfix"></div>
-<br/><br/>
-<small>
-* Condição não aplicável às compras pelo site  ** Não se aplica para certificados SAN e MDC
-</small>
 
 </section>
 <div class="site-body-text2 pull-right btn btn-large" style="display:none;">
@@ -362,5 +358,5 @@
 </div>
 
 <div style='margin-top: 40px;'>
-    <a href="{% url 'page' 'certificado-digital' %}">Conheça a linha completa de certificados digitais</a>
+    <a class="pull-right" href="{% url 'page' 'certificado-digital' %}">Conheça a linha completa de certificados digitais</a>
 </div>
