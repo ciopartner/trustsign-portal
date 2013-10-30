@@ -63,10 +63,10 @@ class ValidateEmissaoUrlMixin(object):
         
         if voucher.ssl_product == Voucher.PRODUTO_SSL_WILDCARD:
             if not valor.startswith('*.'):
-                raise self.ValidationError('A URL deve iniciar com "*.". Ex.: *.exemplo.com.br')
+                raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_WILDCARD))
         else:
             if '*' in valor:
-                raise self.ValidationError('A URL não pode conter *.')
+                raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_COM_WILDCARD))
         
         razao_social = get_razao_social_dominio(valor)
         if not razao_social or not comparacao_fuzzy(razao_social, voucher.customer_companyname):
@@ -88,7 +88,7 @@ class ValidateEmissaoCSRMixin(object):
         try:
             voucher = self.get_voucher()
         except Voucher.DoesNotExist:
-            raise self.ValidationError('Voucher não encontrado')
+            raise self.ValidationError(get_erro_message(e.ERRO_VOUCHER_NAO_EXISTENTE))
 
         if voucher.ssl_product == Voucher.PRODUTO_SMIME:
             return valor
@@ -97,11 +97,11 @@ class ValidateEmissaoCSRMixin(object):
         url = fields.get('emission_url', '')
 
         if not csr['ok']:
-            raise self.ValidationError('CSR Inválida')
+            raise self.ValidationError(get_erro_message(e.ERRO_CSR_INVALIDA_IMPOSSIVEL_DECODIFICAR))
 
         if csr.get('CN') != url and voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC,
                                                                 Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
-            raise self.ValidationError('O campo domínio deve ser idêntico ao campo CN da CSR')
+            raise self.ValidationError(get_erro_message(e.ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO))
 
         # if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
         #     raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
@@ -126,7 +126,7 @@ class ValidateEmissaoCSRMixin(object):
 
         if voucher.ssl_product not in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_EV_MDC):
             if dominios:
-                raise self.ValidationError('A CSR deste produto deve conter o domínio no campo CN e o DNS deve estar vazio')
+                raise self.ValidationError(get_erro_message(e.ERRO_CSR_INVALIDA_DNS_PREECHIDO))
 
             if voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE) and \
                     comparacao_fuzzy(csr.get('CN'), voucher.customer_companyname):
@@ -157,7 +157,7 @@ class ValidateEmissaoCSRMixin(object):
 
             for dominio in dominios:
                 if '*' in dominio:
-                    raise self.ValidationError('Nenhum domínio pode conter *.')
+                    raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_COM_WILDCARD))
 
                 final_dominio = '.%s' % dominio.split('.')[-1]
                 if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
@@ -170,17 +170,6 @@ class ValidateEmissaoCSRMixin(object):
                     else:
                         if self.validacao:
                             self.validacao_carta_cessao_necessaria = True
-            #TODO: TBD > Chamar o serviço da COMODO para validar o e-mail de confirmação enviado pela API
-        return valor
-
-
-@insere_metodos_validacao('emission_primary_dn')
-class ValidateEmissaoPrimaryDN(object):
-
-    def _valida_emission_primary_dn(self, valor, fields):
-        csr = self.get_csr_decoded(fields['emission_csr'])
-        if not valor.strip() in csr.get('dnsNames'):
-            raise self.ValidationError('O domínio primário não consta na lista de domínios na CSR')
         return valor
 
 
@@ -190,7 +179,7 @@ class ValidateEmissaoValidacaoEmail(object):
     def _valida_emission_dcv_emails(self, valor, fields):
         emails = get_emails_validacao(fields['emission_url'])
         if valor not in emails:
-            raise self.ValidationError('E-mail de validação inválido')
+            raise self.ValidationError(get_erro_message(e.ERRO_EMAIL_VALIDACAO_INVALIDO))
         return valor
 
 @insere_metodos_validacao('emission_dcv_emails')
@@ -222,5 +211,62 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
                 continue
 
             if email not in get_emails_validacao_padrao(dominio):
-                raise self.ValidationError('E-mail de validação inválido: %s para o domínio %s' % (email, dominio))
+                raise self.ValidationError(get_erro_message(e.ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO) % (email, dominio))
         return valor
+
+
+class ValidateFormatoArquivos(object):
+
+    def _valida_arquivo(self, arquivo):
+        if arquivo and arquivo.name[-4] not in ('.pdf', '.zip'):
+            raise self.ValidationError(get_erro_message(e.ERRO_FORMATO_ARQUIVOS_INVALIDOS))
+        return arquivo
+
+
+@insere_metodos_validacao('emission_assignment_letter')
+class ValidateEmissaoAssignmentLetter(ValidateFormatoArquivos):
+
+    def _valida_emission_assignment_letter(self, valor, fields):
+        return self._valida_arquivo(valor)
+
+
+@insere_metodos_validacao('emission_articles_of_incorporation')
+class ValidateEmissaoArticlesOfIncorporation(ValidateFormatoArquivos):
+
+    def _valida_emission_articles_of_incorporation(self, valor, fields):
+        return self._valida_arquivo(valor)
+
+
+@insere_metodos_validacao('emission_address_proof')
+class ValidateEmissaoAddressProof(ValidateFormatoArquivos):
+
+    def _valida_emission_address_proof(self, valor, fields):
+        return self._valida_arquivo(valor)
+
+
+@insere_metodos_validacao('emission_ccsa')
+class ValidateEmissaoCCSA(ValidateFormatoArquivos):
+
+    def _valida_emission_ccsa(self, valor, fields):
+        return self._valida_arquivo(valor)
+
+
+@insere_metodos_validacao('emission_evcr')
+class ValidateEmissaoEVCR(ValidateFormatoArquivos):
+
+    def _valida_emission_evcr(self, valor, fields):
+        return self._valida_arquivo(valor)
+
+
+@insere_metodos_validacao('emission_phone_proof')
+class ValidateEmissaoPhoneProof(ValidateFormatoArquivos):
+
+    def _valida_emission_phone_proof(self, valor, fields):
+        return self._valida_arquivo(valor)
+
+
+@insere_metodos_validacao('emission_id')
+class ValidateEmissaoID(ValidateFormatoArquivos):
+
+    def _valida_emission_id(self, valor, fields):
+        return self._valida_arquivo(valor)

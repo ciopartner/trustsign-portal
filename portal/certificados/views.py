@@ -144,10 +144,10 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         #log.info('request FILES: %s ' % unicode(request.FILES))
 
         if voucher.order_canceled_date is not None:
-            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_JA_CANCELADO))
 
         if not voucher.customer_registration_status:
-            return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_SITUACAO_CADASTRAL_INATIVA))
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
@@ -221,13 +221,13 @@ class ReemissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
         try:
             emissao = Emissao.objects.get(crm_hash=request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
-            return erro_rest(('---', u'Emissão não encontrada'))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_EMISSAO_NAO_EXISTENTE))
 
         if emissao.voucher.order_canceled_date is not None:
-            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_JA_CANCELADO))
 
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
-            return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_EMISSAO_STATUS_INVALIDO))
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES, instance=emissao)
 
@@ -258,26 +258,16 @@ class RevogacaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
     serializer_class = RevogacaoSerializer
 
     def post(self, request, *args, **kwargs):
-        emission_url = self.request.DATA.get('emission_url')
-
-        # Comentado por ALR - campo nao mais obrigatorio para revogar
-        #if not emission_url:
-        #    return erro_rest(('---', 'emission_url: campo obrigatório'))  # TODO corrigir codigo erro
-
         try:
             emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Emissao.DoesNotExist:
-            return erro_rest(('---', u'Emissão não encontrada'))  # TODO corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_EMISSAO_NAO_EXISTENTE))
 
         if emissao.voucher.order_canceled_date is not None:
-            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
-
-        # Comentado por ALR - campo nao mais obrigatorio para revogar
-        #if emissao.emission_url != emission_url:
-        #    return erro_rest(('---', 'emission_url: valor não bate com a url de emissão'))  # TODO corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_JA_CANCELADO))
 
         if emissao.emission_status not in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO):
-            return erro_rest(('---', u'Emissão com status: %s' % emissao.get_emission_status_display()))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_EMISSAO_STATUS_INVALIDO))
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
@@ -313,7 +303,7 @@ class EmailWhoisAPIView(GenericAPIView):
         try:
             url = request.GET.get('emission_url')
             if not url:
-                return erro_rest(('---', 'Campo emission_url requerido'))  # TODO: codigo erro
+                return erro_rest(erros.get_erro_tuple(erros.ERRO_CAMPO_DOMINIO_OBRIGATORIO))
             return Response({
                 'email_list': comodo.get_emails_validacao_whois(url)
             })
@@ -353,14 +343,13 @@ class VoucherCancelAPIView(GenericAPIView):
         try:
             voucher = Voucher.objects.select_related('emissao').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Voucher.DoesNotExist:
-            return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
-                              erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_NAO_ENCONTRADO))
 
         if voucher.order_canceled_date is not None:
-            return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_JA_CANCELADO))
 
         if voucher.customer_cnpj != self.request.DATA.get('customer_cnpj'):
-            return erro_rest(('---', 'CNPJ informado não bateu com o do voucher'))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_CNPJ_DIFERENTE))
 
         try:
             emissao = voucher.emissao
@@ -387,7 +376,7 @@ class VoucherAPIView(RetrieveModelMixin, GenericAPIView):
         try:
             self.object = self.get_object()
         except Voucher.DoesNotExist:
-            return erro_rest(('---', 'Voucher não encontrado'))  # TODO: corrigir codigo erro
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_NAO_EXISTENTE))
         serializer = self.get_serializer(self.object)
         data = serializer.data
         voucher = self.object
@@ -453,10 +442,10 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
             voucher = serializer.get_voucher()
 
             if voucher.order_canceled_date is not None:
-                return erro_rest(('---', 'Voucher cancelado'))  # TODO: corrigir codigo erro
+                return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_JA_CANCELADO))
 
             if not voucher.customer_registration_status:
-                return erro_rest(('---', 'Situação Cadastral do CNPJ é inativa'))  # TODO: corrigir código/msg erro
+                return erro_rest(erros.get_erro_tuple(erros.ERRO_SITUACAO_CADASTRAL_INATIVA))
 
             if serializer.is_valid():
                 required_fields = self.required_fields
@@ -494,8 +483,7 @@ class ValidaUrlCSRAPIView(EmissaoAPIView):
 
                 return Response(data, status=status.HTTP_200_OK)
         except Voucher.DoesNotExist:
-            return erro_rest((erros.ERRO_VOUCHER_NAO_ENCONTRADO,
-                              erros.get_erro_message(erros.ERRO_VOUCHER_NAO_ENCONTRADO)))
+            return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_NAO_ENCONTRADO))
 
         return self.error_response(serializer)
 
