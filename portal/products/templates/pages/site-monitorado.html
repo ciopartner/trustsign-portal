@@ -147,7 +147,7 @@
                     </tr>
 
                     <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Possibilidade de contratação adicional DDoS nível de rede*</b></td>
+                        <td class="tdbls"><b>Possibilidade de contratação adicional DDoS nível de rede <span title="Contratação não disponível online. Para contratação de DDoS, entre em contato com a equipe comercial para que seja verificada em qual plano se adequa à sua necessidade." data-toggle="tooltip">*</span></b></td>
                         <td class="tdbls sslwrong"></td>
                         <td class="tdbls sslright"></td>
                         <td class="tdbls sslright tdbrs"></td>
@@ -224,7 +224,7 @@
                     </tr>
 
                     <tr class="all-body-text5  price">
-                        <td class=""></td>
+                        <td style="background: #FFF"></td>
                         <td class="tdbls bbs">
                             <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.basic.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.basic.termsubscription_1m.price_tpl.1 }}</sub></h2>
@@ -235,7 +235,7 @@
                             <h2 class="textac price-color">R$ {{ precos.pro.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.pro.termsubscription_1m.price_tpl.1 }}</sub></h2>
                             <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="pro" data-comprar-produto="site-monitorado" href="">Comprar</a>
                         </td>
-                        <td class="tdbls bbs tdbrs" valign="middle">
+                        <td class="tdbls bbs tdbrs" style="vertical-align: middle">
                             <h2 class="textac price-color">Consulte nossa equipe</h2>
                         </td>
                     </tr>
@@ -244,18 +244,11 @@
             </table>
 
             <div class="clearfix"></div>
-            <br/><br/>
-            <small>
-            * Contratação não disponível online. Para contratação de DDoS, entre em contato com a equipe comercial para que seja verificada em qual plano se adequa à sua necessidade.
-            </small>
+
 
             </section>
             <div class="site-body-text2 pull-right btn btn-large" style="display:none;">
                 <a href='#'>ENTENDA NOSSO PROCESSO DE COMPRA ON-LINE</a>
-            </div>
-
-            <div style='margin-top: 40px;'>
-                <a href="{% url 'page' 'certificado-digital' %}">Conheça a linha completa de certificados digitais</a>
             </div>
 
         {# Inclusão da área 'você sabia' #}
@@ -270,10 +263,12 @@
                             <section class="row-fluid">
 
                                 <aside class="span4">
-                                    <div class="as-text1 tblrp10" style="margin-bottom: -10px">VOCÊ SABIA</div>
-                                    <div class="all-body-text5 tblrp10">74% das empresas acreditam que a segurança na Web é tão crítica quanto outros problemas de segurança enfrentados por suas empresas.<br>
+                                    <div class="as-text1 tblrp10" style="margin-bottom: -10px">VOCÊ SABIA?</div>
+                                    <div class="all-body-text5 tblrp10">
+                                        74% das empresas acreditam que a segurança na Web é tão crítica quanto outros problemas de segurança enfrentados por suas empresas.
+                                        <br/><br/>
+                                        <span style="font-size: 10px">Fonte: Ponemon Institute</span>
                                     </div>
-                                    <div class="site-body-text2 tblrp10 "><a href='{{ url_portal }}site-monitorado/voce-sabia/'>Entenda</a></div>
                                 </aside>
 
                                 <aside class="span4">
