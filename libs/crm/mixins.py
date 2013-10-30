@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.utils.timezone import now
 from oscar.core.loading import get_class
 import crm
+from ecommerce.website.utils import formata_cnpj
+
 Bankcard = get_class('payment.models', 'Bankcard')
 
 
@@ -27,7 +29,10 @@ class OscarToCRMMixin(object):
         profile = order.user.get_profile()
         cliente = crm.ClienteCRM()
 
-        cliente.cnpj = profile.cliente_cnpj
+        if not profile.cliente_cnpj:
+            raise crm.CRMClient.CRMError('Cliente sem CNPJ cadastrado')
+
+        cliente.cnpj = formata_cnpj(profile.cliente_cnpj) if len(profile.cliente_cnpj) < 18 else profile.cliente_cnpj
         cliente.razaosocial = profile.cliente_razaosocial
         cliente.logradouro = profile.cliente_logradouro
         cliente.numero = profile.cliente_numero
