@@ -137,6 +137,7 @@ class ProdutoCRM(object):
 class ContatoCRM(object):
 
     def __init__(self):
+        self.account_id = None
         self.nome = None
         self.sobrenome = None
         self.telefone = None
@@ -325,7 +326,8 @@ class CRMClient(object):
         """
         Cria um contact no CRM
         """
-        response = self.set_entry('Products', {
+        response = self.set_entry('Contacts', {
+            'account_id': contato.account_id,
             'first_name': contato.nome,
             'last_name': contato.sobrenome,
             'phone_work': contato.telefone,
@@ -349,6 +351,7 @@ class CRMClient(object):
                 account_id = account_id[0]['id']
             else:
                 account_id = self.set_entry_account(cliente)
+                contato.account_id = account_id
                 contact_id = self.set_entry_contact(contato)
 
             oportunidade.account_id = account_id
