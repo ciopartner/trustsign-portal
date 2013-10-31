@@ -1,12 +1,7 @@
 {% extends 'certificados/wizard_base.html' %}
 {% load static %}
 
-{% block extra_css %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
-{% endblock %}
-
-{% block one_row %}
+{% block content %}
     <div class="escolha-voucher fix-row-margin">
         <h2>Certificados pendentes de envio à Comodo</h2>
         <table class="table">

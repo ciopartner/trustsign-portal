@@ -1,6 +1,6 @@
 from django.forms import ChoiceField
 from oscar.apps.basket.forms import AddToBasketForm
-from portal.certificados.models import Voucher
+from ecommerce.certificados.models import Voucher
 
 
 class AdicionarProdutoForm(AddToBasketForm):

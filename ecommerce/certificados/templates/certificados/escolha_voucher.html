@@ -1,12 +1,7 @@
 {% extends 'certificados/wizard_base.html' %}
 {% load static %}
 
-{% block extra_css %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
-{% endblock %}
-
-{% block one_row %}
+{% block content %}
     <div class="fix-row-margin escolha-voucher">
         <h2>Escolha o produto disponível e a ação desejada</h2>
         {% if vouchers %}

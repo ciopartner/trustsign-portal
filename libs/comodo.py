@@ -5,7 +5,7 @@ import logging
 from django.conf import settings
 import requests
 
-from portal.certificados.models import Voucher
+from ecommerce.certificados.models import Voucher
 from portal.suporte.utils import url_parse, get_emails_dominio
 
 
