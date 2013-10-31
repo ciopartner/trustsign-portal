@@ -43,7 +43,7 @@ class Product(Page):
         """
         Update the URL slug if settings.UPDATE_SLUG is True.
         """
-        if getattr(settings, 'UPDATE_SLUG', False):
+        if getattr(settings, 'UPDATE_SLUG', False) and not self.slug:
             self.slug = self.get_slug()
         super(Product, self).save(*args, **kwargs)
 
