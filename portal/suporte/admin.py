@@ -35,7 +35,8 @@ class TaggedItemForm(ModelForm):
 
     def save(self, commit=True):
         item = super(TaggedItemForm, self).save(commit=commit)
-        if commit:
+
+        def save_m2m():
             tags = self.cleaned_data['tags_field']
 
             item.tags.exclude(tag__in=tags).delete()
@@ -43,6 +44,11 @@ class TaggedItemForm(ModelForm):
             for tag in tags:
                 if not item.tags.filter(tag=tag).exists():
                     item.tags.create(tag=tag)
+
+        if not commit:
+            self.save_m2m = save_m2m
+        else:
+            save_m2m()
 
         return item
 
