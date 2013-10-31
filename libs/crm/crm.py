@@ -130,8 +130,9 @@ class ProdutoCRM(object):
         self.account_id = None
         self.opportunity_id = None
         self.codigo = None
-        self.preco_venda = None,
-        self.quantidade = None,
+        self.preco_unitario = None
+        self.preco_total = None
+        self.quantidade = None
 
 
 class ContatoCRM(object):
@@ -161,6 +162,10 @@ class CRMClient(object):
         """
         response = None
 
+        if settings.DEBUG:
+            log.info('\n\nMetodo: {}'.format(method))
+            log.info('Request ao Sugar: {}'.format(rest_data))
+
         if not self.session_id and method != 'login':
             raise self.CRMError('Desconectado')
 
@@ -178,6 +183,9 @@ class CRMClient(object):
             log.exception('Ocorreu um erro na chamada do crm: %s' % response.text if response is not None else '')
             raise self.CRMError('Ocorreu um erro na chamada do metodo %s na CRM, verifique o log' % method)
 
+        if settings.DEBUG:
+            log.info('Response: {}'.format(resposta))
+
         return resposta
 
     def login(self, canal="Portal"):
@@ -192,6 +200,7 @@ class CRMClient(object):
             canal
         ])
         if 'id' not in response_data:
+            log.warning('User: {}, Password: ***'.format(settings.CRM_USERNAME))
             log.warning('Erro durante a chamada do metodo login do crm: %s' % response_data)
             raise self.CRMError('Erro durante a chamada do método login do crm')
         self.session_id = response_data['id']
@@ -315,8 +324,9 @@ class CRMClient(object):
         response = self.set_entry('Products', {
             'account_id': produto.account_id,
             'opportunities_id': produto.opportunity_id,
-            'vendor_part_num': produto.codigo,
-            'discount_price': produto.preco_venda,
+            'product_template_id': produto.codigo,
+            'discount_price': produto.preco_unitario,
+            'discount_amount': produto.preco_total,
             'quantity': produto.quantidade,
         })
 

@@ -197,7 +197,6 @@ h3 {
 	color: #aaa;
 	font-size:80%;
 	line-height:100%;
-	padding-left:10px;
 	font-weight:normal;
 }
 
@@ -1871,8 +1870,9 @@ div.ferramentas select{
     border: 0;
 }
 
-.pergunta {
-    text-align: center;
+.resposta h2{
+    margin-top: 50px;
+    color: rgb(0, 82, 149);
 }
 
 .perguntas li a:hover,
@@ -1990,7 +1990,9 @@ h3.title{
 .manual h3{
     font-weight: bold;
 }
-
+#product-price{
+    margin-top: -21px;
+}
 
 #product-price .nav-tabs{
     margin-right: 0;
@@ -2001,34 +2003,36 @@ h3.title{
     margin-top: 40px;
 }
 
-#product-price .nav-tabs .active a{
-    background: #F0F0F0;
-}
+
 
 #product-price .nav-tabs a{
 	font-size: 120%;
+    color: #666;
 }
 
-#product-price .tab-content{
+#product-price .nav-tabs .active a{
     background: #F0F0F0;
+    border-radius: 0;
+    color: rgb(0, 85, 128);
+
+}
+
+
+#product-price .tab-content{
+    background: #FFF;
+    border-radius: 0;
     min-height: 118px;
     border: 1px solid #ddd;
     box-sizing: border-box;
-    width: 473px;
+    width: 539px;
     float: right;
     overflow: inherit;
     -moz-box-sizing: border-box;
-    -webkit-border-radius: 3px;
-       -moz-border-radius: 3px;
-        -ms-border-radius: 3px;
-         -o-border-radius: 3px;
-            border-radius: 3px;
 }
 
 #product-price .tabbable{
-    width: 572px;
+    width: 638px;
     float: right;
-    margin-right: -9px;
 }
 
 #product-price .box-price{
@@ -2040,13 +2044,14 @@ h3.title{
     position: relative;
     text-align: center;
     border-right: 1px solid #dddddd;
+    background: #FFF;
 }
 
 
 
-#product-price .box-price:nth-child(2n+2){
-    background: #F7F7F7;
-}
+/*#product-price .box-price:nth-child(2n+2){*/
+    /*background: #F7F7F7;*/
+/*}*/
 
 #product-price .box-price:last-child{
     border-right: 0;
@@ -2056,13 +2061,12 @@ h3.title{
 #product-price .box-price .btn{
     position: absolute;
     bottom: 4px;
-    width: 80px;
-    height: 24px;
-    line-height: 22px;
-    margin-left: -51px;
+    width: 96px;
+    height: 16px;
+    line-height: 16px;
+    margin-left: -60px;
     left: 50%;
-    font-size: 110%;
-    top: 124px;
+    top: 60;
 }
 
 #product-price .box-price small{
@@ -2080,7 +2084,7 @@ h3.title{
     font-weight: bold;
 }
 #product-price .box-price h3{
-    margin-top: 36px;
+    margin-top: 23px;
 }
 
 #comprar-message{

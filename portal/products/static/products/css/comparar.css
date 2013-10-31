@@ -141,11 +141,16 @@ aside.videoas2 > ul > li{
 table.ssltab .subtitle, table.ssltab .subtitle td{
     background: #F5F5F5;
     color: #999;
-    font-weight: bold;
     text-align: center;
     vertical-align: middle;
     line-height: 1.2;
     border-right: 1px solid #DDD;
+}
+
+table.ssltab .subtitle td{
+    background: #888;
+    border-right: 1px solid #FFF;
+    color: #FFF;
 }
 
 table.ssltab > thead > tr > th{
@@ -158,6 +163,7 @@ table.ssltab > thead > tr > th{
     padding-top:15px;
 	padding-bottom:15px;
     width: 140px;
+    border-right: 1px solid #FFF;
 }
 
 table.ssltab .sslsubtitle td{
@@ -400,6 +406,7 @@ tbody > tr:nth-child(even){
 
 .sslcolor aside .all-body-text5{
     min-height: 70px;
+    text-align: justify;
 }
 
 .minidrop{
