@@ -43,15 +43,10 @@
                                         <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
                                         <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>
                                         <li><a href="{{ voucher.get_sealcode_url }}">HTML Selo</a></li>
-                                        <li><a href="{{ voucher.get_publickey_url }}">Chave Pública</a></li>
+                                        <li><a href="{{ voucher.get_publickey_url }}">Certificado</a></li>
                                     </ul>
                                 </div>
 
-
-    {#                            <a class="btn btn-primary" href="{{ voucher.get_reemissao_url }}">Reemitir</a>#}
-    {#                            <a class="btn btn-danger" href="{{ voucher.get_revogacao_url }}">Revogar</a>#}
-    {#                            <a href="#">HTML Selo</a>  {# TODO: arrumar url html selo #}
-    {#                            <a href="#">Chave Pública</a> {# TODO: arrumar url public key #}
                             {% endif %}
                         {% endwith %}
                         </td>

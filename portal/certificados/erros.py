@@ -61,6 +61,7 @@ ERRO_DOMINIO_COM_WILDCARD = -139
 ERRO_CSR_INVALIDA_DNS_PREECHIDO = -140
 ERRO_EMAIL_VALIDACAO_INVALIDO = -141
 ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO = -142
+ERRO_REVOGACAO_VALIDACAO_DOMINIO = -143
 
 
 
@@ -128,6 +129,7 @@ ERROS = {
     ERRO_CSR_INVALIDA_DNS_PREECHIDO: 'A CSR deste produto deve ter o campo DNS vazio',
     ERRO_EMAIL_VALIDACAO_INVALIDO: 'E-mail de validação inválido',
     ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO: 'E-mail de validação inválido: %s para o domínio %s',
+    ERRO_REVOGACAO_VALIDACAO_DOMINIO: 'Por questões de segurança, confirme o domínio do certificado que você deseja revogar!',
 }
 
 ERROS_CODIGO = {v: k for k, v in ERROS.iteritems()}
