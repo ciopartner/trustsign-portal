@@ -5,7 +5,7 @@ import os
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from portal.certificados.models import Emissao, Voucher
+from ecommerce.certificados.models import Emissao, Voucher
 from ecommerce.certificados.tests import CAMPOS_GET_VOUCHER_DATA, CSR_MDC
 
 
