@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <form action="" method="POST" class="emissao" enctype="multipart/form-data">
+    <form action="" method="POST" class="emissao row" enctype="multipart/form-data">
 
         <div class="span6">
             {% block coluna-esquerda %}
@@ -22,7 +22,7 @@
         </div>
 
         {% block botoes %}
-            <input type="submit" value="Enviar" class="btn btn-orange pull-right lm5" />
+            <input type="submit" value="Enviar" class="btn btn-primary pull-right lm5" />
 
             <input type="button" value="Voltar" class="btn pull-right" onclick="history.back()"/>
         {% endblock %}

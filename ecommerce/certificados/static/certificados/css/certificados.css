@@ -11,7 +11,8 @@
     text-align: right;
 }
 */
-.emissao input[type=text]{
+.emissao input[type=text],
+.emissao textarea{
     width: 270px;
 }
 
