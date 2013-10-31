@@ -5,7 +5,7 @@
 {% block one_row %}
 
 {% editable page.richtextpage.content %}
-<div class="fix-row-margin">
+<div class="fix-row-margin justified">
     {{ page.richtextpage.content|richtext_filter|safe }}
 </div>
 {% endeditable %}

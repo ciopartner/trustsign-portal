@@ -399,6 +399,7 @@ tbody > tr:nth-child(even){
 
 .sslcolor aside .all-body-text5{
     min-height: 70px;
+    text-align: justify;
 }
 
 .minidrop{
