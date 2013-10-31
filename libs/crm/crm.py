@@ -9,6 +9,10 @@ import re
 log = getLogger('libs.crm')
 
 
+def escape(valor):
+    return re.sub(r'([\'\"\\])', r'\\\1', valor)
+
+
 class ClienteCRM(object):
 
     TIPOS_NEGOCIO = (
@@ -222,7 +226,7 @@ class CRMClient(object):
         response_data = self.call_crm('get_entry_list', [
             self.session_id,
             'Accounts',
-            'accounts_cstm.corporate_tax_registry_c = \'%s\'' % re.escape(cnpj),
+            'accounts_cstm.corporate_tax_registry_c = \'%s\'' % escape(cnpj),
             '',
             0,
             ['id', 'name'],
@@ -243,7 +247,7 @@ class CRMClient(object):
         response_data = self.call_crm('get_entry_list', [
             self.session_id,
             'Contacts',
-            'contacts.first_name = \'%s\' AND contacts.last_name = \'%s\'' % (re.escape(nome), re.escape(sobrenome)),
+            'contacts.first_name = \'%s\' AND contacts.last_name = \'%s\'' % (escape(nome), escape(sobrenome)),
             '',
             0,
             ['id'],
