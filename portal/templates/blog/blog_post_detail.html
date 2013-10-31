@@ -69,15 +69,16 @@
 
     </div>
 
-        Foto: <img src="{{ user.get_profile.foto.url }}" alt="" class="pull-left" />
-
 
         {% editable blog_post.user.get_profile.bio %}
-            <div class="shortbio tm30>
+            <div class="shortbio tm30" style="background: #f5f5f5; padding: 20px;">
+                <img src="{{ blog_post.user.get_profile.foto.url }}" alt="" class="pull-left" style="margin-right: 20px;" />
                 <h4>Sobre o autor:</h4>
                 <p>{{ blog_post.user.get_profile.bio|linebreaksbr }}</p>
             </div>
         {% endeditable %}
+
+        <div class="clearfix"></div>
 
 
         {% block blog_post_detail_keywords %}
