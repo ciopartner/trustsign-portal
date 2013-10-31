@@ -69,8 +69,11 @@
 
     </div>
 
+        Foto: <img src="{{ user.get_profile.foto.url }}" alt="" class="pull-left" />
+
+
         {% editable blog_post.user.get_profile.bio %}
-            <div class="shortbio">
+            <div class="shortbio tm30>
                 <h4>Sobre o autor:</h4>
                 <p>{{ blog_post.user.get_profile.bio|linebreaksbr }}</p>
             </div>
