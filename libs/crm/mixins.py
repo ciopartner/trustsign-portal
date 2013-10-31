@@ -86,11 +86,12 @@ class OscarToCRMMixin(object):
         oportunidade.valor_total = str(source.amount_allocated)
 
         #TODO: colocar if quando implementar os outros meios de pagamento
-        oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_CREDITO
-        oportunidade.pag_credito_titular = bankcard.name
-        oportunidade.pag_credito_vencimento = bankcard.expiry_month()
-        oportunidade.pag_credito_bandeira = bankcard.card_type
-        oportunidade.pag_credito_ultimos_digitos = bankcard.number[-4:]
+        if bankcard:
+            oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_CREDITO
+            oportunidade.pag_credito_titular = bankcard.name
+            oportunidade.pag_credito_vencimento = bankcard.expiry_month()
+            oportunidade.pag_credito_bandeira = bankcard.card_type
+            oportunidade.pag_credito_ultimos_digitos = bankcard.number[-4:]
 
         return oportunidade
 
@@ -105,7 +106,8 @@ class OscarToCRMMixin(object):
             produto = crm.ProdutoCRM()
             produto.codigo = line.product.attr.crm_code
             produto.quantidade = line.quantity
-            produto.preco_venda = str(line.line_price_incl_tax)
+            produto.preco_unitario = str(line.unit_price_incl_tax)
+            produto.preco_total = str(line.line_price_excl_tax)
             produtos.append(produto)
 
         return produtos
