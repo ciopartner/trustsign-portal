@@ -147,6 +147,12 @@ table.ssltab .subtitle, table.ssltab .subtitle td{
     border-right: 1px solid #DDD;
 }
 
+table.ssltab .subtitle td{
+    background: #888;
+    border-right: 1px solid #FFF;
+    color: #FFF;
+}
+
 table.ssltab > thead > tr > th{
 	font-family:Tahoma, Geneva, sans-serif;
 	color:#FFF;
@@ -157,6 +163,7 @@ table.ssltab > thead > tr > th{
     padding-top:15px;
 	padding-bottom:15px;
     width: 140px;
+    border-right: 1px solid #FFF;
 }
 
 table.ssltab .sslsubtitle td{
