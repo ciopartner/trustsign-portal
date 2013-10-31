@@ -104,7 +104,7 @@ class OscarToCRMMixin(object):
 
         for line in order.lines.all():
             produto = crm.ProdutoCRM()
-            produto.codigo = line.product.attr.crm_code
+            produto.codigo = line.partner_sku
             produto.quantidade = line.quantity
             produto.preco_unitario = str(line.unit_price_incl_tax)
             produto.preco_total = str(line.line_price_excl_tax)
