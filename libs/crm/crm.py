@@ -87,6 +87,7 @@ class OportunidadeCRM(object):
 
     def __init__(self):
         self.account_id = None
+        self.contact_id = None
         self.numero_pedido = None
         self.data_pedido = None
         self.valor_total = None
@@ -234,6 +235,27 @@ class CRMClient(object):
             raise self.CRMError('Erro durante a chamada do método get_entry_list do crm')
         return response_data
 
+    def get_contact(self, account_id, nome, sobrenome):
+        """
+        Retorna dados de uma Account
+        """
+        response_data = self.call_crm('get_entry_list', [
+            self.session_id,
+            'Contacts',
+            'contacts.first_name = \'%s\' and contacts.last_name = \'%s\'' % (nome, sobrenome),
+            '',
+            0,
+            ['id'],
+            [],
+            1,
+            0,
+            False
+        ])
+        if 'number' in response_data:
+            log.warning('Erro durante a chamada do metodo get_entry_list do crm: %s' % response_data)
+            raise self.CRMError('Erro durante a chamada do método get_entry_list do crm')
+        return response_data
+
     def set_entry(self, tabela, campos):
         """
         Método genérico para inserir dados no CRM
@@ -324,7 +346,7 @@ class CRMClient(object):
         response = self.set_entry('Products', {
             'account_id': produto.account_id,
             'opportunities_id': produto.opportunity_id,
-            'product_template_id': produto.codigo,
+            'vendor_part_num': produto.codigo,
             'discount_price': produto.preco_unitario,
             'discount_amount': produto.preco_total,
             'quantity': produto.quantidade,
@@ -349,6 +371,24 @@ class CRMClient(object):
 
         return response['id']
 
+    def get_or_create_account(self, cliente):
+        account_id = self.get_account(cliente.cnpj)['entry_list']
+
+        if account_id:
+            return account_id[0]['id']
+        return self.set_entry_account(cliente)
+
+    def get_or_create_contact(self, contato):
+
+        contact_id = self.get_contact(contato.account_id, contato.nome, contato.sobrenome)
+
+        if contact_id:
+            contact_id = contact_id[0]['id']
+        else:
+            contact_id = self.set_entry_contact(contato)
+
+        return contact_id
+
     def postar_compra(self, cliente, contato, oportunidade, produtos):
         """
         Executa todo o processo de compra, criando account, opportunity e products quando necessário
@@ -356,15 +396,13 @@ class CRMClient(object):
         log.info('Iniciando a postagem do pedido #%s' % oportunidade.numero_pedido)
         self.login()
         try:
-            account_id = self.get_account(cliente.cnpj)['entry_list']
-            if account_id:
-                account_id = account_id[0]['id']
-            else:
-                account_id = self.set_entry_account(cliente)
-                contato.account_id = account_id
-                contact_id = self.set_entry_contact(contato)
+            account_id = self.get_or_create_account(cliente)
+
+            contato.account_id = account_id
+            contact_id = self.get_or_create_contact(contato)
 
             oportunidade.account_id = account_id
+            oportunidade.countact_id = contact_id
             opportunity_id = self.set_entry_opportunities(oportunidade)
 
             for produto in produtos:

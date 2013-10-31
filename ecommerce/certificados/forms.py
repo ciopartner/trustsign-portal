@@ -5,11 +5,11 @@ import re
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form, TextInput
 from django.core.exceptions import ValidationError
 from passwords.fields import PasswordField
+from ecommerce.certificados import erros as e
 
-from libs.comodo import get_emails_validacao_padrao, get_emails_validacao
-from portal.certificados import erros as e
-from portal.certificados.models import Emissao, Voucher, Revogacao
-from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
+from libs.comodo import get_emails_validacao
+from ecommerce.certificados.models import Emissao, Voucher, Revogacao
+from ecommerce.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
     ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR, ValidateEmissaoPhoneProof, ValidateEmissaoID
 from portal.suporte.utils import decode_csr, verifica_razaosocial_dominio, compare_csr, comparacao_fuzzy
 
@@ -142,7 +142,8 @@ class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     def __init__(self, **kwargs):
         super(EmissaoNv1Tela2Form, self).__init__(**kwargs)
-        choices_email = [(email, email) for email in get_emails_validacao_padrao(self.initial['emission_url'])]
+        choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
+        print choices_email
         self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 
@@ -189,7 +190,7 @@ class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     def __init__(self, **kwargs):
         super(EmissaoNv3Tela2Form, self).__init__(**kwargs)
-        choices_email = [(email, email) for email in get_emails_validacao_padrao(self.initial['emission_url'])]
+        choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
         self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 
@@ -273,11 +274,9 @@ class RevogacaoForm(ModelForm):
     def clean_emission_url(self):
         emission_url = self.cleaned_data.get('emission_url')
 
-        # TODO: checar essa validação no futuro
-        # Comentada a validação abaixo por acordo com a TQI
-        #emissao = self.voucher.emissao
-        #if emission_url != emissao.emission_url:
-        #    raise ValidationError('Valor não bate com a url de emissão')
+        emissao = self.voucher.emissao
+        if emission_url != emissao.emission_url:
+            raise ValidationError(e.get_erro_message(e.ERRO_REVOGACAO_VALIDACAO_DOMINIO))
 
         return emission_url
 
@@ -294,6 +293,6 @@ class ReemissaoForm(EmissaoModelForm, EmissaoCallbackForm):
         csr_antiga = Emissao.objects.get(pk=self.instance.pk).emission_csr
 
         if not compare_csr(decode_csr(csr_nova), decode_csr(csr_antiga)):
-            raise ValidationError('Único campo que pode mudar na CSR de reemissão é a chave pública')
+            raise ValidationError(e.get_erro_message(e.ERRO_CSR_REEMISSAO_CHAVE_PUBLICA))
 
         return csr_nova

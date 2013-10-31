@@ -1,7 +1,7 @@
 # coding=utf-8
 from copy import copy
 from django.core.management import BaseCommand
-from portal.certificados.models import Voucher
+from ecommerce.certificados.models import Voucher
 
 
 class Command(BaseCommand):

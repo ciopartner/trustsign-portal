@@ -15,12 +15,12 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
+from ecommerce.certificados import erros
 from libs import comodo
-from portal.certificados.authentication import UserPasswordAuthentication
-from portal.certificados.forms import RevogacaoForm, ReemissaoForm
-from portal.certificados import erros
-from portal.certificados.models import Emissao, Voucher, Revogacao
-from portal.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
+from ecommerce.certificados.authentication import UserPasswordAuthentication
+from ecommerce.certificados.forms import RevogacaoForm, ReemissaoForm
+from ecommerce.certificados.models import Emissao, Voucher, Revogacao
+from ecommerce.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1Serializer, EmissaoNv2Serializer, \
     EmissaoNv3Serializer, EmissaoNv4Serializer, EmissaoNvASerializer, VoucherSerializer, RevogacaoSerializer, \
     ReemissaoSerializer, EmissaoValidaSerializer, EmissaoNvBSerializer
 from django.conf import settings

@@ -24,7 +24,7 @@ class EnviaComodoJob(CronJobBase):
 
     def do(self):
         from libs import comodo
-        from portal.certificados.models import Emissao, Revogacao
+        from ecommerce.certificados.models import Emissao, Revogacao
 
         status_envio_pendente = (
             Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
@@ -79,10 +79,10 @@ class CheckEmailJob(CronJobBase):
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
 
     def do(self):
-        from portal.certificados.models import Emissao
+        from ecommerce.certificados.models import Emissao
 
         #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
-        m = imaplib.IMAP4_SSL("imap.gmail.com")
+        m = imaplib.IMAP4_SSL(settings.CERTIFICADOS_IMAP_SERVER)
         m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
         m.select("[Gmail]/Todos os e-mails")
         resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')

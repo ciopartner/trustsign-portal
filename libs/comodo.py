@@ -38,17 +38,27 @@ class ComodoError(Exception):
         super(ComodoError, self).__init__(*args, **kwargs)
 
 
-def get_emails_validacao_padrao(dominio):
+def limpa_dominio(dominio):
+
+    if dominio.startswith('www.'):
+        dominio = dominio[4:]
     if dominio.startswith('*.'):
         dominio = dominio[2:]
+
     parts = dominio.split('.')
-    dominio = '.'.join(parts[-3:] if len(parts[-1]) == 2 else parts[-2:])
+
+    return '.'.join(parts[-3:] if len(parts[-1]) == 2 else parts[-2:])
+
+
+def get_emails_validacao_padrao(dominio):
+    dominio = limpa_dominio(dominio)
+
     return [e % dominio for e in ('admin@%s', 'administrator@%s', 'hostmaster@%s', 'postmaster@%s', 'webmaster@%s')]
 
 
 def get_emails_validacao_whois(dominio):
-    if dominio.startswith('www.'):
-        dominio = dominio[4:]
+    dominio = limpa_dominio(dominio)
+
     if dominio.endswith('.br'):
         return get_emails_dominio(dominio)
 
@@ -57,6 +67,7 @@ def get_emails_validacao_whois(dominio):
         'loginPassword': settings.COMODO_LOGIN_PASSWORD,
         'domainName': dominio
     })
+
     return [r[12:] for r in response.text.splitlines()
             if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
 
