@@ -305,7 +305,7 @@ class CRMClient(object):
             'assigned_user_id': settings.CRM_OPORTUNITY_ASSIGNED_USER_ID,
             'manufacturers_id': settings.CRM_OPORTUNITY_MANUFACTURERS_ID,
             'name': 'Oportunidade via e-commerce',
-            'ecommerce_id_c': oportunidade.numero_pedido, TODO: não existe ainda no CRM
+            'ecommerce_id_c': oportunidade.numero_pedido,  # TODO: não existe ainda no CRM
             'date_closed': oportunidade.data_pedido,
             'amount': oportunidade.valor_total,
             'tipo_pagamento_c': oportunidade.tipo_pagamento,
