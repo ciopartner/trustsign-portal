@@ -1,0 +1,56 @@
+{% extends 'certificados/wizard_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
+{% endblock %}
+
+{% block one_row %}
+    <div class="escolha-voucher fix-row-margin">
+        <h2>Certificados pendentes de envio à Comodo</h2>
+        <table class="table">
+            <tr>
+                <th>Cliente</th>
+                <th>Produto</th>
+                <th>Linha</th>
+                <th>Validade</th>
+                <th>Data Solicitação</th>
+                <th>Tempo de Espera</th>
+                <th>Ação Solicitada</th>
+                <th>Ação</th>
+            </tr>
+            {% for voucher in vouchers %}
+                {% with emissao=voucher.emissao %}
+                <tr>
+                    <td>{{ voucher.customer_companyname }}</td>
+                    <td>{{ voucher.get_ssl_product_display }}</td>
+                    <td>{{ voucher.get_ssl_line_display }}</td>
+                    <td>{{ voucher.get_ssl_term_display }}</td>
+                    <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.order_date|date:"d/m/Y" }}</td>
+                    <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.tempo_em_espera }}h</td>
+                    <td>
+                        {% if emissao.emission_status == emissao.STATUS_EMISSAO_APROVACAO_PENDENTE %}
+                            Emissão
+                        {% elif emissao.emission_status == emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE %}
+                            Revogação
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ voucher.get_revisao_url }}">Revisar</a>{% if emissao.emission_reviewer %},
+                       <a href="{{ voucher.get_aprova_voucher_pendente_url }}">Aprovar</a>{% endif %}
+                    {% if emissao.emission_error_message %}
+                        <span class="badge badge-important" title="{{ emissao.emission_error_message }}" rel="tooltip">!</span>
+                    {% endif %}
+
+                    </td>
+
+                </tr>
+                {% endwith %}
+
+            {% empty %}
+                <tr><td colspan="8">Nenhum voucher pendente no momento</td></tr>
+            {% endfor %}
+        </table>
+    <i class="pull-right">Para aprovar é necessário revisar antes.</i>
+    </div>
+{% endblock %}

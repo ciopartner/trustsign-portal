@@ -1,0 +1,40 @@
+{% extends 'certificados/wizard_base.html' %}
+
+{% block coluna-esquerda %}
+    {% include 'certificados/includes/dados_cliente.html' %}
+    {% include 'certificados/includes/form_callback_confirmacao.html' %}
+{% endblock %}
+
+{% block coluna-direita %}
+    <h3>Dados Específicos do Produto Escolhido</h3>
+
+    {{ form.non_field_errors }}
+
+    <table>
+        {% include 'certificados/includes/dados_produto.html' %}
+        <tr><th>Domínio:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_url }}"/></td></tr>
+        {% if emissao.emission_assignment_letter %}
+            <tr><th>Carta de cessão:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_assignment_letter.name }}"/></td></tr>
+        {% endif %}
+        <tr><th>Tipo Servidor:</th><td><input type="text" disabled="disabled" value="{{ emissao.get_emission_server_type_display }}"/></td></tr>
+        <tr><th>e-mail p/ envio cert.:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_publickey_sendto }}"/></td></tr>
+        <tr id="lista-fqdns">
+            <th>Lista de {% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN's{% else %}domínios{% endif %}:</th>
+            <td>
+                <table class="fqdn-table">
+                    <tr>
+                        <th>{% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
+                        <th>E-mail</th>
+                    </tr>
+                    {% for dominio, email in emissao.get_dominios_x_emails %}
+                        <tr id="fqdn-{{ forloop.counter0 }}">
+                            <td>{{ dominio }}</td>
+                            <td><span>{{ email }}</span></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </td></tr>
+    </table>
+
+    {{ form.confirma }}
+{% endblock %}

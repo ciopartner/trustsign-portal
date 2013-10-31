@@ -1,0 +1,25 @@
+{% extends 'certificados/wizard_base.html' %}
+
+{% block coluna-esquerda %}
+    {% include 'certificados/includes/dados_cliente.html' %}
+    {% include 'certificados/includes/form_callback_confirmacao.html' %}
+{% endblock %}
+
+{% block coluna-direita %}
+    <h2>Dados Específicos do Produto Escolhido</h2>
+
+    {{ form.non_field_errors }}
+
+    <table>
+        {% include 'certificados/includes/dados_produto.html' %}
+        <tr><th>Domínio:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_url }}"/></td></tr>
+        {% if emissao.emission_assignment_letter %}
+            <tr><th>Carta de cessão:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_assignment_letter.name }}"/></td></tr>
+        {% endif %}
+        <tr><th>e-mail Validação:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_dcv_emails }}"/></td></tr>
+        <tr><th>e-mail p/ envio cert.:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_publickey_sendto }}"/></td></tr>
+        <tr><th>Tipo Servidor:</th><td><input type="text" disabled="disabled" value="{{ emissao.get_emission_server_type_display }}"/></td></tr>
+    </table>
+
+    {{ form.confirma }}
+{% endblock %}

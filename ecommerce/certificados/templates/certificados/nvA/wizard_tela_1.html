@@ -1,0 +1,30 @@
+{% extends 'certificados/wizard_base.html' %}
+
+{% block coluna-esquerda %}
+    {% include 'certificados/includes/dados_cliente.html' %}
+
+    <h2>Dados de Callback</h2>
+
+    <table>
+        <tr><th>Tratamento:</th><td>{{ form.callback_tratamento }} {{ form.callback_tratamento.errors }}</td></tr>
+        <tr class="nome"><th>Nome:</th><td>{{ form.callback_nome }} {{ form.callback_sobrenome }} {{ form.callback_nome.errors }}{{ form.callback_sobrenome.errors }}</td></tr>
+        <tr><th>e-mail Corporativo:</th><td>{{ form.callback_email }} {{ form.callback_email.errors }}</td></tr>
+        <tr><th>Telefone fixo:</th><td>{{ form.callback_telefone }} {{ form.callback_telefone.errors }}</td></tr>
+        <tr><th>Observação:</th><td>{{ form.callback_observacao }} {{ form.callback_observacao.errors }}</td></tr>
+    </table>
+{% endblock %}
+
+{% block coluna-direita %}
+    <h2>Dados Específicos do Produto Escolhido</h2>
+    {{ form.non_field_errors }}
+
+    <table>
+        {% include 'certificados/includes/dados_produto.html' %}
+        <tr><th>Compr. Telefone:</th><td>{{ form.emission_phone_proof }} {{ form.emission_phone_proof.errors }}</td></tr>
+        <tr><th>CSR:</th><td>{{ form.emission_csr }} {{ form.emission_csr.errors }}</td></tr>
+    </table>
+
+
+
+
+{% endblock %}

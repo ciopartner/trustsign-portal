@@ -1,0 +1,42 @@
+{% extends 'certificados/wizard_base.html' %}
+
+{% block coluna-esquerda %}
+    {% include 'certificados/includes/dados_cliente.html' %}
+
+    <h2>Dados de Callback</h2>
+    <table>
+        <tr class="nome"><th>Nome:</th><td>{{ form.callback_nome }} {{ form.callback_sobrenome }} {{ form.callback_nome.errors }}{{ form.callback_sobrenome.errors }}</td></tr>
+        <tr><th>E-mail:</th><td>{{ form.callback_email }} {{ form.callback_email.errors }}</td></tr>
+        <tr><th>Telefone fixo:</th><td>{{ form.callback_telefone }} {{ form.callback_telefone.errors }}</td></tr>
+        <tr><th>Observação:</th><td>{{ form.callback_observacao }} {{ form.callback_observacao.errors }}</td></tr>
+    </table>
+{% endblock %}
+
+{% block coluna-direita %}
+    <h2>Dados Específicos do Produto Escolhido</h2>
+
+    {{ form.non_field_errors }}
+
+    <table>
+        {% include 'certificados/includes/dados_produto.html' %}
+        <tr><th>e-mail p/ envio cert.</th><td>{{ form.emission_publickey_sendto}} {{ form.emission_publickey_sendto.errors }}</td></tr>
+
+        {% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}
+            <tr><th>FQDN Principal</th><td><input type="text" value="{{ voucher.emissao.emission_url }}" disabled="disabled"/></td></tr>
+            <tr><th>FQDN's Adicionais</th><td><textarea disabled="disabled">{{ voucher.emissao.get_lista_dominios_linha }}</textarea></td></tr>
+            <tr><th>Nova CSR</th><td>{{ form.emission_csr }} {{ form.emission_csr.errors }}<br>
+            Esta CSR deve conter todos os FQDN's especificados no campo acima</td></tr>
+        {% elif voucher.ssl_product == voucher.PRODUTO_MDC or voucher.ssl_product == voucher.PRODUTO_EV_MDC %}
+            <tr><th>Domínio Principal</th><td><input type="text" value="{{ voucher.emissao.emission_url }}" disabled="disabled"/></td></tr>
+            <tr><th>Domínios Adicionais</th><td><textarea disabled="disabled">{{ voucher.emissao.get_lista_dominios_linha }}</textarea></td></tr>
+            <tr><th>Nova CSR</th><td>{{ form.emission_csr }} {{ form.emission_csr.errors }}<br>
+            Esta CSR deve conter todos os domínios especificados no campo acima</td></tr>
+        {% else %}
+            <tr><th>Domínio</th><td><input type="text" value="{{ voucher.emissao.emission_url }}" disabled="disabled"/></td></tr>
+            <tr><th>Nova CSR</th><td>{{ form.emission_csr }} {{ form.emission_csr.errors }}</td></tr>
+        {% endif %}
+
+
+        <tr><th>Data expiração</th><td><input type="text" value="{{ voucher.ssl_valid_to|date:"d/m/Y" }}" disabled="disabled"/></td></tr>
+    </table>
+{% endblock %}

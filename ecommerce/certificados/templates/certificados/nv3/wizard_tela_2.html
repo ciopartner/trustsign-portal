@@ -1,0 +1,29 @@
+{% extends 'certificados/wizard_base.html' %}
+
+{% block coluna-esquerda %}
+    {% include 'certificados/includes/dados_cliente.html' %}
+    {% include 'certificados/includes/form_callback.html' %}
+{% endblock %}
+
+{% block coluna-direita %}
+    <h2>Dados Específicos do Produto Escolhido</h2>
+
+    {{ form.non_field_errors }}
+
+    <table>
+        {% include 'certificados/includes/dados_produto.html' %}
+        {% if form.precisa_carta_cessao %}
+            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}</td></tr>
+        {% endif %}
+        <tr><th>E-mail para validação do domínio:</th><td>{{ form.emission_dcv_emails }} {{ form.emission_dcv_emails.errors }} <a href="">Não tenho acesso a nenhum dos e-mails acima</a></td></tr>
+        <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
+        <tr><th>Tipo do Servidor:</th><td>{{ form.emission_server_type }} {{ form.emission_server_type.errors }}</td></tr>
+
+        <tr><th>Constrato Social:</th><td>{{ form.emission_articles_of_incorporation }} {{ form.emission_articles_of_incorporation.errors }}</td></tr>
+        <tr><th>Comprovante de Endereço:</th><td>{{ form.emission_address_proof }} {{ form.emission_address_proof.errors }}</td></tr>
+        <tr><th>CCSA:</th><td>{{ form.emission_ccsa }} {{ form.emission_ccsa.errors }}</td></tr>
+        <tr><th>EVCR:</th><td>{{ form.emission_evcr }} {{ form.emission_evcr.errors }}</td></tr>
+    </table>
+    {{ form.emission_url }}
+    {{ form.emission_csr }}
+{% endblock %}

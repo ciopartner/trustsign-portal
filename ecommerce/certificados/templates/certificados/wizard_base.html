@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'certificados/css/certificados.css' %}"/>
+{% endblock %}
+
+{% block one_row %}
+    <form action="" method="POST" class="emissao" enctype="multipart/form-data">
+
+        <div class="span6">
+            {% block coluna-esquerda %}
+
+            {% endblock %}
+        </div>
+
+        <div class="span6">
+            {% block coluna-direita %}
+
+            {% endblock %}
+        </div>
+
+        {% block botoes %}
+            <input type="submit" value="Enviar" class="btn btn-orange pull-right lm5" />
+
+            <input type="button" value="Voltar" class="btn pull-right" onclick="history.back()"/>
+        {% endblock %}
+
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        {{ form.crm_hash }}
+
+    </form>
+
+{% endblock %}
+
+
+{% block headers %}
+    <header>
+        {% include 'includes/1-header-logo.html' %}
+        {% include 'includes/2-header-atendimento.html' %}
+        {% include 'includes/3-header-produtos.html' %}
+    </header>
+{% endblock %}
