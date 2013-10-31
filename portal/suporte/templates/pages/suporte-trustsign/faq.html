@@ -47,7 +47,7 @@
                                     </div>
                                     <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content">
                                         <div class="accordion-inner">
-                                            {{question.answer|linebreaksbr}}
+                                            {{ question.answer|safe }}
                                         </div>
                                     </div>
                                 </div>
