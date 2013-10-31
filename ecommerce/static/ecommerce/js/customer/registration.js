@@ -12,6 +12,7 @@ function RegistrationForm($obj, settings){
     var $cnpj = settings.cnpj || $obj.find('#id_registration-cnpj');
     var $phone = settings.phone || $obj.find("#id_registration-telefone_principal");
     var $email = settings.email || $obj.find("#id_registration-email");
+    var $emailNfe = settings.emailNfe || $obj.find("#id_registration-email_nfe");
 
     /**
      * Oculta campos desativos
@@ -91,6 +92,16 @@ function RegistrationForm($obj, settings){
         }
     }
 
+    self.configNfe = function(){
+        if(
+            $emailNfe.val() == "" ||
+            $email.val().substr(0,$email.val().length -1) == $emailNfe.val() ||
+            $emailNfe.val().substr(0,$emailNfe.val().length -1) == $email.val()
+          ){
+            $emailNfe.val($email.val());
+        }
+    }
+
     // --------------------------------------------
     // Constructor
     // --------------------------------------------
@@ -103,13 +114,15 @@ function RegistrationForm($obj, settings){
         completed: self.validadePhone
     });
 
-    console.log($email);
-    $email.on('keydown keyup blur', self.validateEmail);
-
+    $email.on('keydown keyup blur', function(){
+        self.validateEmail();
+        self.configNfe();
+    });
 
     self.hideDisableFields();
 
 }
+
 
 $(function(){
     new RegistrationForm($("#register_form"));
