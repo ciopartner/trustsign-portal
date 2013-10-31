@@ -192,6 +192,11 @@ h3 {
     margin-bottom: 0;
 }
 
+
+header{
+    height: 260px;
+}
+
 .h1-complement {
 	font-family:Tahoma, Geneva, sans-serif;
 	color: #aaa;
