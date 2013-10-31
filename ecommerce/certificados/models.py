@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from datetime import timedelta
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField, permalink
+from hashlib import md5
 #import knu
 from django.utils import timezone
 
@@ -107,6 +109,7 @@ class Voucher(Model):
     ssl_publickey = TextField(blank=True, null=True)
     ssl_revoked_date = DateTimeField(blank=True, null=True)
     ssl_domains_qty = IntegerField(blank=True, default=0)
+    # TODO: apagar o campo abaixo
     ssl_seal_html = TextField(blank=True, default='')
     ssl_key_size = IntegerField(blank=True, null=True)
     ssl_username = CharField(max_length=32, blank=True, null=True)
@@ -195,6 +198,32 @@ class Voucher(Model):
     @permalink
     def get_publickey_url(self):
         return 'chave-publica', (), {'crm_hash': self.crm_hash}
+
+    @property
+    def get_seal_html(self):
+        try:
+            emissao = self.emissao
+        except Emissao.DoesNotExist:
+            return ''
+
+        seals_server_url = settings.SEALS_SERVER_URL
+        url_validacao = '%s?url=%s' % (seals_server_url, emissao.emission_url)
+
+        if self.ssl_line == Voucher.LINHA_BASIC:
+            tipo = 'basic'
+        elif self.ssl_line == Voucher.LINHA_PRO:
+            tipo = 'pro'
+        elif self.ssl_line == Voucher.LINHA_PRIME:
+            tipo = 'prime'
+        else:
+            return ''
+
+        hash_url = md5(emissao.emission_url).hexdigest()
+        url_imagem_selo = '%s/static/selos-clientes/selo-%s-%s-pt.png' % (seals_server_url, tipo, hash_url)
+
+        return '''<a href="%s" target="_blank">
+<img name="trustseal" alt="Site Autêntico" src="%s/static/" border="0" title="Clique para Validar" />
+</a>''' % (url_validacao, url_imagem_selo)
 
 
 class Emissao(Model):

@@ -34,7 +34,7 @@
             <tr><th>Domínio</th><td><input type="text" value="{{ voucher.emissao.emission_url }}" disabled="disabled"/></td></tr>
         {% endif %}
 
-        <tr><th>HTML do selo:</th><td><textarea disabled="disabled">{{ voucher.ssl_seal_html|safe }}</textarea></td></tr>
+        <tr><th>HTML do selo:</th><td><textarea disabled="disabled">{{ voucher.get_seal_html|safe }}</textarea></td></tr>
     </table>
 {% endblock %}
 

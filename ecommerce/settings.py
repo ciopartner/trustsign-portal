@@ -230,6 +230,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
 }
 
+SEALS_SERVER_URL = 'http://newseals.trustsign.com.br'
+
 COMODO_LOGIN_NAME = '<mudar no local_settings.py>'
 COMODO_LOGIN_PASSWORD = '<mudar no local_settings.py>'
 COMODO_ENVIAR_COMO_TESTE = True  # enviar as requisições como teste?
