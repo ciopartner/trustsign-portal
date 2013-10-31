@@ -84,7 +84,7 @@ class CheckEmailJob(CronJobBase):
         #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
         m = imaplib.IMAP4_SSL(settings.CERTIFICADOS_IMAP_SERVER)
         m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
-        m.select("[Gmail]/Todos os e-mails")
+        m.select("INBOX")
         resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')
         items = items[0].split()
 
