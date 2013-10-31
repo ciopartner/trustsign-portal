@@ -33,6 +33,7 @@ urlpatterns = patterns(
     url('^portal/$', direct_to_template, {'template': 'index.html'}, name='home'),
 
     url('^portal/accounts/login/$', login),
+    (r'^portal/accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/portal/'}),
 
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE
     # ---------------------------------------------

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from functools import partial
-from django.conf import settings
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
