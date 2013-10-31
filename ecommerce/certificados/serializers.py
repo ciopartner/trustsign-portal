@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 from rest_framework.fields import DateTimeField
 from rest_framework.serializers import ModelSerializer, ValidationError
-from portal.certificados import erros as e
 from portal.certificados.models import Emissao, Voucher, Revogacao
 from portal.certificados.validations import ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin, \
     ValidateEmissaoValidacaoEmail, ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR, ValidateEmissaoPhoneProof, ValidateEmissaoID
+from ecommerce.certificados import erros as e
 from portal.suporte.utils import decode_csr, compare_csr, verifica_razaosocial_dominio, comparacao_fuzzy
 
 

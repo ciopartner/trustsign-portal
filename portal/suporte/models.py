@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.contenttypes.generic import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import ForeignKey, FileField, CharField, Model, TextField, PositiveIntegerField
+from mezzanine.core.fields import RichTextField
 from mezzanine.pages.models import Page
 
 
@@ -72,7 +73,7 @@ class FAQPage(Page):
 
 class Question(Model):
     question = TextField()
-    answer = TextField()
+    answer = RichTextField()
     page = ForeignKey(FAQPage, related_name="questions")
     tags = GenericRelation('TaggedItem')
 

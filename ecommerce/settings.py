@@ -160,9 +160,11 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 
     'website',
+    'certificados',
 
     'portal.home',
 
+    'rest_framework',
     'django_cron',
 
     'south',
@@ -224,6 +226,24 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = OSCAR_FROM_EMAIL = 'alessandro.reichert@ciop
 
 USAR_KNU = False  # Usado para retornar um dummy dict em vez de chamar a KNU para desenvolvimento
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
+}
+
+COMODO_LOGIN_NAME = '<mudar no local_settings.py>'
+COMODO_LOGIN_PASSWORD = '<mudar no local_settings.py>'
+COMODO_ENVIAR_COMO_TESTE = True  # enviar as requisições como teste?
+COMODO_API_EMISSAO_URL = 'https://secure.comodo.net/products/!AutoApplySSL'
+COMODO_API_REEMISSAO_URL = 'https://secure.comodo.net/products/!AutoReplaceSSL'
+COMODO_API_REVOGACAO_URL = 'https://secure.comodo.net/products/!AutoRevokeSSL'
+COMODO_API_GET_DCV_EMAILS_URL = 'https://secure.comodo.net/products/!GetDCVEmailAddressList'
+
+
+CERTIFICADOS_IMAP_SERVER = 'imap-mail.outlook.com'
+CERTIFICADOS_EMAIL_USERNAME = '<mudar no local_settings.py>'
+CERTIFICADOS_EMAIL_PASSWORD = '<mudar no local_settings.py>'
+CERTIFICADOS_EMAIL_PATH_ATTACHMENTS = os.path.join(PROJECT_ROOT, 'attachments')
+
 CRM_URL = 'http://dev2.lampadaglobal.com/projects/trustsign/service/v4_1/rest.php'
 CRM_USERNAME = '<mudar no local_settings.py>'
 CRM_PASSWORD_HASH = '<mudar no local_settings.py>'
@@ -232,6 +252,9 @@ CRM_OPORTUNITY_MANUFACTURERS_ID = '<mudar no local_settings.py>'
 
 CRON_CLASSES = [
     'website.crons.EnviaOrdersCRMCronJob',
+
+    'certificados.crons.EnviaComodoJob',
+    'certificados.crons.CheckEmailJob',
 
     # This example cron check last cron jobs results. If they were unsuccessfull 10 times in row, it sends email to user
     'django_cron.cron.FailedRunsNotificationCronJob'

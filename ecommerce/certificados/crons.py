@@ -82,7 +82,7 @@ class CheckEmailJob(CronJobBase):
         from portal.certificados.models import Emissao
 
         #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
-        m = imaplib.IMAP4_SSL("imap.gmail.com")
+        m = imaplib.IMAP4_SSL(settings.CERTIFICADOS_IMAP_SERVER)
         m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
         m.select("[Gmail]/Todos os e-mails")
         resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')

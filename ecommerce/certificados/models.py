@@ -397,5 +397,3 @@ def pedido_consulta_knu(sender, instance, **kwargs):
             instance.cliente_pais = 'BR'
         else:
             raise Exception('Ocorreu um erro ao consultar seu CNPJ: %s' % r.desc_erro)
-
-# pre_save.connect(pedido_consulta_knu, sender=Pedido)

@@ -324,7 +324,7 @@ class CRMClient(object):
         response = self.set_entry('Products', {
             'account_id': produto.account_id,
             'opportunities_id': produto.opportunity_id,
-            'product_template_id': produto.codigo,
+            'vendor_part_num': produto.codigo,
             'discount_price': produto.preco_unitario,
             'discount_amount': produto.preco_total,
             'quantity': produto.quantidade,
