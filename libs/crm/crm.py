@@ -4,6 +4,7 @@ from django.conf import settings
 import requests
 import json
 from logging import getLogger
+import re
 
 log = getLogger('libs.crm')
 
@@ -221,7 +222,7 @@ class CRMClient(object):
         response_data = self.call_crm('get_entry_list', [
             self.session_id,
             'Accounts',
-            'accounts_cstm.corporate_tax_registry_c = \'%s\'' % cnpj,
+            'accounts_cstm.corporate_tax_registry_c = \'%s\'' % re.escape(cnpj),
             '',
             0,
             ['id', 'name'],
@@ -242,7 +243,7 @@ class CRMClient(object):
         response_data = self.call_crm('get_entry_list', [
             self.session_id,
             'Contacts',
-            'contacts.first_name = \'%s\' and contacts.last_name = \'%s\'' % (nome, sobrenome),
+            'contacts.first_name = \'%s\' AND contacts.last_name = \'%s\'' % (re.escape(nome), re.escape(sobrenome)),
             '',
             0,
             ['id'],
@@ -304,7 +305,7 @@ class CRMClient(object):
             'assigned_user_id': settings.CRM_OPORTUNITY_ASSIGNED_USER_ID,
             'manufacturers_id': settings.CRM_OPORTUNITY_MANUFACTURERS_ID,
             'name': 'Oportunidade via e-commerce',
-            #'ecommerce_id_c': oportunidade.numero_pedido, TODO: não existe ainda no CRM
+            'ecommerce_id_c': oportunidade.numero_pedido, TODO: não existe ainda no CRM
             'date_closed': oportunidade.data_pedido,
             'amount': oportunidade.valor_total,
             'tipo_pagamento_c': oportunidade.tipo_pagamento,
