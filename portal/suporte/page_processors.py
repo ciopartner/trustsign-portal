@@ -3,7 +3,7 @@ from StringIO import StringIO
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
 from portal.suporte.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
-from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag
+from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage
 
 
 @processor_for(FAQPage)
@@ -13,6 +13,16 @@ def faq_processor(request, page):
     return {
         'tags': tags,
         'questions': questions
+    }
+
+
+@processor_for(TutorialPage)
+def faq_processor(request, page):
+    tutoriais = page.tutorialpage.tutoriais.prefetch_related('tags__tag').all()
+    tags = Tag.objects.filter(itens__question__in=tutoriais).distinct()
+    return {
+        'tags': tags,
+        'tutoriais': tutoriais
     }
 
 

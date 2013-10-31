@@ -80,3 +80,18 @@ class Question(Model):
 
 class FerramentasPage(Page):
     pass
+
+
+class TutorialPage(Page):
+    class Meta:
+        verbose_name = 'Tutorial Page'
+
+    def __unicode__(self):
+        return self.title
+
+
+class Tutorial(Model):
+    titulo = TextField()
+    texto = RichTextField()
+    page = ForeignKey(TutorialPage, related_name="tutoriais")
+    tags = GenericRelation('TaggedItem')

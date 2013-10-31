@@ -3,7 +3,7 @@ from django.contrib.contenttypes.generic import GenericTabularInline
 from django.forms import ModelForm, ModelMultipleChoiceField
 from mezzanine.pages.admin import PageAdmin
 from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question, FerramentasPage, \
-    TaggedItem, Tag
+    TaggedItem, Tag, TutorialPage, Tutorial
 
 
 class TaggedItemInline(GenericTabularInline):
@@ -26,34 +26,36 @@ class GlossarioPageAdmin(PageAdmin):
     inlines = (ItemAdminInline, TaggedItemInline)
 
 
-class QuestionForm(ModelForm):
+class TaggedItemForm(ModelForm):
     tags_field = ModelMultipleChoiceField(Tag.objects.all(), required=False, label='tags')
+
+    def __init__(self, *args, **kwargs):
+        super(TaggedItemForm, self).__init__(*args, **kwargs)
+        self.fields['tags_field'].initial = [taggeditem.tag for taggeditem in self.instance.tags.all()]
+
+    def save(self, commit=True):
+        item = super(TaggedItemForm, self).save(commit=commit)
+        if commit:
+            tags = self.cleaned_data['tags_field']
+
+            item.tags.exclude(tag__in=tags).delete()
+
+            for tag in tags:
+                if not item.tags.filter(tag=tag).exists():
+                    item.tags.create(tag=tag)
+
+        return item
+
+
+class QuestionForm(TaggedItemForm):
 
     class Meta:
         fields = ['question', 'answer', 'tags_field']
         model = Question
 
-    def __init__(self, *args, **kwargs):
-        super(QuestionForm, self).__init__(*args, **kwargs)
-        self.fields['tags_field'].initial = [taggeditem.tag for taggeditem in self.instance.tags.all()]
-
-    def save(self, commit=True):
-        question = super(QuestionForm, self).save(commit=True)
-
-        tags = self.cleaned_data['tags_field']
-
-        question.tags.exclude(tag__in=tags).delete()
-
-        for tag in tags:
-            if not question.tags.filter(tag=tag).exists():
-                question.tags.create(tag=tag)
-
-        return question
-
 
 class QuestionAdminInline(admin.TabularInline):
     model = Question
-    inlines = (TaggedItemInline, )
     form = QuestionForm
 
 
@@ -61,7 +63,24 @@ class FAQPageAdmin(PageAdmin):
     inlines = [QuestionAdminInline, TaggedItemInline]
 
 
+class TutorialForm(TaggedItemForm):
+
+    class Meta:
+        fields = ['titulo', 'texto', 'tags_field']
+        model = Tutorial
+
+
+class TutorialAdminInline(admin.TabularInline):
+    model = Tutorial
+    form = TutorialForm
+
+
+class TutorialPageAdmin(PageAdmin):
+    inlines = [TutorialAdminInline, TaggedItemInline]
+
+
 admin.site.register(FAQPage, FAQPageAdmin)
+admin.site.register(TutorialPage, TutorialPageAdmin)
 admin.site.register(ManualPage, ManualPageAdmin)
 admin.site.register(GlossarioPage, GlossarioPageAdmin)
 admin.site.register(FerramentasPage, PageAdmin)
