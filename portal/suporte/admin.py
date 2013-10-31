@@ -66,7 +66,7 @@ class QuestionAdminInline(admin.TabularInline):
 
 
 class FAQPageAdmin(PageAdmin):
-    inlines = [QuestionAdminInline, TaggedItemInline]
+    inlines = [QuestionAdminInline]
 
 
 class TutorialForm(TaggedItemForm):
@@ -82,7 +82,7 @@ class TutorialAdminInline(admin.TabularInline):
 
 
 class TutorialPageAdmin(PageAdmin):
-    inlines = [TutorialAdminInline, TaggedItemInline]
+    inlines = [TutorialAdminInline]
 
 
 admin.site.register(FAQPage, FAQPageAdmin)
