@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.forms import CharField, TextInput, BooleanField, ChoiceField
+from django.forms import CharField, TextInput, BooleanField, ChoiceField, EmailField
 from django.utils.translation import ugettext_lazy as _
 from localflavor.br.forms import BRCNPJField
 from oscar.apps.customer.forms import EmailUserCreationForm as CoreEmailUserCreationForm, \
@@ -60,11 +60,13 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
     cliente_tipo_negocio = ChoiceField(label='Tipo do Negócio', choices=TrustSignProfile.TIPO_NEGOCIO_CHOICES)
     cliente_fonte_potencial = ChoiceField(label='Fonte do Potencial', choices=TrustSignProfile.FONTE_POTENCIAL_CHOICES)
 
+    email_nfe = EmailField(label='e-Mail p/ envio da NFe')
+
     class Meta:
         model = User
         fields = ('cnpj', 'razao_social', 'logradouro', 'numero', 'complemento', 'cep', 'bairro', 'cidade', 'uf',
                   'situacao_cadastral', 'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_ecommerce', 'nome',
-                  'sobrenome', 'telefone_principal', 'email',)
+                  'sobrenome', 'telefone_principal', 'email', 'email_nfe')
 
     def clean_cnpj(self):
         cnpj = self.cleaned_data['cnpj']
@@ -124,6 +126,7 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
         profile.callback_nome = data['nome']
         profile.callback_sobrenome = data['sobrenome']
         profile.callback_email_corporativo = user.email
+        profile.email_nfe = data['email_nfe']
         profile.callback_telefone_principal = data['telefone_principal']
 
         profile.save()

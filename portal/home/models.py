@@ -85,6 +85,7 @@ class TrustSignProfile(Model):
     date_of_birth = DateField(blank=True, null=True)
     bio = TextField(blank=True, default='')
     tagline = TextField(blank=True, default='')
+    email_nfe = EmailField(blank=True, default='', verbose_name='e-Mail p/ envio da NFe')
 
     cliente_cnpj = CharField(max_length=32, blank=True, default='')
     cliente_razaosocial = CharField(max_length=128, blank=True, default='')
