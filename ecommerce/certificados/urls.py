@@ -24,7 +24,7 @@ FORMS_NVA = [('tela-1', EmissaoNvATela1Form), ('tela-confirmacao', EmissaoConfir
 FORMS_NVB = [('tela-1', EmissaoNvBTela1Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
 
 
-login_required = partial(login_required, login_url='/%s%s' % ('portal', settings.LOGIN_URL))
+login_required = partial(login_required, login_url='/portal/accounts/login/')
 
 urlpatterns = patterns(
     '',
