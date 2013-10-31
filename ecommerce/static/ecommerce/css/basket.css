@@ -40,6 +40,8 @@
 
 .basket-items h4{
     margin: 0;
+    font-size: 120%;
+    margin-top: 3px;
 }
 .basket-items *,
 .basket-items a:hover{
@@ -54,6 +56,7 @@
 
 #total h4{
     font-size: 150%;
+    color: #333;
 }
 
 #total h3{
@@ -61,4 +64,5 @@
     margin-top: -40px;
     margin-bottom: 20px;
     font-size: 170%;
+    color: #333;
 }
