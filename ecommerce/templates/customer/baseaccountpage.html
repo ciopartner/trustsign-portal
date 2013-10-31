@@ -24,10 +24,10 @@
             </li>
             <li>
                 {% if perms.certificados.do_emission_process %}
-                    <a href="{{ url_portal }}escolha-voucher/">Processo de emissão</a>
+                    <a href="{% url 'escolha-voucher' %}">Processo de emissão</a>
                 {% endif %}
                 {% if perms.certificados.view_pending_emission %}
-                    <a href="{{ url_portal }}vouchers-pendentes/">Pendências de Emissão</a>
+                    <a href="{% url 'voucher-pendentes-lista' %}">Pendências de Emissão</a>
                 {% endif %}
             </li>
 {#            <li{% if active_tab == 'wishlists' %} class="active"{% endif %}>#}

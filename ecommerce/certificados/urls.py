@@ -6,12 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework.urlpatterns import format_suffix_patterns
-from portal.certificados import views
-from portal.certificados.forms import EmissaoNv1Tela1Form, EmissaoNv1Tela2Form, EmissaoNv3Tela1Form, \
+from ecommerce.certificados import views
+from ecommerce.certificados.forms import EmissaoNv1Tela1Form, EmissaoNv1Tela2Form, EmissaoNv3Tela1Form, \
     EmissaoNv3Tela2Form, EmissaoNv2Tela2Form, EmissaoNv2Tela1Form, EmissaoNv4Tela1Form, EmissaoNv4Tela2Form, \
     EmissaoNvATela1Form, EmissaoConfirmacaoForm, EmissaoNvBTela1Form
-from portal.certificados.models import Voucher
-from portal.certificados.views import EmissaoNv1WizardView, EmissaoNv3WizardView, EscolhaVoucherView, \
+from ecommerce.certificados.models import Voucher
+from ecommerce.certificados.views import EmissaoNv1WizardView, EmissaoNv3WizardView, EscolhaVoucherView, \
     EmissaoNv2WizardView, EmissaoNv4WizardView, EmissaoNvAWizardView, EmissaoNvBWizardView, RevogacaoView, \
     ReemissaoView, RevisaoEmissaoNv1WizardView, RevisaoEmissaoNv2WizardView, RevisaoEmissaoNv3WizardView, \
     RevisaoEmissaoNv4WizardView, RevisaoEmissaoNvAWizardView, RevisaoEmissaoNvBWizardView, VouchersPendentesListView, AprovaVoucherPendenteView, CodigoSeloView, ChavePublicaView
@@ -24,7 +24,7 @@ FORMS_NVA = [('tela-1', EmissaoNvATela1Form), ('tela-confirmacao', EmissaoConfir
 FORMS_NVB = [('tela-1', EmissaoNvBTela1Form), ('tela-confirmacao', EmissaoConfirmacaoForm)]
 
 
-login_required = partial(login_required, login_url='/%s%s' % (settings.SITE_PREFIX, settings.LOGIN_URL))
+login_required = partial(login_required, login_url='/%s%s' % ('portal', settings.LOGIN_URL))
 
 urlpatterns = patterns(
     '',

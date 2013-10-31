@@ -8,8 +8,8 @@ from passwords.fields import PasswordField
 from ecommerce.certificados import erros as e
 
 from libs.comodo import get_emails_validacao
-from portal.certificados.models import Emissao, Voucher, Revogacao
-from portal.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
+from ecommerce.certificados.models import Emissao, Voucher, Revogacao
+from ecommerce.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
     ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR, ValidateEmissaoPhoneProof, ValidateEmissaoID
 from portal.suporte.utils import decode_csr, verifica_razaosocial_dominio, compare_csr, comparacao_fuzzy
 
