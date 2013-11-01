@@ -16,6 +16,8 @@ Order = get_class('order.models', 'Order')
 
 
 class VoucherManager(Manager):
+    use_for_related_fields = True
+
     def emitidos(self):
         return self.filter(Q(emissao__emission_status=Emissao.STATUS_EMITIDO) |
                            Q(emissao__emission_status=Emissao.STATUS_REEMITIDO))
