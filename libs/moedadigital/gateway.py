@@ -4,7 +4,6 @@ import requests
 from lxml import etree
 from lxml.etree import tostring
 from lxml.builder import E, ElementMaker
-import suds
 
 class MoedaDigital(object):
     """
