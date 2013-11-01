@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
-    OneToOneField, FileField, BooleanField, IntegerField, permalink
+    OneToOneField, FileField, BooleanField, IntegerField, permalink, Manager, Q
 from hashlib import md5
 from django.utils import timezone
 from oscar.core.loading import get_class
@@ -13,6 +13,15 @@ knu = None
 
 User = get_user_model()
 Order = get_class('order.models', 'Order')
+
+
+class VoucherManager(Manager):
+    def emitidos(self):
+        return self.filter(Q(emissao__emission_status=Emissao.STATUS_EMITIDO) |
+                           Q(emissao__emission_status=Emissao.STATUS_REEMITIDO))
+
+    def revogados(self):
+        return self.filter(emissao__emission_status=Emissao.STATUS_REVOGADO)
 
 
 class Voucher(Model):
@@ -122,6 +131,8 @@ class Voucher(Model):
     order_channel = CharField(max_length=64, choices=ORDERCHANNEL_CHOICES)
     order_canceled_date = DateTimeField(blank=True, null=True)
     order_canceled_reason = TextField(blank=True, null=True)
+
+    objects = VoucherManager()
 
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
