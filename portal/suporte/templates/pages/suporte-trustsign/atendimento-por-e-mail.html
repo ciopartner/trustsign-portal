@@ -3,3 +3,27 @@
 {% block img %}
     <img src="{% static "home/img/atendimento_email.jpeg" %}" class="pull-right" />
 {% endblock %}
+
+{% block extra-js-body %}
+	<script type="text/javascript">
+		$(function(){
+
+			var invalidPhone = "<div class=\"error tm10\" id=\"invalidPhone\"><span class=\"help-block\"><i class=\"icon-exclamation-sign\"></i>Telefone inválido. Apenas telefones fixos.</span></div>";
+
+			function validatePhone($phone){
+		        var val = $phone.val();
+
+		        if(parseInt(val[5]) < 2 || parseInt(val[5]) > 5)
+		            $phone.after(invalidPhone);
+		        else
+		            $("#invalidPhone").remove();
+		    }
+
+			$("#id_field_2").mask("(99) 9999-9999", {
+		        completed : function(){
+		        	validatePhone($("#id_field_2"));
+		        }
+		    });
+		});
+	</script>
+{% endblock %}
