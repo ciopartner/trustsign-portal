@@ -15,7 +15,7 @@ USE_I18N = True
 LANGUAGE_CODE = "pt_BR"
 LANGUAGES = (
     ('pt-br', 'Português'),
-    ('en', 'English'),
+#    ('en', 'English'),
 )
 
 # If you set this to False, Django will not format dates, numbers and
