@@ -3,6 +3,7 @@
 {% load currency_filters %}
 {% load display_tags %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block extra_breadcrumbs %}
     <li>
@@ -13,7 +14,59 @@
 {% endblock %}
 
 {% block tabcontent %}
-    <table class="table table-striped table-bordered">
+
+    <div class="status-progress row-fluid tm50">
+        <div class="span4 status-item">
+
+          <h3>Pedido Realizado</h3>
+          <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
+          <div class="info date">
+            <strong>DATA:</strong>
+            <span>{{ order.date_placed.day }}/{{ order.date_placed.month }}/{{ order.date_placed.year }}</span>
+          </div>
+          <div class="info hour">
+            <strong>HORA:</strong>
+            <span>{{ order.date_placed|time:"H:i" }}</span>
+          </div>
+
+        </div>
+        <div class="span4 status-item">
+
+          <h3>Aprovação de Pagamento</h3>
+          {% if order.status == 'Pago' %}
+            <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
+            <div class="info date">
+                <strong>DATA:</strong>
+                <span>{{ order.date_placed.day }}/{{ order.date_placed.month }}/{{ order.date_placed.year }}</span>
+            </div>
+            <div class="info hour">
+                <strong>HORA:</strong>
+                <span>{{ order.date_placed|time:"H:i" }}</span>
+            </div>
+          {% else %}
+            <img src="{% static 'ecommerce/img/status/progress.png' %}" alt="" class="status-icon" />
+          {% endif %}
+
+        </div>
+        <div class="span4 status-item">
+
+          <h3>Processo de Emissão</h3>
+          {% if order.vouchers.emitidos|length == order.vouchers.all.count %}
+            <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
+          {% else %}
+            <img src="{% static 'ecommerce/img/status/progress.png' %}" alt="" class="status-icon" />
+          {% endif %}
+          <div class="info count">
+              <strong>EMITIDOS: </strong> {{ order.vouchers.emitidos|length }} de {{ order.vouchers.all.count }}
+          </div>
+
+        </div>
+        <div class="span3 status-item">
+
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered tm30">
         <thead>
             <tr>
                 <th>{% trans 'Product' %}</th>
@@ -25,6 +78,7 @@
             </tr>
         </thead>
         <tbody>
+
             {% for line in order.lines.all %}
             <tr>
                 <td>
