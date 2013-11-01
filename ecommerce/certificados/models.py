@@ -6,12 +6,13 @@ from django.contrib.auth import get_user_model
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField, permalink
 from hashlib import md5
-#import knu
 from django.utils import timezone
+from oscar.core.loading import get_class
 
 knu = None
 
 User = get_user_model()
+Order = get_class('order.models', 'Order')
 
 
 class Voucher(Model):
@@ -115,6 +116,7 @@ class Voucher(Model):
     ssl_username = CharField(max_length=32, blank=True, null=True)
     ssl_password = CharField(max_length=128, blank=True, null=True)
 
+    order = ForeignKey(Order, related_name='vouchers', blank=True, null=True)
     order_date = DateTimeField()
     order_item_value = DecimalField(decimal_places=2, max_digits=9)
     order_channel = CharField(max_length=64, choices=ORDERCHANNEL_CHOICES)
