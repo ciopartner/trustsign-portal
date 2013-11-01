@@ -307,16 +307,16 @@ class Emissao(Model):
 
         (STATUS_EMISSAO_APROVACAO_PENDENTE, 'Emissão Pendente de Revisão'),
         (STATUS_EMISSAO_ENVIO_COMODO_PENDENTE, 'Emissão Em Processamento'),
-        (STATUS_EMISSAO_ENVIADO_COMODO, 'Emissão Em Processamento'),
+        (STATUS_EMISSAO_ENVIADO_COMODO, 'Emissão Solicitada'),
         (STATUS_EMITIDO, 'Certificado Emitido'),
 
         (STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE, 'Reemissão Em Processamento'),
-        (STATUS_REEMISSAO_ENVIADO_COMODO, 'Reemissão Em Processamento'),
+        (STATUS_REEMISSAO_ENVIADO_COMODO, 'Reemissão Solicitada'),
         (STATUS_REEMITIDO, 'Certificado Reemitido'),
 
         (STATUS_REVOGACAO_APROVACAO_PENDENTE, 'Revogação Pendente de Revisão'),
         (STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE, 'Revogação Em Processamento'),
-        (STATUS_REVOGACAO_ENVIADO_COMODO, 'Revogação Em Processamento'),
+        (STATUS_REVOGACAO_ENVIADO_COMODO, 'Revogação Solicitada'),
         (STATUS_REVOGADO, 'Certificado Revogado'),
 
         (STATUS_OCORREU_ERRO_COMODO, 'Ocorreu um erro interno'),
