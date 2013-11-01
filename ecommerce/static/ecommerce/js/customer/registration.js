@@ -111,18 +111,19 @@ function RegistrationForm($obj, settings){
     });
 
     $phone.mask("(99) 9999-9999", {
-        completed: self.validadePhone
+         completed: self.validadePhone
     });
 
     $email.on('keydown keyup blur', function(){
-        self.validateEmail();
+
+        // Descomente para validar se o email é corporativo
+        // self.validateEmail();
         self.configNfe();
     });
 
     self.hideDisableFields();
 
 }
-
 
 $(function(){
     new RegistrationForm($("#register_form"));
