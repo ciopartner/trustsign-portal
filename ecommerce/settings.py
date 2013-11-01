@@ -296,6 +296,6 @@ DATABASES = {'default': DEFAULT_DATABASE}
 # ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
-    from local_settings import *
+    from ecommerce.local_settings import *
 except ImportError:
     pass

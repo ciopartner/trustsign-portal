@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from oscar.apps.checkout import app
-
-from ecommerce.apps.checkout import views
+from ecommerce.apps.checkout.moedadigital import views
 
 
 class CheckoutApplication(app.CheckoutApplication):
