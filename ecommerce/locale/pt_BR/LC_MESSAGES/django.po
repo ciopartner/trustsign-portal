@@ -7858,3 +7858,55 @@ msgstr "senha"
 msgid "No e-mails found"
 msgstr "Nenhum email enviado até o momento"
 
+#, python-format
+msgid "Must be more complex (%s)"
+msgstr "A senha escolhida deve atender aos requisitos (%s)"
+
+#, python-format
+msgid "Must be %s characters or more"
+msgstr "Deve ter %s caracteres ou mais"
+
+#, python-format
+msgid "Must be %s characters or less"
+msgstr "Deve ter %s caracteres ou menos"
+
+#, python-format
+msgid "Invalid Length (%s)"
+msgstr "Tamanho inválido (%s)"
+
+#, python-format
+msgid "Must contain %(UPPER)s or more uppercase characters"
+msgstr "Deve conter %(UPPER)s ou mais catacteres maiúsculos"
+
+#, python-format
+msgid "Must contain %(LOWER)s or more lowercase characters"
+msgstr "Deve conter %(LOWER)s ou mais catacteres minúsculos"
+
+#, python-format
+msgid "Must contain %(DIGITS)s or more digits"
+msgstr "Deve conter %(DIGITS)s ou mais dígitos"
+
+#, python-format
+msgid "Must contain %(PUNCTUATION)s or more punctuation character"
+msgstr "Deve conter %(PUNCTUATION)s ou mais caracter de pontuação"
+
+#, python-format
+msgid "Must contain %(NON ASCII)s or more non ascii characters"
+msgstr "Deve conter %(NON ASCII)s ou mais caracteres que não sejam ASCII"
+
+#, python-format
+msgid "Must contain %(WORDS)s or more unique words"
+msgstr "Deve conter %(WORDS)s ou mais palavras únicas"
+
+#, python-format
+msgid "Too Similar to [%(haystacks)s]"
+msgstr "Muito Similar ao [%(haystacks)s]"
+
+#, python-format
+msgid "Based on a dictionary word."
+msgstr "Senha baseada em uma palavra do dicionário"
+
+
+#, python-format
+msgid "Based on a common sequence of characters"
+msgstr "Senha baseada em uma sequencia comum de caracters"

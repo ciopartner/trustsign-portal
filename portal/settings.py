@@ -114,7 +114,7 @@ USE_L10N = True
 LANGUAGE_CODE = "pt_BR"
 LANGUAGES = (
     ('pt-br', 'Português'),
-    ('en', 'English'),
+#    ('en', 'English'),
 )
 
 #########
