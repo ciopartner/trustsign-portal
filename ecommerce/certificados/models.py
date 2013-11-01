@@ -41,6 +41,7 @@ class Voucher(Model):
     PRODUTO_SSL_MDC_DOMINIO = 'ssl-mdc-domain'
     PRODUTO_SSL_EV_MDC_DOMINIO = 'ssl-ev-mdc-domain'
     PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
+    PRODUTO_PKI = 'pki'
     PRODUTO_CHOICES = (
         (PRODUTO_SITE_SEGURO, 'Site + Seguro'),
         (PRODUTO_SITE_MONITORADO, 'Site Monitorado'),

@@ -214,5 +214,5 @@ class MoedaDigital(object):
                            encoding='utf-8').replace("\'", "\"")
         #result = requests.post(self.URL+'/'+METHOD, {'PedidoXML': xml_str})
         result = requests.get(self.URL+'/'+METHOD + '?PedidoXML='+xml_str)
-        import ipdb; ipdb.set_trace()
+        #import ipdb; ipdb.set_trace()
         return result

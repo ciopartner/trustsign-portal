@@ -2,8 +2,10 @@
 from django.contrib import messages
 from django import http
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
+from ecommerce.certificados.models import Voucher
 from ecommerce.website.utils import remove_message
 #from libs.cobrebem.facade import Facade
 from libs.moedadigital import facade as moedadigital
@@ -33,12 +35,64 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
     """
 
     preview = False
+    _tem_contrato_ssl = None
+    _tem_contrato_siteseguro = None
+    _tem_contrato_sitemonitorado = None
+    _tem_contrato_pki = None
 
     def get(self, request, *args, **kwargs):
         error_response = self.get_error_response()
         if error_response:
             return error_response
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
+
+    def get_error_response(self):
+        if self.request.method == 'POST':
+            if not self.valida_contrato_ssl() or not self.valida_contrato_sitemonitorado() or \
+                    not self.valida_contrato_siteseguro() or not self.valida_contrato_pki():
+                messages.error(self.request, 'Você precisa aceitar os termos de uso dos produtos selecionados')
+                return HttpResponseRedirect(reverse('checkout:payment-details'))
+        return super(PaymentDetailsView, self).get_error_response()
+
+    def tem_contrato_ssl(self):
+        if self._tem_contrato_ssl is None:
+            codigos = (
+                Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_EV,
+                Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_MDC
+            )
+            self._tem_contrato_ssl = any(line.product.attr.ssl_code.option in codigos
+                                         for line in self.request.basket.all_lines())
+        return self._tem_contrato_ssl
+
+    def tem_contrato_siteseguro(self):
+        if self._tem_contrato_siteseguro is None:
+            self._tem_contrato_siteseguro = any(line.product.attr.ssl_code.option == Voucher.PRODUTO_SITE_SEGURO
+                                                for line in self.request.basket.all_lines())
+        return self._tem_contrato_siteseguro
+
+    def tem_contrato_sitemonitorado(self):
+        if self._tem_contrato_sitemonitorado is None:
+            self._tem_contrato_sitemonitorado = any(line.product.attr.ssl_code.option == Voucher.PRODUTO_SITE_MONITORADO
+                                                    for line in self.request.basket.all_lines())
+        return self._tem_contrato_sitemonitorado
+
+    def tem_contrato_pki(self):
+        if self._tem_contrato_pki is None:
+            self._tem_contrato_pki = any(line.product.attr.ssl_code.option == Voucher.PRODUTO_PKI
+                                         for line in self.request.basket.all_lines())
+        return self._tem_contrato_pki
+
+    def valida_contrato_ssl(self):
+        return not self.tem_contrato_ssl() or self.request.POST.get('aceita_contrato_ssl', '') == '1'
+
+    def valida_contrato_siteseguro(self):
+        return not self.tem_contrato_siteseguro() or self.request.POST.get('aceita_contrato_ss', '') == '1'
+
+    def valida_contrato_sitemonitorado(self):
+        return not self.tem_contrato_sitemonitorado() or self.request.POST.get('aceita_contrato_sm', '') == '1'
+
+    def valida_contrato_pki(self):
+        return not self.tem_contrato_pki() or self.request.POST.get('aceita_contrato_pki', '') == '1'
 
     def get_context_data(self, **kwargs):
         # Add here anything useful to be rendered in templates
@@ -49,6 +103,15 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         facade = moedadigital.Facade()
         payment_div = facade.get_payment_html(request=self.request, amount=ctx['order_total'].incl_tax)
         ctx['payment_div'] = payment_div
+
+        # contratos
+        ctx.update({
+            'tem_contrato_ssl': self.tem_contrato_ssl(),
+            'tem_contrato_siteseguro': self.tem_contrato_siteseguro(),
+            'tem_contrato_sitemonitorado': self.tem_contrato_sitemonitorado(),
+            'tem_contrato_pki': self.tem_contrato_pki(),
+
+        })
         return ctx
 
     def post(self, request, *args, **kwargs):
