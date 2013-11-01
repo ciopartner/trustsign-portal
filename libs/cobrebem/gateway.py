@@ -3,7 +3,7 @@
 import urllib
 import requests
 import xml.etree.ElementTree as ET
-
+from django.conf import settings
 
 class Response(object):
     """
@@ -77,35 +77,35 @@ class Gateway(object):
     APPROVAL = 'APC'
     CAPTURE = 'CAP'
     CANCEL = 'CAN'
+    BOLETO = 'BOL'
+    DEBITO = 'TRX'
 
+    def __init__(self):
+        self._host = settings.COBREBEM_HOST
+        self._path = settings.COBREBEM_USER
 
 class CreditCard(Gateway):
     """
     This class is responsible for the gateway integration.
     """
-
-    def __init__(self, host, path):        
-        self._host = host
-        self._path = path
-
     def _do_request_post(self, method_name, extract_data_type, params):
         url = "/".join([self._host, self._path, method_name])        
         params = urllib.urlencode(params)
-        req = requests.post(url,params=params)        
+        req = requests.post(url, params=params)
         response = Response(req.url, req.text, extract_data_type)
         return response        
 
     def approval(self, **kwargs):
-        approval = {}
-        approval['NumeroDocumento'] = kwargs.get('order_number')
-        approval['QuantidadeParcelas'] = "01"
-        approval['ValorDocumento'] = kwargs.get('amount')
-        approval['NumeroCartao'] = kwargs.get('card_number')
-        approval['MesValidade'] = kwargs.get('expiry_date').strftime("%m")
-        approval['AnoValidade'] = kwargs.get('expiry_date').strftime("%y")
-        approval['CodigoSeguranca'] = kwargs.get('ccv')
-        approval['EnderecoIPComprador'] = kwargs.get('ip')
-        return self._do_request_post(self.APPROVAL, "_extract_data_approval", params=approval)
+        credito_args = {}
+        credito_args['NumeroDocumento'] = kwargs.get('order_number')
+        credito_args['QuantidadeParcelas'] = "01"
+        credito_args['ValorDocumento'] = kwargs.get('amount')
+        credito_args['NumeroCartao'] = kwargs.get('card_number')
+        credito_args['MesValidade'] = kwargs.get('expiry_date').strftime("%m")
+        credito_args['AnoValidade'] = kwargs.get('expiry_date').strftime("%y")
+        credito_args['CodigoSeguranca'] = kwargs.get('ccv')
+        credito_args['EnderecoIPComprador'] = kwargs.get('ip')
+        return self._do_request_post(self.APPROVAL, "_extract_data_approval", params=credito_args)
 
     def capture(self, **kwargs):
         capture={}
@@ -117,4 +117,65 @@ class CreditCard(Gateway):
         cancel['Transacao']  = kwargs['transaction']
         return self._do_request_post(self.CANCEL, "_extract_data_cancel", cancel)
 
-    
+class Boleto(Gateway):
+    """
+    This class is responsible for the integration with Boleto.
+    """
+    def _do_request_post(self, method_name, extract_data_type, params):
+        url = "/".join([self._host, self._path, method_name])
+        params = urllib.urlencode(params)
+        response = requests.get(url, params=params)
+        return response
+
+    def get_boleto(self, **kwargs):
+        boleto_args = {}
+        boleto_args['CCID'] = '341-3777'
+        boleto_args['NumeroDocumento'] = kwargs.get('order_number')
+        boleto_args['ValorDocumento'] = kwargs.get('amount')
+        #boleto_args['DataVencimento'] = 'aaaammdd' usar PrazoVencimento instead of
+        boleto_args['PrazoVencimento'] = '03'
+        boleto_args['VencimentoDiaUtil'] = 'S'
+
+        # Dados do Sacado
+        boleto_args['CNPJCPFSacado'] = '08.886.686/0001-71'.replace('.', '').replace('/', '').replace('-', '')
+        boleto_args['NomeSacado'] = 'Reichert Consultoria em Informática LTDA'
+        boleto_args['EnderecoSacado'] = ''
+        boleto_args['CEPSacado'] = ''
+        boleto_args['CidadeSacado'] = ''
+        boleto_args['EstadoSacado'] = ''
+        boleto_args['EnderecoEmailSacado'] = ''
+
+        # Outros Dados:
+        #boleto_args['PercentualJurosDia'] = '0,03%'
+        #boleto_args['PercentualMulta'] = '2%'
+        boleto_args['InstrucoesCaixa'] = 'Não receber após o vencimento'
+        boleto_args['EspecieDocumento'] = 'DM'
+        boleto_args['Demonstrativo'] = 'Título referente ao pedido {}'.format(kwargs.get('order_number'))
+
+        return self._do_request_post(self.BOLETO, "_extract_data_boleto_args", params=boleto_args)
+
+class DebitCard(Gateway):
+    """
+    This class is responsible for the integration with Boleto.
+    """
+    BB = 'BBRASIL'
+    BANRISUL = 'BANRISUL'
+    BRADESCO = 'BRADESCO'
+    ITAU = 'ITAU'
+    HSBC = 'HSBC'
+
+    def _do_request_post(self, method_name, extract_data_type, params):
+        url = "/".join([self._host, self._path, method_name])
+        params = urllib.urlencode(params)
+        response = requests.post(url, data=params)
+        return response
+
+    def get_page(self, **kwargs):
+        debito_args = {}
+        debito_args['NumeroDocumento'] = kwargs.get('order_number')
+        debito_args['QuantidadeParcelas'] = '01'
+        debito_args['ValorDocumento'] = kwargs.get('amount')
+        debito_args['Bandeira'] = self.BRADESCO
+        debito_args['CNPJCPFSacado'] = '08.886.686/0001-71'.replace('.', '').replace('/', '').replace('-', '')
+
+        return self._do_request_post(self.DEBITO, "_extract_data_debito_args", params=debito_args)
