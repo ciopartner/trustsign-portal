@@ -3,3 +3,11 @@
 {% block img %}
     <img src="{% static "home/img/atendimento_email.jpeg" %}" class="pull-right" />
 {% endblock %}
+
+{% block extra-js-body %}
+	<script type="text/javascript">
+		$(function(){
+			$("#id_field_2").mask("(99) 9999-9999");
+		})
+	</script>
+{% endblock %}
