@@ -16,7 +16,7 @@
 {% block tabcontent %}
 
     <div class="status-progress row-fluid tm50">
-        <div class="span4 status-item">
+        <div class="span3 status-item">
 
           <h3>Pedido Realizado</h3>
           <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
@@ -30,7 +30,7 @@
           </div>
 
         </div>
-        <div class="span4 status-item">
+        <div class="span3 status-item">
 
           <h3>Aprovação de Pagamento</h3>
           {% if order.status == 'Pago' %}
@@ -48,9 +48,9 @@
           {% endif %}
 
         </div>
-        <div class="span4 status-item">
+        <div class="span3 status-item">
 
-          <h3>Processo de Emissão</h3>
+          <h3>Liberado para emissão/liberação</h3>
           {% if order.vouchers.emitidos|length == order.vouchers.all.count %}
             <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
           {% else %}
