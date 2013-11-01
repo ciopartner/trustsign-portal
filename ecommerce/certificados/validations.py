@@ -218,7 +218,7 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
 class ValidateFormatoArquivos(object):
 
     def _valida_arquivo(self, arquivo):
-        if arquivo and arquivo.name[-4] not in ('.pdf', '.zip'):
+        if arquivo and arquivo.name[-4:].lower() not in ('.pdf', '.zip'):
             raise self.ValidationError(get_erro_message(e.ERRO_FORMATO_ARQUIVOS_INVALIDOS))
         return arquivo
 
