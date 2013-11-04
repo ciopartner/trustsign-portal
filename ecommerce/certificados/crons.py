@@ -83,9 +83,11 @@ class CheckEmailJob(CronJobBase):
         from ecommerce.certificados.models import Emissao
 
         #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
+
         m = imaplib.IMAP4_SSL(settings.CERTIFICADOS_IMAP_SERVER)
         m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
         m.select("INBOX")
+
         resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')
         items = items[0].split()
 
@@ -112,9 +114,7 @@ class CheckEmailJob(CronJobBase):
                 counter = 1
 
                 for part in mail.walk():
-                    if part.get_content_maintype() == 'multipart':
-                        continue
-                    if part.get('Content-Disposition') is None:
+                    if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
                         continue
 
                     filename = part.get_filename()
@@ -122,6 +122,7 @@ class CheckEmailJob(CronJobBase):
                     if not filename:
                         filename = 'part-%03d%s' % (counter, '.bin')
                         counter += 1
+
                     n = now()
                     ano = str(n.year)
                     mes = str(n.month)
@@ -266,7 +267,6 @@ class DesativaSelosExpiradosJob(DesativaSelosRevogadosJob):
     schedule = Schedule(run_at_times=['0:00'])
 
     error_message = 'Ocorreu um exceção ao executar o cronjob DesativaSelosExpirados'
-
 
     def get_queryset(self):
         from ecommerce.certificados.models import Voucher, Emissao

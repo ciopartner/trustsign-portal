@@ -175,7 +175,7 @@ class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignme
         super(EmissaoNv2Tela2Form, self).__init__(**kwargs)
         voucher = self.get_voucher()
 
-        if voucher.ssl_product in Voucher.PRODUTO_EV_MDC:
+        if voucher.ssl_product == Voucher.PRODUTO_MDC:
             self.REQUIRED_FIELDS = ('emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                                     'emission_server_type')
             self.fields['emission_url'].required = False
@@ -240,7 +240,7 @@ class EmissaoNvATela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof',)
 
-    class Meta:
+    class Meta(EmissaoModelForm.Meta):
         fields = ['emission_csr', 'emission_phone_proof']
 
 
@@ -253,7 +253,7 @@ class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     emission_revoke_password_confirmation = CharField(widget=PasswordInput)
 
-    class Meta:
+    class Meta(EmissaoModelForm.Meta):
         fields = ('emission_id', 'emission_revoke_password')
 
 
