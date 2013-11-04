@@ -1,8 +1,8 @@
-from oscar.apps.basket.models import Basket as CoreBasket
+from oscar.apps.basket.abstract_models import AbstractBasket
 
 
-class Basket(CoreBasket):
-    _tem_contrato_sll = None
+class Basket(AbstractBasket):
+    _tem_contrato_ssl = None
     _tem_contrato_siteseguro = None
     _tem_contrato_sitemonitorado = None
     _tem_contrato_pki = None
