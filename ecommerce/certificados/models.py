@@ -406,6 +406,7 @@ class Emissao(Model):
             Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE,
             Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
             Emissao.STATUS_EMISSAO_ENVIADO_COMODO,
+            Emissao.STATUS_EMITIDO_SELO_PENDENTE,
 
             Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
             Emissao.STATUS_REEMISSAO_ENVIADO_COMODO,
@@ -413,6 +414,7 @@ class Emissao(Model):
             Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE,
             Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
             Emissao.STATUS_REVOGACAO_ENVIADO_COMODO,
+            Emissao.STATUS_REVOGADO_SELO_PENDENTE,
         )
 
     @property
