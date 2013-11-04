@@ -418,6 +418,10 @@ class Emissao(Model):
         )
 
     @property
+    def expirado(self):
+        return self.emission_status == Emissao.STATUS_EXPIRADO
+
+    @property
     def emitido(self):
         return self.emission_status in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO)
 
