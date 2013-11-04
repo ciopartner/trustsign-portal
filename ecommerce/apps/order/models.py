@@ -4,6 +4,7 @@ Selector = get_class('partner.strategy', 'Selector')
 
 selector = Selector()
 
+
 class Order(AbstractOrder):
     _basket = None
 
