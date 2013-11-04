@@ -158,6 +158,12 @@ class Voucher(Model):
     def sla_estourado(self):
         return self.order_date + timedelta(hours=self.tempo_em_espera) < timezone.now()
 
+    def has_emissao_url(self):
+        return self.ssl_product in(
+            self.PRODUTO_SSL, self.PRODUTO_SSL_WILDCARD, self.PRODUTO_SAN_UCC, self.PRODUTO_MDC, self.PRODUTO_EV,
+            self.PRODUTO_EV_MDC, self.PRODUTO_CODE_SIGNING, self.PRODUTO_JRE, self.PRODUTO_SMIME
+        )
+
     @permalink
     def get_emissao_url(self):
         if self.ssl_product in (self.PRODUTO_SSL, self.PRODUTO_SSL_WILDCARD):
@@ -173,7 +179,7 @@ class Voucher(Model):
         elif self.ssl_product == self.PRODUTO_SMIME:
             view_name = 'form-emissao-nvB'
         else:
-            raise Exception('produto não possui url de emissao')
+            return 'home'
 
         return view_name, (self.ssl_product, self.crm_hash)
 
