@@ -35,7 +35,11 @@
 
     <hr/>
 
-    scrt
+    <script>
+        var el = $("#meu-inline").get()[0];
+        for(style in el.style)
+            console.log(style + ":" + window.getDefaultComputedStyle($("#meu-inline").get()[0]).getPropertyValue(style))
+    </script>
 
     {% if order.basket.tem_contrato_ssl %}
         <div>
@@ -47,6 +51,17 @@
             <a href="{% static 'contratos/contrato-digital-trustsign-sitemonitorado.pdf' %}">termos de uso do Site Monitorado</a>
         </div>
     {% endif %}
+
+    color: rgb(221, 17, 68);
+    direction: ltr; display: inline;
+    order: 0;
+    opacity: 1;
+    overflow: visible;
+    position: static;
+    quotes: "“" "”" "‘" "’";
+    visibility: visible;
+    fill: rgb(0, 0, 0);
+
     {% if order.basket.tem_contrato_siteseguro %}
         <div>
             <a href="{% static 'contratos/contrato-digital-trustsign-siteseguro.pdf' %}">termos de uso do Site + Seguro</a>
