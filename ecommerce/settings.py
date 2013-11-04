@@ -175,12 +175,13 @@ INSTALLED_APPS = [
 from oscar import get_core_apps
 
 INSTALLED_APPS += get_core_apps([
+    'ecommerce.apps.basket',
+    'ecommerce.apps.catalogue',
     'ecommerce.apps.checkout',
     'ecommerce.apps.customer',
-    'ecommerce.apps.catalogue',
+    'ecommerce.apps.order',
     'ecommerce.apps.payment',
     'ecommerce.apps.shipping',
-    'ecommerce.apps.order',
 ])
 
 # TODO: Antes de ir para produção isso precisa ser alterado para um novo engine

@@ -8,8 +8,11 @@ class Order(AbstractOrder):
     @property
     def basket(self):
         if self._basket is None:
-            Basket = get_class('basket.models', 'Basket')
-            self._basket = Basket.objects.prefetch_related('lines__product').get(pk=self.basket_id)
+            if self.basket_id is not None:
+                Basket = get_class('basket.models', 'Basket')
+                self._basket = Basket.objects.prefetch_related(
+                    'lines__product__attribute_values__attribute'
+                ).get(pk=self.basket_id)
         return self._basket
 
 
