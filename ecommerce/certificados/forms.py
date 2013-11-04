@@ -165,6 +165,13 @@ class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignme
             'emission_dcv_emails': HiddenInput,
         }
 
+    def __init__(self, **kwargs):
+        super(EmissaoNv2Tela2Form, self).__init__(**kwargs)
+        voucher = self.get_voucher()
+
+        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC):
+            self.fields['emission_url'].required = False
+
 
 class EmissaoNv3Tela1Form(EmissaoTela1Form):
     validacao_manual = True
