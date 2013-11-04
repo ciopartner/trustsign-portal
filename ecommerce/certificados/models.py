@@ -43,8 +43,6 @@ class Voucher(Model):
     PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
     PRODUTO_PKI = 'pki'
     PRODUTO_CHOICES = (
-        (PRODUTO_SITE_SEGURO, 'Site + Seguro'),
-        (PRODUTO_SITE_MONITORADO, 'Site Monitorado'),
         (PRODUTO_SSL, 'SSL'),
         (PRODUTO_SSL_WILDCARD, 'SSL Wildcard'),
         (PRODUTO_SAN_UCC, 'SAN UCC'),
@@ -54,6 +52,9 @@ class Voucher(Model):
         (PRODUTO_JRE, 'JRE'),
         (PRODUTO_CODE_SIGNING, 'Code Signing'),
         (PRODUTO_SMIME, 'S/MIME'),
+        (PRODUTO_SSL_MDC_DOMINIO, 'MDC Domínio Adicional'),
+        (PRODUTO_SSL_EV_MDC_DOMINIO, 'EV MDC Domínio Adicional'),
+        (PRODUTO_SSL_SAN_FQDN, 'SAN FQDN Adicional'),
     )
 
     LINHA_DEGUSTACAO = 'trial'
