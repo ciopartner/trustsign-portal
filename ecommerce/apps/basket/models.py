@@ -12,7 +12,9 @@ class Basket(AbstractBasket):
             from ecommerce.certificados.models import Voucher
             codigos = (
                 Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_EV,
-                Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_MDC
+                Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_MDC, Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_SMIME,
+                Voucher.PRODUTO_JRE, Voucher.PRODUTO_SSL_MDC_DOMINIO, Voucher.PRODUTO_SSL_EV_MDC_DOMINIO,
+                Voucher.PRODUTO_SSL_SAN_FQDN
             )
             self._tem_contrato_ssl = any(line.product.attr.ssl_code.option in codigos
                                          for line in self.all_lines())
