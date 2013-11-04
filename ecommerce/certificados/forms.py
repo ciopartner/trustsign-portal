@@ -143,7 +143,6 @@ class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
     def __init__(self, **kwargs):
         super(EmissaoNv1Tela2Form, self).__init__(**kwargs)
         choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
-        print choices_email
         self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 
