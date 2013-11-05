@@ -129,6 +129,10 @@ width: 391px;
     margin-left: 17px;
 }
 
+sub{
+    bottom: 0;
+}
+
 /* Overwriting bootstrap.css */
 
 .accordion-inner th{
