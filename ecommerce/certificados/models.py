@@ -115,9 +115,9 @@ class Voucher(Model):
 
     ssl_code = CharField(max_length=128)
     ssl_url = CharField(max_length=200, blank=True, null=True)
-    ssl_product = CharField(max_length=16, choices=PRODUTO_CHOICES)
-    ssl_line = CharField(max_length=16, choices=LINHA_CHOICES)
-    ssl_term = CharField(max_length=16, choices=VALIDADE_CHOICES)
+    ssl_product = CharField(max_length=32, choices=PRODUTO_CHOICES)
+    ssl_line = CharField(max_length=32, choices=LINHA_CHOICES)
+    ssl_term = CharField(max_length=32, choices=VALIDADE_CHOICES)
     ssl_valid_from = DateTimeField(blank=True, null=True)
     ssl_valid_to = DateTimeField(blank=True, null=True)
     ssl_publickey = TextField(blank=True, null=True)
