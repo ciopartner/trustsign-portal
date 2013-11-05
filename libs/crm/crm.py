@@ -394,7 +394,7 @@ class CRMClient(object):
 
         return response['id']
 
-    def update_contract(self, crm_hash, status, seal_html=None):
+    def update_contract(self, crm_hash, status, seal_html=None, certificate_file=None):
         data = {
             'id': crm_hash,
             'status': status
@@ -408,18 +408,13 @@ class CRMClient(object):
     def get_or_create_account(self, cliente):
         account_id = self.get_account(cliente.cnpj)['entry_list']
 
-        if account_id:
-            return account_id[0]['id']
-
-        return self.set_entry_account(cliente)
+        return account_id[0]['id'] if account_id else self.set_entry_account(cliente)
 
     def get_or_create_contact(self, contato):
 
         contact_id = self.get_contact(contato.account_id, contato.nome, contato.sobrenome)['entry_list']
 
-        contact_id = contact_id[0]['id'] if contact_id else self.set_entry_contact(contato)
-
-        return contact_id
+        return contact_id[0]['id'] if contact_id else self.set_entry_contact(contato)
 
     def postar_compra(self, cliente, contato, oportunidade, produtos):
         """
@@ -452,13 +447,13 @@ class CRMClient(object):
 
         log.info('Finalizando a postagem do pedido #%s' % oportunidade.numero_pedido)
 
-    def atualizar_contrato(self, crm_hash, status, seal_html=None):
+    def atualizar_contrato(self, crm_hash, status, seal_html=None, certificate_file=None):
         log.info('Atualizando o contrato #%s' % crm_hash)
 
         try:
             self.login()
 
-            self.update_contract(crm_hash, status, seal_html)
+            self.update_contract(crm_hash, status, seal_html, certificate_file)
 
             self.logout()
 

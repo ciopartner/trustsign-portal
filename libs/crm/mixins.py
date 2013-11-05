@@ -83,7 +83,7 @@ class OscarToCRMMixin(object):
         oportunidade.numero_pedido = 100000 + order.pk
         oportunidade.pag_credito_transacao_id = transaction_id
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
-        oportunidade.valor_total = str(source.amount_allocated)
+        oportunidade.valor_total = str(order.total_incl_tax)
 
         #TODO: colocar if quando implementar os outros meios de pagamento
         if bankcard:

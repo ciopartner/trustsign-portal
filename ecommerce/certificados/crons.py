@@ -142,6 +142,7 @@ class CheckEmailJob(CronJobBase):
                         fp = open(att_path, 'wb')
                         fp.write(part.get_payload(decode=True))
                         fp.close()
+
                     emissao.emission_mail_attachment_path = att_path
 
                 emissao.save()
