@@ -51,7 +51,7 @@
                     Total
                 </h4>
                 <h3>{{ basket.total_incl_tax|currency }}</h3>
-                <a href="{% url 'basket:summary' %}" class="btn btn-large btn-orange btn-block">FINALIZAR COMPRA</a>
+                <button class="btn btn-orange btn-block" onclick="$('#form-compra').submit()">FINALIZAR COMPRA</button>
                 <a href="{% url 'basket:summary' %}" class="pull-right tm10">Editar pedido</a>
                 <div class="clearfix"></div>
             </div>
@@ -62,7 +62,7 @@
     {% block payment_details_content %}
 
         <div>
-            <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
+            <form action="{% url 'checkout:preview' %}" id="form-compra" class="form-horizontal" method="post">
                 <input type="hidden" name="source-type" value="moeda-digital" />
                 {% csrf_token %}
 {#                <div class="alert alert-warning">#}
@@ -70,35 +70,41 @@
 {#                    <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>#}
 {#                </div>#}
                 {{ payment_div|safe }}
-                <div>
 
-                    {% if tem_contrato_ssl %}
-                        <div>
-                            <input type="checkbox" id="aceita_contrato_ssl" name="aceita_contrato_ssl" value="1">
-                            <label for="aceita_contrato_ssl">Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign.pdf' %}">termos de uso do Certificado</a></label>
-                        </div>
-                    {% endif %}
-                    {% if tem_contrato_sitemonitorado %}
-                        <div>
-                            <input type="checkbox" id="aceita_contrato_sm" name="aceita_contrato_sm" value="1">
-                            <label for="aceita_contrato_sm">Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-sitemonitorado.pdf' %}">termos de uso do Site Monitorado</a></label>
-                        </div>
-                    {% endif %}
-                    {% if tem_contrato_siteseguro %}
-                        <div>
-                            <input type="checkbox" id="aceita_contrato_ss" name="aceita_contrato_ss" value="1">
-                            <label for="aceita_contrato_ss">Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-siteseguro.pdf' %}">termos de uso do Site + Seguro</a></label>
-                        </div>
-                    {% endif %}
-                    {% if tem_contrato_pki %}
-                        <div>
-                            <input type="checkbox" id="aceita_contrato_pki" name="aceita_contrato_pki" value="1">
-                            <label for="aceita_contrato_pki">Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-pki.pdf' %}">termos de uso do PKI</a></label>
-                        </div>
-                    {% endif %}
+                <div class="clearfix"></div>
 
+                <div class="tm50">
+
+                    <div class="pull-left">
+
+                        {% if tem_contrato_ssl %}
+                            <label class="checkbox">
+                                <input type="checkbox" id="aceita_contrato_ssl" name="aceita_contrato_ssl" value="1">
+                                Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign.pdf' %}">termos de uso do Certificado</a>
+                            </label>
+                        {% endif %}
+                        {% if tem_contrato_sitemonitorado %}
+                            <label class="checkbox">
+                                <input type="checkbox" id="aceita_contrato_sm" name="aceita_contrato_sm" value="1">
+                                Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-sitemonitorado.pdf' %}">termos de uso do Site Monitorado</a>
+                            </label>
+                        {% endif %}
+                        {% if tem_contrato_siteseguro %}
+                            <label class="checkbox">
+                                <input type="checkbox" id="aceita_contrato_ss" name="aceita_contrato_ss" value="1">
+                                Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-siteseguro.pdf' %}">termos de uso do Site + Seguro</a>
+                            </label>
+                        {% endif %}
+                        {% if tem_contrato_pki %}
+                            <label class="checkbox">
+                                <input type="checkbox" id="aceita_contrato_pki" name="aceita_contrato_pki" value="1">
+                                Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-pki.pdf' %}">termos de uso do PKI</a>
+                            </label>
+                        {% endif %}
+
+                    </div>
+                    <button type="submit" class="pull-right btn btn-orange">FINALIZAR COMPRA</button>
                 </div>
-                <button type="submit" class="pull-right btn btn-orange btn-large">Concluir compra</button>
             </form>
         </div>
 
@@ -121,7 +127,7 @@
         {#                                    <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>#}
         {#</div>#}
         {#                            </div>#}
-        {#                            <button type="submit" class="pull-right btn btn-orange btn-large">Concluir compra</button>#}
+        {#                            <button type="submit" class="pull-right btn btn-orange">Concluir compra</button>#}
         {#                        </form>#}
         {#                    </div>#}
         {#                </div>#}
@@ -137,7 +143,7 @@
         {#                        <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">#}
         {#                            {% csrf_token %}#}
         {#                            <input type="hidden" name="source-type" value="boleto" />#}
-        {#                            <button type="submit" class="pull-right btn btn-orange btn-large">Concluir compra</button>#}
+        {#                            <button type="submit" class="pull-right btn btn-orange">Concluir compra</button>#}
         {#                        </form>#}
         {#                    </div>#}
         {#                </div>#}
@@ -159,7 +165,7 @@
         {#                        <form action="{% url 'checkout:preview' %}" class="form-inline" method="post">#}
         {#                                {% csrf_token %}#}
         {#                                <input type="hidden" name="source-type" value="debito" />#}
-        {#                                <button type="submit" class="pull-right btn btn-orange btn-large">Concluir compra</button>#}
+        {#                                <button type="submit" class="pull-right btn btn-orange">Concluir compra</button>#}
         {##}
         {#                                <label>#}
         {#                                    <input type="radio" name="card_type" value="bb"/>#}
