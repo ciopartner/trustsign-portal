@@ -33,20 +33,16 @@ $(document).ready(function () {
     }
 
     function atualiza_window(){
-        $windowModel.hide();
-        $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').show();
+        $windowModel.addClass('hidden');
+        $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').removeClass('hidden');
     }
 
     function completo(){
         var lista = $campo_emails.val().split(' ');
 
-        console.log(lista);
-        for(var i=0; i < lista.length; i++){
-            console.log(lista[i]);
-
+        for(var i=0; i < lista.length; i++)
             if(lista[i].length == 0)
                 return false;
-        }
 
         return true;
     }
@@ -59,8 +55,6 @@ $(document).ready(function () {
             var val = lista[i];
             var $tr = $('.fqdn-table tr').eq(i + 1);
             var fqdn = $tr.data('fqdn');
-
-            console.log($tr);
 
             $tr.find('span').text(val);
             $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').find('input[value="' + val + '"]');
