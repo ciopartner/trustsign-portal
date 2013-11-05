@@ -303,6 +303,7 @@ class CRMClient(object):
 
         data = {
             'account_id': oportunidade.account_id,
+            'contact_id': oportunidade.contact_id,
             'assigned_user_id': settings.CRM_OPORTUNITY_ASSIGNED_USER_ID,
             'manufacturers_id': settings.CRM_OPORTUNITY_MANUFACTURERS_ID,
             'name': 'Oportunidade via e-commerce',
