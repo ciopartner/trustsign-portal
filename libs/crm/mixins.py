@@ -80,7 +80,7 @@ class OscarToCRMMixin(object):
         transaction_id = source.reference
 
         oportunidade = crm.OportunidadeCRM()
-        oportunidade.numero_pedido = 100000 + order.pk
+        oportunidade.numero_pedido = order.number
         oportunidade.pag_credito_transacao_id = transaction_id
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
         oportunidade.valor_total = str(order.total_incl_tax)
