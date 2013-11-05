@@ -3836,7 +3836,7 @@ msgstr "Pedidos alocados"
 
 #: apps/order/utils.py:51
 msgid "Empty baskets cannot be submitted"
-msgstr "Carrinhos vazias não podem ser submetidas"
+msgstr "Carrinhos vazios não podem ser submetidos"
 
 #: apps/order/utils.py:67
 #, python-format
@@ -4587,7 +4587,7 @@ msgstr "\nO produto <strong>%(title)s</strong> foi deixado para outra compra.\n"
 
 #: templates/oscar/basket/messages/new_total.html:7
 msgid "Your basket is now empty"
-msgstr "Seu carrinho está vazia"
+msgstr "Seu carrinho está vazio"
 
 #: templates/oscar/basket/messages/new_total.html:9
 #, python-format
@@ -4766,7 +4766,7 @@ msgstr "Finalizar pedido"
 #: templates/oscar/basket/partials/basket_content.html:124
 #: templates/oscar/basket/partials/basket_quick.html:36
 msgid "Your basket is empty."
-msgstr "Seu carrinho está vazia."
+msgstr "Seu carrinho está vazio."
 
 #: templates/oscar/basket/partials/basket_content.html:125
 #: templates/oscar/checkout/thank_you.html:208
