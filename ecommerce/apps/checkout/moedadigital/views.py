@@ -90,11 +90,11 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
             installments = request.POST.get('MD_FormaPagto')
             installment = request.POST.get('MD_ValorParcela')
             parameters = {
-                    'payment_method': payment_method,
-                    'amount': amount,
-                    'installments': installments,
-                    'installment': installment,
-                    }
+                'payment_method': payment_method,
+                'amount': amount,
+                'installments': installments,
+                'installment': installment,
+            }
             submission = self.build_submission(payment_kwargs=parameters)
             return self.submit(**submission)
 
@@ -200,7 +200,6 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         # Also record payment event
         # When we create the payment event, we have to set a txn_type that should be debit or refund
         self.add_payment_event('debit', total_incl_tax.incl_tax, reference='')
-
 
     def handle_payment_credito(self, order_number, total_incl_tax, **kwargs):
         """
@@ -321,7 +320,6 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         self.set_status_pago(order)
 
         return self.handle_successful_order(order)
-
 
     def set_status_pago(self, order):
         sources = order.sources.all()
