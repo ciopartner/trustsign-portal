@@ -133,6 +133,10 @@ sub{
     bottom: 0;
 }
 
+small{
+    font-size: 90%;
+}
+
 /* Overwriting bootstrap.css */
 
 .accordion-inner th{
