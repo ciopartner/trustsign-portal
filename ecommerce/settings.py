@@ -261,9 +261,9 @@ CRON_CLASSES = [
 
     'certificados.crons.EnviaComodoJob',
     'certificados.crons.CheckEmailJob',
-    'certificados.crons.AtivaSeloJob',
-    'certificados.crons.DesativaSeloRevogadoJob',
-    'certificados.crons.DesativaSeloExpiradoJob',
+    'certificados.crons.AtivaSelosJob',
+    'certificados.crons.DesativaSelosRevogadosJob',
+    'certificados.crons.DesativaSelosExpiradosJob',
 
     # This example cron check last cron jobs results. If they were unsuccessfull 10 times in row, it sends email to user
     'django_cron.cron.FailedRunsNotificationCronJob'

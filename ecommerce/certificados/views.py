@@ -665,6 +665,7 @@ class EmissaoWizardView(SessionWizardView):
         emissao.save()
 
     def get_voucher_atualizado(self, voucher):
+
         step_dados_callback = 'tela-2' if 'tela-2' in self.templates else 'tela-1'
         dados_form_callback = self.get_cleaned_data_for_step(step_dados_callback)
 
