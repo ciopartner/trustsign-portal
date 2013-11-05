@@ -58,11 +58,18 @@ h4{
     width: 90px;
     margin: 0 15px 0 10px;
 }
-
 .basket-items .price_color{
     font-weight: normal;
     color: rgb(74, 74, 74);
     font-size: 120% !important;
+}
+
+.basket-items .control-group{
+    margin-bottom: 0;
+}
+
+.basket-items .price_color{
+    margin-bottom: 0;
 }
 .accordion-heading {
     border-bottom: 0px none;
