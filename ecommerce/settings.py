@@ -175,12 +175,13 @@ INSTALLED_APPS = [
 from oscar import get_core_apps
 
 INSTALLED_APPS += get_core_apps([
+    'ecommerce.apps.basket',
+    'ecommerce.apps.catalogue',
     'ecommerce.apps.checkout',
     'ecommerce.apps.customer',
-    'ecommerce.apps.catalogue',
+    'ecommerce.apps.order',
     'ecommerce.apps.payment',
     'ecommerce.apps.shipping',
-    'ecommerce.apps.order',
 ])
 
 # TODO: Antes de ir para produção isso precisa ser alterado para um novo engine
@@ -230,7 +231,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
 }
 
-SEALS_SERVER_URL = 'http://newseals.trustsign.com.br'
+SEALS_SERVER_URL = 'http://security.trustsign.com.br'
+SEALS_USERNAME = '<mudar no local_settings.py>'
+SEALS_PASSWORD = '<mudar no local_settings.py>'
+SEALS_MAX_WEBSITES_PER_REQUEST = 50
 
 COMODO_LOGIN_NAME = '<mudar no local_settings.py>'
 COMODO_LOGIN_PASSWORD = '<mudar no local_settings.py>'
@@ -257,6 +261,9 @@ CRON_CLASSES = [
 
     'certificados.crons.EnviaComodoJob',
     'certificados.crons.CheckEmailJob',
+    'certificados.crons.AtivaSelosJob',
+    'certificados.crons.DesativaSelosRevogadosJob',
+    'certificados.crons.DesativaSelosExpiradosJob',
 
     # This example cron check last cron jobs results. If they were unsuccessfull 10 times in row, it sends email to user
     'django_cron.cron.FailedRunsNotificationCronJob'

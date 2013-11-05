@@ -47,6 +47,7 @@
 
 {% endblock %}
 
-{% block extra-js-body %}
+{% block extrascripts %}
+    {{ block.super }}
     <script src="{% static "certificados/js/certificados.js" %}"></script>
 {% endblock %}

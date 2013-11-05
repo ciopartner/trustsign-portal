@@ -1,4 +1,23 @@
-from oscar.apps.order.abstract_models import AbstractLine
+from oscar.apps.order.abstract_models import AbstractLine, AbstractOrder
+from oscar.core.loading import get_class
+Selector = get_class('partner.strategy', 'Selector')
+
+selector = Selector()
+
+
+class Order(AbstractOrder):
+    _basket = None
+
+    @property
+    def basket(self):
+        if self._basket is None:
+            if self.basket_id is not None:
+                Basket = get_class('basket.models', 'Basket')
+                self._basket = Basket.objects.prefetch_related(
+                    'lines__product__attribute_values__attribute'
+                ).get(pk=self.basket_id)
+                self._basket.strategy = selector.strategy()
+        return self._basket
 
 
 class Line(AbstractLine):

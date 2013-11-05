@@ -143,12 +143,18 @@ class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
     def __init__(self, **kwargs):
         super(EmissaoNv1Tela2Form, self).__init__(**kwargs)
         choices_email = [(email, email) for email in get_emails_validacao(self.initial['emission_url'])]
-        print choices_email
         self.fields['emission_dcv_emails'] = ChoiceField(choices=choices_email, widget=RadioSelect)
 
 
 class EmissaoNv2Tela1Form(EmissaoTela1Form):
-    pass
+
+    def __init__(self, **kwargs):
+        super(EmissaoNv2Tela1Form, self).__init__(**kwargs)
+        voucher = self.get_voucher()
+
+        if voucher.ssl_product == Voucher.PRODUTO_MDC:
+            self.REQUIRED_FIELDS = ('emission_csr',)
+            self.fields['emission_url'].required = False
 
 
 class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignmentLetter):
@@ -164,6 +170,15 @@ class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignme
             'emission_csr': HiddenInput,
             'emission_dcv_emails': HiddenInput,
         }
+
+    def __init__(self, **kwargs):
+        super(EmissaoNv2Tela2Form, self).__init__(**kwargs)
+        voucher = self.get_voucher()
+
+        if voucher.ssl_product == Voucher.PRODUTO_MDC:
+            self.REQUIRED_FIELDS = ('emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
+                                    'emission_server_type')
+            self.fields['emission_url'].required = False
 
 
 class EmissaoNv3Tela1Form(EmissaoTela1Form):
@@ -197,6 +212,8 @@ class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 class EmissaoNv4Tela1Form(EmissaoTela1Form):
     validacao_manual = True
 
+    REQUIRED_FIELDS = ('emission_csr',)
+
 
 class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignmentLetter,
                           ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA,
@@ -204,12 +221,11 @@ class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignme
 
     validacao_manual = True
 
-    REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
-                       'emission_server_type', 'emission_articles_of_incorporation',
-                       'emission_address_proof', 'emission_ccsa', 'emission_evcr')
+    REQUIRED_FIELDS = ('emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto', 'emission_server_type',
+                       'emission_articles_of_incorporation', 'emission_address_proof', 'emission_ccsa', 'emission_evcr')
 
     class Meta(EmissaoModelForm.Meta):
-        fields = ['emission_url', 'emission_csr', 'emission_assignment_letter', 'emission_dcv_emails',
+        fields = ['emission_csr', 'emission_assignment_letter', 'emission_dcv_emails',
                   'emission_publickey_sendto', 'emission_server_type', 'emission_articles_of_incorporation',
                   'emission_address_proof', 'emission_ccsa', 'emission_evcr']
         widgets = {
@@ -224,7 +240,7 @@ class EmissaoNvATela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof',)
 
-    class Meta:
+    class Meta(EmissaoModelForm.Meta):
         fields = ['emission_csr', 'emission_phone_proof']
 
 
@@ -237,7 +253,7 @@ class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissao
 
     emission_revoke_password_confirmation = CharField(widget=PasswordInput)
 
-    class Meta:
+    class Meta(EmissaoModelForm.Meta):
         fields = ('emission_id', 'emission_revoke_password')
 
 

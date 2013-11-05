@@ -45,20 +45,27 @@
             </div>
           {% else %}
             <img src="{% static 'ecommerce/img/status/progress.png' %}" alt="" class="status-icon" />
+            <div class="info text-warning">
+                {{ order.status }}
+            </div>
           {% endif %}
 
         </div>
         <div class="span4 status-item">
 
           <h3>Liberado para emissão</h3>
-          {% if order.vouchers.emitidos|length == order.vouchers.all.count %}
-            <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
+          {% if order.vouchers.emitidos|length == 0 %}
+            <img src="{% static 'ecommerce/img/status/no.png' %}" alt="" class="status-icon" />
           {% else %}
-            <img src="{% static 'ecommerce/img/status/progress.png' %}" alt="" class="status-icon" />
+              {% if order.vouchers.emitidos|length == order.vouchers.all.count %}
+                <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
+              {% else %}
+                <img src="{% static 'ecommerce/img/status/progress.png' %}" alt="" class="status-icon" />
+              {% endif %}
+              <div class="info count">
+                  <strong>EMITIDOS: </strong> {{ order.vouchers.emitidos|length }} de {{ order.vouchers.all.count }}
+              </div>
           {% endif %}
-          <div class="info count">
-              <strong>EMITIDOS: </strong> {{ order.vouchers.emitidos|length }} de {{ order.vouchers.all.count }}
-          </div>
 
         </div>
         <div class="span3 status-item">

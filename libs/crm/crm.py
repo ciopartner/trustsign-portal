@@ -205,11 +205,14 @@ class CRMClient(object):
             },
             canal
         ])
+
         if 'id' not in response_data:
             log.warning('User: {}, Password: ***'.format(settings.CRM_USERNAME))
             log.warning('Erro durante a chamada do metodo login do crm: %s' % response_data)
             raise self.CRMError('Erro durante a chamada do método login do crm')
+
         self.session_id = response_data['id']
+
         return response_data['id']
 
     def logout(self):
@@ -219,47 +222,60 @@ class CRMClient(object):
         self.call_crm('logout', [self.session_id])
         self.session_id = None
 
+    def get_entry_list(self, modulo, where, order_by='', offset=0, select_fields=None, link_name_to_fields_array=None,
+                       max_results=0, deleted=0, favorites=False):
+
+        if select_fields is None:
+            select_fields = []
+
+        if link_name_to_fields_array is None:
+            link_name_to_fields_array = []
+
+        response_data = self.call_crm('get_entry_list', [
+            self.session_id,
+            modulo,
+            where,
+            order_by,
+            offset,
+            select_fields,
+            link_name_to_fields_array,
+            max_results,
+            deleted,
+            favorites
+        ])
+
+        if 'number' in response_data:
+            log.warning('Erro durante a chamada do metodo get_entry_list do crm: %s' % response_data)
+            raise self.CRMError('Erro durante a chamada do método get_entry_list do crm')
+
+        return response_data
+
     def get_account(self, cnpj):
         """
         Retorna dados de uma Account
         """
-        response_data = self.call_crm('get_entry_list', [
-            self.session_id,
-            'Accounts',
-            'accounts_cstm.corporate_tax_registry_c = \'%s\'' % escape(cnpj),
-            '',
-            0,
-            ['id', 'name'],
-            [],
-            1,
-            0,
-            False
-        ])
-        if 'number' in response_data:
-            log.warning('Erro durante a chamada do metodo get_entry_list do crm: %s' % response_data)
-            raise self.CRMError('Erro durante a chamada do método get_entry_list do crm')
-        return response_data
+        return self.get_entry_list(modulo='Accounts',
+                                   where='accounts_cstm.corporate_tax_registry_c = \'%s\'' % escape(cnpj),
+                                   select_fields=['id', 'name'],
+                                   max_results=1)
 
     def get_contact(self, account_id, nome, sobrenome):
         """
-        Retorna dados de uma Account
+        Retorna dados de uma Contact
         """
-        response_data = self.call_crm('get_entry_list', [
-            self.session_id,
-            'Contacts',
-            'contacts.first_name = \'%s\' AND contacts.last_name = \'%s\'' % (escape(nome), escape(sobrenome)),
-            '',
-            0,
-            ['id'],
-            [],
-            1,
-            0,
-            False
-        ])
-        if 'number' in response_data:
-            log.warning('Erro durante a chamada do metodo get_entry_list do crm: %s' % response_data)
-            raise self.CRMError('Erro durante a chamada do método get_entry_list do crm')
-        return response_data
+        return self.get_entry_list(modulo='Contacts',
+                                   where='contacts.first_name = \'%s\' AND contacts.last_name = \'%s\'' % (escape(nome), escape(sobrenome)),
+                                   select_fields=['id'],
+                                   max_results=1)
+
+    def get_contract(self, crm_hash):
+        """
+        Retorna dados de um Contract
+        """
+        return self.get_entry_list(modulo='Contracts',
+                                   where='contracts.id = %s' % crm_hash,
+                                   select_fields=['id'],
+                                   max_results=1)
 
     def set_entry(self, tabela, campos):
         """
@@ -270,9 +286,11 @@ class CRMClient(object):
             tabela,
             campos
         ])
+
         if 'id' not in response_data:
             log.warning('Erro durante a chamada do metodo set_entry do crm: %s' % response_data)
             raise self.CRMError('Erro durante a chamada do método set_entry do crm')
+
         return response_data
 
     def set_entry_account(self, cliente):
@@ -376,31 +394,37 @@ class CRMClient(object):
 
         return response['id']
 
+    def update_contract(self, crm_hash, status, seal_html=None, certificate_file=None):
+        data = {
+            'id': crm_hash,
+            'status': status
+        }
+
+        if seal_html is not None:
+            data['seal_html_c'] = seal_html
+
+        self.set_entry('Contracts', data)
+
     def get_or_create_account(self, cliente):
         account_id = self.get_account(cliente.cnpj)['entry_list']
 
-        if account_id:
-            return account_id[0]['id']
-        return self.set_entry_account(cliente)
+        return account_id[0]['id'] if account_id else self.set_entry_account(cliente)
 
     def get_or_create_contact(self, contato):
 
-        contact_id = self.get_contact(contato.account_id, contato.nome, contato.sobrenome)
+        contact_id = self.get_contact(contato.account_id, contato.nome, contato.sobrenome)['entry_list']
 
-        if contact_id:
-            contact_id = contact_id[0]['id']
-        else:
-            contact_id = self.set_entry_contact(contato)
-
-        return contact_id
+        return contact_id[0]['id'] if contact_id else self.set_entry_contact(contato)
 
     def postar_compra(self, cliente, contato, oportunidade, produtos):
         """
         Executa todo o processo de compra, criando account, opportunity e products quando necessário
         """
         log.info('Iniciando a postagem do pedido #%s' % oportunidade.numero_pedido)
-        self.login()
+
         try:
+            self.login()
+
             account_id = self.get_or_create_account(cliente)
 
             contato.account_id = account_id
@@ -414,8 +438,27 @@ class CRMClient(object):
                 produto.account_id = account_id
                 produto.opportunity_id = opportunity_id
                 self.set_entry_products(produto)
+
             self.logout()
+
         except Exception as e:
             log.exception('Ocorreu um erro ao postar a compra')
             raise self.CRMError('Ocorreu um erro ao postar a compra, verifique o log')
+
         log.info('Finalizando a postagem do pedido #%s' % oportunidade.numero_pedido)
+
+    def atualizar_contrato(self, crm_hash, status, seal_html=None, certificate_file=None):
+        log.info('Atualizando o contrato #%s' % crm_hash)
+
+        try:
+            self.login()
+
+            self.update_contract(crm_hash, status, seal_html, certificate_file)
+
+            self.logout()
+
+        except Exception as e:
+            log.exception('Ocorreu um erro ao atualizar o contrato')
+            raise self.CRMError('Ocorreu um erro ao atualizar o contrato, verifique o log')
+
+        log.info('Atualização do contrato #%s concluída' % crm_hash)

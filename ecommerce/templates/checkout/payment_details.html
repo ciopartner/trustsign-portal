@@ -62,7 +62,7 @@
     {% block payment_details_content %}
 
         <div>
-            <form action="{% url 'checkout:preview' %}" id="form-compra" class="form-horizontal" method="post">
+            <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
                 <input type="hidden" name="source-type" value="moeda-digital" />
                 {% csrf_token %}
 {#                <div class="alert alert-warning">#}
@@ -70,6 +70,7 @@
 {#                    <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>#}
 {#                </div>#}
                 {{ payment_div|safe }}
+                <div>
 
                 <div class="clearfix"></div>
 
@@ -105,6 +106,7 @@
                     </div>
                     <button type="submit" class="pull-right btn btn-orange">FINALIZAR COMPRA</button>
                 </div>
+                <button type="submit" class="pull-right btn btn-orange btn-large">Concluir compra</button>
             </form>
         </div>
 

@@ -130,6 +130,27 @@ width: 391px;
 }
 
 /* Overwriting bootstrap.css */
+
+.accordion-inner th{
+    -webkit-background-image: linear-gradient(to top, #2A2A29, #616161);
+       -moz-background-image: linear-gradient(to top, #2A2A29, #616161);
+        -ms-background-image: linear-gradient(to top, #2A2A29, #616161);
+         -o-background-image: linear-gradient(to top, #2A2A29, #616161);
+            background-image: linear-gradient(to top, #2A2A29, #616161);
+    color: #FFFFFF;
+    font-size: 125%;
+    padding: 10px;
+}
+
+.accordion-inner th *{
+    margin: 0;
+    padding: 0;
+}
+
+.accordion-inner td{
+    border: 1px solid #DDD;
+}
+
 .table td.center {
     text-align: center;
 }

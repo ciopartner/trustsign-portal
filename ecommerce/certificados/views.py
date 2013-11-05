@@ -500,7 +500,9 @@ class EscolhaVoucherView(ListView):
 
     def get_queryset(self):
         qs = Voucher.objects.select_related('emissao').filter(
-            Q(emissao__isnull=True) | ~Q(emissao__emission_status=Emissao.STATUS_REVOGADO))
+            Q(emissao__isnull=True) | ~Q(emissao__emission_status__in=(
+                Emissao.STATUS_REVOGADO, Emissao.STATUS_EXPIRADO, Emissao.STATUS_OCORREU_ERRO_COMODO
+            )))
         user = self.request.user
         if not user.is_superuser and user.get_profile().is_cliente:
             qs = qs.filter(customer_cnpj=user.username)
@@ -603,6 +605,18 @@ class EmissaoWizardView(SessionWizardView):
 
         return kwargs
 
+    def process_step(self, form):
+        data = self.get_form_step_data(form)
+        if hasattr(form, 'get_csr_decoded'):
+            voucher = self.get_voucher()
+            emissao = self.instance
+
+            if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
+                if not emissao.emission_urls:
+                    dominios = ' '.join(form.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
+                    emissao.emission_urls = dominios
+        return data
+
     def get_context_data(self, form, **kwargs):
         context = super(EmissaoWizardView, self).get_context_data(form, **kwargs)
 
@@ -651,6 +665,7 @@ class EmissaoWizardView(SessionWizardView):
         emissao.save()
 
     def get_voucher_atualizado(self, voucher):
+
         step_dados_callback = 'tela-2' if 'tela-2' in self.templates else 'tela-1'
         dados_form_callback = self.get_cleaned_data_for_step(step_dados_callback)
 

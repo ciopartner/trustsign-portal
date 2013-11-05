@@ -1,6 +1,5 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from datetime import date
 from time import time
 import email
 import imaplib
@@ -9,6 +8,8 @@ import re
 from django.conf import settings
 from logging import getLogger
 from django_cron import CronJobBase, Schedule
+import requests
+from django.utils.timezone import now
 
 log = getLogger('portal.certificados.crons')
 
@@ -63,7 +64,7 @@ class EnviaComodoJob(CronJobBase):
             except comodo.ComodoError as e:
                 log.error('Ocorreu um erro(%s) na chamada da comodo da emissao: %s' % (e.code, emissao))
 
-                emissao.emission_status = Emissao.OCORREU_ERRO_COMODO
+                emissao.emission_status = Emissao.STATUS_OCORREU_ERRO_COMODO
                 emissao.emission_error_message = '%s (%s)' % (e.comodo_message, e.code)
 
             emissao.save()
@@ -82,9 +83,11 @@ class CheckEmailJob(CronJobBase):
         from ecommerce.certificados.models import Emissao
 
         #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
+
         m = imaplib.IMAP4_SSL(settings.CERTIFICADOS_IMAP_SERVER)
         m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
         m.select("INBOX")
+
         resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')
         items = items[0].split()
 
@@ -111,9 +114,7 @@ class CheckEmailJob(CronJobBase):
                 counter = 1
 
                 for part in mail.walk():
-                    if part.get_content_maintype() == 'multipart':
-                        continue
-                    if part.get('Content-Disposition') is None:
+                    if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
                         continue
 
                     filename = part.get_filename()
@@ -121,8 +122,10 @@ class CheckEmailJob(CronJobBase):
                     if not filename:
                         filename = 'part-%03d%s' % (counter, '.bin')
                         counter += 1
-                    ano = str(date.today().year)
-                    mes = str(date.today().month)
+
+                    n = now()
+                    ano = str(n.year)
+                    mes = str(n.month)
                     directory = os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, ano, mes)
 
                     if not os.path.exists(directory):
@@ -139,6 +142,7 @@ class CheckEmailJob(CronJobBase):
                         fp = open(att_path, 'wb')
                         fp.write(part.get_payload(decode=True))
                         fp.close()
+
                     emissao.emission_mail_attachment_path = att_path
 
                 emissao.save()
@@ -147,3 +151,136 @@ class CheckEmailJob(CronJobBase):
                 log.error('Recebeu e-mail fora do padrão')
             except Emissao.DoesNotExist:
                 log.error('Recebeu e-mail com comodo order inexistente no banco')
+
+
+def chunks(l, n):
+    """
+    Generator that yields successive n-sized chunks from l.
+    list(chunks(range(5), 2)) == [[0,1], [2,3] [4]]
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i + n]
+
+
+class AtivaSelosJob(CronJobBase):
+    """
+    Ativa os selos dos vouchers pendentes no servidor de selos.
+    """
+    RUN_EVERY_MINS = 30
+
+    code = 'certificados.ativa_selo'
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+
+    error_message = 'Ocorreu um exceção ao executar o cronjob AtivaSelos'
+
+    def do(self):
+        try:
+            websites = self.extrai_websites()
+
+            for line in ('basic', 'pro', 'prime'):
+                lista = list(websites[line])
+                if lista:
+                    for chunk in chunks(lista, settings.SEALS_MAX_WEBSITES_PER_REQUEST):
+                        self.processa(line, chunk)
+            self.post_do()
+        except Exception as e:
+            log.exception(self.error_message)
+            raise e  # joga a exceção novamente para o django-cron tentar executar o job
+                     # novamente depois de alguns minutos e enviar o email de aviso
+
+    def post_do(self):
+        from ecommerce.certificados.models import Emissao
+
+        for voucher in self._vouchers:
+            voucher.emissao.emission_status = Emissao.STATUS_EMITIDO
+            voucher.emissao.save()
+
+    def get_queryset(self):
+        from ecommerce.certificados.models import Voucher, Emissao
+
+        self._vouchers = Voucher.objects.select_related('emissao').filter(emissao__emission_status=Emissao.STATUS_EMITIDO_SELO_PENDENTE)
+        return self._vouchers
+
+    def extrai_websites(self):
+        """
+        Retorna um dict separando as urls pela linha, para envio ao servidor de selos
+        """
+        from ecommerce.certificados.models import Voucher
+
+        websites = {
+            'basic': set(),
+            'pro': set(),
+            'prime': set(),
+        }
+
+        for voucher in self.get_queryset():
+            if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
+                if voucher.emissao.emission_urls:
+                    websites[voucher.ssl_line].update(voucher.emissao.get_lista_dominios())
+                else:
+                    log.warning('voucher multi-dominio sem urls #%s' % voucher.pk)
+
+            if voucher.ssl_product != Voucher.PRODUTO_SAN_UCC:
+                websites[voucher.ssl_line].add(voucher.emissao.emission_url)
+
+        return websites
+
+    def processa(self, line, chunk):
+        requests.post('%s/api/v1/ativar/%s/' % (settings.SEALS_SERVER_URL, line), {
+            'username': settings.SEALS_USERNAME,
+            'password': settings.SEALS_PASSWORD,
+            'websites': ','.join(chunk)
+        })
+
+
+class DesativaSelosRevogadosJob(AtivaSelosJob):
+    RUN_EVERY_MINS = 30
+
+    code = 'certificados.desativa_selo'
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+
+    error_message = 'Ocorreu um exceção ao executar o cronjob DesativaSelosRevogados'
+
+    def get_queryset(self):
+        from ecommerce.certificados.models import Voucher, Emissao
+
+        self._vouchers = Voucher.objects.select_related('emissao').filter(emissao__emission_status=Emissao.STATUS_REVOGADO_SELO_PENDENTE)
+        return self._vouchers
+
+    def processa(self, line, websites):
+        requests.post('%s/api/v1/desativar/%s/' % (settings.SEALS_SERVER_URL, line), {
+            'username': settings.SEALS_USERNAME,
+            'password': settings.SEALS_PASSWORD,
+            'websites': ','.join(websites)
+        })
+
+    def post_do(self):
+        from ecommerce.certificados.models import Emissao
+
+        for voucher in self._vouchers:
+            voucher.emissao.emission_status = Emissao.STATUS_REVOGADO
+            voucher.emissao.save()
+
+
+class DesativaSelosExpiradosJob(DesativaSelosRevogadosJob):
+
+    code = 'certificados.desativa_selo_expirado'
+    schedule = Schedule(run_at_times=['0:00'])
+
+    error_message = 'Ocorreu um exceção ao executar o cronjob DesativaSelosExpirados'
+
+    def get_queryset(self):
+        from ecommerce.certificados.models import Voucher, Emissao
+
+        self._vouchers = Voucher.objects.select_related('emissao').filter(
+            emissao__emission_status=Emissao.STATUS_EMITIDO,
+            ssl_valid_to__lt=now()
+        )
+        return self._vouchers
+
+    def post_do(self):
+        from ecommerce.certificados.models import Emissao
+
+        for voucher in self._vouchers:
+            voucher.emissao.emission_status = Emissao.STATUS_EXPIRADO
+            voucher.emissao.save()

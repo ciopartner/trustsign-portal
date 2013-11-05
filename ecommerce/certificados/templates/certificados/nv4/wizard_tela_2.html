@@ -1,4 +1,5 @@
 {% extends 'certificados/wizard_base.html' %}
+{% load static %}
 
 {% block coluna-esquerda %}
     {% include 'certificados/includes/dados_cliente.html' %}
@@ -52,6 +53,7 @@
 
 {% endblock %}
 
-{% block extra-js-body %}
+{% block extrascripts %}
+    {{ block.super }}
     <script src="{% static "certificados/js/certificados.js" %}"></script>
 {% endblock %}

@@ -43,8 +43,6 @@ class Voucher(Model):
     PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
     PRODUTO_PKI = 'pki'
     PRODUTO_CHOICES = (
-        (PRODUTO_SITE_SEGURO, 'Site + Seguro'),
-        (PRODUTO_SITE_MONITORADO, 'Site Monitorado'),
         (PRODUTO_SSL, 'SSL'),
         (PRODUTO_SSL_WILDCARD, 'SSL Wildcard'),
         (PRODUTO_SAN_UCC, 'SAN UCC'),
@@ -54,6 +52,9 @@ class Voucher(Model):
         (PRODUTO_JRE, 'JRE'),
         (PRODUTO_CODE_SIGNING, 'Code Signing'),
         (PRODUTO_SMIME, 'S/MIME'),
+        (PRODUTO_SSL_MDC_DOMINIO, 'MDC Domínio Adicional'),
+        (PRODUTO_SSL_EV_MDC_DOMINIO, 'EV MDC Domínio Adicional'),
+        (PRODUTO_SSL_SAN_FQDN, 'SAN FQDN Adicional'),
     )
 
     LINHA_DEGUSTACAO = 'trial'
@@ -157,6 +158,12 @@ class Voucher(Model):
     def sla_estourado(self):
         return self.order_date + timedelta(hours=self.tempo_em_espera) < timezone.now()
 
+    def has_emissao_url(self):
+        return self.ssl_product in(
+            self.PRODUTO_SSL, self.PRODUTO_SSL_WILDCARD, self.PRODUTO_SAN_UCC, self.PRODUTO_MDC, self.PRODUTO_EV,
+            self.PRODUTO_EV_MDC, self.PRODUTO_CODE_SIGNING, self.PRODUTO_JRE, self.PRODUTO_SMIME
+        )
+
     @permalink
     def get_emissao_url(self):
         if self.ssl_product in (self.PRODUTO_SSL, self.PRODUTO_SSL_WILDCARD):
@@ -172,7 +179,7 @@ class Voucher(Model):
         elif self.ssl_product == self.PRODUTO_SMIME:
             view_name = 'form-emissao-nvB'
         else:
-            raise Exception('produto não possui url de emissao')
+            return 'home'
 
         return view_name, (self.ssl_product, self.crm_hash)
 
@@ -399,6 +406,7 @@ class Emissao(Model):
             Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE,
             Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
             Emissao.STATUS_EMISSAO_ENVIADO_COMODO,
+            Emissao.STATUS_EMITIDO_SELO_PENDENTE,
 
             Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
             Emissao.STATUS_REEMISSAO_ENVIADO_COMODO,
@@ -406,7 +414,12 @@ class Emissao(Model):
             Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE,
             Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
             Emissao.STATUS_REVOGACAO_ENVIADO_COMODO,
+            Emissao.STATUS_REVOGADO_SELO_PENDENTE,
         )
+
+    @property
+    def expirado(self):
+        return self.emission_status == Emissao.STATUS_EXPIRADO
 
     @property
     def emitido(self):
