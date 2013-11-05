@@ -7,9 +7,11 @@ import os
 import re
 from django.conf import settings
 from logging import getLogger
+from django.core.mail import send_mail
 from django_cron import CronJobBase, Schedule
 import requests
 from django.utils.timezone import now
+from libs.crm.crm import CRMClient
 
 log = getLogger('portal.certificados.crons')
 
@@ -194,6 +196,7 @@ class AtivaSelosJob(CronJobBase):
         for voucher in self._vouchers:
             voucher.emissao.emission_status = Emissao.STATUS_EMITIDO
             voucher.emissao.save()
+            self.processa_ativado(voucher)
 
     def get_queryset(self):
         from ecommerce.certificados.models import Voucher, Emissao
@@ -232,6 +235,24 @@ class AtivaSelosJob(CronJobBase):
             'websites': ','.join(chunk)
         })
 
+    def processa_ativado(self, voucher):
+        # TODO: decidir onde atualizar o contrato da reemissão, e como enviar o arquivo para o CRM
+        self.atualiza_contrato(voucher, 'valido', seal_html=voucher.get_seal_html)
+
+    def atualiza_contrato(self, voucher, status, seal_html=None, certificate_file=None):
+        try:
+            client = CRMClient()
+            client.atualizar_contrato(voucher.crm_hash, status, seal_html, certificate_file)
+        except Exception as e:
+            log.exception('Ocorreu um erro ao atualizar o contrato do voucher #%s para o status <%s>' % (voucher.crm_hash, status))
+            self.envia_email_suporte(voucher, status)
+
+    def envia_email_suporte(self, voucher, status):
+        message = 'Ocorreu um erro ao atualizar o contrato no CRM do voucher #%s para o status <%s>\ncliente: %s' % (voucher.crm_hash,
+                                                                                                                     status,
+                                                                                                                     voucher.customer_companyname)
+        send_mail('[Alerta-CRM] #%s' % voucher.crm_hash, message, settings.DEFAULT_FROM_EMAIL, [settings.TRUSTSIGN_SUPORTE_EMAIL])
+
 
 class DesativaSelosRevogadosJob(AtivaSelosJob):
     RUN_EVERY_MINS = 30
@@ -260,6 +281,10 @@ class DesativaSelosRevogadosJob(AtivaSelosJob):
         for voucher in self._vouchers:
             voucher.emissao.emission_status = Emissao.STATUS_REVOGADO
             voucher.emissao.save()
+            self.processa_revogado(voucher)
+
+    def processa_revogado(self, voucher):
+        self.atualiza_contrato(voucher, 'revogado')
 
 
 class DesativaSelosExpiradosJob(DesativaSelosRevogadosJob):
@@ -284,3 +309,7 @@ class DesativaSelosExpiradosJob(DesativaSelosRevogadosJob):
         for voucher in self._vouchers:
             voucher.emissao.emission_status = Emissao.STATUS_EXPIRADO
             voucher.emissao.save()
+            self.processa_expirado(voucher)
+
+    def processa_expirado(self, voucher):
+        self.atualiza_contrato(voucher, 'expirado')
