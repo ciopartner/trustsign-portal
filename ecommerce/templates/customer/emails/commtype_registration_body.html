@@ -1,0 +1,55 @@
+{% extends "customer/emails/base.html" %}
+
+{% block title %}BEM-VINDO A TRUSTSIGN{% endblock %}
+
+{% block body %}
+        <div style="text-align: center; margin-top: 40px;">
+			<strong>{{user.first_name}} {{user.last_name}}</strong>, Obrigado por se cadastrar na TrustSign.
+		</div>
+
+		<h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 200%">Seu Painel de Controle</h2>
+
+		<table cellpadding="0" cellspacing="0" border="0" align="center">
+			<tr>
+				<td bgcolor="#f0f0f0" style="padding: 20px; color: #666; font-size: 150%; font-weight: bold;">
+					<a href="{{ dominio }}ecommerce/accounts/orders/" style="text-decoration: none; color: #606060">Minhas Compras</a>
+				</td>
+				<td bgcolor="#f7f7f7" style="padding: 20px; color: #666; font-size: 150%; font-weight: bold;">
+					<a href="{{ dominio }}ecommerce/accounts/profile/" style="text-decoration: none; color: #606060">Editar Cadastro</a>
+				</td>
+			</tr>
+		</table>
+
+		<h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 200%">Suporte TrustSign</h2>
+
+		<table cellpadding="0" cellspacing="0" border="0" align="center">
+			<tr>
+				<td bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; ">
+					<a href="{{ dominio }}portal/suporte-trustsign/faq/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 150%;">FAQ</a>
+					<p style="font-size: ">Diversas respostas segmentadas por solução, para auxílio nas dúvidas mais frequentes. </p>
+				</td>
+				<td bgcolor="#f7f7f7" style="padding: 10px; color: #666; text-align: center; ">
+					<a href="{{ dominio }}portal/suporte-trustsign/tutoriais-em-video/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 150%;">Tutoriais em vídeo</a>
+					<p style="font-size: "> Tutoriais rápidos e práticos para auxilio em instalações de certificados e principais dúvidas. </p>
+				</td>
+				<!-- <td bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; ">
+					<a href="{{ dominio }}portal/suporte-trustsign/tutoriais/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 150%;">Tutoriais</a>
+					<p style="font-size: "> Tutoriais em PDF para auxílio às instalações de certificados e principais dúvidas. </p>
+				</td>
+			</tr>
+			<tr>	 -->
+				<td bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; ">
+					<a href="{{ dominio }}portal/suporte-trustsign/manuais/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 150%;">Manuais</a>
+					<p style="font-size: "> Diversos documentos segmentados por solução, para auxílio às principais dúvidas. </p>
+				</td>
+				<!-- <td bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; ">
+					<a href="{{ dominio }}portal/suporte-trustsign/glossario/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 150%;">Glossário</a>
+					<p style="font-size: "> Entenda os termos técnicos mais importantes sobre segurança na internet. </p>
+				</td> -->
+				<td bgcolor="#f7f7f7" style="padding: 10px; color: #666; text-align: center; ">
+					<a href="{{ dominio }}portal/suporte-trustsign/ferramentas/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 150%;">Ferramentas</a>
+					<p style="font-size: ">  SSL Checker, SSL decoder, Certificate Key Matcher e SSL converter. </p>
+				</td>
+			</tr>
+		</table>
+{% endblock %}
