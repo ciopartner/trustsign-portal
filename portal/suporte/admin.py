@@ -1,29 +1,8 @@
 from django.contrib import admin
-from django.contrib.contenttypes.generic import GenericTabularInline
 from django.forms import ModelForm, ModelMultipleChoiceField
 from mezzanine.pages.admin import PageAdmin
 from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question, FerramentasPage, \
     TaggedItem, Tag, TutorialPage, Tutorial
-
-
-class TaggedItemInline(GenericTabularInline):
-    model = TaggedItem
-
-
-class ManualAdminInline(admin.TabularInline):
-    model = Manual
-
-
-class ManualPageAdmin(PageAdmin):
-    inlines = (ManualAdminInline, TaggedItemInline)
-
-
-class ItemAdminInline(admin.TabularInline):
-    model = Item
-
-
-class GlossarioPageAdmin(PageAdmin):
-    inlines = (ItemAdminInline, TaggedItemInline)
 
 
 class TaggedItemForm(ModelForm):
@@ -83,6 +62,38 @@ class TutorialAdminInline(admin.TabularInline):
 
 class TutorialPageAdmin(PageAdmin):
     inlines = [TutorialAdminInline]
+
+
+class ItemForm(TaggedItemForm):
+
+    class Meta:
+        fields = ['termo', 'descricao', 'tags_field']
+        model = Item
+
+
+class ItemAdminInline(admin.TabularInline):
+    model = Item
+    form = ItemForm
+
+
+class GlossarioPageAdmin(PageAdmin):
+    inlines = (ItemAdminInline,)
+
+
+class ManualForm(TaggedItemForm):
+
+    class Meta:
+        fields = ['titulo', 'descricao', 'arquivo', 'tags_field']
+        model = Manual
+
+
+class ManualAdminInline(admin.TabularInline):
+    model = Manual
+    form = ManualForm
+
+
+class ManualPageAdmin(PageAdmin):
+    inlines = (ManualAdminInline,)
 
 
 admin.site.register(FAQPage, FAQPageAdmin)
