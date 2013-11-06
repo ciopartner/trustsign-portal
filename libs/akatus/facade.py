@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import datetime
-
 from django.conf import settings
-from ecommerce.website.utils import formata_cnpj
+from oscar.apps.payment import bankcards
+from ecommerce.website.utils import limpa_telefone
 from gateway import *
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
 
@@ -20,88 +19,17 @@ class Facade(object):
                               AKATUS_USER=self.AKATUS_EMAIL,
                               AKATUS_API_KEY=self.AKATUS_API_KEY)
 
-    def post_creditcard_payment(self, request, order_number, total_incl_tax):
+    def post_creditcard_payment(self, request, order, bankcard):
         """
         This method is responsible for taking care of the payment.
         """
-        ip = request.META['REMOTE_ADDR']
+        options = {
+            'pagador': self.get_dados_pagador(request.user),
+            'transacao': self.get_dados_transacao_credito(order, bankcard),
+            'produtos': self.get_dados_produtos(order.lines.all())
+        }
 
-        options = {}
-
-        # Customer data:
-        options['nome'] = ''
-        options['email'] = ''
-        options['enderecos'] = [
-            {
-                'endereco': {
-                    'tipo': 'entrega',
-                    'logradouro': 'Rua Labib Marrar',
-                    'numero': '129',
-                    'bairro': 'Jardim Santa Cruz',
-                    'cidade': 'São Paulo',
-                    'estado': 'SP',
-                    'pais': 'BRA',
-                    'cep': '04182-040',
-                }
-            }
-        ]
-
-        options['DataCadastro'] = request.user.date_joined.strftime('%d/%m/%Y')
-        options['Sobrenome'] = ''
-        options['RazaoSocial'] = request.user.get_profile().cliente_razaosocial
-        options['Genero'] = 'J'
-        options['CpfCnpj'] = request.user.get_profile().cliente_cnpj
-        options['NascAbertura'] = ''
-        options['Login'] = formata_cnpj(request.user.get_profile().cliente_cnpj)
-        options['Moeda'] = 'BRL'
-        options['Idioma'] = 'PT-BR'
-        options['IpCadastro'] = ip
-        options['Notas'] = ''
-
-        # Customer billing address
-        options['Endereco'] = request.user.get_profile().cliente_logradouro
-        options['Numero'] = request.user.get_profile().cliente_numero
-        options['Complemento'] = request.user.get_profile().cliente_complemento
-        options['Bairro'] = request.user.get_profile().cliente_bairro
-        options['Cidade'] = request.user.get_profile().cliente_cidade
-        options['UF'] = request.user.get_profile().cliente_uf
-        options['CEP'] = request.user.get_profile().cliente_cep
-        options['Pais'] = 'Brasil'
-        options['DDD'] = ''
-        options['Telefone'] = request.user.get_profile().callback_telefone_principal
-        options['Tipo'] = 'Comercial'
-
-        # Customer e-mail
-        options['Email'] = request.user.get_profile().callback_email_corporativo
-
-        # Order data
-        options['LojaCanal'] = 'WEB'
-        options['MeiosdePagamento'] = request.POST.get('MD_MeioPagto')
-        options['PedidoCodigo'] = unicode(order_number)
-        options['PedidoNumeroLoja'] = unicode(order_number)
-        options['PedidoEmissao'] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-        options['PedidoVencimento'] = (datetime.datetime.now() +
-                                          datetime.timedelta(days=7)).strftime('%d/%m/%Y %H:%M:%S')
-        options['PedidoExpiracao'] = (datetime.datetime.now() +
-                                         datetime.timedelta(days=7)).strftime('%d/%m/%Y %H:%M:%S')
-        options['PedidoRecorrente'] = 'N'
-        options['PedidoValor'] = request.basket.total_incl_tax.to_eng_string().replace('.','')
-        options['PedidoValorSemJuros'] = request.basket.total_incl_tax.to_eng_string().replace('.','')
-        options['PedidoMulta'] = ''
-        options['PedidoJuros'] = ''
-        # Todo: validar se este num_itens é itens total ou itens diferentes
-        options['PedidoItens'] = unicode(request.basket.num_items)
-        options['PedidoParcelas'] = request.POST.get('MD_FormaPagto')
-        options['PedidoValorParcelas'] = request.POST.get('MD_ValorParcela')
-        # 1 - Administradora; 2 - Loja
-        options['PedidoFinanciador'] = '1'
-        options['PedidoInstrucoes'] = u'Sr Caixa: não receber após o vencimento.'
-        options['PortadorCartao'] = ''
-        options['PortadorValidade'] = ''
-        options['PortadorCVV'] = ''
-        options['PortadorNome'] = ''
-
-        gateway.post_payment(options)
+        self.gateway.post_credit_card(options)
 
     def get_payment_installments(self, request, amount):
         """
@@ -118,3 +46,68 @@ class Facade(object):
             return response
         raise UnableToTakePayment("Erro na comunicação com o gateway de pagamento.")
 
+    def get_dados_pagador(self, user):
+        profile = user.get_profile()
+
+        return {
+            'nome': user.get_full_name(),
+            'email': user.email,
+            'enderecos': [{
+                'tipo': 'comercial',
+                'logradouro': profile.cliente_logradouro,
+                'numero': profile.cliente_numero,
+                'bairro': profile.cliente_bairro,
+                'cidade': profile.cliente_cidade,
+                'estado': profile.cliente_uf,
+                'pais': 'BRA',
+                'cep': profile.cliente_cep.remove('-'),
+            }],
+            'telefones': [{
+                'tipo': 'comercial',
+                'numero': limpa_telefone(profile.callback_telefone_principal)
+            }],
+        }
+
+    def get_dados_transacao_credito(self, order, bankcard):
+        tipo_cartao = bankcard.card_type
+        if tipo_cartao in (bankcards.VISA, bankcards.VISA_ELECTRON):
+            meio_de_pagamento = 'cartao_visa'
+        elif tipo_cartao == bankcards.MASTERCARD:
+            meio_de_pagamento = 'cartao_master'
+        elif tipo_cartao == bankcards.AMEX:
+            meio_de_pagamento = 'cartao_amex'
+        elif tipo_cartao == bankcards.DINERS_CLUB:
+            meio_de_pagamento = 'cartao_dinners'
+        else:
+            raise UnableToTakePayment('Bandeira do cartão inválida')
+
+        return {
+            'numero': bankcard.number.remove('-'),
+            'parcelas': '1',
+            'codigo_de_seguranca': bankcard.cvv,
+            'expiracao': bankcard.expiry_month(),
+            'desconto': '0.00',
+            'peso': '0.00',
+            'frete': '0.00',
+            'moeda': 'BRL',
+            'referencia': order.number,
+            'meio_de_pagamento': meio_de_pagamento,
+
+            'portador': {
+                'nome': bankcard.name,
+                'cpf': bankcard.cpf,
+                'telefone': bankcard.telefone_portador,
+            }
+        }
+
+    def get_dados_produtos(self, lines):
+
+        return [{
+            'codigo': line.product.upc,
+            'descricao': line.product.title,
+            'quantidade': line.quantity,
+            'preco': str(line.line_price_incl_tax),
+            'peso': '0',
+            'frete': '0',
+            'desconto': '0',
+        } for line in lines]

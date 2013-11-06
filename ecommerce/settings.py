@@ -219,6 +219,19 @@ LOGOUT_URL = '/ecommerce/accounts/logout/'
 COBREBEM_HOST = "https://teste.aprovafacil.com/cgi-bin/APFW"
 COBREBEM_USER = "trustsign"
 
+AKATUS_TOKEN_NIP = '<mudar local_settings.py>'
+AKATUS_API_KEY = '<mudar local_settings.py>'
+AKATUS_EMAIL = '<mudar local_settings.py>'
+AKATUS_URL_TST = 'https://sandbox.akatus.com/api/v1/'
+AKATUS_URL_PRD = 'https://www.akatus.com/api/v1/'
+
+# Use TST or PRD in the variable below
+AKATUS_ENVIRONMENT = 'TST'
+
+@property
+def AKATUS_URL():
+    return AKATUS_URL_PRD if AKATUS_ENVIRONMENT == 'PRD' else AKATUS_URL_TST
+
 
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
