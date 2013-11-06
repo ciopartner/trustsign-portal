@@ -18,6 +18,7 @@ class Basket(AbstractBasket):
             )
             self._tem_contrato_ssl = any(line.product.attr.ssl_code.option in codigos
                                          for line in self.all_lines())
+
         return self._tem_contrato_ssl
 
     def tem_contrato_siteseguro(self):
