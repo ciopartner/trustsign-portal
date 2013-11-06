@@ -25,10 +25,18 @@ class Akatus(object):
         return '{}/{}'.format(self.URL, self.METHODS[method])
 
     def call_server_post(self, method, data):
-        return requests.post(self.get_method_url(method), data)
+        response = requests.post(self.get_method_url(method), data)
+
+        # TODO: verificar se deu erro na resposta, raise GatewayError caso encontre erro
+        #import ipdb; ipdb.set_trace()
+        return response
 
     def call_server_get(self, method, data):
-        return requests.get(self.get_method_url(method), params=data)
+        response = requests.get(self.get_method_url(method), params=data)
+
+        # TODO: verificar se deu erro na resposta, raise GatewayError caso encontre erro
+        #import ipdb; ipdb.set_trace()
+        return response
 
     def post_payment(self, options):
         """

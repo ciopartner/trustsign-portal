@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.conf import settings
 from oscar.apps.payment import bankcards
 from ecommerce.website.utils import limpa_telefone
-from gateway import *
-from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
+from gateway import Akatus
+from oscar.apps.payment.exceptions import UnableToTakePayment
+
 
 class Facade(object):
     """
@@ -19,29 +21,26 @@ class Facade(object):
                               AKATUS_USER=self.AKATUS_EMAIL,
                               AKATUS_API_KEY=self.AKATUS_API_KEY)
 
-    def post_creditcard_payment(self, request, order, bankcard):
+    def post_creditcard_payment(self, request, order_number, bankcard):
         """
         This method is responsible for taking care of the payment.
         """
         options = {
             'pagador': self.get_dados_pagador(request.user),
-            'transacao': self.get_dados_transacao_credito(order, bankcard),
-            'produtos': self.get_dados_produtos(order.lines.all())
+            'transacao': self.get_dados_transacao_credito(order_number, bankcard),
+            'produtos': self.get_dados_produtos(request.basket.all_lines())
         }
 
-        self.gateway.post_credit_card(options)
+        self.gateway.post_payment(options)
 
     def get_payment_installments(self, request, amount):
         """
         This method requests Akatus webservice for installments for Credit Card.
         You must call the capture method to confirm the transaction.
         """
-        ip = request.META['REMOTE_ADDR']
-        gateway = Akatus()
-
         if amount == 0:
             raise UnableToTakePayment("Order amount must be non-zero")
-        response = gateway.get_installments(amount, 'VISA')
+        response = self.gateway.get_installments(amount, 'VISA')
         if response:
             return response
         raise UnableToTakePayment("Erro na comunicação com o gateway de pagamento.")
@@ -68,9 +67,10 @@ class Facade(object):
             }],
         }
 
-    def get_dados_transacao_credito(self, order, bankcard):
+    def get_dados_transacao_credito(self, order_number, bankcard):
         tipo_cartao = bankcard.card_type
-        if tipo_cartao in (bankcards.VISA, bankcards.VISA_ELECTRON):
+
+        if tipo_cartao == bankcards.VISA:
             meio_de_pagamento = 'cartao_visa'
         elif tipo_cartao == bankcards.MASTERCARD:
             meio_de_pagamento = 'cartao_master'
@@ -90,7 +90,7 @@ class Facade(object):
             'peso': '0.00',
             'frete': '0.00',
             'moeda': 'BRL',
-            'referencia': order.number,
+            'referencia': order_number,
             'meio_de_pagamento': meio_de_pagamento,
 
             'portador': {
@@ -100,14 +100,14 @@ class Facade(object):
             }
         }
 
-    def get_dados_transacao_debito(self, order, bankcard):
+    def get_dados_transacao_debito(self, order_number, bankcard):
         """
         Compila os dados de cartão de débito
         meio_de_pagamento = tef_itau/tef_bradesco/tef_bb
         """
         bank_name = bankcard.bank_name
         if bank_name == 'BRADESCO':
-            meio_de_pagamento = 'cartao_master'
+            meio_de_pagamento = 'tef_bradesco'
         elif bank_name == 'ITAU':
             meio_de_pagamento = 'tef_itau'
         elif bank_name == 'BB':
@@ -120,11 +120,11 @@ class Facade(object):
             'peso': '0.00',
             'frete': '0.00',
             'moeda': 'BRL',
-            'referencia': order.number,
+            'referencia': order_number,
             'meio_de_pagamento': meio_de_pagamento,
         }
 
-    def get_dados_transacao_boleto(self, order):
+    def get_dados_transacao_boleto(self, order_number):
         """
         Compila os dados de cartão de débito
         meio_de_pagamento = tef_itau/tef_bradesco/tef_bb
@@ -135,7 +135,7 @@ class Facade(object):
             'peso': '0.00',
             'frete': '0.00',
             'moeda': 'BRL',
-            'referencia': order.number,
+            'referencia': order_number,
             'meio_de_pagamento': meio_de_pagamento,
         }
 

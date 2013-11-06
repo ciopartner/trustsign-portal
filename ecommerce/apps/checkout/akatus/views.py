@@ -6,11 +6,9 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
 from ecommerce.website.utils import remove_message
-#from libs.cobrebem.facade import Facade
-from libs.moedadigital import facade as moedadigital
-from libs.cobrebem import facade as cobrebem
+from libs.akatus import facade as akatus
 
-from oscar.apps.payment.exceptions import UnableToTakePayment
+from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
 from oscar.apps.checkout import views
 from libs.crm.mixins import OscarToCRMMixin
 import logging
@@ -66,11 +64,6 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
         ctx['bankcard_form'] = kwargs.get('bankcard_form', BankcardForm())
 
-        # Payment DIV from MoedaDigital:
-        facade = moedadigital.Facade()
-        payment_div = facade.get_payment_html(request=self.request, amount=ctx['order_total'].incl_tax)
-        ctx['payment_div'] = payment_div
-
         return ctx
 
     def post(self, request, *args, **kwargs):
@@ -99,7 +92,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
             return self.submit(**submission)
 
         # Only for credit card:
-        if request.POST.get('source-type') == 'credito':
+        if request.POST.get('source-type') == 'akatus-creditcard':
             bankcard_form = BankcardForm(request.POST)
             if not bankcard_form.is_valid():
                 # Bancard form invalid, re-render the payment details template
@@ -111,12 +104,12 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
             submission = self.build_submission(payment_kwargs=payment_kwargs)
             return self.submit(**submission)
 
-        if request.POST.get('source-type') == 'debito':
+        if request.POST.get('source-type') == 'akatus-debitcard':
             bank = request.POST.get('card_type')
             submission = self.build_submission()
             return self.submit(**submission)
 
-        if request.POST.get('source-type') == 'boleto':
+        if request.POST.get('source-type') == 'akatus-boleto':
             submission = self.build_submission()
             return self.submit(**submission)
 
@@ -175,12 +168,11 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         # Make request to DataCash - if there any problems (eg bankcard
         # not valid / request refused by bank) then an exception would be
         # raised and handled by the parent PaymentDetail view)
-        facade = cobrebem.Facade()
-        transaction_id = facade.approval(self.request, order_number, total_incl_tax.incl_tax, bankcard)
-        if transaction_id:
-            msg = facade.capture(transaction_id)
-            if transaction_id != msg:
-                raise UnableToTakePayment(msg)
+        facade = akatus.Facade()
+        try:
+            transaction_id = facade.post_creditcard_payment(self.request, order_number, bankcard)
+        except InvalidGatewayRequestError as e:
+            raise UnableToTakePayment(e.message)
 
         bankcard.user = self.request.user
         bankcard.save()
@@ -188,7 +180,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         # Request was successful - record the "payment source".  As this
         # request was a 'pre-auth', we set the 'amount_allocated' - if we had
         # performed an 'auth' request, then we would set 'amount_debited'.
-        source_type, _ = SourceType.objects.get_or_create(name='cobrebem-credito')
+        source_type, _ = SourceType.objects.get_or_create(name='akatus-creditcard')
         source = Source(source_type=source_type,
                         currency='BRL',
                         amount_debited=total_incl_tax.incl_tax,
@@ -206,14 +198,13 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         """
         This method is responsible for taking the payment of credit card
         """
-        ip = self.request.META['REMOTE_ADDR']
         bankcard = kwargs['bankcard']
 
         # Make request to DataCash - if there any problems (eg bankcard
         # not valid / request refused by bank) then an exception would be
         # raised and handled by the parent PaymentDetail view)
-        facade = cobrebem.Facade()
-        debito_html = facade.debit_card(self.request, order_number, total_incl_tax.incl_tax, bankcard)
+        facade = akatus.Facade()
+        debito_html = facade.post_debitcard_payment(self.request, order_number, bankcard)
 
         if not debito_html:
             msg = 'Falha no pagamento com cartão de débito'
@@ -240,12 +231,11 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         """
         This method is responsible for taking the payment of credit card
         """
-        ip = self.request.META['REMOTE_ADDR']
         bankcard = kwargs['bankcard']
 
         # Do the request to Cobrebem
-        facade = cobrebem.Facade()
-        boleto_html = facade.get_boleto(self.request, order_number, total_incl_tax.incl_tax)
+        facade = akatus.Facade()
+        boleto_html = facade.post_boleto_payment(self.request, order_number, bankcard)
         if boleto_html.status_code != 200:
             msg = 'Falha no pagamento com boleto bancário'
             raise UnableToTakePayment(msg)

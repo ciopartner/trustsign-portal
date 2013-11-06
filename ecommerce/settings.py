@@ -228,7 +228,7 @@ AKATUS_URL_PRD = 'https://www.akatus.com/api/v1/'
 # Use TST or PRD in the variable below
 AKATUS_ENVIRONMENT = 'TST'
 
-@property
+
 def AKATUS_URL():
     return AKATUS_URL_PRD if AKATUS_ENVIRONMENT == 'PRD' else AKATUS_URL_TST
 
