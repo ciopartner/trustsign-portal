@@ -1462,6 +1462,7 @@ img.size-thumbnail{
 	color:#4B4B4B;
 	font-size:110%;
     line-height: 140%;
+    min-height: 34px;
 }
 .product-tabs > h4{
 	font-family:Tahoma, Geneva, sans-serif;
