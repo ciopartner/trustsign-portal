@@ -100,6 +100,45 @@ class Facade(object):
             }
         }
 
+    def get_dados_transacao_debito(self, order, bankcard):
+        """
+        Compila os dados de cartão de débito
+        meio_de_pagamento = tef_itau/tef_bradesco/tef_bb
+        """
+        bank_name = bankcard.bank_name
+        if bank_name == 'BRADESCO':
+            meio_de_pagamento = 'cartao_master'
+        elif bank_name == 'ITAU':
+            meio_de_pagamento = 'tef_itau'
+        elif bank_name == 'BB':
+            meio_de_pagamento = 'tef_bb'
+        else:
+            raise UnableToTakePayment('Banco {} Inválido'.format(bank_name))
+
+        return {
+            'desconto': '0.00',
+            'peso': '0.00',
+            'frete': '0.00',
+            'moeda': 'BRL',
+            'referencia': order.number,
+            'meio_de_pagamento': meio_de_pagamento,
+        }
+
+    def get_dados_transacao_boleto(self, order):
+        """
+        Compila os dados de cartão de débito
+        meio_de_pagamento = tef_itau/tef_bradesco/tef_bb
+        """
+        meio_de_pagamento = 'boleto'
+        return {
+            'desconto': '0.00',
+            'peso': '0.00',
+            'frete': '0.00',
+            'moeda': 'BRL',
+            'referencia': order.number,
+            'meio_de_pagamento': meio_de_pagamento,
+        }
+
     def get_dados_produtos(self, lines):
 
         return [{

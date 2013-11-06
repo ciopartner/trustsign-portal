@@ -26,9 +26,9 @@ class Akatus(object):
     def call_server(self, method, data):
         return requests.post(self.get_method_url(method), data)
 
-    def post_credit_card(self, options):
+    def post_payment(self, options):
         """
-        Efetua o POST de uma solicitação de pagamento via cartão de crédito
+        Efetua o POST de uma solicitação de pagamento via cartão de crédito, débito ou boleto
         """
         carrinho = {
             'recebedor': {
@@ -36,7 +36,7 @@ class Akatus(object):
                 'email': self.USER,
             },
 
-            'pagador': options['pegador'],
+            'pagador': options['pagador'],
             'transacao': options['transacao'],
             'produtos': options['produtos']
         }
@@ -45,28 +45,19 @@ class Akatus(object):
         #import ipdb; ipdb.set_trace()
         return result
 
-    def post_debit_card(self, options):
+    def get_installments(self, amount, card='cartao_visa'):
         """
-        Efetua o POST de uma solicitação de pagamento via cartão de crédito
+        Get the installments amount for the given card.
+        payment_method = cartao_visa, cartao_master, cartao_amex, cartao_elo e cartao_dinners
         """
-        carrinho = {
-            'recebedor': {
-                'api_key': '',
-                'email': ''
-            },
+        URL = 'https://sandbox.akatus.com/api/v1/parcelamento/simulacao.json'
+        parameters = {
+            'email': self.USER,
+            'api_key': self.API_KEY,
+            'amount': unicode(amount).replace('.', '').replace(',', ''),
+            'payment_method': card,
         }
 
-    def post_boleto(self, options):
-        """
-        Efetua o POST de uma solicitação de pagamento via cartão de crédito
-        """
-        carrinho = {
-            'recebedor': {
-                'api_key': '',
-                'email': ''
-            },
-        }
-
-    def get_installments(self, amount, method):
-        pass
+        result = requests.get(URL, params=parameters)
+        return result
 
