@@ -6,6 +6,9 @@
         <div style="text-align: center; margin-top: 40px;">
 			<strong>{{user.first_name}} {{user.last_name}}</strong>, Obrigado por se cadastrar na TrustSign.
 
+            <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 200%">Dados cadastrais:</h2>
+            CNPJ: {{ user.get_profile.get_cnpj_formatado }}<br/>
+            Senha: ******
 
 		</div>
 
