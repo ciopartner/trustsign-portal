@@ -1,8 +1,12 @@
 from decimal import Decimal
-from django.utils.formats import localize
 from mezzanine.pages.page_processors import processor_for
 from portal.products.models import Product
 from django.db import connection
+
+
+def split1000(s, sep='.'):
+    return s if len(s) <= 3 else split1000(s[:-3], sep) + sep + s[-3:]
+
 
 @processor_for(Product)
 def product_processor(request, page):
@@ -73,10 +77,10 @@ def product_processor(request, page):
         if price is None:
             price = Decimal(0)
 
-
         price = price.quantize(Decimal('0.01'))
         x = data['precos'][product_line]['term%s' % product_term]
-        x['price_tpl'] = localize(price).split(',')
+        num, dec = str(price).split('.')
+        x['price_tpl'] = split1000(num), dec
         x['price'] = price
 
     for line in ('basic', 'pro', 'prime', 'na'):
