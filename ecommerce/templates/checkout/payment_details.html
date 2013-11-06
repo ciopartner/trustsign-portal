@@ -8,15 +8,14 @@
         <h1>{% trans "Enter payment details" %}</h1>
     </div>
 
-    <h3>{% trans "Order contents" %}</h3>
     <div class="row bm30">
         <div class="span9">
             <div class="basket-title">
                 <div class="row-fluid">
-                    <h4 class="span6">{% trans "Items in basket" %}</h4>
-                    <h4 class="span2 align-right">{% trans "Quantity" %}</h4>
-                    <h4 class="span2 align-right">{% trans "Price" %}</h4>
-                    <h4 class="span2 align-right">{% trans "Total" %}</h4>
+                    <h4 class="span6">Descrição dos produtos</h4>
+                    <h4 class="span2">{% trans "Quantity" %}</h4>
+                    <h4 class="span2">{% trans "Price" %}</h4>
+                    <h4 class="span2">{% trans "Total" %}</h4>
                 </div>
             </div>
             {% for line in basket.all_lines %}
@@ -24,16 +23,16 @@
                     <div class="row-fluid">
                         <div class="span6">
 {#                            <h4>{{ line.product.stockrecord.partner.name }}</h4>#}
-                            <h3><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h3>
+                            <h4><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></h4>
                         </div>
-                        <div class="span2  align-right">
-                            <h3>{{ line.quantity }}</h3>
+                        <div class="span2">
+                            <p class="price_color price_total">{{ line.quantity }}</p>
                         </div>
-                        <div class="span2 align-right">
-                            <h3>{{  line.unit_price_incl_tax|currency }}</h3>
+                        <div class="span2">
+                            <p class="price_color price_total">{{  line.unit_price_incl_tax|currency }}</p>
                         </div>
-                        <div class="span2 align-right">
-                            <h3>{{ line.line_price_incl_tax|currency }}</h3>
+                        <div class="span2">
+                            <p class="price_color price_total">{{ line.line_price_incl_tax|currency }}</p>
                         </div>
                     </div>
                 </div>
@@ -62,7 +61,7 @@
     {% block payment_details_content %}
 
         <div>
-            <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
+            <form action="{% url 'checkout:preview' %}" id="form-compra" class="form-horizontal" method="post">
                 <input type="hidden" name="source-type" value="moeda-digital" />
                 {% csrf_token %}
 {#                <div class="alert alert-warning">#}
