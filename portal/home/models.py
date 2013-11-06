@@ -17,6 +17,7 @@ from django.db.models.signals import post_save
 # class Book(models.Model):
 #     author = models.ForeignKey("Author")
 #     cover = models.ImageField(upload_to="authors")
+from ecommerce.website.utils import formata_cnpj
 
 
 class TrustSignProfile(Model):
@@ -102,6 +103,11 @@ class TrustSignProfile(Model):
     @property
     def is_plataforma(self):
         return self.perfil == self.PERFIL_PLATAFORMA
+
+    def get_cnpj_formatado(self):
+        if len(self.cliente_cnpj) == 14:
+            return formata_cnpj(self.cliente_cnpj)
+        return self.cliente_cnpj
 
 
 def create_profile(sender, **kwargs):
