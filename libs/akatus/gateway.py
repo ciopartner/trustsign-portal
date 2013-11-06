@@ -12,7 +12,8 @@ class Akatus(object):
     """
 
     METHODS = {
-        'carrinho': '/api/v1/carrinho.json',
+        'carrinho': 'api/v1/carrinho.json',
+        'installments': 'api/v1/parcelamento/simulacao.json',
     }
 
     def __init__(self, *args, **kwargs):
@@ -23,8 +24,11 @@ class Akatus(object):
     def get_method_url(self, method):
         return '{}/{}'.format(self.URL, self.METHODS[method])
 
-    def call_server(self, method, data):
+    def call_server_post(self, method, data):
         return requests.post(self.get_method_url(method), data)
+
+    def call_server_get(self, method, data):
+        return requests.get(self.get_method_url(method), params=data)
 
     def post_payment(self, options):
         """
@@ -41,7 +45,7 @@ class Akatus(object):
             'produtos': options['produtos']
         }
 
-        result = self.call_server('carrinho', json.dumps(carrinho))
+        result = self.call_server_post('carrinho', json.dumps(carrinho))
         #import ipdb; ipdb.set_trace()
         return result
 
@@ -50,7 +54,6 @@ class Akatus(object):
         Get the installments amount for the given card.
         payment_method = cartao_visa, cartao_master, cartao_amex, cartao_elo e cartao_dinners
         """
-        URL = 'https://sandbox.akatus.com/api/v1/parcelamento/simulacao.json'
         parameters = {
             'email': self.USER,
             'api_key': self.API_KEY,
@@ -58,6 +61,6 @@ class Akatus(object):
             'payment_method': card,
         }
 
-        result = requests.get(URL, params=parameters)
+        result = self.call_server_get('installments', parameters)
         return result
 

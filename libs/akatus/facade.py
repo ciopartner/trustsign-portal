@@ -12,7 +12,7 @@ class Facade(object):
     """
 
     def __init__(self, *args, **kwargs):
-        self.AKATUS_URL = settings.AKATUS_URL
+        self.AKATUS_URL = settings.AKATUS_URL()
         self.AKATUS_EMAIL = settings.AKATUS_EMAIL
         self.AKATUS_API_KEY = settings.AKATUS_API_KEY
         self.gateway = Akatus(AKATUS_URL=self.AKATUS_URL,
