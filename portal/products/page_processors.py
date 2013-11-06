@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.utils.formats import localize
 from mezzanine.pages.page_processors import processor_for
 from portal.products.models import Product
 from django.db import connection
@@ -68,14 +69,14 @@ def product_processor(request, page):
         }
     }
 
-
     for upc, product_line, product_term, price in cursor.fetchall():
         if price is None:
             price = Decimal(0)
 
+
         price = price.quantize(Decimal('0.01'))
         x = data['precos'][product_line]['term%s' % product_term]
-        x['price_tpl'] = str(price).split('.')
+        x['price_tpl'] = localize(price).split(',')
         x['price'] = price
 
     for line in ('basic', 'pro', 'prime', 'na'):
@@ -88,5 +89,4 @@ def product_processor(request, page):
             data_line['term2years']['discount'] = int((1 - data_line.get('term2years', {}).get('price', 0) / (2 * preco_1ano)) * 100)
             data_line['term3years']['discount'] = int((1 - data_line.get('term3years', {}).get('price', 0) / (3 * preco_1ano)) * 100)
 
-    print(data)
     return data
