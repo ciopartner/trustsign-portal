@@ -268,7 +268,7 @@ elif ENVIRONMENT == 'PRD':
     # Para que haja compartilhamento de sessions...
     SESSION_COOKIE_DOMAIN = 'trustsign.com.br'
 
-URL_CONTINUAR_COMPRANDO = URL_PORTAL + 'certificado-digital'
+URL_CONTINUAR_COMPRANDO = URL_PORTAL
 
 ##################
 # LOCAL SETTINGS #
