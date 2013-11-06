@@ -4597,6 +4597,24 @@ msgid ""
 "        "
 msgstr "\nSeu carrinho está custando <strong>%(total)s</strong>."
 
+msgid ""
+"\n"
+"        Basket total now <strong>%(total)s</strong>\n"
+"        "
+msgstr "\nSeu carrinho está custando <strong>%(total)s</strong>"
+
+msgid ""
+"\n"
+"        Basket total now %(total)s\n"
+"        "
+msgstr "\nSeu carrinho está custando %(total)s"
+
+msgid "Basket total now <strong>%(total)s</strong>."
+msgstr "Seu carrinho está custando <strong>%(total)s</strong>."
+
+msgid "Basket total now <strong>%(total)s</strong>"
+msgstr "Seu carrinho está custando <strong>%(total)s</strong>"
+
 #: templates/oscar/basket/messages/new_total.html:17
 msgid "View basket"
 msgstr "Visualizar carrinho"
