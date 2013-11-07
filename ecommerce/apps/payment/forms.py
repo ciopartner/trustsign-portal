@@ -34,4 +34,6 @@ class BankcardForm(ModelForm):
         return Bankcard(number=self.cleaned_data['number'],
                         expiry_date=self.cleaned_data['expiry_month'],
                         name=self.cleaned_data['name'],
-                        ccv=self.cleaned_data['ccv'])
+                        ccv=self.cleaned_data['ccv'],
+                        credito_cpf=self.cleaned_data['credito_cpf'],
+                        credito_telefone=self.cleaned_data['credito_telefone'])

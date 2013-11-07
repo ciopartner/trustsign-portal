@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.conf import settings
 from oscar.apps.payment import bankcards
-from ecommerce.website.utils import limpa_telefone
+from ecommerce.website.utils import limpa_telefone, limpa_cpf
 from gateway import Akatus
 from oscar.apps.payment.exceptions import UnableToTakePayment
 
@@ -31,7 +31,7 @@ class Facade(object):
             'produtos': self.get_dados_produtos(request.basket.all_lines())
         }
 
-        self.gateway.post_payment(options)
+        return self.gateway.post_payment(options)
 
     def get_payment_installments(self, request, amount):
         """
@@ -54,17 +54,17 @@ class Facade(object):
             'enderecos': [{
                 'tipo': 'comercial',
                 'logradouro': profile.cliente_logradouro,
-                'numero': profile.cliente_numero,
+                'numero': int(profile.cliente_numero or 0),
                 'bairro': profile.cliente_bairro,
                 'cidade': profile.cliente_cidade,
                 'estado': profile.cliente_uf,
                 'pais': 'BRA',
                 'cep': profile.cliente_cep.replace('-', ''),
             }],
-            'telefones': [{'telefone': {
+            'telefones': [{
                 'tipo': 'comercial',
-                'numero': limpa_telefone(profile.callback_telefone_principal)
-            }}],
+                'numero': int(limpa_telefone(profile.callback_telefone_principal) or 0)
+            }]
         }
 
     def get_dados_transacao_credito(self, order_number, bankcard):
@@ -82,21 +82,22 @@ class Facade(object):
             raise UnableToTakePayment('Bandeira do cartão inválida')
 
         return {
-            'numero': bankcard.number.replace('-', ''),
-            'parcelas': '1',
-            'codigo_de_seguranca': bankcard.cvv,
+            'tipo': 'akatus-creditcard',
+            'numero': int(bankcard.number.replace('-', '')),
+            'parcelas': 1,
+            'codigo_de_seguranca': int(bankcard.cvv),
             'expiracao': bankcard.expiry_month(),
-            'desconto': '0.00',
-            'peso': '0.00',
-            'frete': '0.00',
+            'desconto': 0.0,
+            'peso': 0.0,
+            'frete': 0.0,
             'moeda': 'BRL',
-            'referencia': order_number,
+            'referencia': str(order_number),
             'meio_de_pagamento': meio_de_pagamento,
 
             'portador': {
                 'nome': bankcard.name,
-                'cpf': bankcard.credito_cpf,
-                'telefone': bankcard.credito_telefone,
+                'cpf': limpa_cpf(bankcard.credito_cpf),
+                'telefone': limpa_telefone(bankcard.credito_telefone),
             }
         }
 
@@ -116,26 +117,27 @@ class Facade(object):
             raise UnableToTakePayment('Banco {} Inválido'.format(bank_name))
 
         return {
+            'tipo': 'akatus-debitcard',
             'desconto': '0.00',
             'peso': '0.00',
             'frete': '0.00',
             'moeda': 'BRL',
-            'referencia': order_number,
+            'referencia': str(order_number),
             'meio_de_pagamento': meio_de_pagamento,
         }
 
     def get_dados_transacao_boleto(self, order_number):
         """
-        Compila os dados de cartão de débito
-        meio_de_pagamento = tef_itau/tef_bradesco/tef_bb
+        Compila os dados da transação por boleto
         """
         meio_de_pagamento = 'boleto'
         return {
+            'tipo': 'akatus-boleto',
             'desconto': '0.00',
             'peso': '0.00',
             'frete': '0.00',
             'moeda': 'BRL',
-            'referencia': order_number,
+            'referencia': str(order_number),
             'meio_de_pagamento': meio_de_pagamento,
         }
 
@@ -146,7 +148,7 @@ class Facade(object):
             'descricao': line.product.title,
             'quantidade': line.quantity,
             'preco': str(line.line_price_incl_tax),
-            'peso': '0',
-            'frete': '0',
-            'desconto': '0',
+            'peso': 0,
+            'frete': 0,
+            'desconto': 0,
         } for line in lines]

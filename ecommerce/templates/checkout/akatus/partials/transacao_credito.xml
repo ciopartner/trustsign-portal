@@ -1,0 +1,17 @@
+<transacao>
+    <numero>{{ transacao.numero }}</numero>
+    <parcelas>{{ transacao.parcelas }}</parcelas>
+    <codigo_de_seguranca>{{ transacao.codigo_de_seguranca }}</codigo_de_seguranca>
+    <expiracao>{{ transacao.expiracao }}</expiracao>
+    <desconto>{{ transacao.desconto }}</desconto>
+    <peso>{{ transacao.peso }}</peso>
+    <frete>{{ transacao.frete }}</frete>
+    <moeda>{{ transacao.moeda }}</moeda>
+    <referencia>{{ transacao.referencia }}</referencia>
+    <meio_de_pagamento>{{ transacao.meio_de_pagamento }}</meio_de_pagamento>
+    <portador>
+        <nome>{{ transacao.portador.nome }}</nome>
+        <cpf>{{ transacao.portador.cpf }}</cpf>
+        <telefone>{{ transacao.portador.telefone }}</telefone>
+    </portador>
+</transacao>

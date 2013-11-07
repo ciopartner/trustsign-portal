@@ -1,5 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
+from collections import defaultdict
+from xml.etree import cElementTree
 from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
@@ -17,6 +19,8 @@ def remove_message(request, message_text):
         if message.message == message_text:
             storage._queued_messages.remove(message)
 
+def limpa_cpf(cpf):
+    return re.sub('[.-]', '', cpf)
 
 def limpa_cnpj(cnpj):
     return re.sub('[./-]', '', cnpj)
@@ -70,3 +74,28 @@ def get_dados_empresa(cnpj):
             }
         cache.set('cnpj-%s' % cnpj, data, 2592000)  # cache de 30 dias
     return data
+
+
+def xml_to_dict(xml):
+    return etree_to_dict(cElementTree.XML(xml))
+
+
+def etree_to_dict(t):
+    d = {t.tag: {} if t.attrib else None}
+    children = list(t)
+    if children:
+        dd = defaultdict(list)
+        for dc in map(etree_to_dict, children):
+            for k, v in dc.iteritems():
+                dd[k].append(v)
+        d = {t.tag: {k: v[0] if len(v) == 1 else v for k, v in dd.iteritems()}}
+    if t.attrib:
+        d[t.tag].update(('@' + k, v) for k, v in t.attrib.iteritems())
+    if t.text:
+        text = t.text.strip()
+        if children or t.attrib:
+            if text:
+                d[t.tag]['#text'] = text
+        else:
+            d[t.tag] = text
+    return d

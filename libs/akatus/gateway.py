@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
+from django.template import Context
+from django.template.loader import get_template
 from oscar.apps.payment.exceptions import GatewayError
 
 import requests
 import logging
+from ecommerce.website.utils import xml_to_dict
 
 log = logging.getLogger('libs.akatus.gateway')
 
@@ -16,8 +18,8 @@ class Akatus(object):
     """
 
     METHODS = {
-        'carrinho': 'api/v1/carrinho.json',
-        'installments': 'api/v1/parcelamento/simulacao.json',
+        'carrinho': 'api/v1/carrinho.xml',
+        'installments': 'api/v1/parcelamento/simulacao.xml',
     }
 
     def __init__(self, *args, **kwargs):
@@ -29,12 +31,15 @@ class Akatus(object):
         return '{}/{}'.format(self.URL, self.METHODS[method])
 
     def call_server_post(self, method, data):
-        response = requests.post(self.get_method_url(method), data)
+        """
+        Realiza um POST no servidor passando a data (uma string XML) e retornando um dict com os dados da resposta
+        """
+        response = requests.post(self.get_method_url(method), data.encode('utf-8'))
 
         if response.status_code != 200:
             log.warning('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
-        return response.json()
+        return xml_to_dict(response.text.encode('utf-8'))
 
     def call_server_get(self, method, data):
         response = requests.get(self.get_method_url(method), params=data)
@@ -48,22 +53,22 @@ class Akatus(object):
         """
         Efetua o POST de uma solicitação de pagamento via cartão de crédito, débito ou boleto
         """
-        carrinho = {
-            'carrinho': {
-                'recebedor': {
-                    'api_key': self.API_KEY,
-                    'email': self.USER,
-                },
+        context = {
+            'recebedor': {
+                'api_key': self.API_KEY,
+                'email': self.USER,
+            },
 
-                'pagador': options['pagador'],
-                'transacao': options['transacao'],
-                'produtos': options['produtos']
-            }
+            'pagador': options['pagador'],
+            'transacao': options['transacao'],
+            'produtos': options['produtos']
         }
 
-        result = self.call_server_post('carrinho', json.dumps(carrinho))
+        template = get_template('checkout/akatus/carrinho.xml')
+
+        result = self.call_server_post('carrinho', template.render(Context(context)))
         #import ipdb; ipdb.set_trace()
-        return result
+        return result['resposta']['transacao']
 
     def get_installments(self, amount, card='cartao_visa'):
         """

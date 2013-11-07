@@ -134,6 +134,15 @@ LOGGING = {
             'maxBytes': 10485760,
             'backupCount': 50,
         },
+        'logfile_akatus': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'formatter': 'verysimple',
+            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile-akatus.log'),
+            'mode': 'a',
+            'maxBytes': 10485760,
+            'backupCount': 50,
+        },
         'logfile_crm': {
             'class': 'logging.handlers.RotatingFileHandler',
             'level': 'INFO',
@@ -164,6 +173,10 @@ LOGGING = {
         },
         'libs.comodo': {
             'handlers': ['console', 'logfile_comodo'],
+            'level': 'DEBUG'
+        },
+        'libs.akatus': {
+            'handlers': ['console', 'logfile_akatus'],
             'level': 'DEBUG'
         },
         'oscar': {

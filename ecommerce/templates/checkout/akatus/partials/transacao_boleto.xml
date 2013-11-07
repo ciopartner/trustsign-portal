@@ -1,0 +1,8 @@
+<transacao>
+    <desconto>{{ transacao.desconto }}</desconto>
+    <peso>{{ transacao.peso }}</peso>
+    <frete>{{ transacao.frete }}</frete>
+    <moeda>{{ transacao.moeda }}</moeda>
+    <referencia>{{ transacao.referencia }}</referencia>
+    <meio_de_pagamento>{{ transacao.meio_de_pagamento }}</meio_de_pagamento>
+</transacao>

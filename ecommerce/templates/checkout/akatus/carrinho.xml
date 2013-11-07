@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<carrinho>
+    <recebedor>
+        <api_key>{{ recebedor.api_key }}</api_key>
+        <email>{{ recebedor.email }}</email>
+    </recebedor>
+    <pagador>
+        <nome>{{ pagador.nome }}</nome>
+        <email>{{ pagador.email }}</email>
+        <enderecos>
+            {% for endereco in pagador.enderecos %}
+                <endereco>
+                    <tipo>{{ endereco.tipo }}</tipo>
+                    <logradouro>{{ endereco.logradouro }}</logradouro>
+                    <numero>{{ endereco.numero }}</numero>
+                    <bairro>{{ endereco.bairro }}</bairro>
+                    <cidade>{{ endereco.cidade }}</cidade>
+                    <estado>{{ endereco.estado }}</estado>
+                    <pais>{{ endereco.pais }}</pais>
+                    <cep>{{ endereco.cep }}</cep>
+                </endereco>
+            {% endfor %}
+        </enderecos>
+        <telefones>
+            {% for telefone in pagador.telefones %}
+                <telefone>
+                    <tipo>{{ telefone.tipo }}</tipo>
+                    <numero>{{ telefone.numero }}</numero>
+                </telefone>
+            {% endfor %}
+        </telefones>
+    </pagador>
+    <produtos>
+        {% for produto in produtos %}
+            <produto>
+                <codigo>{{ produto.codigo }}</codigo>
+                <descricao>{{ produto.descricao }}</descricao>
+                <quantidade>{{ produto.quantidade }}</quantidade>
+                <preco>{{ produto.preco }}</preco>
+                <peso>{{ produto.peso }}</peso>
+                <frete>{{ produto.frete }}</frete>
+                <desconto>{{ produto.desconto }}</desconto>
+            </produto>
+        {% endfor %}
+    </produtos>
+    {% if transacao.tipo == 'akatus-creditcard' %}
+        {% include 'checkout/akatus/partials/transacao_credito.xml' %}
+    {% elif transacao.tipo == 'akatus-debitcard' %}
+        {% include 'checkout/akatus/partials/transacao_debito.xml' %}
+    {% elif transacao.tipo == 'akatus-boleto' %}
+        {% include 'checkout/akatus/partials/transacao_boleto.xml' %}
+    {% endif %}
+</carrinho>
