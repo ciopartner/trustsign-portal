@@ -1,4 +1,5 @@
 from django.forms import CharField, ModelForm
+from localflavor.br.forms import BRCPFField
 from oscar.apps.payment.forms import BankcardNumberField, BankcardCCVField, BankcardExpiryMonthField
 from oscar.core.loading import get_class
 
@@ -10,10 +11,12 @@ class BankcardForm(ModelForm):
     number = BankcardNumberField()
     ccv = BankcardCCVField()
     expiry_month = BankcardExpiryMonthField()
+    credito_cpf = BRCPFField(label='CPF do portador')
+    credito_telefone = CharField(label='Telefone do portador')
 
     class Meta:
         model = Bankcard
-        fields = ('name', 'number', 'expiry_month', 'ccv')
+        fields = ('name', 'number', 'expiry_month', 'ccv', 'credito_cpf', 'credito_telefone')
 
     def save(self, *args, **kwargs):
         # It doesn't really make sense to save directly from the form as saving
