@@ -9,7 +9,7 @@ $(document).ready(function () {
         function add_success(data){
             $qtd_carrinho.text(parseInt($qtd_carrinho.text()) + 1);
             //location.href = url_ecommerce + 'basket/';
-            $message.html("<div class=\"alert alert-success\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + ". <a href='" + url_ecommerce + "/basket'>Clique aqui</a> para visualizá-lo.</div>");
+            $message.html("<div class=\"alert alert-success\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + " ite" + (quantity > 1 ? "m" : "ns") +  ". <a href='" + url_ecommerce + "basket'>Clique aqui</a> para visualizá-lo.</div>");
         }
 
         function add_fail(data){
