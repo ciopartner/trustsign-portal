@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <section class="featurette tabmid">
 <table class="table ssltab">
 <thead>
@@ -240,15 +241,15 @@
             <div class="tab-pane active" id="lA">
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.basic.term1year.price_tpl.0 }}<sup>,{{ precos.basic.term1year.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="1year" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.pro.term1year.price_tpl.0 }}<sup>,{{ precos.pro.term1year.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="1year" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.prime.term1year.price_tpl.0 }}<sup>,{{ precos.prime.term1year.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="1year" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>1 mês grátis</h3>
@@ -259,16 +260,16 @@
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.basic.term2years.price_tpl.0 }}<sup>,{{ precos.basic.term2years.price_tpl.1 }}</sup></h3>
                     <small>Economia de {{ precos.basic.term2years.discount }}%</small>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="2years" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="2years" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.pro.term2years.price_tpl.0 }}<sup>,{{ precos.pro.term2years.price_tpl.1 }}</sup></h3>
                     <small>Economia de {{ precos.pro.term2years.discount }}%</small>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="2years" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="2years" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.prime.term2years.price_tpl.0 }}<sup>,{{ precos.prime.term2years.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="2years" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="2years" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                     <small>Economia de {{ precos.prime.term2years.discount }}%</small>
                 </div>
                 <div class="box-price tblrp10">
@@ -280,16 +281,16 @@
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.basic.term3years.price_tpl.0 }}<sup>,{{ precos.basic.term3years.price_tpl.1 }}</sup></h3>
                     <small>Economia de {{ precos.basic.term3years.discount }}%</small>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="3years" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="3years" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.pro.term3years.price_tpl.0 }}<sup>,{{ precos.pro.term3years.price_tpl.1 }}</sup></h3>
                     <small>Economia de {{ precos.pro.term3years.discount }}%</small>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="3years" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-term="3years" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                 </div>
                 <div class="box-price tblrp10">
                     <h3>R$ {{ precos.prime.term3years.price_tpl.0 }}<sup>,{{ precos.prime.term3years.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="3years" class="btn btn-orange">Comprar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-term="3years" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adcionar</a>
                     <small>Economia de {{ precos.prime.term3years.discount }}%</small>
                 </div>
                 <div class="box-price tblrp10">
@@ -314,4 +315,4 @@
     <a href='#'>ENTENDA NOSSO PROCESSO DE COMPRA ON-LINE</a>
 </div>
 
-    <a class="pull-right" style="margin-top: -20px" href="{% url 'page' 'certificado-digital' %}">Conheça a linha completa de certificados digitais</a>
+    {# <a class="pull-right" style="margin-top: -20px" href="{% url 'page' 'certificado-digital' %}">Conheça a linha completa de certificados digitais</a> #}

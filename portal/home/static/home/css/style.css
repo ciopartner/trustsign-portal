@@ -2128,3 +2128,22 @@ h3.title{
     margin-right: -8px;
     margin-top: 30px;
 }
+
+
+#form-confirm-buy{
+    border: 1px solid #DDDDDD;
+    float: right;
+    padding: 10px;
+    width: 515px;
+}
+
+#form-confirm-buy div *{
+    display: inline-block;
+}
+#form-confirm-buy div label{
+    width: 250px;
+    font-weight: bold;
+}
+#form-confirm-buy div input{
+    margin-right: 10px;
+}
