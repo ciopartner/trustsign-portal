@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
+from oscar.apps.payment.exceptions import GatewayError
 
 import requests
+import logging
+
+log = logging.getLogger('libs.akatus.gateway')
 
 
 class Akatus(object):
@@ -27,15 +31,17 @@ class Akatus(object):
     def call_server_post(self, method, data):
         response = requests.post(self.get_method_url(method), data)
 
-        # TODO: verificar se deu erro na resposta, raise GatewayError caso encontre erro
-        #import ipdb; ipdb.set_trace()
-        return response
+        if response.status_code != 200:
+            log.warning('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text))
+            raise GatewayError('Ocorreu um erro durante a chamada do gateway')
+        return response.json()
 
     def call_server_get(self, method, data):
         response = requests.get(self.get_method_url(method), params=data)
 
-        # TODO: verificar se deu erro na resposta, raise GatewayError caso encontre erro
-        #import ipdb; ipdb.set_trace()
+        if response.status_code != 200:
+            log.warning('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text))
+            raise GatewayError('Ocorreu um erro durante a chamada do gateway')
         return response
 
     def post_payment(self, options):
@@ -43,14 +49,16 @@ class Akatus(object):
         Efetua o POST de uma solicitação de pagamento via cartão de crédito, débito ou boleto
         """
         carrinho = {
-            'recebedor': {
-                'api_key': self.API_KEY,
-                'email': self.USER,
-            },
+            'carrinho': {
+                'recebedor': {
+                    'api_key': self.API_KEY,
+                    'email': self.USER,
+                },
 
-            'pagador': options['pagador'],
-            'transacao': options['transacao'],
-            'produtos': options['produtos']
+                'pagador': options['pagador'],
+                'transacao': options['transacao'],
+                'produtos': options['produtos']
+            }
         }
 
         result = self.call_server_post('carrinho', json.dumps(carrinho))

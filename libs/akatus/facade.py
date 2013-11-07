@@ -59,12 +59,12 @@ class Facade(object):
                 'cidade': profile.cliente_cidade,
                 'estado': profile.cliente_uf,
                 'pais': 'BRA',
-                'cep': profile.cliente_cep.remove('-'),
+                'cep': profile.cliente_cep.replace('-', ''),
             }],
-            'telefones': [{
+            'telefones': [{'telefone': {
                 'tipo': 'comercial',
                 'numero': limpa_telefone(profile.callback_telefone_principal)
-            }],
+            }}],
         }
 
     def get_dados_transacao_credito(self, order_number, bankcard):
@@ -82,7 +82,7 @@ class Facade(object):
             raise UnableToTakePayment('Bandeira do cartão inválida')
 
         return {
-            'numero': bankcard.number.remove('-'),
+            'numero': bankcard.number.replace('-', ''),
             'parcelas': '1',
             'codigo_de_seguranca': bankcard.cvv,
             'expiracao': bankcard.expiry_month(),
@@ -95,8 +95,8 @@ class Facade(object):
 
             'portador': {
                 'nome': bankcard.name,
-                'cpf': bankcard.cpf,
-                'telefone': bankcard.telefone_portador,
+                'cpf': bankcard.credito_cpf,
+                'telefone': bankcard.credito_telefone,
             }
         }
 

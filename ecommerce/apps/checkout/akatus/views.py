@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.contrib import messages
 from django import http
 from django.core.urlresolvers import reverse
@@ -76,21 +77,6 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         if error_response:
             return error_response
 
-        # Only for moeda-digital
-        if request.POST.get('source-type') == 'akatus':
-            payment_method = request.POST.get('MD_MeioPagto')
-            amount = request.POST.get('MD_ValorBoleto')
-            installments = request.POST.get('MD_FormaPagto')
-            installment = request.POST.get('MD_ValorParcela')
-            parameters = {
-                    'payment_method': payment_method,
-                    'amount': amount,
-                    'installments': installments,
-                    'installment': installment,
-                    }
-            submission = self.build_submission(payment_kwargs=parameters)
-            return self.submit(**submission)
-
         # Only for credit card:
         if request.POST.get('source-type') == 'akatus-creditcard':
             bankcard_form = BankcardForm(request.POST)
@@ -112,6 +98,8 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         if request.POST.get('source-type') == 'akatus-boleto':
             submission = self.build_submission()
             return self.submit(**submission)
+
+        raise UnableToTakePayment('Forma de pagamento inválida')
 
     def build_submission(self, **kwargs):
         """
@@ -184,10 +172,9 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         source = Source(source_type=source_type,
                         currency='BRL',
                         amount_debited=total_incl_tax.incl_tax,
-                        reference=transaction_id,
-                        bankcard=bankcard)
+                        reference=transaction_id)
         # When we create a transaction, we have to set a txn_type that should be debit or refund
-        source.create_deferred_transaction("debit", total_incl_tax.incl_tax, reference=transaction_id, status=1)
+        source.create_deferred_transaction("debit", total_incl_tax.incl_tax, reference=transaction_id, status=1, bankcard=bankcard)
         self.add_payment_source(source)
 
         # Also record payment event
@@ -275,7 +262,6 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         self.set_status_pago(order)
 
         return self.handle_successful_order(order)
-
 
     def set_status_pago(self, order):
         sources = order.sources.all()

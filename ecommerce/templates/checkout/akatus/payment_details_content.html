@@ -1,0 +1,88 @@
+{% load static i18n %}
+<div class="accordion" id="accordion">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Cartão de crédito
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse in">
+            <div class="accordion-inner">
+                <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
+                    <input type="hidden" name="source-type" value="akatus-creditcard" />
+                    <div class="">
+                        {% csrf_token %}
+                        {% include 'partials/form_fields.html' with form=bankcard_form %}
+                        <div class="alert alert-warning">
+                            <h4>{% trans "Demo site help" %}</h4>
+                            <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>
+                        </div>
+                    </div>
+                    <div class="pull-left">
+                        {% include 'partials/contratos_checkbox.html' %}
+                    </div>
+                    <button type="submit" class="pull-right btn btn-orange">Concluir compra</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                Boleto bancário
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="source-type" value="akatus-boleto" />
+                    <div class="pull-left">
+                        {% include 'partials/contratos_checkbox.html' %}
+                    </div>
+                    <button type="submit" class="pull-right btn btn-orange">Gerar Boleto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                Cartão de Débito / Débito em conta
+            </a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <p>Para débito em conta, o banco nos envia uma confirmação de pagamento em até <strong>dois dias íteis</strong>.</p>
+                <p>Após essa confirmação o pedido é liberado para emissão.</p>
+                <p>Escolha seu banco abaixo, e ao confirmar sua compra, você será encaminhado para uma página do banco, onde deverá fazer o pagamento online.</p>
+
+
+
+                <form action="{% url 'checkout:preview' %}" class="form-inline" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="source-type" value="akatus-debitcard" />
+                    <div class="pull-left">
+                        {% include 'partials/contratos_checkbox.html' %}
+                    </div>
+                    <button type="submit" class="pull-right btn btn-orange">Iniciar pagamento com cartão de débito</button>
+
+                    <label>
+                        <input type="radio" name="card_type" value="bb"/>
+                        <img src="{% static 'home/img/payment/thumb_bb.gif' %}" alt=""/>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="card_type" value="itau"/>
+                        <img src="{% static 'home/img/payment/thumb_itau.gif' %}" alt=""/>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="card_type" value="bradesco"/>
+                        <img src="{% static 'home/img/payment/thumb_bradesco.gif' %}" alt=""/>
+                    </label>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -222,8 +222,8 @@ COBREBEM_USER = "trustsign"
 AKATUS_TOKEN_NIP = '<mudar local_settings.py>'
 AKATUS_API_KEY = '<mudar local_settings.py>'
 AKATUS_EMAIL = '<mudar local_settings.py>'
-AKATUS_URL_TST = 'https://sandbox.akatus.com/api/v1/'
-AKATUS_URL_PRD = 'https://www.akatus.com/api/v1/'
+AKATUS_URL_TST = 'https://sandbox.akatus.com'
+AKATUS_URL_PRD = 'https://www.akatus.com'
 
 # Use TST or PRD in the variable below
 AKATUS_ENVIRONMENT = 'TST'

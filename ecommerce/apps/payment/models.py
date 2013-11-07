@@ -1,5 +1,25 @@
 from django.db.models import ForeignKey, CharField, DateField, TextField, Model, DateTimeField
-from oscar.apps.payment.abstract_models import AbstractBankcard, AbstractTransaction
+from oscar.apps.payment.abstract_models import AbstractBankcard, AbstractTransaction, AbstractSource
+
+
+class Source(AbstractSource):
+
+    def create_deferred_transaction(self, txn_type, amount, reference=None,
+                                    status=None, bankcard=None, debitcard=None, boleto=None):
+        """
+        Register the data for a transaction that can't be created yet due to FK
+        constraints.  This happens at checkout where create an payment source
+        and a transaction but can't save them until the order model exists.
+        """
+        if self.deferred_txns is None:
+            self.deferred_txns = []
+        self.deferred_txns.append((txn_type, amount, reference, status, bankcard, debitcard, boleto))
+
+    def _create_transaction(self, txn_type, amount, reference='',
+                            status='', bankcard=None, debitcard=None, boleto=None):
+        self.transactions.create(
+            txn_type=txn_type, amount=amount,
+            reference=reference, status=status, bankcard=bankcard, debitcard=debitcard, boleto=boleto)
 
 
 class Transaction(AbstractTransaction):
