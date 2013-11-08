@@ -9,7 +9,7 @@ $(document).ready(function () {
         function add_success(data){
             $qtd_carrinho.text(parseInt($qtd_carrinho.text()) + 1);
             //location.href = url_ecommerce + 'basket/';
-            $message.html("<div class=\"alert alert-success\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + " ite" + (quantity > 1 ? "m" : "ns") +  ". <a href='" + url_ecommerce + "basket'>Clique aqui</a> para visualizá-lo.</div>");
+            $message.html("<div class=\"alert alert-success\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + " ite" + (quantity > 1 ? "ns" : "m") +  ". <a href='" + url_ecommerce + "basket'>Clique aqui</a> para visualizá-lo.</div>");
         }
 
         function add_fail(data){
@@ -31,7 +31,7 @@ $(document).ready(function () {
             $("#btn-confirm-buy").on('click', function(e){
                 e.preventDefault();
 
-                qtd = form.find('[name=qtd]').val();
+                var qtd = form.find('[name=qtd]').val();
                 num_domains = form.find('[name=num_domains]').val();
 
                 do_post();
