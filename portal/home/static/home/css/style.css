@@ -876,7 +876,7 @@ img.size-thumbnail{
 .all-body-text1 > article > div > p{
 	margin-top:5px;
 	margin-bottom:10px;
-	}
+}
 
 
 .all-body-text1 > div{
@@ -1297,7 +1297,7 @@ img.size-thumbnail{
 
 .certificado-digital h2{
     background: #f2f2f2;
-    padding: 10px;
+    padding: 15px 10px;
     height: 30px;
 }
 
@@ -1305,6 +1305,9 @@ img.size-thumbnail{
     font-weight: bold;
 }
 
+.certificado-digital .all-body-text1 > article > div > p{
+    min-height: 28px;
+}
 .productbgw{
 	background-color:#FFF;
 }
