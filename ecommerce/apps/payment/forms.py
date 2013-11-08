@@ -2,6 +2,7 @@ from django.forms import CharField, ModelForm
 from localflavor.br.forms import BRCPFField
 from oscar.apps.payment.forms import BankcardNumberField, BankcardCCVField, BankcardExpiryMonthField
 from oscar.core.loading import get_class
+from ecommerce.apps.payment.models import Debitcard
 
 Bankcard = get_class('payment.models', 'Bankcard')
 
@@ -41,3 +42,14 @@ class BankcardForm(ModelForm):
                         ccv=self.cleaned_data['ccv'],
                         credito_cpf=self.cleaned_data['credito_cpf'],
                         credito_telefone=self.cleaned_data['credito_telefone'])
+
+
+class DebitcardForm(ModelForm):
+
+    class Meta:
+        model = Debitcard
+        fields = ['banco']
+
+    @property
+    def debitcard(self):
+        return Debitcard(banco=self.cleaned_data['banco'])
