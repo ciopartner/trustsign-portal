@@ -52,6 +52,7 @@
     background: #b2b2b2;
     padding: 10px 20px 20px 20px;
     color: #FFF;
+    min-height: 102px;
 }
 
 #total h4{
