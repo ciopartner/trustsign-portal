@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import messages
-from django import http
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext_lazy as _
 from oscar.core.loading import get_class
+from ecommerce.apps.payment.forms import DebitcardForm
 from ecommerce.website.utils import remove_message
 from libs.akatus import facade as akatus
 
@@ -17,6 +16,7 @@ import logging
 BankcardForm = get_class('payment.forms', 'BankcardForm')
 SourceType = get_class('payment.models', 'SourceType')
 Source = get_class('payment.models', 'Source')
+Transaction = get_class('payment.models', 'Transaction')
 
 log = logging.getLogger('ecommerce.checkout.views')
 
@@ -64,6 +64,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         # Add here anything useful to be rendered in templates
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
         ctx['bankcard_form'] = kwargs.get('bankcard_form', BankcardForm())
+        ctx['debitcard_form'] = kwargs.get('debitcard_form', DebitcardForm())
 
         return ctx
 
@@ -77,58 +78,37 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         if error_response:
             return error_response
 
-        # Only for credit card:
-        if request.POST.get('source-type') == 'akatus-creditcard':
+        source_type = request.POST.get('source-type')
+
+        if source_type == 'akatus-creditcard':
             bankcard_form = BankcardForm(request.POST)
             if not bankcard_form.is_valid():
-                # Bancard form invalid, re-render the payment details template
+                # Bankcard form invalid, re-render the payment details template
                 self.preview = False
                 ctx = self.get_context_data(**kwargs)
                 ctx['bankcard_form'] = bankcard_form
                 return self.render_to_response(ctx)
-            payment_kwargs = self.build_payment_kwargs(request)
-            submission = self.build_submission(payment_kwargs=payment_kwargs)
-            return self.submit(**submission)
-
-        if request.POST.get('source-type') == 'akatus-debitcard':
-            bank = request.POST.get('card_type')
             submission = self.build_submission()
+            submission['payment_kwargs']['bankcard'] = bankcard_form.bankcard
             return self.submit(**submission)
 
-        if request.POST.get('source-type') == 'akatus-boleto':
+        if source_type == 'akatus-debitcard':
+            debitcard_form = DebitcardForm(request.POST)
+            if not debitcard_form.is_valid():
+                # Debitcard form invalid, re-render the payment details template
+                self.preview = False
+                ctx = self.get_context_data(**kwargs)
+                ctx['debitcard_form'] = debitcard_form
+                return self.render_to_response(ctx)
+            submission = self.build_submission()
+            submission['payment_kwargs']['debitcard'] = debitcard_form.debitcard
+            return self.submit(**submission)
+
+        if source_type == 'akatus-boleto':
             submission = self.build_submission()
             return self.submit(**submission)
 
         raise UnableToTakePayment('Forma de pagamento inválida')
-
-    def build_submission(self, **kwargs):
-        """
-        Author: Alessandro Reichert
-        Return a dict of data to submitted to pay for, and create an order
-        ** Update the payment_kwargs which is not treated in the standard oscar
-        """
-        submission = super(PaymentDetailsView, self).build_submission(**kwargs)
-        if 'payment_kwargs' in kwargs:
-            payment_kwargs = kwargs.get('payment_kwargs')
-            submission.update({'payment_kwargs': payment_kwargs})
-        return submission
-
-    def build_payment_kwargs(self, request, *args, **kwargs):
-        """
-        Author: Alessandro Reichert
-        This method is responsible for generating the payment information (bankcard),
-         which will be sent to handle_payment and can be used for the submission to CobreBem
-        """
-        # Double-check the bankcard data is still valid
-        bankcard_form = BankcardForm(request.POST)
-        if not bankcard_form.is_valid():
-            messages.error(request, _("Invalid submission"))
-            return http.HttpResponseRedirect(
-                reverse('checkout:payment-details'))
-
-        bankcard = bankcard_form.bankcard
-        payment_kwargs={'bankcard': bankcard}
-        return payment_kwargs
 
     def handle_payment(self, order_number, total_incl_tax, **kwargs):
         """
@@ -158,7 +138,8 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         # raised and handled by the parent PaymentDetail view)
         facade = akatus.Facade()
         try:
-            transaction_id = facade.post_creditcard_payment(self.request, order_number, bankcard)
+            response = facade.post_payment(self.request, order_number, bankcard=bankcard, tipo='akatus-creditcard')
+            transaction_id = response['transacao']
         except InvalidGatewayRequestError as e:
             raise UnableToTakePayment(e.message)
 
@@ -174,79 +155,76 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
                         amount_debited=total_incl_tax.incl_tax,
                         reference=transaction_id)
         # When we create a transaction, we have to set a txn_type that should be debit or refund
-        source.create_deferred_transaction("debit", total_incl_tax.incl_tax, reference=transaction_id, status=1, bankcard=bankcard)
+        source.create_deferred_transaction("akatus-creditcard-init", total_incl_tax.incl_tax, reference=transaction_id, status=1, bankcard=bankcard)
         self.add_payment_source(source)
 
         # Also record payment event
         # When we create the payment event, we have to set a txn_type that should be debit or refund
-        self.add_payment_event('debit', total_incl_tax.incl_tax, reference=transaction_id)
+        self.add_payment_event('akatus-creditcard-init', total_incl_tax.incl_tax, reference=transaction_id)
 
     def handle_payment_debito(self, order_number, total_incl_tax, **kwargs):
         """
-        This method is responsible for taking the payment of credit card
+        This method is responsible for taking the payment of debit card
         """
-        bankcard = kwargs['bankcard']
+        debitcard = kwargs['debitcard']
 
         # Make request to DataCash - if there any problems (eg bankcard
         # not valid / request refused by bank) then an exception would be
         # raised and handled by the parent PaymentDetail view)
         facade = akatus.Facade()
-        debito_html = facade.post_debitcard_payment(self.request, order_number, bankcard)
 
-        if not debito_html:
-            msg = 'Falha no pagamento com cartão de débito'
-            raise UnableToTakePayment(msg)
+        response = facade.post_payment(self.request, order_number, debitcard=debitcard, tipo='akatus-debitcard')
+        transaction_id = response['transacao']
+        url_redirect = response['url_retorno']
 
-        bankcard.user = self.request.user
-        bankcard.save()
+        debitcard.user = self.request.user
+        debitcard.debitcard_url = url_redirect
+        debitcard.save()
 
         # Request was successful - record the "payment source".  As this
         # request was a 'pre-auth', we set the 'amount_allocated' - if we had
         # performed an 'auth' request, then we would set 'amount_debited'.
-        source_type, _ = SourceType.objects.get_or_create(name='cobrebem-debito')
+        source_type, _ = SourceType.objects.get_or_create(name='akatus-debitcard')
         source = Source(source_type=source_type,
                         currency='BRL',
                         amount_allocated=total_incl_tax.incl_tax,
-                        bankcard=bankcard)
-        source.create_deferred_transaction("auth_request", total_incl_tax.incl_tax, status=1)
+                        reference=transaction_id)
+
+        source.create_deferred_transaction("akatus-debitcard-init", total_incl_tax.incl_tax, reference=transaction_id, status=1, debitcard=debitcard)
         self.add_payment_source(source)
 
         # Also record payment event
-        self.add_payment_event('auth_request', total_incl_tax.incl_tax)
+        self.add_payment_event('akatus-debitcard-init', total_incl_tax.incl_tax, reference=transaction_id)
 
     def handle_payment_boleto(self, order_number, total_incl_tax, **kwargs):
         """
-        This method is responsible for taking the payment of credit card
+        This method is responsible for taking the payment of boleto
         """
-        bankcard = kwargs['bankcard']
+        boleto = kwargs['boleto']
 
-        # Do the request to Cobrebem
         facade = akatus.Facade()
-        boleto_html = facade.post_boleto_payment(self.request, order_number, bankcard)
-        if boleto_html.status_code != 200:
-            msg = 'Falha no pagamento com boleto bancário'
-            raise UnableToTakePayment(msg)
+        response = facade.post_payment(self.request, order_number, tipo='akatus-boleto')
+        transaction_id = response['transacao']
+        url_redirect = response['url_retorno']
 
-        # TODO: recuperar o nosso número do boleto:
-        nosso_numero = 'nosso numero'
-
-        bankcard.user = self.request.user
-        bankcard.boleto_html = boleto_html
-        bankcard.save()
+        boleto.user = self.request.user
+        boleto.boleto_url = url_redirect
+        boleto.save()
 
         # Request was successful - record the "payment source".  As this
         # request was a 'pre-auth', we set the 'amount_allocated' - if we had
         # performed an 'auth' request, then we would set 'amount_debited'.
-        source_type, _ = SourceType.objects.get_or_create(name='cobrebem-boleto')
+        source_type, _ = SourceType.objects.get_or_create(name='akatus-boleto')
         source = Source(source_type=source_type,
                         currency='BRL',
                         amount_allocated=total_incl_tax.incl_tax,
-                        reference=nosso_numero)
-        source.create_deferred_transaction("boleto_emitido", total_incl_tax.incl_tax, reference=nosso_numero, status=1)
+                        reference=transaction_id)
+
+        source.create_deferred_transaction("akatus-boleto-init", total_incl_tax.incl_tax, reference=transaction_id, status=1, boleto=boleto)
         self.add_payment_source(source)
 
         # Also record payment event
-        self.add_payment_event('boleto_emitido', total_incl_tax.incl_tax)
+        self.add_payment_event('akatus-boleto-init', total_incl_tax.incl_tax, reference=transaction_id)
 
     def handle_order_placement(self, order_number, user, basket, shipping_address, shipping_method, total, **kwargs):
         """
@@ -277,3 +255,30 @@ class ShippingAddressView(views.ShippingAddressView):
         r = super(ShippingAddressView, self).get(request, *args, **kwargs)
         remove_message(request, u'Sua cesta não requer um endereço para ser submetida')
         return r
+
+
+class ThankYouView(views.ThankYouView):
+    def get_context_data(self, **kwargs):
+        context = super(ThankYouView, self).get_context_data(**kwargs)
+        order = context['order']
+        transacoes_com_url = []
+
+        transactions = Transaction.objects.select_related(
+            'boleto',
+            'debitcard',
+        ).filter(
+            txn_type__in=('akatus-boleto-init', 'akatus-debitcard-init'),
+            source__order=order,
+        )
+
+        for transaction in transactions:
+            if transaction.source.source_type.name == 'akatus-boleto':
+                transacoes_com_url.append(('boleto', transaction.boleto.boleto_url))
+            else:
+                transacoes_com_url.append(('debitcard', transaction.debitcard.debitcard_url))
+
+        context.update({
+            'transacoes_com_url': transacoes_com_url  # uma lista de  (<tipo>, <url>) onde <tipo> = boleto ou debitcard
+        })
+
+        return context
