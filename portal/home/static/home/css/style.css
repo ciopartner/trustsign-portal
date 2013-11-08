@@ -2108,6 +2108,15 @@ h3.title{
     display: block;
 }
 
+#product-price .box-price .line {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DDDDDD;
+    left: 10px;
+    padding: 2px 5px;
+    position: absolute;
+    top: -10px;
+}
+
 .price-color sub, #product-price .box-price sup{
     top: 0;
     font-size: 65%;
@@ -2123,10 +2132,9 @@ h3.title{
 }
 
 #comprar-message{
-    width: 572px;
     float: right;
-    margin-right: -8px;
-    margin-top: 30px;
+    margin-top: 0;
+    width: 538px;
 }
 
 

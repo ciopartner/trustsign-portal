@@ -51,9 +51,9 @@ $(document).ready(function () {
 
         quantity = typeof quantity !== 'undefined' ? quantity : 1;
 
-        if($("#form-confirm-buy").length != 1){
-            do_post();
-        }else{
+        do_post();
+
+        if($("#form-confirm-buy").length == 1){
             show_buy_info();
         }
     }
