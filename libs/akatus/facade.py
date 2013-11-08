@@ -21,15 +21,21 @@ class Facade(object):
                               AKATUS_USER=self.AKATUS_EMAIL,
                               AKATUS_API_KEY=self.AKATUS_API_KEY)
 
-    def post_creditcard_payment(self, request, order_number, bankcard):
+    def post_payment(self, request, order_number, bankcard=None, debitcard=None, tipo=None):
         """
         This method is responsible for taking care of the payment.
         """
         options = {
             'pagador': self.get_dados_pagador(request.user),
-            'transacao': self.get_dados_transacao_credito(order_number, bankcard),
             'produtos': self.get_dados_produtos(request.basket.all_lines())
         }
+
+        if tipo == 'akatus-creditcard':
+            options['transacao'] = self.get_dados_transacao_credito(order_number, bankcard)
+        elif tipo == 'akatus-debitcard':
+            options['transacao'] = self.get_dados_transacao_debito(order_number, debitcard)
+        elif tipo == 'akatus-boleto':
+            options['transacao'] = self.get_dados_transacao_boleto(order_number)
 
         return self.gateway.post_payment(options)
 
@@ -101,17 +107,17 @@ class Facade(object):
             }
         }
 
-    def get_dados_transacao_debito(self, order_number, bankcard):
+    def get_dados_transacao_debito(self, order_number, debitcard):
         """
         Compila os dados de cartão de débito
         meio_de_pagamento = tef_itau/tef_bradesco/tef_bb
         """
-        bank_name = bankcard.bank_name
-        if bank_name == 'BRADESCO':
+        bank_name = debitcard.banco
+        if bank_name == 'bradesco':
             meio_de_pagamento = 'tef_bradesco'
-        elif bank_name == 'ITAU':
+        elif bank_name == 'itau':
             meio_de_pagamento = 'tef_itau'
-        elif bank_name == 'BB':
+        elif bank_name == 'bb':
             meio_de_pagamento = 'tef_bb'
         else:
             raise UnableToTakePayment('Banco {} Inválido'.format(bank_name))

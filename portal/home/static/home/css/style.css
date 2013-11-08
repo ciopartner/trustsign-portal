@@ -1327,7 +1327,7 @@ img.size-thumbnail{
 	width:100%;
 	text-align:right;
 	padding-bottom:10px;
-	padding-top:30px;
+	padding-top:24px;
 
 }
 
@@ -2068,9 +2068,17 @@ h3.title{
     -moz-box-sizing: border-box;
 }
 
+#product-price.tabs-3 .tab-content{
+    width: 473px;
+}
+
 #product-price .tabbable{
     width: 638px;
     float: right;
+}
+
+#product-price.tabs-3 .tabbable{
+    width: 572px;
 }
 
 #product-price .box-price{
@@ -2084,7 +2092,10 @@ h3.title{
     border-right: 1px solid #dddddd;
     background: #FFF;
 }
+#product-price.tabs-3 .box-price{
+    width: 33.3333333333333333%;
 
+}
 
 
 /*#product-price .box-price:nth-child(2n+2){*/

@@ -1,5 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.db.models import ForeignKey, CharField, DateField, TextField, Model, DateTimeField
 from oscar.apps.payment.abstract_models import AbstractBankcard, AbstractTransaction, AbstractSource
+User = get_user_model()
 
 
 class Source(AbstractSource):
@@ -35,15 +37,19 @@ class Bankcard(AbstractBankcard):
 
 
 class Debitcard(Model):
+    user = ForeignKey(User, related_name='debitcards', blank=True, null=True)
     banco = CharField(max_length=16)
     agencia = CharField(max_length=8, blank=True, null=True)
     conta = CharField(max_length=16, blank=True, null=True)
+    debitcard_url = CharField(max_length=256, blank=True, null=True)
 
 
 class Boleto(Model):
-    nosso_numero = CharField(max_length=32)
-    vencimento = DateField()
-    boleto_html = TextField()
+    user = ForeignKey(User, related_name='boletos', blank=True, null=True)
+    nosso_numero = CharField(max_length=32, blank=True, null=True)
+    vencimento = DateField(blank=True, null=True)
+    boleto_html = TextField(blank=True, null=True)
+    boleto_url = CharField(max_length=256, blank=True, null=True)
 
 
 from oscar.apps.payment.models import *

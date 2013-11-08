@@ -29,8 +29,8 @@ class Product(Page):
     tab_title = models.CharField('Tab Title', max_length=256)
     cart_add_url = models.CharField('Add to Cart URL', max_length=64, blank=True)
     order = models.IntegerField('Order', default=999)
-
     product_code = models.CharField('Código do produto', blank=True, null=True, max_length=16)
+    additional_product_code = models.CharField('Código de produto adicional', blank=True, null=True, max_length=16)
 
     class Meta:
         verbose_name = 'Product'
