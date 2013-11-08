@@ -71,6 +71,7 @@ class Voucher(Model):
     VALIDADE_ANUAL = '1year'
     VALIDADE_BIANUAL = '2years'
     VALIDADE_TRIANUAL = '3years'
+    VALIDADE_DEGUSTACAO = 'trial'
     VALIDADE_ASSINATURA_MENSAL = 'subscription_1m'
     VALIDADE_ASSINATURA_SEMESTRAL = 'subscription_6m'
     VALIDADE_ASSINATURA_ANUAL = 'subscription_12m'
@@ -78,6 +79,7 @@ class Voucher(Model):
         (VALIDADE_ANUAL, '1 ano'),
         (VALIDADE_BIANUAL, '2 anos'),
         (VALIDADE_TRIANUAL, '3 anos'),
+        (VALIDADE_DEGUSTACAO, 'Trial'),
         (VALIDADE_ASSINATURA_MENSAL, 'Assinatura Mensal'),
         (VALIDADE_ASSINATURA_SEMESTRAL, 'Assinatura Semestral'),
         (VALIDADE_ASSINATURA_ANUAL, 'Assinatura Anual'),
