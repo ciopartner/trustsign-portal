@@ -26,6 +26,10 @@ class BankcardForm(ModelForm):
         # details, you can save.
         raise RuntimeError("Don't save bankcards directly from form")
 
+    def clean(self):
+        cleaned_data = super(BankcardForm, self).clean()
+        return cleaned_data
+
     @property
     def bankcard(self):
         """
