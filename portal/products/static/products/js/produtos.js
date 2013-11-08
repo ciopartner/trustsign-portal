@@ -43,7 +43,7 @@ $(document).ready(function () {
                 type: 'POST',
                 dataType: 'json',
                 url: url_ecommerce + 'ajax/adicionar-produto/',
-                data: {product_code: product_code, quantity:quantity, line: line, term: term, num_domains : num_domains},
+                data: {product_code: product_code, quantity:quantity, line: line, term: term},
                 success: add_success,
                 error: add_fail
             });
