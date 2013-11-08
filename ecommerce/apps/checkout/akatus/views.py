@@ -80,6 +80,12 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 
         source_type = request.POST.get('source-type')
 
+        if source_type == 'no-payment':
+            submission = self.build_submission()
+            if submission['order_total'].incl_tax > 0:
+                raise UnableToTakePayment('Forma de pagamento inválida')
+            return self.submit(**submission)
+
         if source_type == 'akatus-creditcard':
             bankcard_form = BankcardForm(request.POST)
             if not bankcard_form.is_valid():
@@ -124,6 +130,8 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 
         elif payment_source == 'akatus-debitcard':
             return self.handle_payment_debito(order_number, total_incl_tax, **kwargs)
+        elif payment_source == 'no-payment':
+            return
 
         raise UnableToTakePayment
 
@@ -237,15 +245,10 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         order = self.place_order(order_number, user, basket, shipping_address, shipping_method, total, **kwargs)
         basket.submit()
 
-        self.set_status_pago(order)
+        if self.request.POST.get('source-type') == 'no-payment':
+            order.set_status('Pago')
 
         return self.handle_successful_order(order)
-
-    def set_status_pago(self, order):
-        sources = order.sources.all()
-        if sources and sources[0].reference:  # somente deve setar se existir um transaction_id(reference)
-            order.set_status('Pago')
-            log.info('Order #%s: alterado status para Pago' % order.pk)
 
 
 class ShippingAddressView(views.ShippingAddressView):
