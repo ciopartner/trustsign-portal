@@ -2,6 +2,7 @@ from decimal import Decimal
 from mezzanine.pages.page_processors import processor_for
 from portal.products.models import Product
 from django.db import connection
+from pprint import pprint
 
 
 def split1000(s, sep='.'):
@@ -10,7 +11,6 @@ def split1000(s, sep='.'):
 
 @processor_for(Product)
 def product_processor(request, page):
-
     #sql = '''
     #SELECT p.upc, p.product_line, p.product_term, s.price_excl_tax
     #FROM
@@ -42,6 +42,7 @@ def product_processor(request, page):
 
     data = {
         'product_code': page.product.product_code,
+        'additional_product_code' : page.product.additional_product_code,
         'precos': {
             'basic': {
                 'termsubscription_1m': {},
@@ -90,7 +91,27 @@ def product_processor(request, page):
         preco_1ano = data_line.get('term1year', {}).get('price', 0)
 
         if preco_1ano > 0:
-            data_line['term2years']['discount'] = int((1 - data_line.get('term2years', {}).get('price', 0) / (2 * preco_1ano)) * 100)
-            data_line['term3years']['discount'] = int((1 - data_line.get('term3years', {}).get('price', 0) / (3 * preco_1ano)) * 100)
+            data_line['term2years']['discount'] = int(
+                (1 - data_line.get('term2years', {}).get('price', 0) / (2 * preco_1ano)) * 100)
+            data_line['term3years']['discount'] = int(
+                (1 - data_line.get('term3years', {}).get('price', 0) / (3 * preco_1ano)) * 100)
+
+    cursor = connection.cursor()
+    cursor.execute(sql, [page.product.additional_product_code])
+
+    for upc, product_line, product_term, price in cursor.fetchall():
+        if price is None:
+            price = Decimal(0)
+
+        price = price.quantize(Decimal('0.01'))
+
+        x = data.setdefault('adicional', {})\
+            .setdefault('precos', {})\
+            .setdefault(product_line, {})\
+            .setdefault('term%s' % product_term, {})
+
+        x['price'] = price
+
+    pprint(data)
 
     return data
