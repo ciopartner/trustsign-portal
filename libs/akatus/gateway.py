@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.template import Context
 from django.template.loader import get_template
 from oscar.apps.payment.exceptions import GatewayError
@@ -37,11 +38,14 @@ class Akatus(object):
         response = requests.post(self.get_method_url(method), data.encode('utf-8'))
 
         if response.status_code != 200:
-            log.error(u'Erro na chamada do gateway: http {}'.format(response.status_code))
-            log.error(u'Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text.encode('utf8')))
+            log.error('Erro na chamada do gateway: http {}'.format(response.status_code))
+            log.error('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text.encode('utf8')))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
-        log.info(u'URL: {}\nrequest:\n{}\nresponse:\n{}\n'.format(self.get_method_url(method), data.encode('utf8'), response.text.encode('utf8')))
+        import ipdb; ipdb.set_trace()
+        log.info('URL: {}'.format(self.get_method_url(method)))
+        log.info('Request: {}'.format(data))
+        log.info('Response: {}'.format(response.text))
 
         return xml_to_dict(response.text.encode('utf-8'))
 
