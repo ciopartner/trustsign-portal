@@ -35,7 +35,8 @@ def formata_cnpj(cnpj):
 
 
 def get_dados_empresa(cnpj):
-    cnpj = limpa_cnpj(cnpj)
+    # Se não colocar o str() dá pau em produção
+    cnpj = str(limpa_cnpj(cnpj))
     data = cache.get('cnpj-%s' % cnpj)
     if data is None:
         if settings.USAR_KNU:
