@@ -2,9 +2,19 @@ $(document).ready(function () {
     var $qtd_carrinho = $('#qtd_carrinho');
     var $message = $("#comprar-message");
 
-    function add_product(product_code, line, term, quantity, num_domains){
+    /**
+     *
+     * @param product_code Código do produto
+     * @param line Linha
+     * @param term Termo
+     * @param quantity Quantidade
+     * @param show_additional Se deve exibir box para produtos adicionais
+     * @param additional_code Código do produto adicional
+     * @param additional_price Preço do produto adicional
+     */
+    function add_product(product_code, line, term, quantity, show_additional, additional_code, additional_price){
 
-        num_domains = num_domains ? num_domains : 0;
+        show_additional = show_additional == 'true' || show_additional ? true : false;
 
         function add_success(data){
             $qtd_carrinho.text(parseInt($qtd_carrinho.text()) + 1);
@@ -26,13 +36,16 @@ $(document).ready(function () {
 
             form.find('.line').text(line);
             form.find('.term').text(term.replace('year', ' ano'));
+            form.find('.price').text(additional_price);
+
+            product_code = additional_code;
 
             $("#btn-confirm-buy").bind('click')
             $("#btn-confirm-buy").on('click', function(e){
                 e.preventDefault();
 
                 var qtd = form.find('[name=qtd]').val();
-                num_domains = form.find('[name=num_domains]').val();
+                quantity = form.find('[name=num_domains]').val();
 
                 do_post();
             });
@@ -53,9 +66,7 @@ $(document).ready(function () {
 
         do_post();
 
-        if($("#form-confirm-buy").length == 1){
-            show_buy_info();
-        }
+        if(show_additional) show_buy_info();
     }
 
     $('#add-ssl-basic-1year').click(function(){
@@ -64,8 +75,19 @@ $(document).ready(function () {
     });
 
     $("[data-comprar-produto]").click(function(e){
+
         e.preventDefault();
-        add_product($(this).data('comprar-produto'),$(this).data('line'),$(this).data('term'));
+
+        var product_code = $(this).data('comprar-produto');
+        var line = $(this).data('line');
+        var term = $(this).data('term');
+        var qtd = 1;
+        var additional = $(this).data('additional');
+        var additional_code = $(this).data('additional-product-code');
+        var additional_price = $(this).data('additional-price');
+
+        add_product(product_code, line, term, qtd, additional, additional_code, additional_price);
+
     });
 
 });
