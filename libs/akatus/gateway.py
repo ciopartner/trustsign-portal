@@ -38,13 +38,15 @@ class Akatus(object):
         response = requests.post(self.get_method_url(method), data.encode('utf-8'))
 
         if response.status_code != 200:
-            log.error('Erro na chamada do gateway: http {}'.format(response.status_code))
-            log.error('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text.encode('utf8')))
+            log.error('Erro na chamada do gateway: HTTP {}'.format(response.status_code))
+            log.error('URL: {}'.format(self.get_method_url(method)))
+            log.error('Request: {}'.format(data))
+            log.error('Response: {}'.format(response.text))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
-        log.info('URL: {}'.format(self.get_method_url(method)))
-        log.info('Request: {}'.format(data))
-        log.info('Response: {}'.format(response.text))
+        log.debug('URL: {}'.format(self.get_method_url(method)))
+        log.debug('Request: {}'.format(data))
+        log.debug('Response: {}'.format(response.text))
 
         return xml_to_dict(response.text.encode('utf-8'))
 
