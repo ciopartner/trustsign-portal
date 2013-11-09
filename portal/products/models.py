@@ -15,7 +15,6 @@ class Products(Page):
     Esta Page é responsável por armazenar o conteúdo da página 'Certificado Digital',
       ou seja, a lista de produtos
     """
-    # dob = models.DateField("Date of birth")
     pass
 
 
@@ -34,7 +33,7 @@ class Product(Page):
 
     class Meta:
         verbose_name = 'Product'
-        ordering = ['-order']
+        ordering = ['order']
 
     def __unicode__(self):
         return self.title
