@@ -42,7 +42,6 @@ class Akatus(object):
             log.error('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text.encode('utf8')))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
-        import ipdb; ipdb.set_trace()
         log.info('URL: {}'.format(self.get_method_url(method)))
         log.info('Request: {}'.format(data))
         log.info('Response: {}'.format(response.text))
