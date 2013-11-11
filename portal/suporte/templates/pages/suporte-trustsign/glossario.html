@@ -30,25 +30,53 @@
 {% endblock %}
 
 {% block title %}
-    {%editable page.glossariopage.title%}{%endeditable%}
+    {%editable page.faqpage.title%}{%endeditable%}
 {% endblock %}
 
 {% block one_row %}
-    <div class="accordion glossario fix-row-margin" id="accordion2">
-        {% for item in page.glossariopage.itens.all %}
-            {% editable item.termo item.descricao %}
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <span class="glossario-termo">
-                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{ item.termo }}</a></span>
-                    </div>
-                    <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content">
-                        <div class="accordion-inner">
-                            {{ item.descricao|linebreaksbr }}
-                        </div>
+    <div class="list-tags">
+        <div class="fix-row-margin">
+            <div class="row-fluid">
+                <div class="span8">
+                    <div class="accordion faq" id="accordion2">
+                        {%for question in questions %}
+                            {%editable question.question question.answer%}
+                                <div class="accordion-group item" data-tags="[{% for tag in question.tags.all %}{% if forloop.counter > 1 %},{% endif %}{{ tag.tag.id }}{% endfor %}]">
+                                    <div class="accordion-heading">
+                                        <span class="faq-question"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{question.question}}</a></span>
+                                    </div>
+                                    <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content">
+                                        <div class="accordion-inner">
+                                            {{ question.answer|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {%endeditable%}
+                        {%endfor%}
                     </div>
                 </div>
-            {%endeditable%}
-        {%endfor%}
+                <div class="span4">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">
+                            CATEGORIAS
+                        </li>
+                        <li class="divider"></li>
+                        {% for tag in tags %}
+                        <li>
+                            <label class="checkbox">
+                                <input type="checkbox" name="tag[]" checked value="{{ tag.id }}"/> {{ tag.texto }}
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'home/js/tags.js' %}"></script>
 {% endblock %}
