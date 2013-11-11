@@ -96,12 +96,15 @@ class ManualPageAdmin(PageAdmin):
     inlines = (ManualAdminInline,)
 
 
+class VideoTutorialPageAdmin(PageAdmin):
+    model = VideoTutorialPage
+
 admin.site.register(FAQPage, FAQPageAdmin)
 admin.site.register(TutorialPage, TutorialPageAdmin)
 admin.site.register(ManualPage, ManualPageAdmin)
 admin.site.register(GlossarioPage, GlossarioPageAdmin)
 admin.site.register(FerramentasPage, PageAdmin)
+admin.site.register(VideoTutorialPage, VideoTutorialPageAdmin)
 admin.site.register(Tag)
 admin.site.register(TaggedItem)
-admin.site.register(VideoTutorialPage)
 admin.site.register(VideoTutorial)
