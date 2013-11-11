@@ -48,7 +48,6 @@ def formata_cep(cep):
     return cep
 
 
-
 def get_dados_empresa(cnpj):
     # Se não colocar o str() dá pau em produção
     cnpj = str(limpa_cnpj(cnpj))
