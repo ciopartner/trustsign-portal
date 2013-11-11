@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block title %}
-    {%editable page.faqpage.title%}{%endeditable%}
+    {%editable page.glossariopage.title%}{%endeditable%}
 {% endblock %}
 
 {% block one_row %}
@@ -38,16 +38,16 @@
         <div class="fix-row-margin">
             <div class="row-fluid">
                 <div class="span8">
-                    <div class="accordion faq" id="accordion2">
-                        {%for question in questions %}
-                            {%editable question.question question.answer%}
-                                <div class="accordion-group item" data-tags="[{% for tag in question.tags.all %}{% if forloop.counter > 1 %},{% endif %}{{ tag.tag.id }}{% endfor %}]">
+                    <div class="accordion glossario" id="accordion2">
+                        {% for item in page.glossariopage.itens.all %}
+                            {% editable item.termo item.descricao %}
+                                <div class="accordion-group item" data-tags="[{% for tag in item.tags.all %}{% if forloop.counter > 1 %},{% endif %}{{ tag.tag.id }}{% endfor %}]">
                                     <div class="accordion-heading">
-                                        <span class="faq-question"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{question.question}}</a></span>
+                                        <span class="faq-question"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{forloop.counter}}">{{ item.termo }}</a></span>
                                     </div>
                                     <div id="collapse{{forloop.counter}}" class="accordion-body collapse product-tabs-content">
                                         <div class="accordion-inner">
-                                            {{ question.answer|safe }}
+                                            {{ item.descricao | linebreaksbr }}
                                         </div>
                                     </div>
                                 </div>
