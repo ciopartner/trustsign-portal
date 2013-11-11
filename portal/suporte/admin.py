@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import ModelForm, ModelMultipleChoiceField
 from mezzanine.pages.admin import PageAdmin
 from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question, FerramentasPage, \
-    TaggedItem, Tag, TutorialPage, Tutorial
+    TaggedItem, Tag, TutorialPage, Tutorial, VideoTutorialPage, VideoTutorial
 
 
 class TaggedItemForm(ModelForm):
@@ -103,3 +103,5 @@ admin.site.register(GlossarioPage, GlossarioPageAdmin)
 admin.site.register(FerramentasPage, PageAdmin)
 admin.site.register(Tag)
 admin.site.register(TaggedItem)
+admin.site.register(VideoTutorialPage)
+admin.site.register(VideoTutorial)
