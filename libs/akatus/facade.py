@@ -60,7 +60,7 @@ class Facade(object):
             'enderecos': [{
                 'tipo': 'comercial',
                 'logradouro': profile.cliente_logradouro,
-                'numero': int(profile.cliente_numero or 0),
+                'numero': profile.cliente_numero if profile.cliente_numero.isdigit() else '0',
                 'bairro': profile.cliente_bairro,
                 'cidade': profile.cliente_cidade,
                 'estado': profile.cliente_uf,
