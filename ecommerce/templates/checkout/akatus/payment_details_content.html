@@ -35,10 +35,10 @@
                         <div class="">
                             {% csrf_token %}
                             {% include 'partials/form_fields.html' with form=bankcard_form %}
-                            <div class="alert alert-warning">
-                                <h4>{% trans "Demo site help" %}</h4>
-                                <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>
-                            </div>
+{#                            <div class="alert alert-warning">#}
+{#                                <h4>{% trans "Demo site help" %}</h4>#}
+{#                                <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>#}
+{#                            </div>#}
                         </div>
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
@@ -85,9 +85,6 @@
                     <form action="{% url 'checkout:preview' %}" class="form-inline" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="source-type" value="akatus-debitcard" />
-                        <div class="pull-left">
-                            {% include 'partials/contratos_checkbox.html' %}
-                        </div>
                         <button type="submit" class="pull-right btn btn-orange">Iniciar pagamento com cartão de débito</button>
 
                         <label>
@@ -104,6 +101,10 @@
                             <input type="radio" name="banco" value="bradesco"/>
                             <img src="{% static 'home/img/payment/thumb_bradesco.gif' %}" alt=""/>
                         </label>
+
+                        <div class="pull-left">
+                            {% include 'partials/contratos_checkbox.html' %}
+                        </div>
                     </form>
                 </div>
             </div>
