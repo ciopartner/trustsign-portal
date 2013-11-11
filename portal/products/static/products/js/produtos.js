@@ -51,6 +51,14 @@ $(document).ready(function () {
             });
         }
 
+        function hide_buy_info(){
+            var form = $("#form-confirm-buy");
+
+            form.hide();
+            form.addClass('hidden');
+
+        }
+
         function do_post(){
             $.ajax({
                 type: 'POST',
@@ -67,6 +75,7 @@ $(document).ready(function () {
         do_post();
 
         if(show_additional) show_buy_info();
+        else hide_buy_info();
     }
 
     $('#add-ssl-basic-1year').click(function(){
