@@ -51,7 +51,7 @@ def get_dados_empresa(cnpj):
                 'logradouro': r.logradouro,
                 'numero': r.numero,
                 'complemento': r.complemento,
-                'cep': r.cep,
+                'cep': r.cep.replace('.','').replace('-',''),
                 'bairro': r.bairro,
                 'cidade': r.municipio,
                 'uf': r.uf,
