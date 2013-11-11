@@ -7,7 +7,9 @@ import os
 import re
 from django.conf import settings
 from logging import getLogger
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
+from django.template.context import Context
+from django.template.loader import get_template
 from django_cron import CronJobBase, Schedule
 import requests
 from django.utils.timezone import now
@@ -147,12 +149,14 @@ class CheckEmailJob(CronJobBase):
 
                     emissao.emission_mail_attachment_path = att_path
 
+                emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
+
                 emissao.save()
 
             except (IndexError, AttributeError):
-                log.error('Recebeu e-mail fora do padrão')
+                log.error('Recebeu e-mail fora do padrão (#{})'.format(subject))
             except Emissao.DoesNotExist:
-                log.error('Recebeu e-mail com comodo order inexistente no banco')
+                log.error('Recebeu e-mail com comodo order inexistente no banco (#{}) '.format(subject))
 
 
 def chunks(l, n):
@@ -238,6 +242,7 @@ class AtivaSelosJob(CronJobBase):
     def processa_ativado(self, voucher):
         # TODO: decidir onde atualizar o contrato da reemissão, e como enviar o arquivo para o CRM
         self.atualiza_contrato(voucher, 'valido', seal_html=voucher.get_seal_html)
+        self.envia_email_cliente(voucher)
 
     def atualiza_contrato(self, voucher, status, seal_html=None, certificate_file=None):
         try:
@@ -246,6 +251,16 @@ class AtivaSelosJob(CronJobBase):
         except Exception as e:
             log.exception('Ocorreu um erro ao atualizar o contrato do voucher #%s para o status <%s>' % (voucher.crm_hash, status))
             self.envia_email_suporte(voucher, status)
+
+    def envia_email_cliente(self, voucher):
+        html_content = get_template('emails/envio_certificado_e_selo.html')
+        email_cliente = voucher.emissao.emission_publickey_sendto
+        context = Context({
+            'voucher': voucher,  # TODO: ver com o Carlos o que vai ser necessário passar pro template
+        })
+        msg = EmailMessage('Certificado Digital e Selo TrustSign', html_content.render(context), to=[email_cliente])
+        msg.content_subtype = "html"  # Main content is now text/html
+        msg.send()
 
     def envia_email_suporte(self, voucher, status):
         message = 'Ocorreu um erro ao atualizar o contrato no CRM do voucher #%s para o status <%s>\ncliente: %s' % (voucher.crm_hash,

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.forms import CharField, TextInput, BooleanField, ChoiceField, EmailField
 from django.utils.translation import ugettext_lazy as _
@@ -11,8 +12,10 @@ from ecommerce.website.models import DominioInvalidoEmail
 from ecommerce.website.utils import get_dados_empresa, limpa_cnpj
 from portal.home.models import TrustSignProfile
 from passwords.fields import PasswordField
+import logging
 
 User = get_user_model()
+log = logging.getLogger('ecommerce.apps.customer.forms')
 
 
 class TextInputDisabled(TextInput):
@@ -130,6 +133,13 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
         profile.callback_telefone_principal = data['telefone_principal']
 
         profile.save()
+
+        #todos os usuários são adicionados ao grupo de clientes
+        try:
+            group = Group.objects.get(name='trustsign-cliente')
+            group.user_set.add(user)
+        except Group.DoesNotExist:
+            log.warning('Necessário criar o grupo trustsign-cliente')
 
         return user
 

@@ -336,3 +336,5 @@ $('.sortmune*').mouseleave(function (event) {
 
 // Masks
 $('.mask-cnpj').mask("99.999.999/9999-99");
+$('#id_credito_cpf').mask('999.999.999-99');
+$('#id_credito_telefone').mask("(99) 9999-9999");

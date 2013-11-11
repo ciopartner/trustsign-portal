@@ -19,11 +19,17 @@ def remove_message(request, message_text):
         if message.message == message_text:
             storage._queued_messages.remove(message)
 
+
 def limpa_cpf(cpf):
     return re.sub('[.-]', '', cpf)
 
+
 def limpa_cnpj(cnpj):
     return re.sub('[./-]', '', cnpj)
+
+
+def limpa_cep(cep):
+    return re.sub('[.-]', '', cep)
 
 
 def limpa_telefone(telefone):
@@ -31,7 +37,16 @@ def limpa_telefone(telefone):
 
 
 def formata_cnpj(cnpj):
-    return '%s.%s.%s/%s-%s' % (cnpj[0:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:14])
+    if len(cnpj) == 14:
+        return '{}.{}.{}/{}-{}'.format(cnpj[:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:14])
+    return cnpj
+
+
+def formata_cep(cep):
+    if len(cep) == 8:
+        return '{}-{}'.format(cep[:5], cep[5:])
+    return cep
+
 
 
 def get_dados_empresa(cnpj):
@@ -51,7 +66,7 @@ def get_dados_empresa(cnpj):
                 'logradouro': r.logradouro,
                 'numero': r.numero,
                 'complemento': r.complemento,
-                'cep': r.cep.replace('.','').replace('-',''),
+                'cep': limpa_cep(r.cep),
                 'bairro': r.bairro,
                 'cidade': r.municipio,
                 'uf': r.uf,
