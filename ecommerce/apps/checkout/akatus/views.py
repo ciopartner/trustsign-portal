@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from oscar.core.loading import get_class
+import requests
 from ecommerce.apps.payment.forms import DebitcardForm
 from ecommerce.website.utils import remove_message
 from libs.akatus import facade as akatus
@@ -17,6 +18,7 @@ BankcardForm = get_class('payment.forms', 'BankcardForm')
 SourceType = get_class('payment.models', 'SourceType')
 Source = get_class('payment.models', 'Source')
 Transaction = get_class('payment.models', 'Transaction')
+Boleto = get_class('payment.models', 'Boleto')
 
 log = logging.getLogger('ecommerce.checkout.views')
 
@@ -112,6 +114,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 
         if source_type == 'akatus-boleto':
             submission = self.build_submission()
+            submission['payment_kwargs']['boleto'] = Boleto()
             return self.submit(**submission)
 
         raise UnableToTakePayment('Forma de pagamento inválida')
@@ -217,6 +220,10 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 
         boleto.user = self.request.user
         boleto.boleto_url = url_redirect
+        try:
+            boleto.boleto_html = requests.get(url_redirect).text
+        except Exception:
+            pass
         boleto.save()
 
         # Request was successful - record the "payment source".  As this
