@@ -161,24 +161,37 @@ class ProfileForm(CoreProfileForm):
     class Meta(CoreProfileForm.Meta):
         exclude = ['user', 'date_of_birth', 'perfil', 'bio', 'tagline']
         fields = ['callback_nome', 'callback_sobrenome', 'callback_email_corporativo', 'callback_telefone_principal',
-                  'cliente_ecommerce', 'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_cnpj',
-                  'cliente_razaosocial', 'cliente_logradouro', 'cliente_numero', 'cliente_complemento', 'cliente_cep',
-                  'cliente_bairro', 'cliente_cidade', 'cliente_uf', 'cliente_situacao_cadastral']
+                  'cliente_ecommerce', 'cliente_tipo_negocio', 'cliente_fonte_potencial']
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
+        f = self.fields
+        p = self.instance
 
         # adicionados dinamicamente no super:
-        del self.fields['email']
-        del self.fields['first_name']
-        del self.fields['last_name']
+        del f['email']
+        del f['first_name']
+        del f['last_name']
 
         self.user_field_names = ()
+
+        # campos que devem aparecer disabled na tela e não salvar alterações
+        f['cliente_cnpj'].initial = p.cliente_cnpj
+        f['cliente_razaosocial'].initial = p.cliente_razaosocial
+        f['cliente_logradouro'].initial = p.cliente_logradouro
+        f['cliente_numero'].initial = p.cliente_numero
+        f['cliente_complemento'].initial = p.cliente_complemento
+        f['cliente_cep'].initial = p.cliente_cep
+        f['cliente_bairro'].initial = p.cliente_bairro
+        f['cliente_cidade'].initial = p.cliente_cidade
+        f['cliente_uf'].initial = p.cliente_uf
+        f['cliente_situacao_cadastral'].initial = p.cliente_situacao_cadastral
 
     def save(self, *args, **kwargs):
         profile = super(ProfileForm, self).save(*args, **kwargs)
 
         user = profile.user
+        user.email = profile.callback_email_corporativo
         user.first_name = profile.callback_nome
         user.last_name = profile.callback_sobrenome
         user.save()
