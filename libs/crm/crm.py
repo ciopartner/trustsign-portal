@@ -315,8 +315,6 @@ class CRMClient(object):
             'opportunity_type': 'New Business',
         }
 
-        response = self.set_entry('Opportunities', data)
-
         if oportunidade.is_credito():
             data.update({
                 'titular_c': oportunidade.pag_credito_titular,
@@ -327,18 +325,20 @@ class CRMClient(object):
             })
         elif oportunidade.is_debito():
             data.update({
-                'titular_debito_c': oportunidade.pag_debito_titular,
-                'vencimento_debito_c': oportunidade.pag_debito_vencimento,
-                'bandeira_debito_c': oportunidade.pag_debito_bandeira,
+                #'titular_debito_c': oportunidade.pag_debito_titular,
+                #'vencimento_debito_c': oportunidade.pag_debito_vencimento,
+                #'bandeira_debito_c': oportunidade.pag_debito_bandeira,
                 'transaction_id_debito_c': oportunidade.pag_debito_transacao_id,
-                'ultimos_digitos_debito_c': oportunidade.pag_debito_ultimos_digitos,
+                #'ultimos_digitos_debito_c': oportunidade.pag_debito_ultimos_digitos,
             })
         elif oportunidade.is_boleto():
             data.update({
-                'nosso_numero_c': oportunidade.nosso_numero,
-                'data_pgto_c': oportunidade.data_pagamento_boleto
+                'nosso_numero_c': oportunidade.pag_boleto_transacao_id,
+                #'nosso_numero_c': oportunidade.nosso_numero,
+                #'data_pgto_c': oportunidade.data_pagamento_boleto
             })
 
+        response = self.set_entry('Opportunities', data)
         return response['id']
 
     def set_entry_products(self, produto):
@@ -420,8 +420,10 @@ class CRMClient(object):
                 self.set_entry_products(produto)
 
             self.logout()
+            import ipdb; ipdb.set_trace()
 
         except Exception as e:
+            import ipdb; ipdb.set_trace()
             log.exception('Ocorreu um erro ao postar a compra')
             raise self.CRMError('Ocorreu um erro ao postar a compra, verifique o log')
 
