@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.contenttypes.generic import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import ForeignKey, FileField, CharField, Model, TextField, PositiveIntegerField
+from django.db.models import ForeignKey, FileField, CharField, Model, TextField, PositiveIntegerField, ImageField
 from mezzanine.core.fields import RichTextField
 from mezzanine.pages.models import Page
 
@@ -95,3 +95,19 @@ class Tutorial(Model):
     texto = RichTextField()
     page = ForeignKey(TutorialPage, related_name="tutoriais")
     tags = GenericRelation('TaggedItem')
+
+
+class VideoTutorialPage(Page):
+    class Meta:
+        verbose_name = 'VideoTutorial Page'
+
+    def __unicode__(self):
+        return self.title
+
+
+class VideoTutorial(Model):
+    titulo = CharField(max_length=128)
+    descricao = RichTextField()
+    page = ForeignKey(VideoTutorialPage, related_name='videos')
+    video_url = CharField(max_length=256)
+    video_thumb = ImageField(upload_to='uploads/video-thumbs/')
