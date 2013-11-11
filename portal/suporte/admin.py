@@ -96,8 +96,12 @@ class ManualPageAdmin(PageAdmin):
     inlines = (ManualAdminInline,)
 
 
+class VideoTutorialInline(admin.TabularInline):
+    model = VideoTutorial
+
+
 class VideoTutorialPageAdmin(PageAdmin):
-    model = VideoTutorialPage
+    inlines = (VideoTutorialInline,)
 
 admin.site.register(FAQPage, FAQPageAdmin)
 admin.site.register(TutorialPage, TutorialPageAdmin)
