@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags staticfiles %}
+
+{% block meta_title %}{{ page.meta_title }}{% endblock %}
+
+{% block meta_keywords %}{% metablock %}
+    {% keywords_for page as keywords %}
+    {% for keyword in keywords %}
+        {% if not forloop.first %}, {% endif %}
+        {{ keyword }}
+    {% endfor %}
+{% endmetablock %}{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link href="{% static "products/css/comparar.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block meta_description %}{% metablock %}
+    {{ page.description }}
+{% endmetablock %}{% endblock %}
+
+{% block headers %}
+    <header>
+        {% include 'includes/1-header-logo.html' %}
+        {% include 'includes/2-header-atendimento.html' %}
+        {% include 'includes/3-header-produtos.html' %}
+        <br><br>
+    </header>
+{% endblock %}
+
+{% block title %}
+
+    {% editable page.product.title %}
+        {{ page.product.title }}
+    {% endeditable %}
+    {% editable page.product.subtitle %}
+        <span style="color:#ddd; margin: 0 10px;">|</span>
+        <span class=h1-complement>{{ page.product.subtitle }}</span>
+    {% endeditable %}
+
+{% endblock %}
+
+{% block one_row %}
+    <div class="span12 left">
+
+        {% editable page.product.youtube_title %}
+            <h2>{{ page.product.youtube_title }}</h2>
+        {% endeditable %}
+
+        <div class="youtube-container">
+            {% editable page.product.youtube_url %}
+                <iframe title="YouTube video player" class="youtube-player" type="text/html" width="720" height="390"
+                    src="{{ page.product.youtube_url }}?rel=0" frameborder="0" allowFullScreen></iframe>
+            {% endeditable %}
+
+            {% include 'includes/sharebar.html' %}
+        </div>
+
+        <br><br>
+
+        <div class="clearfix"></div>
+
+        {% editable page.product.tab_title %}
+            <h2>{{ page.product.tab_title }}</h2>
+        {% endeditable %}
+
+        {# Esquema de Abas #}
+        <section class="nav nav-tabs" style="display:inline-block; width:100%; margin-bottom: 0px;">
+            {% for tab in page.product.tabs.all %}
+                <aside class="product-tabs" style="display:inline-block;">
+                    {% editable tab.tab_title %}
+                        <h3>{{ tab.tab_title }}</h3>
+                    {% endeditable %}
+                    {% editable tab.tab_short_description %}
+                        <h4>{{ tab.tab_short_description }}</h4>
+                        <a class="btn" style="color: #555;" href="#{{ tab.tab_title|slugify }}" data-toggle="tab">Entenda
+                        </a>
+                    {% endeditable %}
+                </aside>
+            {% endfor %}
+        </section>
+        <div class="tab-content">
+            {% for tab in page.product.tabs.all %}
+                <div class="tab-pane product-tabs-content" id="{{ tab.tab_title|slugify }}" style="text-align: justify;">
+                    {% editable tab.tab_description %}
+                        {{ tab.tab_description }}
+                    {% endeditable %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% block price %}{% endblock %}
+
+        {% block linhas_ssl %}
+            {# Inclusão da tabela de comparação de certificados #}
+            <div style="margin-top:20px;">
+                {% include "includes/linhas-ssl.html" with precos=precos product_code=product_code %}
+            </div>
+        {% endblock %}
+
+        <form class="form-certificados hidden" id="form-confirm-buy">
+            <h2>Você precisa de Servidores adicionais?</h2>
+            {#    <h2>{{ page.product.title }}, linha <span class="line">prime</span>, vigência de <span class="term">1 ano</span></h2>#}
+        {#    <div>#}
+        {#      <label for="qtd">Quantidade de certificados</label><input type="text" id="qtd" name="qtd" class="span1" value="1"><span class="info price">R$ 1.000,00</span>#}
+        {#    </div>#}
+        {#    <div>#}
+        {#      <label>Dominios inclusos por certificado</label><input type="text" disabled="disabled" class="span1"><span class="info price">R$ Incluso no valor do certificado</span>#}
+        {#    </div>#}
+            <div>
+              <label for="num_domains">Quantidade de Servidores adicionais</label><input type="text" id="num_domains" name="num_domains" value="1" class="span1"><span class="info price">R$ 100,00 / Domínio adicional</span>
+            </div>
+
+            <button class="btn btn-orange pull-right" id="btn-confirm-buy">Confirmar</button>
+        </form>
+
+        {# Inclusão da área 'você sabia' #}
+        <div style="margin-top:20px;">
+            {% include "includes/voce-sabia.html" %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'products/js/produtos.js' %}"></script>
+{% endblock %}
