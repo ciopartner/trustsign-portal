@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView
 from oscar.core.loading import get_class
 import requests
 from ecommerce.apps.payment.forms import DebitcardForm
@@ -292,3 +293,13 @@ class ThankYouView(views.ThankYouView):
         })
 
         return context
+
+
+class StatusChangedView(TemplateView):
+    template_name = 'checkout/akatus/status_changed.html'
+
+    def render_to_response(self, context, **response_kwargs):
+        r = super(StatusChangedView, self).render_to_response(context, **response_kwargs)
+        log.info('AKATUS STATUS CHANGED GET: {}'.format(self.request.GET))
+        log.info('AKATUS STATUS CHANGED POST: {}'.format(self.request.POST))
+        return r

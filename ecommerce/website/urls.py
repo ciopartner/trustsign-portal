@@ -6,4 +6,5 @@ urlpatterns = patterns(
     '',
     url(r'^ajax/get-cnpj-data/$', GetCNPJDataView.as_view()),
     url(r'^ajax/adicionar-produto/$', csrf_exempt(AdicionarProdutoView.as_view())),
+    url(r'^api/v1/atualiza-status-pagto/$', csrf_exempt()),
 )
