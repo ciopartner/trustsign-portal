@@ -104,7 +104,7 @@
                     <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order.number line.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="reorder" />
-                        <button class="btn btn-success" type="submit">{% trans 'Re-order' %}</button>
+                        <button class="btn btn-orange" type="submit">{% trans 'Re-order' %}</button>
                     </form>
                     {% else %}
                         {% trans 'Not available anymore' %}
@@ -176,7 +176,7 @@
         {% csrf_token %}
         <input type="hidden" name="order_id" value="{{ order.id }}" />
         <input type="hidden" name="action" value="reorder" />
-        <button type="submit" class="btn btn-success">{% trans 'Re-order all items' %}</button>
+        <button type="submit" class="btn btn-orange">{% trans 'Re-order all items' %}</button>
     </form>
 
 {#    <hr>#}
