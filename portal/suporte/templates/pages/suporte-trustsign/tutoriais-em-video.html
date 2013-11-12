@@ -49,7 +49,9 @@
                 <div class="span6">
                     <h2><a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">{{ video.titulo }}</a></h2>
                     <div>{{ video.descricao|richtext_filter|safe  }}</div>
-                    <a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal"><img src="{% static video.video_thumb %}" alt=""/></a>
+                    <a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">
+                        <img src="{{ video.video_thumb.url }}" alt=""/>
+                    </a>
                 </div>
             {% endfor %}
         </div>
