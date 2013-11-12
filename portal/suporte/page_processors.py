@@ -1,9 +1,10 @@
 # coding=utf-8
 from StringIO import StringIO
+import pprint
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
 from portal.suporte.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
-from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage
+from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage, VideoTutorialPage
 
 
 @processor_for(FAQPage)
@@ -45,6 +46,13 @@ def faq_processor(request, page):
         'itens': itens
     }
 
+@processor_for(VideoTutorialPage)
+def video_tutorial(request, page):
+    videos = page.videotutorialpage.videos.all()
+
+    return {
+        'videos': videos
+    }
 
 @processor_for(FerramentasPage)
 def ferramentas_processor(request, page):
