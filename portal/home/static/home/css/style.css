@@ -2185,10 +2185,10 @@ h3.title{
     margin-right: 10px;
 }
 
-#tutorial-em-video .video{
+#video-tutorial .video{
     position:relative;
 }
-#tutorial-em-video .video:before{
+#video-tutorial .video:before{
     background: url("../img/youtube/youtube-seta.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     content: "";
     height: 208px;
