@@ -298,6 +298,9 @@ class ThankYouView(views.ThankYouView):
 class StatusChangedView(TemplateView):
     template_name = 'checkout/akatus/status_changed.html'
 
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
     def render_to_response(self, context, **response_kwargs):
         r = super(StatusChangedView, self).render_to_response(context, **response_kwargs)
         log.info('AKATUS STATUS CHANGED GET: {}'.format(self.request.GET))
