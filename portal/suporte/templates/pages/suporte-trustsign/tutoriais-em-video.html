@@ -46,7 +46,7 @@
     <div class="fix-row-margin">
         <div id="video-tutorial" class="row">
             {% for video in videos %}
-                <div class="span6">
+                <div class="span6 video">
                     <h2><a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">{{ video.titulo }}</a></h2>
                     <div>{{ video.descricao|richtext_filter|safe  }}</div>
                     <a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">

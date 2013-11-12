@@ -2184,3 +2184,15 @@ h3.title{
 #form-confirm-buy div input{
     margin-right: 10px;
 }
+
+#tutorial-em-video .video{
+    position:relative;
+}
+#tutorial-em-video .video:before{
+    background: url("../img/youtube/youtube-seta.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    content: "";
+    height: 208px;
+    pointer-events: none;
+    position: absolute;
+    width: 391px;
+}
