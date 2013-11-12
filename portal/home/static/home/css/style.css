@@ -2190,9 +2190,13 @@ h3.title{
 }
 #video-tutorial .video:before{
     background: url("../img/youtube/youtube-seta.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    bottom: 50%;
     content: "";
-    height: 208px;
+    height: 23px;
+    left: 50%;
+    margin-bottom: -42px;
+    margin-left: -19px;
     pointer-events: none;
     position: absolute;
-    width: 391px;
+    width: 32px;
 }
