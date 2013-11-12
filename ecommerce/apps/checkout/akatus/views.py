@@ -79,9 +79,9 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
             'parcelas': {
                 'assinaturas': Decimal(250),
                 'certificados': [
-                    {'parcelas': 1, 'valor_total': Decimal(1000), 'valor_parcela': Decimal(1000), 'juros': Decimal(0)},
-                    {'parcelas': 2, 'valor_total': Decimal(1100), 'valor_parcela': Decimal(550), 'juros': Decimal('1.99')},
-                    {'parcelas': 3, 'valor_total': Decimal(1200), 'valor_parcela': Decimal(400), 'juros': Decimal('1.99')},
+                    {'qtd': 1, 'valor_total': Decimal(1000), 'valor_parcela': Decimal(1000), 'juros': Decimal(0)},
+                    {'qtd': 2, 'valor_total': Decimal(1100), 'valor_parcela': Decimal(550), 'juros': Decimal('1.99')},
+                    {'qtd': 3, 'valor_total': Decimal(1200), 'valor_parcela': Decimal(400), 'juros': Decimal('1.99')},
                 ]
             }
         })
@@ -151,6 +151,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
 
         elif payment_source == 'akatus-debitcard':
             return self.handle_payment_debito(order_number, total_incl_tax, **kwargs)
+
         elif payment_source == 'no-payment':
             return
 
