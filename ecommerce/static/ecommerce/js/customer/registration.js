@@ -6,6 +6,7 @@ function RegistrationForm($obj, settings){
     var CNPJNotFoundHTML = "<div class=\"error tm10\"  id=\"invalidCNPJ\"><span class=\"help-block error\"><i class=\"icon-exclamation-sign\"></i>Não foi possível localizar o CNPJ.</span></div>";
     var invalidPhone = "<div class=\"error tm10\" id=\"invalidPhone\"><span class=\"help-block\"><i class=\"icon-exclamation-sign\"></i>Telefone inválido. Apenas telefones fixos.</span></div>";
     var invalidEmail = "<div class=\"error tm10\" id=\"invalidEmail\"><span class=\"help-block\"><i class=\"icon-exclamation-sign\"></i>Use apenas email corporativo.</span></div>";
+    var loading = '<img id="loading" src="' + url_static + 'home/img/icons/loading.gif">';
     var emailBlackList = new Array('gmail', 'yahoo', 'hotmail', 'outlook', 'ymail');
 
     settings = settings || {};
@@ -28,10 +29,18 @@ function RegistrationForm($obj, settings){
         $obj.find("input[disabled]").parents('.control-group').show();
     }
 
+    var CNPJLoading = function(bool){
+        $("#loading").remove();
+
+        if(bool)
+            $cnpj.after(loading);
+    }
+
     /**
      * Função de retorno da função getCNPJData
      */
     var CPNJCallback = function(data){
+        CNPJLoading(false);
 
         for(field in data)
             if(field !== 'cnpj')
@@ -46,6 +55,7 @@ function RegistrationForm($obj, settings){
      * Função de retorno da função getCNPJData em caso de erro.
      */
     var CPNJFailCallback = function(){
+        CNPJLoading(false);
         $cnpj.after(CNPJNotFoundHTML);
         loading = false;
     }
@@ -54,6 +64,7 @@ function RegistrationForm($obj, settings){
      * Obtém CNPJ
      */
     self.getCPNJData = function(){
+        CNPJLoading(true);
         var xhr = $.post(url_ecommerce + 'ajax/get-cnpj-data/', { cnpj : $cnpj.val() }, CPNJCallback);
         xhr.fail(CPNJFailCallback);
     }
@@ -76,8 +87,6 @@ function RegistrationForm($obj, settings){
     self.validateEmail = function(){
         var val = $email.val();
         var domain = val.split('@')[1] || "";
-
-        console.log(domain);
 
         if(domain.length){
             var block;
