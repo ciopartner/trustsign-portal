@@ -15,7 +15,7 @@
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
                         </div>
-                        <button type="submit" class="pull-right btn btn-orange">Concluir compra</button>
+                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
                     </form>
                 </div>
             </div>
@@ -35,15 +35,15 @@
                         <div class="">
                             {% csrf_token %}
                             {% include 'partials/form_fields.html' with form=bankcard_form %}
-{#                            <div class="alert alert-warning">#}
-{#                                <h4>{% trans "Demo site help" %}</h4>#}
-{#                                <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>#}
-{#                            </div>#}
+                            <div class="alert alert-warning">
+                                <h4>{% trans "Demo card" %}</h4>
+                                <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>
+                            </div>
                         </div>
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
                         </div>
-                        <button type="submit" class="pull-right btn btn-orange">Concluir compra</button>
+                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
                     </form>
                 </div>
             </div>
@@ -57,13 +57,17 @@
             </div>
             <div id="collapseTwo" class="accordion-body collapse">
                 <div class="accordion-inner">
+                    <p>Para pagamento por boleto bancário, o banco nos envia uma confirmação em até <strong>dois dias úteis</strong> após o pagamento.</p>
+                    <p>Após a confirmação o pedido será liberado para emissão.</p>
+                    <p>Ao confirmar o pedido clicando no botão "Finalizar Compra" o seu pedido será concluído e será disponibilizado um link para que você possa visualizar o boleto gerado.</p>
+
                     <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="source-type" value="akatus-boleto" />
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
                         </div>
-                        <button type="submit" class="pull-right btn btn-orange">Gerar Boleto</button>
+                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
                     </form>
                 </div>
             </div>
@@ -76,16 +80,14 @@
             </div>
             <div id="collapseThree" class="accordion-body collapse">
                 <div class="accordion-inner">
-                    <p>Para débito em conta, o banco nos envia uma confirmação de pagamento em até <strong>dois dias íteis</strong>.</p>
+                    <p>Para pagamento por débito em conta, o banco nos envia uma confirmação em até <strong>dois dias úteis</strong> após o pagamento.</p>
                     <p>Após essa confirmação o pedido é liberado para emissão.</p>
                     <p>Escolha seu banco abaixo, e ao confirmar sua compra, você será encaminhado para uma página do banco, onde deverá fazer o pagamento online.</p>
-
-
 
                     <form action="{% url 'checkout:preview' %}" class="form-inline" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="source-type" value="akatus-debitcard" />
-                        <button type="submit" class="pull-right btn btn-orange">Iniciar pagamento com cartão de débito</button>
+                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
 
                         <label>
                             <input type="radio" name="banco" value="bb"/>
@@ -101,6 +103,8 @@
                             <input type="radio" name="banco" value="bradesco"/>
                             <img src="{% static 'home/img/payment/thumb_bradesco.gif' %}" alt=""/>
                         </label>
+
+                        <br><br>
 
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}

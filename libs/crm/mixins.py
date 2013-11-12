@@ -15,11 +15,46 @@ class OscarToCRMMixin(object):
         """
         cliente = self.get_cliente_crm(order)
         contato = self.get_contato_crm(order)
-        oportunidade = self.get_oportunidade_crm(order)
-        produtos = self.get_produtos_crm(order)
 
+        # Passo 1: Fazer login
         crm_client = crm.CRMClient()
-        crm_client.postar_compra(cliente, contato, oportunidade, produtos)
+        crm_client.login()
+
+        # Passo 2: Criar ou recuperar o cliente
+        cliente_id = crm_client.get_or_create_account(cliente)
+
+        # Passo 3: Criar o recuperar o contato
+        contato.account_id = cliente_id
+        contato_id = crm_client.get_or_create_contact(contato)
+
+        # Passo 3: Criar uma oportunidade para cada transaction_id
+        # Isso se faz necessário porque temos a seguinte regra de pagamento:
+        # - a soma de todos os certificados geram 1 transaction quando pago via cartão de crédito;
+        # - cada assinatura gera uma nova transaction, quando pago via cartão de crédito;
+
+        # Para cada transação, criar uma oportunidade
+        sources = order.sources.all()
+        transactions = []
+        for s in sources:
+            for t in s.transactions.all():
+                transactions.append(t)
+
+        # Para cada transação, crie uma oportunidade e inclua todos os produtos daquela transação
+        for t in transactions:
+            # Cria a oportunidade
+            oportunidade = self.get_oportunidade_crm(order, transaction=t)
+            oportunidade.account_id = cliente_id
+            oportunidade.contact_id = contato_id
+            oportunidade_id = crm_client.set_entry_opportunities(oportunidade)
+
+            # Cria os produtos da oportunidade
+            produtos = self.get_produtos_crm(order, transaction=t)
+            for produto in produtos:
+                produto.account_id = contato_id
+                produto.opportunity_id = oportunidade_id
+                crm_client.set_entry_products(produto)
+
+        crm_client.logout()
 
     @staticmethod
     def get_cliente_crm(order):
@@ -66,43 +101,49 @@ class OscarToCRMMixin(object):
         return contato
 
     @staticmethod
-    def get_oportunidade_crm(order):
+    def get_oportunidade_crm(order, transaction):
         """
         Return a oportunity to send to CRM
+        A intenção é criar uma oportunidade para cada transação de cartão de crédito.
         """
-        source = order.sources.all()[0]
-
-        try:
-            bankcard = source.bankcard
-        except Bankcard.DoesNotExists:
-            raise crm.CRMClient.CRMError('Falta os dados do cartão de crédito')
-
-        transaction_id = source.reference
-
+        transaction_id = transaction.reference
         oportunidade = crm.OportunidadeCRM()
         oportunidade.numero_pedido = order.number
-        oportunidade.pag_credito_transacao_id = transaction_id
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
         oportunidade.valor_total = str(order.total_incl_tax)
 
-        #TODO: colocar if quando implementar os outros meios de pagamento
-        if bankcard:
+        if transaction.boleto_id:
+            # Para pagamento com boleto
+            oportunidade.pag_boleto_transacao_id = transaction_id
+
+        elif transaction.debitcard_id:
+            # Para pagamento com cartão de débito
+            oportunidade.pag_debito_transacao_id = transaction_id
+
+        elif transaction.bankcard_id:
+            # Para pagamento com cartão de crédito
             oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_CREDITO
-            oportunidade.pag_credito_titular = bankcard.name
-            oportunidade.pag_credito_vencimento = bankcard.expiry_month()
-            oportunidade.pag_credito_bandeira = bankcard.card_type
-            oportunidade.pag_credito_ultimos_digitos = bankcard.number[-4:]
+            oportunidade.pag_credito_titular = transaction.bankcard.name
+            oportunidade.pag_credito_vencimento = transaction.bankcard.expiry_month()
+            oportunidade.pag_credito_bandeira = transaction.bankcard.card_type
+            oportunidade.pag_credito_ultimos_digitos = transaction.bankcard.number[-4:]
+            oportunidade.pag_credito_transacao_id = transaction_id
+
+        else:
+            # Para pagamento fiado....
+            raise crm.CRMClient.CRMError('Faltam os dados de pagamento')
 
         return oportunidade
 
     @staticmethod
-    def get_produtos_crm(order):
+    def get_produtos_crm(order, transaction):
         """
         Return a list of products to send to CRM
         """
+        transaction_id = transaction.reference
         produtos = []
 
-        for line in order.lines.all():
+        for line in order.lines.filter(paymentevent__reference=transaction_id):
             produto = crm.ProdutoCRM()
             produto.codigo = line.partner_sku
             produto.quantidade = line.quantity
