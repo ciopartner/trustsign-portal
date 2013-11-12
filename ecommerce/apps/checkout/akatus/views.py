@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from decimal import Decimal
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.views.generic import TemplateView
 from oscar.core.loading import get_class
 import requests
@@ -20,6 +22,8 @@ SourceType = get_class('payment.models', 'SourceType')
 Source = get_class('payment.models', 'Source')
 Transaction = get_class('payment.models', 'Transaction')
 Boleto = get_class('payment.models', 'Boleto')
+Order = get_class('order.models', 'Order')
+Line = get_class('order.models', 'Line')
 
 log = logging.getLogger('ecommerce.checkout.views')
 
@@ -66,8 +70,21 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
     def get_context_data(self, **kwargs):
         # Add here anything useful to be rendered in templates
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
-        ctx['bankcard_form'] = kwargs.get('bankcard_form', BankcardForm())
-        ctx['debitcard_form'] = kwargs.get('debitcard_form', DebitcardForm())
+
+        ctx.update({
+            'bankcard_form': kwargs.get('bankcard_form', BankcardForm()),
+            'debitcard_form': kwargs.get('debitcard_form', DebitcardForm()),
+
+            #TODO: implementar parcelas akatus
+            'parcelas': {
+                'assinaturas': Decimal(250),
+                'certificados': [
+                    {'parcelas': 1, 'valor_total': Decimal(1000), 'valor_parcela': Decimal(1000), 'juros': Decimal(0)},
+                    {'parcelas': 2, 'valor_total': Decimal(1100), 'valor_parcela': Decimal(550), 'juros': Decimal('1.99')},
+                    {'parcelas': 3, 'valor_total': Decimal(1200), 'valor_parcela': Decimal(400), 'juros': Decimal('1.99')},
+                ]
+            }
+        })
 
         return ctx
 
@@ -299,10 +316,32 @@ class StatusChangedView(TemplateView):
     template_name = 'checkout/akatus/status_changed.html'
 
     def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
-
-    def render_to_response(self, context, **response_kwargs):
-        r = super(StatusChangedView, self).render_to_response(context, **response_kwargs)
         log.info('AKATUS STATUS CHANGED GET: {}'.format(self.request.GET))
         log.info('AKATUS STATUS CHANGED POST: {}'.format(self.request.POST))
-        return r
+
+        token = self.request.POST.get('token')
+
+        if token != settings.AKATUS_TOKEN_NIP:
+            log.warning('chamada ao akatus status changed com token inválido')
+            raise Http404()
+
+        order_number = self.request.POST['referencia']
+        transacao_id = self.request.POST['transacao_id']
+        status = self.request.POST['status']
+
+        log.info('Order #{} com transaction_id {} alterou o status para {}'.format(order_number, transacao_id, status))
+
+        if status == 'Aprovado':
+            try:
+                order = Order.objects.get(number=order_number)
+                line = order.lines.get(partner_line_reference=transacao_id)
+                line.set_status('Pago')
+
+                if order.lines.count() == order.lines.filter(status='Pago').count():
+                    order.set_status('Pago')
+            except Order.DoesNotExist:
+                log.error('Não encontrou a order #{}'.format(order_number))
+            except Line.DoesNotExist:
+                log.error('Não encontrou a line com partner_line_reference={} da order #{}'.format(transacao_id, order_number))
+
+        return self.get(request, *args, **kwargs)

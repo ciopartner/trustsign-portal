@@ -411,7 +411,7 @@ class CRMClient(object):
             contact_id = self.get_or_create_contact(contato)
 
             oportunidade.account_id = account_id
-            oportunidade.countact_id = contact_id
+            oportunidade.contact_id = contact_id
             opportunity_id = self.set_entry_opportunities(oportunidade)
 
             for produto in produtos:
