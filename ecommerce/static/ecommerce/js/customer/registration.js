@@ -126,8 +126,18 @@ function RegistrationForm($obj, settings){
 }
 
 $(function(){
-    new RegistrationForm($("#register_form"));
-    new RegistrationForm($("#profile_form"),{
-        phone : $("#id_callback_telefone_principal")
-    });
+    // Cadastro de usuário
+    var $register = $("#register_form");
+    if($register){
+        new RegistrationForm($register);
+    }
+
+    // Edição de cadastro
+    var $profile = $("#profile_form");
+    if($profile){
+        var profile = new RegistrationForm($profile,{
+            phone : $("#id_callback_telefone_principal")
+        });
+        profile.showDisableFields();
+    }
 });

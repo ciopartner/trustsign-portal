@@ -50,7 +50,8 @@
                     Total
                 </h4>
                 <h3>{{ basket.total_incl_tax|currency }}</h3>
-                <button class="btn btn-orange btn-block" onclick="$('#form-compra').submit()">FINALIZAR COMPRA</button>
+{#                <button class="btn btn-orange btn-block" onclick="$('#form-compra').submit()">Concluir</button>#}
+                <br><br><br>
                 <a href="{% url 'basket:summary' %}" class="pull-right tm10">Editar pedido</a>
                 <div class="clearfix"></div>
             </div>

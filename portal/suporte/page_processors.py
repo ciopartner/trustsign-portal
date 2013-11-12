@@ -1,9 +1,10 @@
 # coding=utf-8
 from StringIO import StringIO
+import pprint
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
 from portal.suporte.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
-from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage
+from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage, VideoTutorialPage
 
 
 @processor_for(FAQPage)
@@ -17,7 +18,7 @@ def faq_processor(request, page):
 
 
 @processor_for(TutorialPage)
-def faq_processor(request, page):
+def tutorial_processor(request, page):
     tutoriais = page.tutorialpage.tutoriais.prefetch_related('tags__tag').all()
     tags = Tag.objects.filter(itens__question__in=tutoriais).distinct()
     return {
@@ -27,7 +28,7 @@ def faq_processor(request, page):
 
 
 @processor_for(ManualPage)
-def faq_processor(request, page):
+def manual_processor(request, page):
     manuais = page.manualpage.manuais.prefetch_related('tags__tag').all()
     tags = Tag.objects.filter(itens__manual__in=manuais).distinct()
     return {
@@ -37,7 +38,7 @@ def faq_processor(request, page):
 
 
 @processor_for(GlossarioPage)
-def faq_processor(request, page):
+def glossario_processor(request, page):
     itens = page.glossariopage.itens.prefetch_related('tags__tag').all()
     tags = Tag.objects.filter(itens__item__in=itens).distinct()
     return {
@@ -45,6 +46,14 @@ def faq_processor(request, page):
         'itens': itens
     }
 
+
+@processor_for(VideoTutorialPage)
+def video_tutorial(request, page):
+    videos = page.videotutorialpage.videos.all()
+
+    return {
+        'videos': videos
+    }
 
 @processor_for(FerramentasPage)
 def ferramentas_processor(request, page):
