@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from decimal import Decimal
+import json
+from django.conf import settings
 from django.template import Context
 from django.template.loader import get_template
+from django.utils.encoding import smart_unicode
 from oscar.apps.payment.exceptions import GatewayError
 
 import requests
 import logging
+import re
 from ecommerce.website.utils import xml_to_dict
 
 log = logging.getLogger('libs.akatus.gateway')
@@ -19,8 +24,8 @@ class Akatus(object):
     """
 
     METHODS = {
-        'carrinho': 'api/v1/carrinho.xml',
-        'installments': 'api/v1/parcelamento/simulacao.xml',
+        'carrinho': ('api/v1/carrinho.xml', 'POST'),
+        'installments': ('api/v1/parcelamento/simulacao.json', 'GET'),
     }
 
     def __init__(self, *args, **kwargs):
@@ -28,36 +33,38 @@ class Akatus(object):
         self.API_KEY = kwargs.get('AKATUS_API_KEY')
         self.USER = kwargs.get('AKATUS_USER')
 
-    def get_method_url(self, method):
-        return '{}/{}'.format(self.URL, self.METHODS[method])
+    def get_method_details(self, method):
+        url, tipo = self.METHODS[method]
+        return '{}/{}'.format(self.URL, url), tipo
 
-    def call_server_post(self, method, data):
-        """
-        Realiza um POST no servidor passando a data (uma string XML) e retornando um dict com os dados da resposta
-        """
-        response = requests.post(self.get_method_url(method), data.encode('utf-8'))
+    def call_server(self, method, data):
+        url, tipo = self.get_method_details(method)
 
-        if response.status_code != 200:
-            log.error('Erro na chamada do gateway: HTTP {}'.format(response.status_code))
-            log.error('URL: {}'.format(self.get_method_url(method)))
-            log.error('Request: {}'.format(data))
-            log.error('Response: {}'.format(response.text))
+        if tipo == 'GET':
+            response = requests.get(url, params=data)
+        elif tipo == 'POST':
+            response = requests.post(url, data=data)
+        else:
+            log.warning('URLs do Akatus.METHODS configurado errado')
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
-        log.debug('URL: {}'.format(self.get_method_url(method)))
-        log.debug('Request: {}'.format(data))
-        log.debug('Response: {}'.format(response.text))
+        resposta = response.text.encode('utf-8')
 
-        return xml_to_dict(response.text.encode('utf-8'))
-
-    def call_server_get(self, method, data):
-        response = requests.get(self.get_method_url(method), params=data)
+        log.debug('URL[{}]: {}'.format(response.status_code, url))
+        log.debug('Request: {}'.format(smart_unicode(data)))
+        log.debug('Response: {}'.format(smart_unicode(resposta)))
 
         if response.status_code != 200:
-            log.warning('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, response.text))
+            log.warning('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, resposta))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
-        return response
+        if url.endswith('.xml'):
+            return xml_to_dict(resposta)
+        elif url.endswith('.json'):
+            return json.loads(resposta)
+        else:
+            log.warning('URLs do Akatus.METHODS configurado errado')
+            raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
     def post_payment(self, options):
         """
@@ -76,8 +83,9 @@ class Akatus(object):
 
         template = get_template('checkout/akatus/carrinho.xml')
 
-        result = self.call_server_post('carrinho', template.render(Context(context)))
-        #import ipdb; ipdb.set_trace()
+        data = template.render(Context(context)).encode('utf-8')
+
+        result = self.call_server('carrinho', data)
         return result['resposta']
 
     def get_installments(self, amount, card='cartao_visa'):
@@ -85,12 +93,23 @@ class Akatus(object):
         Get the installments amount for the given card.
         payment_method = cartao_visa, cartao_master, cartao_amex, cartao_elo e cartao_dinners
         """
+
+        def limpa_amount(amt):
+            """
+            A Akatus assume que o amount está sem pontuação e com duas casas decimais: R$ 14.332,50 == 1433250
+            """
+            return re.sub('[.,]', '', unicode(amt.quantize(Decimal('0.01'))))
+
         parameters = {
             'email': self.USER,
             'api_key': self.API_KEY,
-            'amount': unicode(amount).replace('.', '').replace(',', ''),
+            'amount': unicode(amount.quantize(Decimal('0.01'))),
             'payment_method': card,
         }
 
-        result = self.call_server_get('installments', parameters)
-        return result
+        result = self.call_server('installments', parameters)
+
+        # Filtra a quantidade de parcelas
+        result['resposta']['parcelas'] = result['resposta']['parcelas'][:getattr(settings, 'AKATUS_MAX_INSTALLMENTS', 3)]
+
+        return result['resposta']

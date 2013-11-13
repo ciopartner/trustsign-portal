@@ -224,6 +224,7 @@ AKATUS_API_KEY = '<mudar local_settings.py>'
 AKATUS_EMAIL = '<mudar local_settings.py>'
 AKATUS_URL_TST = 'https://sandbox.akatus.com'
 AKATUS_URL_PRD = 'https://www.akatus.com'
+AKATUS_MAX_INSTALLMENTS = 3
 
 # Use TST or PRD in the variable below
 AKATUS_ENVIRONMENT = 'TST'
