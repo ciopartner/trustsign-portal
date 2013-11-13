@@ -378,5 +378,10 @@ class StatusChangedView(TemplateView):
                 log.error('Não encontrou a order #{}'.format(order_number))
             except Line.DoesNotExist:
                 log.error('Não encontrou a line com partner_line_reference={} da order #{}'.format(transacao_id, order_number))
+        else:
+            pass
+            # TODO: Envia e-mail para sistemas@trustsign.com.br
+            # Contendo o número do pedido, cnpj e razão social do cliente, valor do pedido e status retornado pela Akatus
+            # Subjetc: Alteração de status não prevista para ordem <ordem>: <status>
 
         return self.get(request, *args, **kwargs)
