@@ -350,7 +350,6 @@ class StatusChangedView(TemplateView):
     template_name = 'checkout/akatus/status_changed.html'
 
     def post(self, request, *args, **kwargs):
-        log.info('AKATUS STATUS CHANGED GET: {}'.format(self.request.GET))
         log.info('AKATUS STATUS CHANGED POST: {}'.format(self.request.POST))
 
         token = self.request.POST.get('token')

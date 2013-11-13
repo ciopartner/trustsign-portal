@@ -29,7 +29,7 @@ from ecommerce.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1S
 from django.conf import settings
 import logging
 
-log = logging.getLogger('portal.certificados.view')
+log = logging.getLogger('ecommerce.certificados.view')
 
 
 def erro_rest(*lista_erros):
@@ -319,6 +319,11 @@ class EmailWhoisAPIAjaxView(EmailWhoisAPIView):
 
 
 class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
+    """
+    Esta classe é responsável pela criação de vouchers.
+    Os vouchers são criados via API pelo SugarCRM
+    Neste instante é necessário setar a ordem para status concluído
+    """
     authentication_classes = [UserPasswordAuthentication]
     renderer_classes = [UnicodeJSONRenderer]
     serializer_class = VoucherSerializer
@@ -326,11 +331,17 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
+        if settings.DEBUG:
+            log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
+
         if serializer.is_valid():
             self.pre_save(serializer.object)
             self.object = serializer.save(force_insert=True)
             self.post_save(self.object, created=True)
             headers = self.get_success_headers(serializer.data)
+
+            # TODO: Setar como 'Concluído' o status do pedido e de seus itens
+
             return Response({}, status=status.HTTP_200_OK,
                             headers=headers)
 

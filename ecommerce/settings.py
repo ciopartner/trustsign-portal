@@ -198,12 +198,16 @@ OSCAR_CURRENCY_FORMAT = u'\xa4 #,##0.00'
 OSCAR_SHOP_NAME = 'TrustSign e-commerce'
 
 # STATUS DAS ORDENS
+# Status 'Em Processamento' = Enviado para o CRM
+# Status 'Concluído' = Vouchers Criados
 OSCAR_INITIAL_ORDER_STATUS = 'Pendente de Pagamento'
 OSCAR_INITIAL_LINE_STATUS = 'Pendente de Pagamento'
 OSCAR_ORDER_STATUS_PIPELINE = {
     'Pendente de Pagamento': ('Em Análise', 'Pago', 'Cancelado', 'Não Aprovado',),
     'Em Análise': ('Pago', 'Cancelado', 'Não Aprovado',),
-    'Pago': ('Estornado', 'Cancelado'),
+    'Pago': ('Estornado', 'Cancelado', 'Em Processamento'),
+    'Em Processamento': ('Concluído', 'Estornado', 'Cancelado'),
+    'Concluído': ('Estornado', 'Cancelado'),
     'Cancelado': (),
     'Estornado': (),
     'Não Aprovado': (),
@@ -211,7 +215,9 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 OSCAR_LINE_STATUS_PIPELINE = {
     'Pendente de Pagamento': ('Em Análise', 'Pago', 'Cancelado', 'Não Aprovado',),
     'Em Análise': ('Pago', 'Cancelado', 'Não Aprovado',),
-    'Pago': ('Estornado', 'Cancelado'),
+    'Pago': ('Estornado', 'Cancelado', 'Em Processamento'),
+    'Em Processamento': ('Concluído', 'Estornado', 'Cancelado'),
+    'Concluído': ('Estornado', 'Cancelado'),
     'Cancelado': (),
     'Estornado': (),
     'Não Aprovado': (),
