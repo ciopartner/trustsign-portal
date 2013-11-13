@@ -160,6 +160,14 @@ class Voucher(Model):
     def sla_estourado(self):
         return self.order_date + timedelta(hours=self.tempo_em_espera) < timezone.now()
 
+    @property
+    def sla_since(self):
+        try:
+            diff = timezone.now() - self.order_date
+            return int(diff.total_seconds() / 3600)  # quantidade de horas passadas
+        except Emissao.DoesNotExist:
+            return 0
+
     def has_emissao_url(self):
         return self.ssl_product in(
             self.PRODUTO_SSL, self.PRODUTO_SSL_WILDCARD, self.PRODUTO_SAN_UCC, self.PRODUTO_MDC, self.PRODUTO_EV,

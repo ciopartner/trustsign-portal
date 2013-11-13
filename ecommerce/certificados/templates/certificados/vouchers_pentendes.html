@@ -23,7 +23,7 @@
                     <td>{{ voucher.get_ssl_line_display }}</td>
                     <td>{{ voucher.get_ssl_term_display }}</td>
                     <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.order_date|date:"d/m/Y" }}</td>
-                    <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.tempo_em_espera }}h</td>
+                    <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.sla_since }}h / {{ voucher.tempo_em_espera }}h</td>
                     <td>
                         {% if emissao.emission_status == emissao.STATUS_EMISSAO_APROVACAO_PENDENTE %}
                             Emissão
