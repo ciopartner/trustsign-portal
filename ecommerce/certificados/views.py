@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from copy import copy
 import os
+from django.contrib import messages
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
@@ -896,6 +897,8 @@ class AprovaVoucherPendenteView(TemplateView):
         emissao.aprova(self.request.user)
 
         emissao.save()
+
+        messages.info(self.request, 'Certificado aprovado com sucesso')
 
         return HttpResponseRedirect(reverse('voucher-pendentes-lista'))
 
