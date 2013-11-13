@@ -250,6 +250,9 @@ EMAIL_HOST_PASSWORD = 'AjfrHH5LIVaKku5iBMkbBs5CWM2IK0Z6ZhiXWKVQHHHV'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = OSCAR_FROM_EMAIL = 'alessandro.reichert@ciopartner.com.br'
 
+TRUSTSIGN_SUPORTE_EMAIL = 'suporte@trustsign.com.br'
+TRUSTSIGN_VALIDACAO_EMAIL = 'validacao@trustsign.com.br'
+
 USAR_KNU = False  # Usado para retornar um dummy dict em vez de chamar a KNU para desenvolvimento
 
 REST_FRAMEWORK = {

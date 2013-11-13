@@ -54,9 +54,9 @@
 
     <table style="width: 100%" cellspacing="0" cellpadding="0">
         <tr>
-            <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF">Produto:</th>
-            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'quantity:' %}</th>
-            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'price:' %}</th>
+            <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF">{% trans 'Product' %}</th>
+            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'Quantity' %}</th>
+            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'Price' %}</th>
         </tr>
         {% for line in order.lines.all %}
             <tr>
@@ -79,9 +79,9 @@
     {% trans 'Order Total:' %} {{ order.total_incl_tax|currency:order.currency }}
     </p>
 
-    <p>{% trans 'Shipping address:' %}</p>
-    <p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>
-    {% endfor %}</p>
+{#    <p>{% trans 'Shipping address:' %}</p>#}
+{#    <p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>#}
+{#    {% endfor %}</p>#}
 
     <hr/>
 

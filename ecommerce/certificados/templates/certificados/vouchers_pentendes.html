@@ -31,11 +31,23 @@
                             Revogação
                         {% endif %}
                     </td>
-                    <td><a href="{{ voucher.get_revisao_url }}">Revisar</a>{% if emissao.emission_reviewer %},
-                       <a href="{{ voucher.get_aprova_voucher_pendente_url }}">Aprovar</a>{% endif %}
-                    {% if emissao.emission_error_message %}
-                        <span class="badge badge-important" title="{{ emissao.emission_error_message }}" rel="tooltip">!</span>
-                    {% endif %}
+                    <td>
+
+                        <div class="btn-group btn-block">
+                            <button class="btn dropdown-toggle btn-block btn-primary no-uppercase" data-toggle="dropdown">Ação <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ voucher.get_revisao_url }}">Revisar</a></li>
+                                {% if emissao.emission_reviewer %}
+                                    <li>
+                                        <a href="{{ voucher.get_aprova_voucher_pendente_url }}">Aprovar</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                        {% if emissao.emission_error_message %}
+                            <span class="badge badge-important" title="{{ emissao.emission_error_message }}" rel="tooltip">!</span>
+                        {% endif %}
 
                     </td>
 

@@ -26,11 +26,12 @@ Executar uma vez para o portal e outra para o e-commerce
   - PRD
 
 6) Dependências:
-- apt-get install libncurses5-dev
-- apt-get install python-dev
-- apt-get install openssl
-- apt-get install libssl-dev
-- apt-get install whois
+# apt-get install libncurses5-dev
+# apt-get install python-dev
+# apt-get install openssl
+# apt-get install libssl-dev
+# apt-get install whois
+# apt-get install libxml2-dev libxslt1-dev libyaml-dev linux-headers-generic flup memcached lighttpd
 
 7) Settings local:
 - CRM_USERNAME = 'usuario de acesso ao CRM'
