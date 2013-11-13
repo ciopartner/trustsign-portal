@@ -1,13 +1,16 @@
-Emissão Solicitada com Sucesso
+{% extends 'customer/emails/base.html' %}
 
-Olá, você acabou de solicitar a emissão do certificado tipo <SSL>, linha <PRIME> com vigência de <3 ANOS>, do pedido <PEDIDO>.
-Durante todo o processo de emissão cada vez que o status for alterado você receberá um novo e-mail avisando isso.
+{% block title %}Emissão Solicitada com Sucesso{% endblock %}
 
-Bolinha 1: Pedido Realizado
-Bolinha 2: Pedido Pago
-Bolinha 3: Emissão Solicitada
-Bolinha 4: Emissão Concluída
+{% block body %}
+<p>Olá, você acabou de solicitar a emissão do certificado tipo {{ voucher.get_ssl_product_display }}, linha {{ voucher.get_ssl_line_display }} com vigência de {{ voucher.get_ssl_term_display }}.</p>
+<p>Durante todo o processo de emissão cada vez que o status for alterado você receberá um novo e-mail avisando isso.</p>
+{% endblock %}
 
-Link para termos de uso do certificado.
+{# voucher.emissao.emitido = True #}
+{#Bolinha 1: Pedido Realizado#}
+{#Bolinha 2: Pedido Pago#}
+{#Bolinha 3: Emissão Solicitada#}
+{#Bolinha 4: Emissão Concluída#}
 
-Informações importantes
+{#Link para termos de uso do certificado.#}
