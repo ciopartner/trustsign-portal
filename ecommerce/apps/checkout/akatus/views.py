@@ -368,8 +368,9 @@ class StatusChangedView(TemplateView):
         if status == 'Aprovado':
             try:
                 order = Order.objects.get(number=order_number)
-                line = order.lines.get(partner_line_reference=transacao_id)
-                line.set_status('Pago')
+                lines = order.lines.filter(paymentevent__reference=transacao_id)
+                for line in lines:
+                    line.set_status('Pago')
 
                 if order.lines.count() == order.lines.filter(status='Pago').count():
                     order.set_status('Pago')
