@@ -39,7 +39,7 @@ class Facade(object):
 
         return self.gateway.post_payment(options)
 
-    def get_payment_installments(self, request, amount):
+    def get_payment_installments(self, amount):
         """
         This method requests Akatus webservice for installments for Credit Card.
         You must call the capture method to confirm the transaction.

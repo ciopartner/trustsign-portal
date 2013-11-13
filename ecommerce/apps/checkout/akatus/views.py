@@ -2,12 +2,9 @@
 from __future__ import unicode_literals
 from decimal import Decimal
 from django.conf import settings
-from django.contrib import messages
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import Http404
 from django.views.generic import TemplateView
 from oscar.core.loading import get_class
-import requests
 from ecommerce.apps.payment.forms import DebitcardForm
 from ecommerce.website.utils import remove_message
 from libs.akatus import facade as akatus
@@ -15,6 +12,7 @@ from libs.akatus import facade as akatus
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
 from oscar.apps.checkout import views
 from libs.crm.mixins import OscarToCRMMixin
+import requests
 import logging
 
 BankcardForm = get_class('payment.forms', 'BankcardForm')
@@ -47,14 +45,6 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
             return error_response
         return super(PaymentDetailsView, self).get(request, *args, **kwargs)
 
-    def get_error_response(self):
-        if self.request.method == 'POST':
-            if not self.valida_contrato_ssl() or not self.valida_contrato_sitemonitorado() or \
-                    not self.valida_contrato_siteseguro() or not self.valida_contrato_pki():
-                messages.error(self.request, 'Você precisa aceitar os termos de uso dos produtos selecionados')
-                return HttpResponseRedirect(reverse('checkout:payment-details'))
-        return super(PaymentDetailsView, self).get_error_response()
-
     def valida_contrato_ssl(self):
         return not self.request.basket.tem_contrato_ssl() or self.request.POST.get('aceita_contrato_ssl', '') == '1'
 
@@ -71,20 +61,58 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         # Add here anything useful to be rendered in templates
         ctx = super(PaymentDetailsView, self).get_context_data(**kwargs)
 
+        basket = self.request.basket
+
+        total_compra = basket.total_incl_tax
+
+        total_assinaturas = sum(line.line_price_incl_tax
+                                for line in basket.all_lines()
+                                if line.product.categories.filter(slug='assinaturas-de-servicos').exists())
+
+        total_certificados = total_compra - total_assinaturas
+
+        if total_certificados <= 0:
+            parcelas_certificados = []
+        else:
+            facade = akatus.Facade()
+
+            try:
+                response = facade.get_payment_installments(total_certificados)
+            except InvalidGatewayRequestError as e:
+                raise UnableToTakePayment(e.message)
+
+            juros = Decimal(response['descricao'].split('%')[0].replace(',', '.'))
+
+            parcelas_certificados = [
+                {
+                    'qtd': p['quantidade'],
+                    'valor_total': p['total'],
+                    'valor_parcela': p['valor'],
+                    'juros': juros
+                } for p in response['parcelas']]
+
+            parcelas_certificados[0]['juros'] = Decimal(0)
+
         ctx.update({
             'bankcard_form': kwargs.get('bankcard_form', BankcardForm()),
             'debitcard_form': kwargs.get('debitcard_form', DebitcardForm()),
 
-            #TODO: implementar parcelas akatus
+            'total_compra': total_compra,
+            'total_assinaturas': total_assinaturas,
+            'total_certificados': total_certificados,
+
             'parcelas': {
-                'assinaturas': Decimal(250),
-                'certificados': [
-                    {'qtd': 1, 'valor_total': Decimal(1000), 'valor_parcela': Decimal(1000), 'juros': Decimal(0)},
-                    {'qtd': 2, 'valor_total': Decimal(1100), 'valor_parcela': Decimal(550), 'juros': Decimal('1.99')},
-                    {'qtd': 3, 'valor_total': Decimal(1200), 'valor_parcela': Decimal(400), 'juros': Decimal('1.99')},
-                ]
+                'assinaturas': total_assinaturas,
+                'certificados': parcelas_certificados
             }
         })
+
+        if self.request.method == 'POST':
+            source_type = self.request.POST.get('source-type')
+            if source_type == 'akatus-creditcard':
+                ctx['bankcard_form'] = kwargs.get('bankcard_form', BankcardForm(data=self.request.POST))
+            elif source_type == 'akatus-debitcard':
+                ctx['debitcard_form'] = kwargs.get('bankcard_form', DebitcardForm(data=self.request.POST))
 
         return ctx
 
@@ -141,6 +169,11 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         """
         This method is responsible for taking the payment.
         """
+
+        if not self.valida_contrato_ssl() or not self.valida_contrato_sitemonitorado() or \
+                not self.valida_contrato_siteseguro() or not self.valida_contrato_pki():
+            raise UnableToTakePayment('Você precisa aceitar os termos de uso dos produtos selecionados')
+
         payment_source = self.request.POST.get('source-type')
 
         if payment_source == 'akatus-boleto':
