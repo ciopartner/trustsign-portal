@@ -1903,18 +1903,20 @@ div.ferramentas select{
     text-align: center;
 }
 
-.perguntas .pergunta-1{width: 86px}
-.perguntas .pergunta-2{width: 103px}
-.perguntas .pergunta-3{width: 90px}
-.perguntas .pergunta-4{width: 119px}
-.perguntas .pergunta-5{width: 130px; margin-right: 0}
+/*.perguntas .pergunta-1{width: 86px}*/
+/*.perguntas .pergunta-2{width: 103px}*/
+/*.perguntas .pergunta-3{width: 90px}*/
+/*.perguntas .pergunta-4{width: 119px}*/
+.perguntas .pergunta-5{margin-right: 0}
 
 .perguntas li{
     margin-right: 10px;
+    width: 107px;
 }
 
 .perguntas li:last-child{
     margin-right: 0;
+    width: 500px;
 }
 
 .perguntas li a{
