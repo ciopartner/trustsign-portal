@@ -293,7 +293,8 @@ CRON_CLASSES = [
     # This example cron check last cron jobs results. If they were unsuccessfull 10 times in row, it sends email to user
     'django_cron.cron.FailedRunsNotificationCronJob'
 ]
-FAILED_RUNS_CRONJOB_EMAIL_PREFIX = "[CronJob Error]: "
+FAILED_RUNS_CRONJOB_EMAIL_PREFIX = "[Django-cron Error]: "
+ALLOW_PARALLEL_RUNS = False
 
 # Precisa colocar no cron do linux:
 # python manage.py runcrons
