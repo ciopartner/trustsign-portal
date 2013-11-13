@@ -10,7 +10,7 @@ from ecommerce.certificados import erros as e
 from libs.comodo import get_emails_validacao
 from ecommerce.certificados.models import Emissao, Voucher, Revogacao
 from ecommerce.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \
-    ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR, ValidateEmissaoPhoneProof, ValidateEmissaoID
+    ValidateEmissaoValidacaoEmailMultiplo, ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR, ValidateEmissaoPhoneProof, ValidateEmissaoID, ValidateEmissaoUrlMixin
 from portal.suporte.utils import decode_csr, verifica_razaosocial_dominio, compare_csr, comparacao_fuzzy
 
 
@@ -71,6 +71,9 @@ class EmissaoModelForm(ModelForm):
                 else:
                     self._precisa_carta_cessao = False
 
+            if self._precisa_carta_cessao:
+                self.validacao_manual = True
+
         return self._precisa_carta_cessao
 
 
@@ -101,7 +104,8 @@ class EmissaoTela1Form(EmissaoModelForm, ValidateEmissaoCSRMixin):
         fields = ['emission_url', 'emission_csr']
 
 
-class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmailMultiplo):
+class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin,
+                                    ValidateEmissaoValidacaoEmailMultiplo):
     _fqdns = None
 
     def get_domains_csr(self):
@@ -126,8 +130,8 @@ class EmissaoNv1Tela1Form(EmissaoTela1Form):
     pass
 
 
-class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail,
-                          ValidateEmissaoAssignmentLetter):
+class EmissaoNv1Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
+                          ValidateEmissaoValidacaoEmail, ValidateEmissaoAssignmentLetter):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type')
@@ -157,7 +161,7 @@ class EmissaoNv2Tela1Form(EmissaoTela1Form):
             self.fields['emission_url'].required = False
 
 
-class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignmentLetter):
+class EmissaoNv2Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoUrlMixin, ValidateEmissaoAssignmentLetter):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type')
@@ -185,9 +189,10 @@ class EmissaoNv3Tela1Form(EmissaoTela1Form):
     validacao_manual = True
 
 
-class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail,
-                          ValidateEmissaoAssignmentLetter, ValidateEmissaoArticlesOfIncorporation,
-                          ValidateEmissaoAddressProof, ValidateEmissaoCCSA, ValidateEmissaoEVCR):
+class EmissaoNv3Tela2Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoUrlMixin, ValidateEmissaoCSRMixin,
+                          ValidateEmissaoValidacaoEmail, ValidateEmissaoAssignmentLetter,
+                          ValidateEmissaoArticlesOfIncorporation, ValidateEmissaoAddressProof, ValidateEmissaoCCSA,
+                          ValidateEmissaoEVCR):
 
     REQUIRED_FIELDS = ('emission_url', 'emission_csr', 'emission_dcv_emails', 'emission_publickey_sendto',
                        'emission_server_type', 'emission_articles_of_incorporation', 'emission_address_proof',
