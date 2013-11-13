@@ -338,3 +338,24 @@ $('.sortmune*').mouseleave(function (event) {
 $('.mask-cnpj').mask("99.999.999/9999-99");
 $('#id_credito_cpf').mask('999.999.999-99');
 $('#id_credito_telefone').mask("(99) 9999-9999");
+
+$('form').each(function(){
+   var self = $(this);
+   var $checkboxs = self.find("[type=checkbox][required=true]");
+   var checked = true;
+
+   function checkButton(){
+       checked = true;
+       $checkboxs.each(function(){
+           checked = checked && $(this).is(":checked");
+       });
+
+       if(!checked)
+           self.find('[type=submit]').attr("disabled", "disabled");
+       else
+           self.find('[type=submit]').removeAttr("disabled");
+   }
+
+   checkButton();
+   $checkboxs.on('click', checkButton);
+});
