@@ -5,10 +5,12 @@ import os
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
+from django.template import Context
+from django.template.loader import get_template
 from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView, TemplateView
 from rest_framework import status
@@ -571,7 +573,19 @@ class EmissaoWizardView(SessionWizardView):
 
     def done(self, form_list, **kwargs):
         self.save(form_list, **kwargs)
+        self.envia_email_usuario()
         return HttpResponseRedirect(reverse(self.done_redirect_url))
+
+    def envia_email_usuario(self,):
+        voucher = self.get_voucher()
+        html_content = get_template('emails/emissao_solicitada_sucesso.html')
+        email_cliente = voucher.emissao.emission_publickey_sendto
+        context = Context({
+            'voucher': voucher,  # TODO: ver com o Carlos o que vai ser necessário passar pro template
+        })
+        msg = EmailMessage('Emissão iniciada com sucesso', html_content.render(context), to=[email_cliente])
+        msg.content_subtype = "html"  # Main content is now text/html
+        msg.send()
 
     def get_form_initial(self, step):
         initial = super(EmissaoWizardView, self).get_form_initial(step)
