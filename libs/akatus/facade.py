@@ -21,17 +21,21 @@ class Facade(object):
                               AKATUS_USER=self.AKATUS_EMAIL,
                               AKATUS_API_KEY=self.AKATUS_API_KEY)
 
-    def post_payment(self, request, order_number, bankcard=None, debitcard=None, tipo=None):
+    def post_payment(self, request, order_number, lines=None, bankcard=None, debitcard=None, tipo=None, parcelas=1):
         """
         This method is responsible for taking care of the payment.
         """
+
+        if lines is None:
+            lines = request.basket.all_lines()
+
         options = {
             'pagador': self.get_dados_pagador(request.user),
-            'produtos': self.get_dados_produtos(request.basket.all_lines())
+            'produtos': self.get_dados_produtos(lines)
         }
 
         if tipo == 'akatus-creditcard':
-            options['transacao'] = self.get_dados_transacao_credito(order_number, bankcard)
+            options['transacao'] = self.get_dados_transacao_credito(order_number, bankcard, parcelas)
         elif tipo == 'akatus-debitcard':
             options['transacao'] = self.get_dados_transacao_debito(order_number, debitcard)
         elif tipo == 'akatus-boleto':
@@ -73,7 +77,7 @@ class Facade(object):
             }]
         }
 
-    def get_dados_transacao_credito(self, order_number, bankcard):
+    def get_dados_transacao_credito(self, order_number, bankcard, parcelas):
         tipo_cartao = bankcard.card_type
 
         if tipo_cartao == bankcards.VISA:
@@ -90,7 +94,7 @@ class Facade(object):
         return {
             'tipo': 'akatus-creditcard',
             'numero': int(bankcard.number.replace('-', '')),
-            'parcelas': 1,
+            'parcelas': parcelas,
             'codigo_de_seguranca': int(bankcard.cvv),
             'expiracao': bankcard.expiry_month(),
             'desconto': 0.0,
