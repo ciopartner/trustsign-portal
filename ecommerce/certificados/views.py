@@ -346,6 +346,7 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
             return Response({}, status=status.HTTP_200_OK,
                             headers=headers)
 
+        log.error('Criação de Voucher não processada:\n{}'.format(serializer.errors))
         return self.error_response(serializer)
 
 
@@ -358,12 +359,15 @@ class VoucherCancelAPIView(GenericAPIView):
         try:
             voucher = Voucher.objects.select_related('emissao').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Voucher.DoesNotExist:
+            log.error('Cancelamento de Voucher não processado: {}'.format(erros.ERRO_VOUCHER_NAO_ENCONTRADO))
             return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_NAO_ENCONTRADO))
 
         if voucher.order_canceled_date is not None:
+            log.error('Cancelamento de Voucher não processado: {}'.format(erros.ERRO_VOUCHER_JA_CANCELADO))
             return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_JA_CANCELADO))
 
         if voucher.customer_cnpj != self.request.DATA.get('customer_cnpj'):
+            log.error('Cancelamento de Voucher não processado: {}'.format(erros.ERRO_VOUCHER_CNPJ_DIFERENTE))
             return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_CNPJ_DIFERENTE))
 
         try:
@@ -372,7 +376,7 @@ class VoucherCancelAPIView(GenericAPIView):
                 emissao.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
                 emissao.save()
         except Emissao.DoesNotExist:
-            pass
+            log.error('Cancelamento de Voucher não processado: não existe emissão para o voucher {}'.format(voucher.crm_hash))
 
         voucher.order_canceled_date = now()
         voucher.order_canceled_reason = self.request.DATA.get('order_cancel_reason')
