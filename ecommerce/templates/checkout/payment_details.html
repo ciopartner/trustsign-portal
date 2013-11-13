@@ -46,14 +46,14 @@
                 </div>
             </div>
             <div id="total">
-                <h4>
-                    Total
-                </h4>
-                <h3>{{ basket.total_incl_tax|currency }}</h3>
+                <h4 style="font-size: 125%; text-align: center;">Total para assinaturas</h4>
+                <h3 style="margin-top: -10px; text-align: center;">{{ parcelas.assinaturas|currency }} / mês</h3>
+                <h4 style="font-size: 125%; text-align: center;">Total para certificados</h4>
+                <h3 style="margin-top: -10px; text-align: center;">{{ parcelas.certificados.0.valor_total|currency }}</h3>
 {#                <button class="btn btn-orange btn-block" onclick="$('#form-compra').submit()">Concluir</button>#}
-                <br><br><br>
-                <a href="{% url 'basket:summary' %}" class="pull-right tm10">Editar pedido</a>
-                <div class="clearfix"></div>
+{#                <br><br><br>#}
+{#                <a href="{% url 'basket:summary' %}" class="pull-right tm10">Editar pedido</a>#}
+{#                <div class="clearfix"></div>#}
             </div>
         </div>
     </div>

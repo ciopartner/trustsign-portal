@@ -1801,6 +1801,10 @@ div.ferramentas ul.nav-tabs li{
     height: 155px;
 }
 
+div.ferramentas ul.nav-tabs li img{
+    width: 100%;
+}
+
 div.ferramentas ul.nav-tabs li:nth-child(even){
     background: #f0f0f0;
 }
