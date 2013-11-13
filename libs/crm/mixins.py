@@ -114,10 +114,12 @@ class OscarToCRMMixin(object):
 
         if transaction.boleto_id:
             # Para pagamento com boleto
+            oportunidade.tipo_pagamento = oportunidade.TIPO_BOLETO
             oportunidade.pag_boleto_transacao_id = transaction_id
 
         elif transaction.debitcard_id:
             # Para pagamento com cartão de débito
+            oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_DEBITO
             oportunidade.pag_debito_transacao_id = transaction_id
 
         elif transaction.bankcard_id:

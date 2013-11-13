@@ -148,7 +148,8 @@ class CRMClient(object):
         response = None
 
         if settings.DEBUG:
-            log.info('\n\nMetodo: {}'.format(method))
+            log.info('\n\n')
+            log.info('Metodo: {}'.format(method))
             log.info('Request ao Sugar: {}'.format(rest_data))
 
         if not self.session_id and method != 'login':
