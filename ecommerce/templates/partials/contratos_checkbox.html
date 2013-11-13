@@ -1,25 +1,25 @@
 {% load static %}
 {% if basket.tem_contrato_ssl %}
     <label class="checkbox">
-        <input type="checkbox" id="aceita_contrato_ssl" name="aceita_contrato_ssl" value="1">
+        <input type="checkbox" required="true" id="aceita_contrato_ssl" name="aceita_contrato_ssl" value="1">
         Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign.pdf' %}">termos de uso do Certificado</a>
     </label>
 {% endif %}
 {% if basket.tem_contrato_sitemonitorado %}
     <label class="checkbox">
-        <input type="checkbox" id="aceita_contrato_sm" name="aceita_contrato_sm" value="1">
+        <input type="checkbox" required="true" id="aceita_contrato_sm" name="aceita_contrato_sm" value="1">
         Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-sitemonitorado.pdf' %}">termos de uso do Site Monitorado</a>
     </label>
 {% endif %}
 {% if basket.tem_contrato_siteseguro %}
     <label class="checkbox">
-        <input type="checkbox" id="aceita_contrato_ss" name="aceita_contrato_ss" value="1">
+        <input type="checkbox" required="true" id="aceita_contrato_ss" name="aceita_contrato_ss" value="1">
         Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-siteseguro.pdf' %}">termos de uso do Site + Seguro</a>
     </label>
 {% endif %}
 {% if basket.tem_contrato_pki %}
     <label class="checkbox">
-        <input type="checkbox" id="aceita_contrato_pki" name="aceita_contrato_pki" value="1">
+        <input type="checkbox" required="true" id="aceita_contrato_pki" name="aceita_contrato_pki" value="1">
         Concordo com os <a href="{% static 'contratos/contrato-digital-trustsign-pki.pdf' %}">termos de uso do PKI</a>
     </label>
 {% endif %}
