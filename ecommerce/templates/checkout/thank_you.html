@@ -31,8 +31,9 @@
 
     {% if transacoes_com_url %}
         <div class="well">
-            <h4>Para iniciar o seu pagamento, clique no botão abaixo</h4>
+            <h4>Caso uma nova janela não tenha sido aberta, clique no botão abaixo:</h4>
             {% for tipo, url in transacoes_com_url %}
+                <script>window.open("{{ url }}");</script>
                 {% if tipo == 'boleto' %}
                     <div><a class="btn btn-orange" target="_blank" href="{{ url }}">VISUALIZAR BOLETO</a></div>
                 {% elif tipo == 'debitcard' %}
