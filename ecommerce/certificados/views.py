@@ -330,10 +330,10 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
     serializer_class = VoucherSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
-
         if settings.DEBUG:
             log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
+
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
             self.pre_save(serializer.object)
