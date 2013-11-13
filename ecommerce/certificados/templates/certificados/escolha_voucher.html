@@ -28,7 +28,7 @@
 
                             {% if not emissao %}
                                 {% if voucher.has_emissao_url %}
-                                    <a class="btn btn-inverse btn-primary btn-block no-uppercase" href="{{ voucher.get_emissao_url }}">Emitir</a>
+                                    <a class="btn btn-primary btn-block no-uppercase" href="{{ voucher.get_emissao_url }}">Emitir</a>
                                 {% endif %}
                             {% elif emissao.em_processamento %}
                                 Em processamento
