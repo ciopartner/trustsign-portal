@@ -5,6 +5,7 @@ import os
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
@@ -659,6 +660,9 @@ class EmissaoWizardView(SessionWizardView):
             emissao.emission_status = emissao.STATUS_EMISSAO_APROVACAO_PENDENTE
             if self.revisao:
                 emissao.emission_reviewer = self.request.user
+            else:
+                message = 'Existe uma nova solicitação pendente de revisão na caixa de validação manual.'
+                send_mail('[Alerta-Ecommerce] Solicitação pendente #%s' % voucher.crm_hash, message, settings.DEFAULT_FROM_EMAIL, [settings.TRUSTSIGN_VALIDACAO_EMAIL])
         else:
             emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
 
