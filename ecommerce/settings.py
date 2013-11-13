@@ -201,12 +201,20 @@ OSCAR_SHOP_NAME = 'TrustSign e-commerce'
 OSCAR_INITIAL_ORDER_STATUS = 'Pendente de Pagamento'
 OSCAR_INITIAL_LINE_STATUS = 'Pendente de Pagamento'
 OSCAR_ORDER_STATUS_PIPELINE = {
-    'Pendente de Pagamento': ('Pago', 'Cancelado',),
-    'Pago': ('Em Processamento', 'Estornado',),
-    'Em processamento': ('Concluído', 'Estornado',),
-    'Concluído': (),
+    'Pendente de Pagamento': ('Em Análise', 'Pago', 'Cancelado', 'Não Aprovado',),
+    'Em Análise': ('Pago', 'Cancelado', 'Não Aprovado',),
+    'Pago': ('Estornado', 'Cancelado'),
     'Cancelado': (),
     'Estornado': (),
+    'Não Aprovado': (),
+}
+OSCAR_LINE_STATUS_PIPELINE = {
+    'Pendente de Pagamento': ('Em Análise', 'Pago', 'Cancelado', 'Não Aprovado',),
+    'Em Análise': ('Pago', 'Cancelado', 'Não Aprovado',),
+    'Pago': ('Estornado', 'Cancelado'),
+    'Cancelado': (),
+    'Estornado': (),
+    'Não Aprovado': (),
 }
 
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
