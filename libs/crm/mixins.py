@@ -110,7 +110,9 @@ class OscarToCRMMixin(object):
         oportunidade = crm.OportunidadeCRM()
         oportunidade.numero_pedido = order.number
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
+        oportunidade.data_pagto = now().strftime('%Y-%m-%d')
         oportunidade.valor_total = str(order.total_incl_tax)
+        oportunidade.parcelas = '1'
 
         if transaction.boleto_id:
             # Para pagamento com boleto
@@ -130,6 +132,8 @@ class OscarToCRMMixin(object):
             oportunidade.pag_credito_bandeira = transaction.bankcard.card_type
             oportunidade.pag_credito_ultimos_digitos = transaction.bankcard.number[-4:]
             oportunidade.pag_credito_transacao_id = transaction_id
+            # TODO: colocar o número de parcelas escolhido aqui.
+            oportunidade.parcelas = '1'
 
         else:
             # Para pagamento fiado....

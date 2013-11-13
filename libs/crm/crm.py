@@ -314,6 +314,8 @@ class CRMClient(object):
             'tipo_pagamento_c': oportunidade.tipo_pagamento,
             'sales_stage': 'Closed Won',
             'opportunity_type': 'New Business',
+            'data_pgto_c': oportunidade.data_pagto,
+            #'parcelas': oportunidade.parcelas,
         }
 
         if oportunidade.is_credito():
