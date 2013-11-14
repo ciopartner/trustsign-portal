@@ -83,8 +83,6 @@ class AdicionarProdutoView(BasketAddView, JSONFormView):
                 attribute_values__value_option__option=product_code
             )
 
-            print produtos
-
             for produto in produtos:
                 product_line = str(produto.attr.ssl_line)
                 product_term = str(produto.attr.ssl_term)
