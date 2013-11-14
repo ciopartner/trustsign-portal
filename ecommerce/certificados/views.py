@@ -607,7 +607,8 @@ class EmissaoWizardView(SessionWizardView):
 
     def done(self, form_list, **kwargs):
         self.save(form_list, **kwargs)
-        self.envia_email_usuario()
+        if not self.revisao:
+            self.envia_email_usuario()
         return HttpResponseRedirect(reverse(self.done_redirect_url))
 
     def envia_email_usuario(self,):
