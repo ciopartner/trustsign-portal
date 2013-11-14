@@ -5,6 +5,9 @@ from xml.etree import cElementTree
 from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
+from django.core.mail import EmailMessage
+from django.template import Context
+from django.template.loader import get_template
 from libs import knu
 import re
 
@@ -114,3 +117,13 @@ def etree_to_dict(t):
         else:
             d[t.tag] = text
     return d
+
+
+def send_template_email(to, subject, template, context, from_email=None, bcc=None,
+                        connection=None, attachments=None, headers=None, cc=None):
+    html_content = get_template(template)
+    context = Context(context)
+    msg = EmailMessage(subject, html_content.render(context), from_email=from_email,
+                       to=to, bcc=bcc, connection=connection, attachments=attachments, headers=headers, cc=cc)
+    msg.content_subtype = 'html'
+    msg.send()
