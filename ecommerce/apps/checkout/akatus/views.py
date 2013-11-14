@@ -3,12 +3,13 @@ from __future__ import unicode_literals
 from copy import copy
 from decimal import Decimal
 from django.conf import settings
+from django.contrib.sites.models import get_current_site
 from django.core.mail import send_mail
 from django.http import Http404
 from django.views.generic import TemplateView
 from oscar.core.loading import get_class
 from ecommerce.apps.payment.forms import DebitcardForm
-from ecommerce.website.utils import remove_message
+from ecommerce.website.utils import remove_message, send_template_email
 from libs.akatus import facade as akatus
 
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
@@ -252,6 +253,8 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
 
         parcelas = self.request.POST.get('certificado_parcela')
 
+        bankcard.qtd_parcelas = parcelas
+
         bankcard_com_numero = copy(bankcard)
 
         bankcard.user = self.request.user
@@ -440,6 +443,15 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
 
                 if order.lines.count() == order.lines.filter(status='Pago').count():
                     order.set_status('Pago')
+                    subject = 'Pagamento Aprovado'
+                    template = 'customer/commtype_order_placed_body.html'
+                    context = {
+                        'user': order.user,
+                        'order': order,
+                        'site': get_current_site(self.request),
+                        'lines': order.lines.all()
+                    }
+                    send_template_email([order.user.email], subject, template, context)
 
                 if lines:
                     event = lines[0].paymentevent_set.all()[0]
