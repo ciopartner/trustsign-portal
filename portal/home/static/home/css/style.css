@@ -1664,7 +1664,7 @@ img.size-thumbnail{
 /* To hide image blogs in the home page */
 .home-text4 img,
 .all-body-text5 img{
-    display: none;
+    /*display: none;*/
 }
 
 /* Home page - margin between blog title and blog content */
