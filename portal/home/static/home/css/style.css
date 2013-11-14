@@ -2207,16 +2207,27 @@ h3.title{
 
 #video-tutorial .video{
     position:relative;
+    margin-bottom: 30px;
 }
+
 #video-tutorial .video:before{
     background: url("../img/youtube/youtube-seta.png") no-repeat scroll center center rgba(0, 0, 0, 0);
-    bottom: 50%;
     content: "";
     height: 23px;
-    left: 50%;
-    margin-bottom: -42px;
-    margin-left: -19px;
+    left: 78px;
     pointer-events: none;
     position: absolute;
+    top: 39px;
     width: 32px;
+}
+
+#video-tutorial .video img{
+    float: left;
+    margin-right: 10px;
+    width: 200px;
+}
+
+#video-tutorial .video h2{
+    margin-top: 0;
+    color: #333;
 }
