@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm as AuthPasswordChangeForm
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.forms import CharField, TextInput, BooleanField, ChoiceField, EmailField
@@ -197,3 +198,8 @@ class ProfileForm(CoreProfileForm):
         user.save()
 
         return profile
+
+
+class PasswordChangeForm(AuthPasswordChangeForm):
+
+    new_password1 = PasswordField(label=_("New password"),)
