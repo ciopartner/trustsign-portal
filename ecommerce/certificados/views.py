@@ -14,6 +14,7 @@ from django.template import Context
 from django.template.loader import get_template
 from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView, TemplateView
+from oscar.core.loading import get_class
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
@@ -30,6 +31,7 @@ from ecommerce.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1S
 from django.conf import settings
 import logging
 
+Order = get_class('order.models', 'Order')
 log = logging.getLogger('ecommerce.certificados.view')
 
 
@@ -329,22 +331,38 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
     renderer_classes = [UnicodeJSONRenderer]
     serializer_class = VoucherSerializer
 
+    def pre_save(self, obj):
+        if obj.order_number:
+            try:
+                obj.order = Order.objects.get(number=obj.order_number)
+            except Order.DoesNotExist:
+                log.error('Não existe order o order_number informado.')
+                raise
+
     def post(self, request, *args, **kwargs):
         if settings.DEBUG:
             log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+        try:
+            if serializer.is_valid():
+                self.pre_save(serializer.object)
+                self.object = serializer.save(force_insert=True)
+                self.post_save(self.object, created=True)
+                headers = self.get_success_headers(serializer.data)
 
-        if serializer.is_valid():
-            self.pre_save(serializer.object)
-            self.object = serializer.save(force_insert=True)
-            self.post_save(self.object, created=True)
-            headers = self.get_success_headers(serializer.data)
+                voucher = self.object
+                try:
+                    order = voucher.order
+                    if order.vouchers.count() == order.num_items:
+                        order.set_status('Concluído')
 
-            # TODO: Setar como 'Concluído' o status do pedido e de seus itens
+                except Order.DoesNotExist:
+                    pass
 
-            return Response({}, status=status.HTTP_200_OK,
-                            headers=headers)
+                return Response({}, status=status.HTTP_200_OK, headers=headers)
+        except:
+            log.exception('Ocorreu uma exceção')
 
         log.error('Criação de Voucher não processada:\n{}'.format(serializer.errors))
         return self.error_response(serializer)

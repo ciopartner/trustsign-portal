@@ -223,6 +223,11 @@ OSCAR_LINE_STATUS_PIPELINE = {
     'Não Aprovado': (),
 }
 
+# dessa forma, quando setar status concluído na order, também é setado nas lines
+OSCAR_ORDER_STATUS_CASCADE = {
+    'Concluído': 'Concluído'
+}
+
 AUTH_PROFILE_MODULE = "home.TrustSignProfile"
 LOGIN_REDIRECT_URL = '/ecommerce/accounts/profile/'
 LOGIN_URL = '/ecommerce/accounts/login/'
