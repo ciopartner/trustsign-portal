@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.forms import CharField, ModelForm
 from localflavor.br.forms import BRCPFField
 from oscar.apps.payment.forms import BankcardNumberField, BankcardCCVField, BankcardExpiryMonthField
@@ -10,7 +11,7 @@ Bankcard = get_class('payment.models', 'Bankcard')
 class BankcardForm(ModelForm):
     name = CharField(label='Titular')
     number = BankcardNumberField()
-    ccv = BankcardCCVField()
+    ccv = BankcardCCVField({'label': 'Código de Segurança'})
     expiry_month = BankcardExpiryMonthField()
     credito_cpf = BRCPFField(label='CPF do portador')
     credito_telefone = CharField(label='Telefone do portador')

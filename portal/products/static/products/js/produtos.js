@@ -22,6 +22,11 @@ $(document).ready(function () {
             $message.append("<div class=\"alert alert-success\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + " ite" + (quantity > 1 ? "ns" : "m") +  ". <a href='" + url_ecommerce + "basket'>Clique aqui</a> para visualizá-lo.</div>");
         }
 
+        function add_additional_success(data){
+            $qtd_carrinho.text(parseInt($qtd_carrinho.text()) + 1);
+            $message.append("<div class=\"alert alert-success\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + " ite" + (quantity > 1 ? "ns" : "m") +  ". <a href='" + url_ecommerce + "basket'>Clique aqui</a> para visualizá-lo.</div>");
+        }
+
         function add_fail(data){
             $message.html("<div class=\"alert alert-error\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Não foi possível adicionar o produto ao carrinho.</div>");
             console.log(data);
@@ -47,7 +52,7 @@ $(document).ready(function () {
                 var qtd = form.find('[name=qtd]').val();
                 quantity = form.find('[name=num_domains]').val();
 
-                do_post();
+                do_post(add_additional_success);
             });
         }
 
@@ -59,13 +64,16 @@ $(document).ready(function () {
 
         }
 
-        function do_post(){
+        function do_post(callback){
+
+            callback = callback ? callback : add_success;
+
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
                 url: url_ecommerce + 'ajax/adicionar-produto/',
                 data: {product_code: product_code, quantity:quantity, line: line, term: term},
-                success: add_success,
+                success: callback,
                 error: add_fail
             });
         }
