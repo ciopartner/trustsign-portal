@@ -17,6 +17,7 @@ CODIGO_SSL_SAN = 492
 CODIGO_SSL_EV = 337
 CODIGO_SSL_EV_MDC = 410
 CODIGO_MDC = 335
+CODIGO_TRIAL = 342
 
 CODIGOS_PRODUTOS = {
     Voucher.PRODUTO_SSL: CODIGO_SSL,
@@ -81,19 +82,26 @@ def emite_certificado(emissao):
         voucher = emissao.voucher
 
         if voucher.ssl_term == voucher.VALIDADE_ANUAL:
-            validade = 1
+            validade = 365
         elif voucher.ssl_term == voucher.VALIDADE_BIANUAL:
-            validade = 2
+            validade = 730
         elif voucher.ssl_term == voucher.VALIDADE_TRIANUAL:
-            validade = 3
+            validade = 1095
+        elif voucher.ssl_term == voucher.VALIDADE_DEGUSTACAO:
+            validade = 30
         else:
-            raise Exception('Validade inválida para emissão de certificados', code=-1)
+            raise ComodoError('Validade inválida para emissão de certificados', code=-1)
+
+        if voucher.ssl_product == 'ssl' and voucher.ssl_term == voucher.VALIDADE_DEGUSTACAO:
+            product = CODIGO_TRIAL
+        else:
+            product = CODIGOS_PRODUTOS[voucher.ssl_product]
 
         params = {
             'loginName': settings.COMODO_LOGIN_NAME,
             'loginPassword': settings.COMODO_LOGIN_PASSWORD,
-            'product': CODIGOS_PRODUTOS[voucher.ssl_product],
-            'years': validade,
+            'product': product,
+            'days': validade,
             'serverSoftware': emissao.emission_server_type,
             'csr': emissao.emission_csr,
             'prioritiseCSRValues': 'N',
