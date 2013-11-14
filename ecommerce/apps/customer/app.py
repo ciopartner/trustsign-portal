@@ -11,6 +11,7 @@ class CustomerApplication(app.CustomerApplication):
     order_cancel_view = views.OrderCancelView    
     order_cancel_return_view = views.OrderCancelReturnView
     profile_update_view = views.ProfileUpdateView
+    change_password_view = views.ChangePasswordView
 
     def get_urls(self): 
         urlpatterns = super(CustomerApplication, self).get_urls()        
