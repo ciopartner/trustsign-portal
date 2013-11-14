@@ -252,6 +252,8 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
 
         parcelas = self.request.POST.get('certificado_parcela')
 
+        bankcard.qtd_parcelas = parcelas
+
         bankcard_com_numero = copy(bankcard)
 
         bankcard.user = self.request.user

@@ -83,6 +83,7 @@ class OportunidadeCRM(object):
         self.pag_credito_bandeira = None
         self.pag_credito_transacao_id = None
         self.pag_credito_ultimos_digitos = None
+        self.parcelas = None
 
         #cartão de débito
         self.pag_debito_titular = None
@@ -315,7 +316,7 @@ class CRMClient(object):
             'sales_stage': 'Closed Won',
             'opportunity_type': 'New Business',
             'data_pgto_c': oportunidade.data_pagto,
-            #'parcelas': oportunidade.parcelas,
+            'parcelas': oportunidade.parcelas,
         }
 
         if oportunidade.is_credito():

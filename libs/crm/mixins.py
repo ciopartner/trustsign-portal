@@ -132,8 +132,7 @@ class OscarToCRMMixin(object):
             oportunidade.pag_credito_bandeira = transaction.bankcard.card_type
             oportunidade.pag_credito_ultimos_digitos = transaction.bankcard.number[-4:]
             oportunidade.pag_credito_transacao_id = transaction_id
-            # TODO: colocar o número de parcelas escolhido aqui.
-            oportunidade.parcelas = '1'
+            oportunidade.parcelas = transaction.bankcard.qtd_parcelas
 
         else:
             # Para pagamento fiado....
