@@ -14,7 +14,7 @@ $(document).ready(function () {
      */
     function add_product(product_code, line, term, quantity, show_additional, additional_code, additional_price){
 
-        show_additional = show_additional == 'true' || show_additional ? true : false;
+        show_additional = (show_additional == 'true') || show_additional ? true : false;
 
         function add_success(data){
             $qtd_carrinho.text(parseInt($qtd_carrinho.text()) + 1);
@@ -24,7 +24,7 @@ $(document).ready(function () {
 
         function add_additional_success(data){
             $qtd_carrinho.text(parseInt($qtd_carrinho.text()) + 1);
-            $message.append("<div class=\"alert alert-success\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + " ite" + (quantity > 1 ? "ns" : "m") +  ". <a href='" + url_ecommerce + "basket'>Clique aqui</a> para visualizá-lo.</div>");
+            $("#form-confirm-buy").after("<div class=\"alert alert-success pull-right\" style=\"width: 486px\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>Foi adicionado ao seu carrinho " + quantity + " ite" + (quantity > 1 ? "ns" : "m") +  ". <a href='" + url_ecommerce + "basket'>Clique aqui</a> para visualizá-lo.</div><div class=\"clearfix\"></div>");
         }
 
         function add_fail(data){
@@ -45,8 +45,9 @@ $(document).ready(function () {
 
             product_code = additional_code;
 
-            $("#btn-confirm-buy").bind('click')
-            $("#btn-confirm-buy").on('click', function(e){
+            var $btn_buy = $("#btn-confirm-buy");
+            $btn_buy.bind('click');
+            $btn_buy.on('click', function(e){
                 e.preventDefault();
 
                 var qtd = form.find('[name=qtd]').val();
