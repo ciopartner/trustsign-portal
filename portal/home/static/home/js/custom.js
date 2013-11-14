@@ -338,4 +338,23 @@ $('.sortmune*').mouseleave(function (event) {
 $('.mask-cnpj').mask("99.999.999/9999-99");
 $('.mask-phone').mask("(99) 9999-9999");
 $('[data-toggle="tooltip"]').tooltip();
-console.log($('[data-toggle="tooltip"]'));
+
+var $login_cnpj = $("#id_username.mask-cnpj");
+$login_cnpj.unmask();
+$login_cnpj.mask("*9.999.999/9999-99");
+
+
+var masked = true;
+$login_cnpj.on('keydown keyup keypress', function(){
+    if($(this).val().length == 0 || $(this).val()[0] == '_' || !isNaN(parseInt($(this).val()[0]))){
+        if(!masked){
+            console.log("coloquei a mascara");
+            $(this).mask("*9.999.999/9999-99");
+            masked = true;
+        }
+    }else{
+        masked = false;
+        $(this).unmask();
+        $(this).val($(this).val().replace("_.___.___/____-__",""));
+    }
+});
