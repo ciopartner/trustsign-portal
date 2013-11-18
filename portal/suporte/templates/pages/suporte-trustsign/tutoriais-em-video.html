@@ -49,9 +49,9 @@
             {% for video in videos %}
                 <div class="span6 video">
                     <a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">
-                        <img src="{{ video.video_thumb.url }}" alt=""/>
+                        <img src="http://www.t.trustsign.com.br{{ video.video_thumb.url }}" alt=""/>
                     </a>
-                    <h2><a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">{{ video.titulo }}</a></h2>
+                    <h3><a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">{{ video.titulo }}</a></h3>
                     <div>{{ video.descricao|richtext_filter|safe  }}</div>
                 </div>
             {% endfor %}
