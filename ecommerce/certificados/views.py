@@ -540,13 +540,15 @@ class EscolhaVoucherView(ListView):
     context_object_name = 'vouchers'
 
     def get_queryset(self):
-        qs = Voucher.objects.select_related('emissao').filter(
-            Q(emissao__isnull=True) | ~Q(emissao__emission_status__in=(
+        qs = Voucher.objects.select_related('emissao').exclude(
+            emissao__emission_status__in=(
                 Emissao.STATUS_REVOGADO, Emissao.STATUS_EXPIRADO, Emissao.STATUS_OCORREU_ERRO_COMODO
-            )))
+            ))
+
         user = self.request.user
         if not user.is_superuser and user.get_profile().is_cliente:
             qs = qs.filter(customer_cnpj=user.username)
+
         return qs
 
 

@@ -16,15 +16,15 @@
             </tr>
 
                 {% for voucher in vouchers %}
-                    <tr data-product-code="{{ voucher.ssl_product }}">
+                    <tr data-product-code="{{ voucher.ssl_product }}" data-status="{{ voucher.emissao.emission_status }}">
                         <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
                         <td>1 {# TODO: como calcular saldo voucher? #}</td>
                         <td>{{ voucher.ssl_valid_to|date:"d/m/Y" }}</td>
                         <td>
-                        {% with emissao=voucher.emissao %}
 
+                        {% with emissao=voucher.emissao %}
 
                             {% if not emissao %}
                                 {% if voucher.has_emissao_url %}
@@ -45,6 +45,7 @@
                                 </div>
 
                             {% endif %}
+
                         {% endwith %}
                         </td>
                     </tr>
