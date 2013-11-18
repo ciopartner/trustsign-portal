@@ -2,6 +2,14 @@
 from django.contrib import admin
 from ecommerce.certificados.models import Voucher, Emissao, Revogacao
 
-admin.site.register(Emissao)
+
+class EmissaoAdmin(admin.ModelAdmin):
+    list_display = ('crm_hash', 'emission_primary_dn', 'emission_status')
+admin.site.register(Emissao, EmissaoAdmin)
+
 admin.site.register(Revogacao)
-admin.site.register(Voucher)
+
+class VoucherAdmin(admin.ModelAdmin):
+    list_display = ('crm_hash', 'order_number', 'order_date', 'customer_cnpj', 'ssl_product', 'ssl_line', 'ssl_term',
+                    'comodo_order')
+admin.site.register(Voucher, VoucherAdmin)
