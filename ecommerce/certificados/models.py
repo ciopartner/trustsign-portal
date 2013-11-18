@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField, permalink, Manager, Q
 from hashlib import md5
@@ -259,6 +260,11 @@ class Voucher(Model):
 </a>''' % (url_validacao, url_imagem_selo)
 
 
+class DominioValidator(RegexValidator):
+    regex = r'^(\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
+    message = 'Domínio inválido'
+
+
 class Emissao(Model):
     SERVIDOR_TIPO_CHOICES = (
         (1, 'AOL'),
@@ -356,7 +362,7 @@ class Emissao(Model):
     requestor_user = ForeignKey(User, related_name='emissoes')
     requestor_timestamp = DateTimeField(auto_now_add=True)
 
-    emission_url = CharField(max_length=256, blank=True, null=True)
+    emission_url = CharField(max_length=256, blank=True, null=True, validators=[DominioValidator()])
     emission_urls = TextField(blank=True, null=True)
     emission_csr = TextField(blank=True, null=True)
 

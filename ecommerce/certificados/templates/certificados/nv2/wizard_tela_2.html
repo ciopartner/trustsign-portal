@@ -1,5 +1,6 @@
 {% extends 'certificados/wizard_base.html' %}
 {% load static %}
+
 {% block coluna-esquerda %}
     {% include 'certificados/includes/dados_cliente.html' %}
     {% include 'certificados/includes/form_callback.html' %}
@@ -30,7 +31,7 @@
                     {% for fqdn in form.get_domains_csr %}
                         <tr data-fqdn="{{ fqdn }}" id="fqdn-{{ forloop.counter0 }}">
                             <td>{{ fqdn }}</td>
-                            <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}"  href="#windowEscolheEmail">escolher</a></td>
+                            <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}" href="#windowEscolheEmail">escolher</a></td>
                         </tr>
                     {% endfor %}
                 </table>
