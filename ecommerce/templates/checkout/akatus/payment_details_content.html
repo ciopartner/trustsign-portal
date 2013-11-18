@@ -17,7 +17,7 @@
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
                         </div>
-                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
+                        <button type="submit" data-toggle="tooltip" data-disable-title="Para concluir é necessário aceitar os termos e condições de uso" class="pull-right btn btn-orange">Concluir</button>
                     </form>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
                         </div>
-                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
+                        <button type="submit" data-toggle="tooltip" data-disable-title="Para concluir é necessário aceitar os termos e condições de uso" class="pull-right btn btn-orange">Concluir</button>
                     </form>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
                         </div>
-                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
+                        <button type="submit" data-toggle="tooltip" data-disable-title="Para concluir é necessário aceitar os termos e condições de uso" class="pull-right btn btn-orange">Concluir</button>
                     </form>
                 </div>
             </div>
@@ -137,7 +137,7 @@
                     <form action="{% url 'checkout:preview' %}" class="form-inline" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="source-type" value="akatus-debitcard" />
-                        <button type="submit" class="pull-right btn btn-orange">Concluir</button>
+                        <button type="submit" data-toggle="tooltip" data-disable-title="Para concluir é necessário aceitar os termos e condições de uso" class="pull-right btn btn-orange">Concluir</button>
 
                         <label>
                             <input type="radio" name="banco" value="bb"/>
