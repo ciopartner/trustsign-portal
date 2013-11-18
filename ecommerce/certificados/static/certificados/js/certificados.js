@@ -62,6 +62,10 @@ $(document).ready(function () {
 
     $window.find('input[type=radio]').click(function(){
         var i = $('.fqdn-table tr[data-fqdn="' + fqdn + '"]').index() - 1;
+        if ($(this).parent().parent().parent().index() > 4){
+            alert("Preferencialmente escolha um dos 5 primeiros e-mails oferecidos. Caso escolha outro e-mail, " +
+                "considere que o processo de emissão pode demorar até 1 dia útil a mais que o convencional.")
+        }
         var lista = $campo_emails.val().split(' ');
 
         lista[i] = $(this).parent().find('span').text().trim();
@@ -88,7 +92,7 @@ $(document).ready(function () {
 
         if(!completo()){
             e.preventDefault();
-            alert('Escolha todos os emails.');
+            alert('É necessário fornecer um e-mail de validação para cada domínio da CSR');
         }
 
     });

@@ -118,7 +118,7 @@ ERROS = {
     ERRO_VOUCHER_JA_CANCELADO: 'Este Cupom de Emissão já se encontra cancelado',
     ERRO_CSR_REEMISSAO_CHAVE_PUBLICA: 'Na CSR do processo de reemissão só é possível alterar a chave pública',
     ERRO_OBTER_RAZAOSOCIAL_DOMINIO: 'Não foi possível recuperar a Razão Social a partir do domínio informado (possível problema no whois, contacte o suporte)',
-    ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO: 'Erro na CSR: O campo COMMON NAME (CN) deve conter o nome de um domínio',
+    ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO: 'O domínio informado deve ser igual ao domínio da CSR',
     ERRO_CSR_INVALIDA_DOMINIO_NAO_CONTIDO_NA_CSR: 'O domínio ou FQDN primário deve estar contido na lista de domínios da CSR',
 
     ERRO_EMISSAO_NAO_EXISTENTE: 'Emissão não existente',
