@@ -2,7 +2,6 @@ from decimal import Decimal
 from mezzanine.pages.page_processors import processor_for
 from portal.products.models import Product
 from django.db import connection
-from pprint import pprint
 
 
 def split1000(s, sep='.'):
@@ -46,27 +45,28 @@ def product_processor(request, page):
         'precos': {
             'basic': {
                 'termsubscription_1m': {},
+                'termtrial': {},
                 'term1year': {},
                 'term2years': {},
                 'term3years': {},
             },
             'pro': {
                 'termsubscription_1m': {},
+                'termtrial': {},
                 'term1year': {},
                 'term2years': {},
                 'term3years': {},
             },
             'prime': {
                 'termsubscription_1m': {},
+                'termtrial': {},
                 'term1year': {},
                 'term2years': {},
                 'term3years': {},
             },
-            'trial': {
-                'termtrial': {}
-            },
             'na': {
                 'termsubscription_1m': {},
+                'termtrial': {},
                 'term1year': {},
                 'term2years': {},
                 'term3years': {}
@@ -111,7 +111,5 @@ def product_processor(request, page):
             .setdefault('term%s' % product_term, {})
 
         x['price'] = price
-
-    pprint(data)
 
     return data
