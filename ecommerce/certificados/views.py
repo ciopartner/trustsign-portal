@@ -21,6 +21,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from ecommerce.certificados import erros
+from ecommerce.website.utils import limpa_cnpj
 from libs import comodo
 from ecommerce.certificados.authentication import UserPasswordAuthentication
 from ecommerce.certificados.forms import RevogacaoForm, ReemissaoForm
@@ -332,6 +333,9 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
     serializer_class = VoucherSerializer
 
     def pre_save(self, obj):
+        #cnpj do CRM vem com máscara:
+        obj.customer_cnpj = limpa_cnpj(obj.customer_cnpj)
+
         if obj.order_number:
             try:
                 obj.order = Order.objects.get(number=obj.order_number)
