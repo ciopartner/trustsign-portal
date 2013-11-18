@@ -12,8 +12,18 @@ from portal.suporte.utils import url_parse, get_emails_dominio
 
 log = logging.getLogger('libs.comodo')
 
-CODIGO_SSL = 488
-CODIGO_SSL_WILDCARD = 489
+# CÓDIGOS ANTIGOS
+#CODIGO_SSL = 488
+#CODIGO_SSL_WILDCARD = 489
+#CODIGO_SSL_SAN = 492
+#CODIGO_SSL_EV = 337
+#CODIGO_SSL_EV_MDC = 410
+#CODIGO_MDC = 335
+#CODIGO_TRIAL = 342
+
+# CÓDIGOS NOVOS
+CODIGO_SSL = 301
+CODIGO_SSL_WILDCARD = 343
 CODIGO_SSL_SAN = 492
 CODIGO_SSL_EV = 337
 CODIGO_SSL_EV_MDC = 410
@@ -150,7 +160,7 @@ def emite_certificado(emissao):
             log.error('ERRO EMISSAO > params: %s | response: %s' % (params, r))
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
-            log.info('EMISSAO > params: %s | response: %s' % (params, r))
+            log.info('EMISSAO > params: %s \nResponse: %s' % (params, r))
 
         return r
 
