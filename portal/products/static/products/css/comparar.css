@@ -212,9 +212,9 @@ table.ssltab.comptab > tbody > tr > td:nth-child(1){
 table.comptab .btn{
     width: 70px;
 }
-table.ssltab.comptab > tbody > tr > td{
-    vertical-align: middle;
-}
+/*table.ssltab.comptab > tbody > tr > td{*/
+    /*vertical-align: middle;*/
+/*}*/
 
 table.ssltab > thead > tr > th:nth-child(2){
 	background-image: -webkit-linear-gradient(bottom,rgba(1,84,151,1),rgba(49,116,171,1));
