@@ -110,14 +110,21 @@ class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, Valid
 
     def get_domains_csr(self):
         if not self._fqdns:
+
             csr = self.get_csr_decoded(self.initial['emission_csr'])
             self._fqdns = csr.get('dnsNames', [])
         return self._fqdns
 
     def __init__(self, **kwargs):
         self.initial = kwargs.get('initial', {})
-        kwargs.setdefault('initial', {})['emission_dcv_emails'] = ' ' * (len(self.get_domains_csr()) - 1)
+        dominios = self.get_domains_csr()
+        kwargs.setdefault('initial', {})['emission_dcv_emails'] = ' ' * (len(dominios) - 1)
         super(EmissaoTela2MultiplosDominios, self).__init__(**kwargs)
+
+        url = self.initial['emission_url']
+
+        if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC and url not in dominios:
+            dominios.insert(0, url)
 
     def get_dict_domains_email(self):
         d = {}

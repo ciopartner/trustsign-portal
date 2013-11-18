@@ -197,10 +197,6 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             dominios = csr.get('dnsNames', [])
 
         emails = valor.split(' ')
-        url = fields.get('emission_url')
-
-        if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and url not in dominios:
-            dominios.insert(0, url)
 
         if len(dominios) != len(emails):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))

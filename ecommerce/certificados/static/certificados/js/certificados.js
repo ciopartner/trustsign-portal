@@ -5,13 +5,12 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 
 $(document).ready(function () {
+
     var count = 0;
     var fqdn = '';
 
     var $window = $('#windowEscolheEmail'),
-        $campo_emails= $('#lista-fqdns').find('input[type=hidden]'),
-        email_atual='fqdn-0',
-        total_fqdn=$('.fqdn-table tr').length - 1;
+        $campo_emails= $('#lista-fqdns').find('input[type=hidden]');
     var $windowModel = $('#windowEscolheEmail .modal-body');
     var $form = $('form.emissao');
 
@@ -60,11 +59,6 @@ $(document).ready(function () {
             $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').find('input[value="' + val + '"]');
         }
     }
-
-    $('.fqdn-table a').click(function(){
-        email_atual = $(this).parent().parent().attr('id');
-        atualiza_window()
-    });
 
     $window.find('input[type=radio]').click(function(){
         var i = $('.fqdn-table tr[data-fqdn="' + fqdn + '"]').index() - 1;

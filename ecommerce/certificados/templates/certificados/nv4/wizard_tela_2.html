@@ -7,12 +7,11 @@
 {% endblock %}
 
 {% block coluna-direita %}
-    {{ form.errors }}
     <h2>Dados Específicos do Produto Escolhido</h2>
 
     {{ form.non_field_errors }}
 
-    <table>
+    <table class="table">
         {% include 'certificados/includes/dados_produto.html' %}
 
         {% if form.precisa_carta_cessao %}
@@ -30,9 +29,9 @@
                         <th>E-mail</th>
                     </tr>
                     {% for fqdn in form.get_domains_csr %}
-                        <tr id="fqdn-{{ forloop.counter0 }}">
+                        <tr data-fqdn="{{ fqdn }}" id="fqdn-{{ forloop.counter0 }}">
                             <td>{{ fqdn }}</td>
-                            <td><span></span><a data-toggle="modal" href="#windowEscolheEmail">escolher</a></td>
+                            <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}" href="#windowEscolheEmail">escolher</a></td>
                         </tr>
                     {% endfor %}
                 </table>
