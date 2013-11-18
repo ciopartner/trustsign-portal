@@ -374,6 +374,10 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
         if self.request.POST.get('source-type') == 'no-payment':
             order.set_status('Pago')
 
+        # Se o ambiente for de testes, vamos setar o pedido como pago
+        if settings.AKATUS_ENVIRONMENT == 'TST':
+            order.set_status('Pago')
+
         return self.handle_successful_order(order)
 
 
