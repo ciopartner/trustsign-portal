@@ -92,7 +92,7 @@ $(document).ready(function () {
 
         if(!completo()){
             e.preventDefault();
-            alert('Escolha todos os emails.');
+            alert('É necessário fornecer um e-mail de validação para cada domínio da CSR');
         }
 
     });
