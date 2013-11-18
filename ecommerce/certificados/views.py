@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from copy import copy
 import os
+from django.contrib import messages
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
@@ -13,6 +14,7 @@ from django.template import Context
 from django.template.loader import get_template
 from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView, TemplateView
+from oscar.core.loading import get_class
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
@@ -29,7 +31,8 @@ from ecommerce.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1S
 from django.conf import settings
 import logging
 
-log = logging.getLogger('portal.certificados.view')
+Order = get_class('order.models', 'Order')
+log = logging.getLogger('ecommerce.certificados.view')
 
 
 def erro_rest(*lista_erros):
@@ -319,21 +322,49 @@ class EmailWhoisAPIAjaxView(EmailWhoisAPIView):
 
 
 class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
+    """
+    Esta classe é responsável pela criação de vouchers.
+    Os vouchers são criados via API pelo SugarCRM
+    Neste instante é necessário setar a ordem para status concluído
+    """
     authentication_classes = [UserPasswordAuthentication]
     renderer_classes = [UnicodeJSONRenderer]
     serializer_class = VoucherSerializer
 
+    def pre_save(self, obj):
+        if obj.order_number:
+            try:
+                obj.order = Order.objects.get(number=obj.order_number)
+            except Order.DoesNotExist:
+                log.error('Não existe order o order_number informado.')
+                raise
+
     def post(self, request, *args, **kwargs):
+        if settings.DEBUG:
+            log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
+
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+        try:
+            if serializer.is_valid():
+                self.pre_save(serializer.object)
+                self.object = serializer.save(force_insert=True)
+                self.post_save(self.object, created=True)
+                headers = self.get_success_headers(serializer.data)
 
-        if serializer.is_valid():
-            self.pre_save(serializer.object)
-            self.object = serializer.save(force_insert=True)
-            self.post_save(self.object, created=True)
-            headers = self.get_success_headers(serializer.data)
-            return Response({}, status=status.HTTP_200_OK,
-                            headers=headers)
+                voucher = self.object
+                try:
+                    order = voucher.order
+                    if order.vouchers.count() == order.num_items:
+                        order.set_status('Concluído')
 
+                except Order.DoesNotExist:
+                    pass
+
+                return Response({}, status=status.HTTP_200_OK, headers=headers)
+        except:
+            log.exception('Ocorreu uma exceção')
+
+        log.error('Criação de Voucher não processada:\n{}'.format(serializer.errors))
         return self.error_response(serializer)
 
 
@@ -346,12 +377,15 @@ class VoucherCancelAPIView(GenericAPIView):
         try:
             voucher = Voucher.objects.select_related('emissao').get(crm_hash=self.request.DATA.get('crm_hash'))
         except Voucher.DoesNotExist:
+            log.error('Cancelamento de Voucher não processado: {}'.format(erros.ERRO_VOUCHER_NAO_ENCONTRADO))
             return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_NAO_ENCONTRADO))
 
         if voucher.order_canceled_date is not None:
+            log.error('Cancelamento de Voucher não processado: {}'.format(erros.ERRO_VOUCHER_JA_CANCELADO))
             return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_JA_CANCELADO))
 
         if voucher.customer_cnpj != self.request.DATA.get('customer_cnpj'):
+            log.error('Cancelamento de Voucher não processado: {}'.format(erros.ERRO_VOUCHER_CNPJ_DIFERENTE))
             return erro_rest(erros.get_erro_tuple(erros.ERRO_VOUCHER_CNPJ_DIFERENTE))
 
         try:
@@ -360,7 +394,7 @@ class VoucherCancelAPIView(GenericAPIView):
                 emissao.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
                 emissao.save()
         except Emissao.DoesNotExist:
-            pass
+            log.error('Cancelamento de Voucher não processado: não existe emissão para o voucher {}'.format(voucher.crm_hash))
 
         voucher.order_canceled_date = now()
         voucher.order_canceled_reason = self.request.DATA.get('order_cancel_reason')
@@ -573,7 +607,8 @@ class EmissaoWizardView(SessionWizardView):
 
     def done(self, form_list, **kwargs):
         self.save(form_list, **kwargs)
-        self.envia_email_usuario()
+        if not self.revisao:
+            self.envia_email_usuario()
         return HttpResponseRedirect(reverse(self.done_redirect_url))
 
     def envia_email_usuario(self,):
@@ -896,6 +931,8 @@ class AprovaVoucherPendenteView(TemplateView):
         emissao.aprova(self.request.user)
 
         emissao.save()
+
+        messages.info(self.request, 'Certificado aprovado com sucesso')
 
         return HttpResponseRedirect(reverse('voucher-pendentes-lista'))
 

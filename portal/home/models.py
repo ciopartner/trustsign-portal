@@ -84,8 +84,8 @@ class TrustSignProfile(Model):
     callback_telefone_principal = CharField(max_length=16, blank=True, default='', verbose_name='telefone principal')
 
     cliente_ecommerce = BooleanField(default=False, verbose_name='e-commerce', help_text='Seu site realiza operações de e-commerce?', blank=True)
-    cliente_tipo_negocio = CharField(max_length=128, verbose_name='tipo do negócio', choices=TIPO_NEGOCIO_CHOICES, default='Other', blank=True)
-    cliente_fonte_potencial = CharField(max_length=128, verbose_name='fonte do potencial', choices=FONTE_POTENCIAL_CHOICES, default='Website', blank=True)
+    cliente_tipo_negocio = CharField(max_length=128, verbose_name='Tipo do Negócio', choices=TIPO_NEGOCIO_CHOICES, default='Other', blank=True)
+    cliente_fonte_potencial = CharField(max_length=128, verbose_name='Como chegou até nós?', choices=FONTE_POTENCIAL_CHOICES, default='Website', blank=True)
 
     perfil = PositiveSmallIntegerField(choices=PERFIL_CHOICES, default=PERFIL_CLIENTE)
 

@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from copy import copy
 from decimal import Decimal
 from django.conf import settings
+from django.contrib.sites.models import get_current_site
+from django.core.mail import send_mail
 from django.http import Http404
 from django.views.generic import TemplateView
 from oscar.core.loading import get_class
 from ecommerce.apps.payment.forms import DebitcardForm
-from ecommerce.website.utils import remove_message
+from ecommerce.website.utils import remove_message, send_template_email
 from libs.akatus import facade as akatus
 
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
@@ -23,10 +26,53 @@ Boleto = get_class('payment.models', 'Boleto')
 Order = get_class('order.models', 'Order')
 Line = get_class('order.models', 'Line')
 
+PaymentEventType = get_class('order.models', 'PaymentEventType')
+PaymentEvent = get_class('order.models', 'PaymentEvent')
+PaymentEventQuantity = get_class('order.models', 'PaymentEventQuantity')
+
+
 log = logging.getLogger('ecommerce.checkout.views')
 
 
-class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
+class PaymentEventMixin(object):
+    def add_payment_event(self, event_type_name, amount, reference='', lines=None):
+        """
+        Record a payment event for creation once the order is placed
+        """
+        event_type, __ = PaymentEventType.objects.get_or_create(
+            name=event_type_name)
+        # We keep a local cache of payment events
+        if self._payment_events is None:
+            self._payment_events = []
+        event = PaymentEvent(
+            event_type=event_type, amount=amount,
+            reference=reference)
+        self._payment_events.append((event, lines))
+
+    def save_payment_events(self, order):
+        """
+        Saves any relevant payment events for this order
+        """
+        if not self._payment_events:
+            return
+
+        for event, lines in self._payment_events:
+            event.order = order
+            event.save()
+
+            order_lines = order.lines.all()
+
+            if lines is None:
+                lines = order_lines
+
+            for line in lines:
+                for order_line in order_lines:
+                    if order_line.product_id == line.product_id:
+                        PaymentEventQuantity.objects.create(event=event, line=order_line, quantity=order_line.quantity)
+                        break
+
+
+class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRMMixin):
     """
     For taking the details of payment and creating the order
 
@@ -66,8 +112,7 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         total_compra = basket.total_incl_tax
 
         total_assinaturas = sum(line.line_price_incl_tax
-                                for line in basket.all_lines()
-                                if line.product.categories.filter(slug='assinaturas-de-servicos').exists())
+                                for line in basket.get_lines_assinaturas())
 
         total_certificados = total_compra - total_assinaturas
 
@@ -200,30 +245,51 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
         # not valid / request refused by bank) then an exception would be
         # raised and handled by the parent PaymentDetail view)
         facade = akatus.Facade()
-        try:
-            response = facade.post_payment(self.request, order_number, bankcard=bankcard, tipo='akatus-creditcard')
-            transaction_id = response['transacao']
-        except InvalidGatewayRequestError as e:
-            raise UnableToTakePayment(e.message)
+
+        lines_assinaturas = self.request.basket.get_lines_assinaturas()
+        lines_certificados = self.request.basket.get_lines_certificados()
+
+        source_type, _ = SourceType.objects.get_or_create(name='akatus-creditcard')
+
+        parcelas = self.request.POST.get('certificado_parcela')
+
+        bankcard.qtd_parcelas = parcelas
+
+        bankcard_com_numero = copy(bankcard)
 
         bankcard.user = self.request.user
         bankcard.save()
 
-        # Request was successful - record the "payment source".  As this
-        # request was a 'pre-auth', we set the 'amount_allocated' - if we had
-        # performed an 'auth' request, then we would set 'amount_debited'.
-        source_type, _ = SourceType.objects.get_or_create(name='akatus-creditcard')
-        source = Source(source_type=source_type,
-                        currency='BRL',
-                        amount_debited=total_incl_tax.incl_tax,
-                        reference=transaction_id)
-        # When we create a transaction, we have to set a txn_type that should be debit or refund
-        source.create_deferred_transaction("akatus-creditcard-init", total_incl_tax.incl_tax, reference=transaction_id, status=1, bankcard=bankcard)
-        self.add_payment_source(source)
+        if not parcelas:
+            raise UnableToTakePayment('Selecione a quantidade de parcelas no pagamento por cartão de crédito')
 
-        # Also record payment event
-        # When we create the payment event, we have to set a txn_type that should be debit or refund
-        self.add_payment_event('akatus-creditcard-init', total_incl_tax.incl_tax, reference=transaction_id)
+        for lines in (lines_assinaturas, lines_certificados):
+            if lines:
+                try:
+                    response = facade.post_payment(self.request, order_number, lines=lines,
+                                                   bankcard=bankcard_com_numero, tipo='akatus-creditcard',
+                                                   parcelas=parcelas)
+                    transaction_id = response['transacao']
+                except InvalidGatewayRequestError as e:
+                    raise UnableToTakePayment(e.message)
+
+                total = sum(line.line_price_incl_tax for line in lines)
+
+                # Request was successful - record the "payment source".  As this
+                # request was a 'pre-auth', we set the 'amount_allocated' - if we had
+                # performed an 'auth' request, then we would set 'amount_debited'.
+                source = Source(source_type=source_type,
+                                currency='BRL',
+                                amount_debited=total,
+                                reference=transaction_id)
+                # When we create a transaction, we have to set a txn_type that should be debit or refund
+                source.create_deferred_transaction("akatus-creditcard-init", total, reference=transaction_id, status=1,
+                                                   bankcard=bankcard)
+                self.add_payment_source(source)
+
+                # Also record payment event
+                # When we create the payment event, we have to set a txn_type that should be debit or refund
+                self.add_payment_event('akatus-creditcard-init', total, reference=transaction_id, lines=lines)
 
     def handle_payment_debito(self, order_number, total_incl_tax, **kwargs):
         """
@@ -287,7 +353,8 @@ class PaymentDetailsView(views.PaymentDetailsView, OscarToCRMMixin):
                         amount_allocated=total_incl_tax.incl_tax,
                         reference=transaction_id)
 
-        source.create_deferred_transaction("akatus-boleto-init", total_incl_tax.incl_tax, reference=transaction_id, status=1, boleto=boleto)
+        source.create_deferred_transaction("akatus-boleto-init", total_incl_tax.incl_tax, reference=transaction_id,
+                                           status=1, boleto=boleto)
         self.add_payment_source(source)
 
         # Also record payment event
@@ -346,11 +413,11 @@ class ThankYouView(views.ThankYouView):
         return context
 
 
-class StatusChangedView(TemplateView):
+class StatusChangedView(TemplateView, PaymentEventMixin):
     template_name = 'checkout/akatus/status_changed.html'
+    _payment_events = None
 
     def post(self, request, *args, **kwargs):
-        log.info('AKATUS STATUS CHANGED GET: {}'.format(self.request.GET))
         log.info('AKATUS STATUS CHANGED POST: {}'.format(self.request.POST))
 
         token = self.request.POST.get('token')
@@ -365,23 +432,43 @@ class StatusChangedView(TemplateView):
 
         log.info('Order #{} com transaction_id {} alterou o status para {}'.format(order_number, transacao_id, status))
 
+        order = Order.objects.get(number=order_number)
+
         if status == 'Aprovado':
             try:
-                order = Order.objects.get(number=order_number)
-                lines = order.lines.filter(paymentevent__reference=transacao_id)
+                lines = order.lines.filter(paymentevent_set__reference=transacao_id)
+
                 for line in lines:
                     line.set_status('Pago')
 
                 if order.lines.count() == order.lines.filter(status='Pago').count():
                     order.set_status('Pago')
+                    subject = 'Pagamento Aprovado'
+                    template = 'customer/commtype_order_placed_body.html'
+                    context = {
+                        'user': order.user,
+                        'order': order,
+                        'site': get_current_site(self.request),
+                        'lines': order.lines.all()
+                    }
+                    send_template_email([order.user.email], subject, template, context)
+
+                if lines:
+                    event = lines[0].paymentevent_set.all()[0]
+                    self.add_payment_event('akatus-approved', event.amount, reference=transacao_id, lines=lines)
+                    self.save_payment_events(order)
             except Order.DoesNotExist:
                 log.error('Não encontrou a order #{}'.format(order_number))
             except Line.DoesNotExist:
                 log.error('Não encontrou a line com partner_line_reference={} da order #{}'.format(transacao_id, order_number))
         else:
-            pass
-            # TODO: Envia e-mail para sistemas@trustsign.com.br
-            # Contendo o número do pedido, cnpj e razão social do cliente, valor do pedido e status retornado pela Akatus
-            # Subjetc: Alteração de status não prevista para ordem <ordem>: <status>
+            profile = order.user.get_profile()
+            message = 'número do pedido: %s \n CNPJ: %s \n razão social: %s \n valor do pedido: %s \n status: %s' % (
+                order_number, profile.cliente_cnpj, profile.cliente_razaosocial, order.total_incl_tax, status
+            )
+            send_mail('[Alerta-Akatus] Alteração de status não prevista para ordem #%s: %s' % (order_number, status),
+                      message,
+                      settings.DEFAULT_FROM_EMAIL,
+                      [settings.TRUSTSIGN_SUPORTE_EMAIL])
 
         return self.get(request, *args, **kwargs)

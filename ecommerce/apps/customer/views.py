@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView, View
-from oscar.apps.customer.views import ProfileUpdateView as CoreProfileUpdateView
+from oscar.apps.customer.views import ProfileUpdateView as CoreProfileUpdateView, ChangePasswordView as CoreChangePasswordView
+from ecommerce.apps.customer.forms import PasswordChangeForm
 
 from libs.cobrebem.facade import Facade
 
@@ -64,3 +65,7 @@ class ProfileUpdateView(CoreProfileUpdateView):
 
     def get_success_url(self):
         return reverse('customer:profile-view')
+
+
+class ChangePasswordView(CoreChangePasswordView):
+    form_class = PasswordChangeForm

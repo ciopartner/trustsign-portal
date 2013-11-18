@@ -83,6 +83,7 @@ class OportunidadeCRM(object):
         self.pag_credito_bandeira = None
         self.pag_credito_transacao_id = None
         self.pag_credito_ultimos_digitos = None
+        self.parcelas = None
 
         #cartão de débito
         self.pag_debito_titular = None
@@ -148,7 +149,8 @@ class CRMClient(object):
         response = None
 
         if settings.DEBUG:
-            log.info('\n\nMetodo: {}'.format(method))
+            log.info('\n\n')
+            log.info('Metodo: {}'.format(method))
             log.info('Request ao Sugar: {}'.format(rest_data))
 
         if not self.session_id and method != 'login':
@@ -313,6 +315,8 @@ class CRMClient(object):
             'tipo_pagamento_c': oportunidade.tipo_pagamento,
             'sales_stage': 'Closed Won',
             'opportunity_type': 'New Business',
+            'data_pgto_c': oportunidade.data_pagto,
+            'parcelas': oportunidade.parcelas,
         }
 
         if oportunidade.is_credito():

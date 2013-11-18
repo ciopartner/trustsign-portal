@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.db.models import ForeignKey, CharField, DateField, TextField, Model, DateTimeField
+from django.db.models import ForeignKey, CharField, DateField, TextField, Model, DateTimeField, IntegerField
 from oscar.apps.payment.abstract_models import AbstractBankcard, AbstractTransaction, AbstractSource
 User = get_user_model()
 
@@ -34,6 +34,7 @@ class Transaction(AbstractTransaction):
 class Bankcard(AbstractBankcard):
     credito_cpf = CharField(max_length=16, blank=True, null=True)
     credito_telefone = CharField(max_length=16, blank=True, null=True)
+    qtd_parcelas = IntegerField(default=1, blank=True)
 
 
 class Debitcard(Model):

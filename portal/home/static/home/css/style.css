@@ -1664,7 +1664,7 @@ img.size-thumbnail{
 /* To hide image blogs in the home page */
 .home-text4 img,
 .all-body-text5 img{
-    display: none;
+    /*display: none;*/
 }
 
 /* Home page - margin between blog title and blog content */
@@ -2087,10 +2087,14 @@ h3.title{
     float: right;
     overflow: inherit;
     -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 #product-price.tabs-3 .tab-content{
-    width: 473px;
+    width: 474px;
 }
 
 #product-price .tabbable{
@@ -2099,11 +2103,11 @@ h3.title{
 }
 
 #product-price.tabs-3 .tabbable{
-    width: 572px;
+    width: 573px;
 }
 
 #product-price .box-price{
-    width: 24.95%;
+    width: 25.15%;
     float: left;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -2112,9 +2116,14 @@ h3.title{
     text-align: center;
     border-right: 1px solid #dddddd;
     background: #FFF;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
 }
 #product-price.tabs-3 .box-price{
-    width: 33.3333333333333333%;
+    width: 33.31%;
 
 }
 
@@ -2126,6 +2135,11 @@ h3.title{
 #product-price .box-price:last-child{
     border-right: 0;
     background: #FFFFFF;
+    width: 24%;
+}
+
+#product-price.tabs-3 .box-price:last-child{
+    width: 33.1%;
 }
 
 #product-price .box-price .btn{
@@ -2193,16 +2207,27 @@ h3.title{
 
 #video-tutorial .video{
     position:relative;
+    margin-bottom: 30px;
 }
+
 #video-tutorial .video:before{
     background: url("../img/youtube/youtube-seta.png") no-repeat scroll center center rgba(0, 0, 0, 0);
-    bottom: 50%;
     content: "";
     height: 23px;
-    left: 50%;
-    margin-bottom: -42px;
-    margin-left: -19px;
+    left: 78px;
     pointer-events: none;
     position: absolute;
+    top: 39px;
     width: 32px;
+}
+
+#video-tutorial .video img{
+    float: left;
+    margin-right: 10px;
+    width: 200px;
+}
+
+#video-tutorial .video h2{
+    margin-top: 0;
+    color: #333;
 }

@@ -6,6 +6,36 @@ class Basket(AbstractBasket):
     _tem_contrato_siteseguro = None
     _tem_contrato_sitemonitorado = None
     _tem_contrato_pki = None
+    _lines_assinaturas = None
+    _lines_certificados = None
+
+    def get_lines_assinaturas(self):
+        if self._lines_assinaturas is None:
+            self._lines_assinaturas = [line
+                                       for line in self.all_lines()
+                                       if line.product.categories.filter(slug='assinaturas-de-servicos').exists()]
+
+        return self._lines_assinaturas
+
+    def get_lines_certificados(self):
+        if self._lines_certificados is None:
+            assinaturas = self.get_lines_assinaturas()
+            self._lines_certificados = [line
+                                        for line in self.all_lines()
+                                        if line not in assinaturas]
+        return self._lines_certificados
+
+    def add_product(self, *args, **kwargs):
+
+        # clear caches
+        self._lines_assinaturas = None
+        self._lines_certificados = None
+        self._tem_contrato_ssl = None
+        self._tem_contrato_siteseguro = None
+        self._tem_contrato_sitemonitorado = None
+        self._tem_contrato_pki = None
+
+        return super(self.__class__, self).add_product(*args, **kwargs)
 
     def tem_contrato_ssl(self):
         if self._tem_contrato_ssl is None:
