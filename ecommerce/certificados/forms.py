@@ -6,6 +6,7 @@ from django.forms import ModelForm, CharField, EmailField, PasswordInput, Hidden
 from django.core.exceptions import ValidationError
 from passwords.fields import PasswordField
 from ecommerce.certificados import erros as e
+from ecommerce.certificados.erros import get_erro_message
 
 from libs.comodo import get_emails_validacao
 from ecommerce.certificados.models import Emissao, Voucher, Revogacao
@@ -63,8 +64,12 @@ class EmissaoModelForm(ModelForm):
         if self._precisa_carta_cessao is None:
             voucher = self.get_voucher()
 
-            if voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
-                csr = self.get_csr_decoded(self.initial.get('emission_csr'))
+            csr = self.get_csr_decoded(self.initial.get('emission_csr'))
+
+            if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
+                self._precisa_carta_cessao = True
+
+            elif voucher.ssl_product in (Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
                 self._precisa_carta_cessao = not comparacao_fuzzy(csr.get('CN'), voucher.customer_companyname)
 
             elif voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC):
