@@ -62,8 +62,8 @@ class Voucher(Model):
     LINHA_PRO = 'pro'
     LINHA_PRIME = 'prime'
     LINHA_CHOICES = (
-        (LINHA_DEGUSTACAO, 'Degustação'),
-        (LINHA_BASIC, 'Basico'),
+        (LINHA_DEGUSTACAO, 'Trial'),
+        (LINHA_BASIC, 'Basic'),
         (LINHA_PRO, 'Pro'),
         (LINHA_PRIME, 'Prime'),
     )

@@ -16,7 +16,7 @@
             </tr>
 
                 {% for voucher in vouchers %}
-                    <tr>
+                    <tr data-product-code="{{ voucher.ssl_product }}">
                         <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
@@ -53,7 +53,8 @@
             </table>
 
         {% else %}
-            <p>Você ainda não possui certificados para emitir. Se você acabou de realizar a compra, aguarde alguns minutos após o pagamento ter sido aprovado.</p>
+            <p>Você ainda não possui certificados para emitir.
+                Se você acabou de realizar a compra, aguarde alguns minutos após o pagamento ter sido aprovado.</p>
         {% endif %}
     </div>
 {% endblock %}
