@@ -2214,7 +2214,7 @@ h3.title{
     background: url("../img/youtube/youtube-seta.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     content: "";
     height: 23px;
-    left: 78px;
+    left: 60px;
     pointer-events: none;
     position: absolute;
     top: 39px;
@@ -2223,11 +2223,14 @@ h3.title{
 
 #video-tutorial .video img{
     float: left;
+    height: 100px;
     margin-right: 10px;
-    width: 200px;
+    width: 150px;
 }
 
-#video-tutorial .video h2{
+#video-tutorial .video h3{
     margin-top: 0;
     color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
