@@ -342,6 +342,7 @@ $('#id_credito_telefone').mask("(99) 9999-9999");
 $('form').each(function(){
    var self = $(this);
    var $checkboxs = self.find("[type=checkbox][required=true]");
+   var $submit = self.find('[type=submit]');
    var checked = true;
 
    function checkButton(){
@@ -350,10 +351,17 @@ $('form').each(function(){
            checked = checked && $(this).is(":checked");
        });
 
-       if(!checked)
-           self.find('[type=submit]').attr("disabled", "disabled");
-       else
-           self.find('[type=submit]').removeAttr("disabled");
+       $submit.attr('title', $submit.data('disable-title'));
+//       $submit.tooltip();
+
+       if(!checked){
+           $submit.attr("disabled", "disabled");
+//           $submit.tooltip('enable');
+       }else{
+           $submit.removeAttr("disabled");
+//           $submit.tooltip('disable');
+           $submit.attr('title', '');
+       }
    }
 
    checkButton();
