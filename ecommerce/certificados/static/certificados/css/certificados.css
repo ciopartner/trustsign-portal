@@ -29,6 +29,18 @@
     text-align: right;
 }
 
+.fqdn-table{
+    width: 100%;
+    background: #ccc;
+    border-spacing: 1px;
+    border-collapse: separate;
+}
+
+.fqdn-table th, .fqdn-table td{
+    text-align: center;
+    border-top: none;
+    background: #fff;
+}
 .emissao.th{
     padding: 10px;
 }
