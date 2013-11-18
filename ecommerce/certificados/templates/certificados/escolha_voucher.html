@@ -16,11 +16,11 @@
             </tr>
 
                 {% for voucher in vouchers %}
-                    <tr data-product-code="{{ voucher.ssl_product }}" data-status="{{ voucher.emissao.emission_status }}">
+                    <tr data-product-code="{{ voucher.ssl_product }}" data-status="{{ voucher.emissao.emission_status }}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
                         <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
-                        <td>1 {# TODO: como calcular saldo voucher? #}</td>
+                        <td class="saldo">1 {# TODO: como calcular saldo voucher? #}</td>
                         <td>{{ voucher.ssl_valid_to|date:"d/m/Y" }}</td>
                         <td>
 
@@ -58,4 +58,36 @@
                 Se você acabou de realizar a compra, aguarde alguns minutos após o pagamento ter sido aprovado.</p>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+    <script type="application/javascript">
+        $(function(){
+
+            var $products = $('[data-product-code=ssl-ev-mdc-domain],[data-product-code=ssl-mdc-domain], [data-product-code=ssl-san-fqdn]');
+
+
+            for(var i=0; i < $products.length; i++){
+
+                var prod_code = $products.eq(i).data('product-code');
+                var prod_status = $products.eq(i).data('status');
+                var prod_line = $products.eq(i).data('line');
+                var prod_term = $products.eq(i).data('term');
+
+                for(var j=i+1; j < $products.length; j++){
+
+                    if(prod_code == $products.eq(j).data('product-code'))
+                        if(prod_status == $products.eq(j).data('status'))
+                            if(prod_line == $products.eq(j).data('line'))
+                                if(prod_term == $products.eq(j).data('term')){
+                                    $products.eq(j).remove();
+                                    $products.eq(i).find('.saldo').text(parseInt($products.eq(i).find('.saldo').text()) + 1);
+                                }
+
+                }
+            }
+
+        });
+    </script>
 {% endblock %}
