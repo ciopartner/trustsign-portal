@@ -14,7 +14,8 @@
     <table>
         {% include 'certificados/includes/dados_produto.html' %}
         {% if form.precisa_carta_cessao %}
-            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}</td></tr>
+            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}
+                <a href="/static/portal/documentos/carta-de-cessao.pdf">Documento Modelo</a></td></tr>
         {% endif %}
         <tr><th>E-mail para validação do domínio:</th><td>{{ form.emission_dcv_emails }} {{ form.emission_dcv_emails.errors }} <a href="">Não tenho acesso a nenhum dos e-mails acima</a></td></tr>
         <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
