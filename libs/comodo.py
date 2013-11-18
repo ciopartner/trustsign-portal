@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
+from django.core.cache import cache
 import requests
 
 from ecommerce.certificados.models import Voucher
@@ -58,6 +59,11 @@ def get_emails_validacao_padrao(dominio):
 
 
 def get_emails_validacao_whois(dominio):
+    emails = cache.get('whois-{}'.format(dominio))
+
+    if emails is not None:
+        return emails
+
     dominio = limpa_dominio(dominio)
 
     if dominio.endswith('.br'):
@@ -69,8 +75,12 @@ def get_emails_validacao_whois(dominio):
         'domainName': dominio
     })
 
-    return [r[12:] for r in response.text.splitlines()
-            if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+    emails = [r[12:] for r in response.text.splitlines()
+              if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+
+    cache.set('whois-{}'.format(dominio), emails, 86400)  # cache de 1 dia
+
+    return emails
 
 
 def get_emails_validacao(dominio):
