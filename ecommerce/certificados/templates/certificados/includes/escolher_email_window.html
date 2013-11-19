@@ -1,7 +1,7 @@
 <div id="windowEscolheEmail" class="modal hide" tabindex="-1" role="dialog">
     <div class="modal-header">
         <a href="#" class="close" data-dismiss="modal">&times;</a>
-        <h3>Escolha os e-mails de validação para o FQDN.</h3>
+        <h3>Escolha os e-mails de validação para o {% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}domínio{% endif %}.</h3>
     </div>
     {%  for dominio, emails in form.get_dict_domains_email.iteritems %}
     <div class="modal-body {% if forloop.counter0 %}hidden{% endif %}" data-fqdn="{{ dominio }}" data-count="{{ forloop.counter0 }}">

@@ -62,7 +62,7 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
 
     cliente_ecommerce = BooleanField(label='e-commerce', help_text='Seu site realiza operações de e-commerce?', required=False)
     cliente_tipo_negocio = ChoiceField(label='Tipo do Negócio', choices=TrustSignProfile.TIPO_NEGOCIO_CHOICES)
-    cliente_fonte_potencial = ChoiceField(label='Fonte do Potencial', choices=TrustSignProfile.FONTE_POTENCIAL_CHOICES)
+    cliente_fonte_potencial = ChoiceField(label='Como chegou até nós', choices=TrustSignProfile.FONTE_POTENCIAL_CHOICES)
 
     email_nfe = EmailField(label='e-Mail p/ envio da NFe')
 

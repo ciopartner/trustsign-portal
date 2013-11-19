@@ -8,7 +8,6 @@ from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail, EmailMessage
 from django.core.urlresolvers import reverse
-from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.template import Context
 from django.template.loader import get_template

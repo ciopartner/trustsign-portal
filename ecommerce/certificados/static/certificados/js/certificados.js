@@ -5,13 +5,12 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 
 $(document).ready(function () {
+
     var count = 0;
     var fqdn = '';
 
     var $window = $('#windowEscolheEmail'),
-        $campo_emails= $('#lista-fqdns').find('input[type=hidden]'),
-        email_atual='fqdn-0',
-        total_fqdn=$('.fqdn-table tr').length - 1;
+        $campo_emails= $('#lista-fqdns').find('input[type=hidden]');
     var $windowModel = $('#windowEscolheEmail .modal-body');
     var $form = $('form.emissao');
 
@@ -61,13 +60,12 @@ $(document).ready(function () {
         }
     }
 
-    $('.fqdn-table a').click(function(){
-        email_atual = $(this).parent().parent().attr('id');
-        atualiza_window()
-    });
-
     $window.find('input[type=radio]').click(function(){
         var i = $('.fqdn-table tr[data-fqdn="' + fqdn + '"]').index() - 1;
+        if ($(this).parent().parent().parent().index() > 4){
+            alert("Preferencialmente escolha um dos 5 primeiros e-mails oferecidos. Caso escolha outro e-mail, " +
+                "considere que o processo de emissão pode demorar até 1 dia útil a mais que o convencional.")
+        }
         var lista = $campo_emails.val().split(' ');
 
         lista[i] = $(this).parent().find('span').text().trim();
@@ -94,7 +92,7 @@ $(document).ready(function () {
 
         if(!completo()){
             e.preventDefault();
-            alert('Escolha todos os emails.');
+            alert('É necessário fornecer um e-mail de validação para cada domínio da CSR');
         }
 
     });

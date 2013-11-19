@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from ecommerce.certificados import erros as e
-from libs.comodo import get_emails_validacao_padrao, get_emails_validacao
+from libs.comodo import get_emails_validacao
 from ecommerce.certificados.erros import get_erro_message
 from ecommerce.certificados.models import Voucher
 from portal.suporte.utils import comparacao_fuzzy, get_razao_social_dominio
@@ -197,10 +197,6 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             dominios = csr.get('dnsNames', [])
 
         emails = valor.split(' ')
-        url = fields.get('emission_url')
-
-        if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and url not in dominios:
-            dominios.insert(0, url)
 
         if len(dominios) != len(emails):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
@@ -210,7 +206,7 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
                 continue
 
-            if email not in get_emails_validacao_padrao(dominio):
+            if email not in get_emails_validacao(dominio):
                 raise self.ValidationError(get_erro_message(e.ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO) % (email, dominio))
         return valor
 
