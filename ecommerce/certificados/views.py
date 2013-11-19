@@ -643,7 +643,10 @@ class EmissaoWizardView(SessionWizardView):
                 'callback_observacao': voucher.customer_callback_note,
             })
 
-            if not self.revisao:
+            if self.revisao:
+                initial['emission_url'] = self.instance.emission_url
+                initial['emission_csr'] = self.instance.emission_csr
+            else:
                 cd = self.get_cleaned_data_for_step('tela-1')
                 initial['emission_url'] = cd['emission_url']
                 initial['emission_csr'] = cd['emission_csr']
@@ -669,8 +672,10 @@ class EmissaoWizardView(SessionWizardView):
 
             if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
                 if not emissao.emission_urls:
-                    dominios = ' '.join(form.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
-                    emissao.emission_urls = dominios
+                    dominios = form.get_csr_decoded(emissao.emission_csr).get('dnsNames', [])
+                    if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
+                        dominios.insert(0, emissao.emission_url)
+                    emissao.emission_urls = ' '.join(dominios)
         return data
 
     def get_context_data(self, form, **kwargs):
@@ -724,7 +729,10 @@ class EmissaoWizardView(SessionWizardView):
         if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
             if not emissao.emission_urls:
                 csr = decode_csr(emissao.emission_csr)
-                emissao.emission_urls = ' '.join(csr.get('dnsNames', []))
+                dominios = csr.get('dnsNames', [])
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
+                    dominios.insert(0, emissao.emission_url)
+                emissao.emission_urls = ' '.join(dominios)
 
         emissao.save()
 

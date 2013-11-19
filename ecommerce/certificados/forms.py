@@ -133,7 +133,10 @@ class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, Valid
     def __init__(self, **kwargs):
         self.initial = kwargs.get('initial', {})
         dominios = self.get_domains_csr()
-        kwargs.setdefault('initial', {})['emission_dcv_emails'] = ' ' * (len(dominios) - 1)
+        initial = kwargs.setdefault('initial', {})
+        instance = kwargs.get('instance')
+        if not instance or not instance.pk:
+            initial['emission_dcv_emails'] = ' ' * (len(dominios) - 1)
         super(EmissaoTela2MultiplosDominios, self).__init__(**kwargs)
 
         url = self.initial['emission_url']
