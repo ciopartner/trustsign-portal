@@ -35,36 +35,39 @@
                     <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
 
                         <div class="row-fluid">
-                            <div class="span6">
-                                <h2>Certificados</h2>
+                            {% if total_cetificados %}
+                                <div class="span6">
+                                    <h2>Certificados</h2>
 
-                                <span class="" style="width: 120px; padding: 3px; padding-bottom: 0; display: inline-block">
-                                    <strong style="padding-left: 20px">Parcela</strong>
-                                </span>
+                                    <span class="" style="width: 120px; padding: 3px; padding-bottom: 0; display: inline-block">
+                                        <strong style="padding-left: 20px">Parcela</strong>
+                                    </span>
 
-                                <span class="" style="width: 100px; padding: 3px; padding-bottom: 0; display: inline-block">
-                                    <strong>Total com juros</strong>
-                                </span>
+                                    <span class="" style="width: 100px; padding: 3px; padding-bottom: 0; display: inline-block">
+                                        <strong>Total com juros</strong>
+                                    </span>
 
-                                {% for parcela in parcelas.certificados %}
-                                    <label class="radio">
-                                        {# Todo: Remove inline CSS #}
+                                    {% for parcela in parcelas.certificados %}
+                                        <label class="radio">
+                                            {# Todo: Remove inline CSS #}
 
-                                        <span class="" style="width: 100px; padding: 3px; padding-bottom: 0; display: inline-block">
-                                            <input name="certificado_parcela" value="{{ parcela.qtd }}" type="radio" {% if forloop.first %}checked="checked"{% endif %} />
-                                            <strong>{{ parcela.qtd }}</strong> x {{ parcela.valor_parcela|currency  }}
-                                        </span>
-                                        <span class="" style="width: 80px; padding: 3px; padding-bottom: 0; display: inline-block">
-                                            {{ parcela.valor_total|currency  }}
-                                        </span>
-                                        {% if parcela.juros %}
-                                            <span>Juros: {{ parcela.juros }}%</span>
-                                        {% endif %}
+                                            <span class="" style="width: 100px; padding: 3px; padding-bottom: 0; display: inline-block">
+                                                <input name="certificado_parcela" value="{{ parcela.qtd }}" type="radio" {% if forloop.first %}checked="checked"{% endif %} />
+                                                <strong>{{ parcela.qtd }}</strong> x {{ parcela.valor_parcela|currency  }}
+                                            </span>
+                                            <span class="" style="width: 80px; padding: 3px; padding-bottom: 0; display: inline-block">
+                                                {{ parcela.valor_total|currency  }}
+                                            </span>
+                                            {% if parcela.juros %}
+                                                <span>Juros: {{ parcela.juros }}%</span>
+                                            {% endif %}
 
-                                    </label>
-                                {% endfor %}
-                            </div>
-                            <div class="span6">
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if total_assinaturas %}
+                            <div class="span6" {% if total_certificados %}style="border-left: 1px solid rgb(221, 221, 221); padding-left: 10px;"{% endif %}>
                                 <h2>Assinaturas</h2>
                                 <label class="radio">
                                     <span class="" style="padding: 3px; padding-bottom: 0; display: inline-block">
@@ -77,6 +80,7 @@
 
                                 </label>
                             </div>
+                            {% endif %}
                         </div>
 
                         <hr/>
