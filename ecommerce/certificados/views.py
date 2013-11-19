@@ -643,7 +643,10 @@ class EmissaoWizardView(SessionWizardView):
                 'callback_observacao': voucher.customer_callback_note,
             })
 
-            if not self.revisao:
+            if self.revisao:
+                initial['emission_url'] = self.instance.emission_url
+                initial['emission_csr'] = self.instance.emission_csr
+            else:
                 cd = self.get_cleaned_data_for_step('tela-1')
                 initial['emission_url'] = cd['emission_url']
                 initial['emission_csr'] = cd['emission_csr']
