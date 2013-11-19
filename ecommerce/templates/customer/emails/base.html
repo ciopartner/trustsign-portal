@@ -20,23 +20,27 @@
                                     <img src="http://{{ site.domain }}/static-ecommerce/home/img/icons/mainlogo.png" alt="" width="200px" style="padding: 20px; padding-left: 0; margin-right: 20px; border-right: 1px solid #DDD; margin-bottom:20px;">
                                 </td>
                                 <td align="center">
-                                    <h1 style="color: #4c4c4c; text-align: center; margin-top: -5px; font-size: 18px;">{% block title %}{% endblock %}</h1>
+                                    <h1 style="color: #4c4c4c; text-align: center; margin-top: -5px; font-size: 18px;">
+                                        <font face="Tahoma">{% block title %}{% endblock %}</font>
+                                    </h1>
                                 </td>
                             </tr>
                         </table>
 
                         <div style="background: #4c4c4c; padding: 10px; color: #FFF; font-weight: bold; text-align: center; margin-bottom: 20px">
-                            Esse e-mail é automático. Não é necessário respondê-lo.
+                            <font face="Tahoma">Esse e-mail é automático. Não é necessário respondê-lo.</font>
                         </div>
 
                         {% block body %}{% endblock %}
 
-                        <h3 style="color: #076644; margin-top: 40px;">Informações importantes:</h3>
+                        <h3 style="color: #076644; margin-top: 40px;">
+                            <font face="Tahoma">Informações importantes:</font>
+                        </h3>
                         <ul>
-                            <li>Contatos do suporte: suporte@trustsign.com.br - (12) 3308-8420</li>
-                            <li>Contatos do Financeiro: financeiro@trustsign.com.br - (12) 3308-8420</li>
-                            <li>Contatos do Comercial: comercial@trustsign.com.br - (11) 3729-3945</li>
-                            <li>Consulte suas compras acessando o link “<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Minhas Compras</a>”, após realizar seu login de acesso.</li>
+                            <li><font face="Tahoma">Contatos do suporte: suporte@trustsign.com.br - (12) 3308-8420</font></li>
+                            <li><font face="Tahoma">Contatos do Financeiro: financeiro@trustsign.com.br - (12) 3308-8420</font></li>
+                            <li><font face="Tahoma">Contatos do Comercial: comercial@trustsign.com.br - (11) 3729-3945</font></li>
+                            <li><font face="Tahoma">Consulte suas compras acessando o link “<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Minhas Compras</a>”, após realizar seu login de acesso.</font></li>
                         </ul>
                     </div>
                 </font>
