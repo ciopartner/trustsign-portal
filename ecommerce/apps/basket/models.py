@@ -6,11 +6,15 @@ class Basket(AbstractBasket):
     _tem_contrato_siteseguro = None
     _tem_contrato_sitemonitorado = None
     _tem_contrato_pki = None
+    _has_trial = None
     _lines_assinaturas = None
     _lines_certificados = None
 
-    def has_trial():
-        return False
+    def has_trial(self):
+        if self._has_trial is None:
+            self._has_trial = any(line.product.attr.ssl_term.option == 'trial'
+                                  for line in self.all_lines())
+        return self._has_trial
 
     def get_lines_assinaturas(self):
         if self._lines_assinaturas is None:
