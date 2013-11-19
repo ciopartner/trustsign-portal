@@ -10,12 +10,6 @@ class Basket(AbstractBasket):
     _lines_assinaturas = None
     _lines_certificados = None
 
-    def has_trial(self):
-        if self._has_trial is None:
-            self._has_trial = any(line.product.attr.ssl_term.option == 'trial'
-                                  for line in self.all_lines())
-        return self._has_trial
-
     def get_lines_assinaturas(self):
         if self._lines_assinaturas is None:
             self._lines_assinaturas = [line
@@ -41,6 +35,7 @@ class Basket(AbstractBasket):
         self._tem_contrato_siteseguro = None
         self._tem_contrato_sitemonitorado = None
         self._tem_contrato_pki = None
+        self._has_trial = None
 
         return super(self.__class__, self).add_product(*args, **kwargs)
 
