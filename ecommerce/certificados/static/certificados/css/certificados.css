@@ -85,3 +85,12 @@ ul.errorlist{
 #windowEscolheEmail input[type=radio]{
     margin: 4px
 }
+
+.emissao .botoes{
+    margin-top: 10px;
+    clear: both;
+}
+
+.emissao .botoes input[type=button]{
+    margin-right: 34px;
+}

@@ -97,6 +97,16 @@ $(document).ready(function () {
 
     });
 
-    atualizar_tabela();
+    if (!window.sem_tabela){
+        atualizar_tabela();
+    }
+
+    $form.find('td.emails-validacao input[type=radio]').click(function(){
+        if ($(this).parent().parent().index() > 4){
+            alert("Preferencialmente escolha um dos 5 primeiros e-mails oferecidos. Caso escolha outro e-mail, " +
+                "considere que o processo de emissão pode demorar até 1 dia útil a mais que o convencional.")
+        }
+    });
+
 });
 
