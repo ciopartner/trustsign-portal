@@ -49,7 +49,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div id="total">
+            <div id="total" class="{% if not total_assinaturas or not total_certificados %}unique_line{% endif %}">
                 {% if total_certificados or basket.has_trial %}
                     <h3 style="margin-top: -10px; text-align: center;">{{ total_certificados|currency }}</h3>
 

@@ -55,6 +55,11 @@
     min-height: 102px;
 }
 
+#total.unique_line{
+    min-height: 41px;
+    padding-bottom: 0;
+}
+
 #total h4{
     font-size: 150%;
     color: #333;
