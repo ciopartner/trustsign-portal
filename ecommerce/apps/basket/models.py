@@ -9,6 +9,9 @@ class Basket(AbstractBasket):
     _lines_assinaturas = None
     _lines_certificados = None
 
+    def has_trial():
+        return False
+
     def get_lines_assinaturas(self):
         if self._lines_assinaturas is None:
             self._lines_assinaturas = [line
