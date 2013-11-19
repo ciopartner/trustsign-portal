@@ -507,7 +507,7 @@ tbody.bor-tb > tr:nth-child(even){
 }
 
 tbody.bor-tb > tr:last-child{
-	background-color:#F7F7F7;
+	/*background-color:#F7F7F7;*/
 	border-top:hidden;
 	border-bottom:#DADEE3 2px solid;
 }
