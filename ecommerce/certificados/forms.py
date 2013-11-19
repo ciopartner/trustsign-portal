@@ -6,8 +6,6 @@ from django.forms import ModelForm, CharField, EmailField, PasswordInput, Hidden
 from django.core.exceptions import ValidationError
 from passwords.fields import PasswordField
 from ecommerce.certificados import erros as e
-from ecommerce.certificados.erros import get_erro_message
-
 from libs.comodo import get_emails_validacao
 from ecommerce.certificados.models import Emissao, Voucher, Revogacao
 from ecommerce.certificados.validations import ValidateEmissaoCSRMixin, ValidateEmissaoValidacaoEmail, \

@@ -30,6 +30,7 @@ from ecommerce.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1S
     ReemissaoSerializer, EmissaoValidaSerializer, EmissaoNvBSerializer
 from django.conf import settings
 import logging
+from portal.suporte.utils import decode_csr
 
 Order = get_class('order.models', 'Order')
 log = logging.getLogger('ecommerce.certificados.view')
@@ -719,6 +720,11 @@ class EmissaoWizardView(SessionWizardView):
                 send_mail('[Alerta-Ecommerce] Solicitação pendente #%s' % voucher.crm_hash, message, settings.DEFAULT_FROM_EMAIL, [settings.TRUSTSIGN_VALIDACAO_EMAIL])
         else:
             emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
+
+        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
+            if not emissao.emission_urls:
+                csr = decode_csr(emissao.emission_csr)
+                emissao.emission_urls = ' '.join(csr.get('dnsNames', []))
 
         emissao.save()
 
