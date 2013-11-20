@@ -39,7 +39,7 @@ class Akatus(object):
 
     def call_server(self, method, data):
         url, tipo = self.get_method_details(method)
-        log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, data))
+        #log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, data))
         if tipo == 'GET':
             response = requests.get(url, params=data)
         elif tipo == 'POST':
