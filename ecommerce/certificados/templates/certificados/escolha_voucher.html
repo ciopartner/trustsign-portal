@@ -29,7 +29,6 @@
                         <td>
 
                         {% with emissao=voucher.emissao %}
-
                             {% if not emissao %}
                                 {% if voucher.has_emissao_url %}
                                     <a class="btn btn-success btn-block no-uppercase" href="{{ voucher.get_emissao_url }}">Emitir</a>
@@ -47,15 +46,16 @@
                                         <li><a href="{{ voucher.get_publickey_url }}">Certificado</a></li>
                                     </ul>
                                 </div>
-
-                            {% elif emissao.is_complemento_disponivel %}
-                                Disponível para uso
-                            {% elif emissao.is_complemento_utilizado %}
-                                Já utilizado
                             {% endif %}
 
                         {% endwith %}
-                        </td>
+                        {# Para tratar o status dos FQDNs, Domínios e Servidores Adicionais #}
+                        {% if voucher.is_complemento_disponivel %}
+                            Disponível para uso
+                        {% elif voucher.is_complemento_utilizado %}
+                            Já utilizado
+                        {% endif %}
+                    </td>
                     </tr>
                 {% endfor %}
 
