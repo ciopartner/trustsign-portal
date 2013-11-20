@@ -33,7 +33,7 @@
         <div class="span4 status-item">
 
           <h3>Aprovação de Pagamento</h3>
-          {% if order.status == 'Pago' %}
+          {% if order.is_order_paid %}
             <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
             <div class="info date">
                 <strong>DATA:</strong>
@@ -52,12 +52,11 @@
 
         </div>
         <div class="span4 status-item">
-
           <h3>Liberado para emissão</h3>
-          {% if order.vouchers.emitidos|length == 0 %}
+          {% if not order.is_voucher_issued and not order.is_voucher_partially_issued %}
             <img src="{% static 'ecommerce/img/status/no.png' %}" alt="" class="status-icon" />
           {% else %}
-              {% if order.vouchers.emitidos|length == order.vouchers.all.count %}
+              {% if order.is_voucher_issued %}
                 <img src="{% static 'ecommerce/img/status/yes.png' %}" alt="" class="status-icon" />
               {% else %}
                 <img src="{% static 'ecommerce/img/status/progress.png' %}" alt="" class="status-icon" />
@@ -73,7 +72,7 @@
         </div>
     </div>
 
-    <table class="table table-striped table-bordered tm30">
+    <table class="table table-vcenter table-striped table-bordered tm30">
         <thead>
             <tr>
                 <th>{% trans 'Product' %}</th>
@@ -89,7 +88,7 @@
             {% for line in order.lines.all %}
             <tr>
                 <td>
-                    <p><a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a></p>
+                    <a href="{{ line.product.get_absolute_url }}">{{ line.description }}</a>
 {#                    {% iffeature "reviews" %}#}
 {#                        <a class="btn" href="{% url 'catalogue:reviews-add' line.product.slug line.product.id %}">{% trans 'Write a review' %}</a>#}
 {#                    {% endiffeature %}#}
