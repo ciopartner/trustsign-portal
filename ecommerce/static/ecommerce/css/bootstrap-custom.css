@@ -22,3 +22,7 @@
 .form-horizontal .control-group{
     margin-bottom: 10px !important;
 }
+
+.table-vcenter td {
+   vertical-align: middle!important;
+}
