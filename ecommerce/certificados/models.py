@@ -43,7 +43,7 @@ class Voucher(Model):
     PRODUTO_SSL_MDC_DOMINIO = 'ssl-mdc-domain'
     PRODUTO_SSL_EV_MDC_DOMINIO = 'ssl-ev-mdc-domain'
     PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
-    PRODUTO_SSL_WILDCARD_SERVIDOR = 'ssl-wildcard-servidor'
+    PRODUTO_SSL_WILDCARD_SERVER = 'ssl-wildcard-servidor'
 
     # Assinaturas
     PRODUTO_PKI = 'pki'
@@ -63,13 +63,13 @@ class Voucher(Model):
         (PRODUTO_SSL_MDC_DOMINIO, 'MDC Domínio Adicional'),
         (PRODUTO_SSL_EV_MDC_DOMINIO, 'EV MDC Domínio Adicional'),
         (PRODUTO_SSL_SAN_FQDN, 'SAN FQDN Adicional'),
-        (PRODUTO_SSL_WILDCARD_SERVIDOR, 'Wildcard Servidor Adicional')
+        (PRODUTO_SSL_WILDCARD_SERVER, 'Wildcard Servidor Adicional')
     )
 
     PRODUTO_CERTIFICADOS = [PRODUTO_SSL, PRODUTO_EV, PRODUTO_SSL_WILDCARD, PRODUTO_JRE, PRODUTO_CODE_SIGNING,
                             PRODUTO_SMIME, PRODUTO_SAN_UCC, PRODUTO_MDC, PRODUTO_EV_MDC]
     PRODUTO_ADICIONAIS   = [PRODUTO_SSL_SAN_FQDN, PRODUTO_SSL_MDC_DOMINIO, PRODUTO_SSL_EV_MDC_DOMINIO,
-                            PRODUTO_SSL_WILDCARD_SERVIDOR]
+                            PRODUTO_SSL_WILDCARD_SERVER]
     PRODUTO_ASSINATURAS = [PRODUTO_PKI, PRODUTO_SITE_MONITORADO, PRODUTO_SITE_SEGURO]
 
     LINHA_DEGUSTACAO = 'trial'
@@ -275,6 +275,30 @@ class Voucher(Model):
 <img name="trustseal" alt="Site Autêntico" src="%s/static/" border="0" title="Clique para Validar" />
 </a>''' % (url_validacao, url_imagem_selo)
 
+    @property
+    def is_complemento_certificado(self):
+        """
+        Retorna verdadeiro se for um FQDN, Domínio ou Servidor Adicional, checando contra as categorias do produto
+        """
+        # TODO: Quando o order_item estiver indo e voltando do CRM, alterar a consulta para o
+        # voucher.emissao.order_item.product.categories in ....
+        return self.ssl_product in self.PRODUTO_ADICIONAIS
+
+    @property
+    def is_complemento_utilizado(self):
+        """
+        Retorna True se for um domínio, fqdn ou servidor adicional e já tiver sido utilizado.
+        """
+        return self.is_complemento_certificado and hasattr(self, 'emissao') and \
+               self.emissao.emission_status != self.STATUS_NAO_EMITIDO
+
+    @property
+    def is_complemento_disponivel(self):
+        """
+        Retorna True se for um domínio, fqdn ou servidor adicional e não tiver sido utilizado.
+        """
+        return self.is_complemento_certificado and not hasattr(self, 'emissao')
+
 
 class DominioValidator(RegexValidator):
     regex = r'^(\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
@@ -464,29 +488,6 @@ class Emissao(Model):
             self.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
 
         self.emission_approver = user
-
-    @property
-    def is_complemento_certificado(self):
-        """
-        Retorna verdadeiro se for um FQDN, Domínio ou Servidor Adicional, checando contra as categorias do produto
-        """
-        # TODO: Quando o order_item estiver indo e voltando do CRM, alterar a consulta para o
-        # voucher.emissao.order_item.product.categories in ....
-        return self.voucher.ssl_product == self.voucher.PRODUTO_ADICIONAIS
-
-    @property
-    def is_complemento_utilizado(self):
-        """
-        Retorna True se for um domínio, fqdn ou servidor adicional e já tiver sido utilizado.
-        """
-        return self.is_complemento_certificado and self.emission_status != self.STATUS_NAO_EMITIDO
-
-    @property
-    def is_complemento_disponivel(self):
-        """
-        Retorna True se for um domínio, fqdn ou servidor adicional e não tiver sido utilizado.
-        """
-        return self.is_complemento_certificado and self.emission_status == self.STATUS_NAO_EMITIDO
 
 
 class Revogacao(Model):
