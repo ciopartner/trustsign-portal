@@ -47,7 +47,6 @@ class Akatus(object):
         else:
             log.error('URLs do Akatus.METHODS configurado errado')
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
-        import ipdb; ipdb.set_trace()
 
         resposta = response.text.encode('utf-8')
         log.debug('\nDados do Response: {}'.format(resposta))
