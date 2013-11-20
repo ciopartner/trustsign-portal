@@ -1,52 +1,41 @@
 {% extends "customer/emails/base.html" %}
 {% load staticfiles currency_filters i18n %}
 
-{% block title %}PAGAMENTO APROVADO!{% endblock %}
+{% block title %}
+    {% if order.is_order_paid %}
+        PAGAMENTO APROVADO!
+    {% else %}
+        PEDIDO REALIZADO COM SUCESSO!
+    {% endif %}
+{% endblock %}
 
 {% block body %}
     <p><font face="Tahoma">Olá,</font></p>
 
-
-
-
-
-
-    {% if order.status == 'Pago' %}
-        {% if order.vouchers.emitidos|length == 0 %}
-
+    {% if order.is_order_paid %}
+        {% if not order.is_voucher_partially_issued and not order.is_voucher_issued %}
             {# Mensagem para pagamento OK #}
-
             <p><font face="Tahoma">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
-
             <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_ok.png' %}" alt="" align="center" />
-
-
         {% else %}
-            {% if order.vouchers.emitidos|length == order.vouchers.all.count %}
-
+            {% if order.is_voucher_issued %}
                 {# Mensagem para todos os voucher emitidos #}
-
                 <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_emitido.png' %}" alt="" align="center" />
             {% else %}
-
                 {# Mensagem para vouchers pendentes #}
                 <p><font face="Tahoma">Você já pode emitir seus certificados!</font></p>
                 <p><font face="Tahoma">Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</font></p>
                 <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_pendente.png' %}" alt="" align="center" />
             {% endif %}
-
         {% endif %}
     {% else %}
-
         {# Mensagem para Pagamento Pendente #}
         <p><font face="Tahoma">
             Você acabou de confirmar sua compra!<br/>
             Para acompanhá-la vá em Histórico de Pedidos, localizado em Minha Conta. <br/>
             O número do seu pedido é: <span style="color: #076644;">{{ order.number }}</span></font>
         </p>
-
         <p><font face="Tahoma">Assim que o seu pagamento for confirmado pela instituição financeira, você receberá um email e estará apto para ativar seus serviços ou iniciar o processo de emissão do certificado.</font></p>
-
         <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_pendente.png' %}" alt="" align="center" />
     {% endif %}
 
