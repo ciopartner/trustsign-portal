@@ -11,7 +11,7 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
     """
     Envia para a comodo as emissões com status aguardando envio comodo.
     """
-    RUN_EVERY_MINS = 5
+    RUN_EVERY_MINS = 1
 
     code = 'ecommerce.envia_orders_crm'
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
