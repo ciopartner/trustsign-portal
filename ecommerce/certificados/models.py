@@ -299,6 +299,36 @@ class Voucher(Model):
         """
         return self.is_complemento_certificado and not hasattr(self, 'emissao')
 
+    @property
+    def is_status_available(self):
+        """
+        Retorna True se o status é de voucher disponível para emissão
+        """
+        return not hasattr(self, 'emissao')
+
+    @property
+    def is_status_ongoing(self):
+        """
+        Retorna True se o status é de emissão em andamento
+        """
+        STATUS_ONGOING = [Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE, Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
+                          Emissao.STATUS_EMISSAO_ENVIADO_COMODO, Emissao.STATUS_REEMISSAO_ENVIADO_COMODO,
+                          Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
+                          Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE, Emissao.STATUS_REVOGACAO_ENVIADO_COMODO,
+                          Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
+                          ]
+        return hasattr(self, 'emissao') and self.emissao.emission_status in STATUS_ONGOING
+
+    @property
+    def is_status_done(self):
+        """
+        Retorna True se o status é de emissão terminada
+        """
+        STATUS_DONE = [Emissao.STATUS_EMITIDO, Emissao.STATUS_EMITIDO_SELO_PENDENTE, Emissao.STATUS_REEMITIDO,
+                       Emissao.STATUS_REVOGADO, Emissao.STATUS_REVOGADO_SELO_PENDENTE,
+                       Emissao.STATUS_ADICIONAL_USADO]
+        return hasattr(self, 'emissao') and self.emissao.emission_status in STATUS_DONE
+
 
 class DominioValidator(RegexValidator):
     regex = r'^(\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
