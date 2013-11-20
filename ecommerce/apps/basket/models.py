@@ -77,7 +77,8 @@ class Basket(AbstractBasket):
         Retorna verdadeiro se o carrinho possui alguma linha com produto do tipo assinatura, ou seja,
         PKI, Site+Seguro, Site Monitorado
         """
-        return any(line.product.categories.all()[0].slug == 'assinatura-servicos'
+        #import ipdb; ipdb.set_trace()
+        return any(line.product.categories.all()[0].slug == self.CATEGORIA_ASSINATURA
                    for line in self.all_lines())
 
     def tem_certificado(self):
@@ -85,7 +86,7 @@ class Basket(AbstractBasket):
         Retorna verdadeiro se o carrinho possui alguma linha com produto do tipo certificado, ou seja,
         qualquer SSL ou fqdn, dominio ou servidor adicional
         """
-        return any(line.product.categories.all()[0].slug in ['certificados-digitais', 'complemento-de-certificados']
+        return any(line.product.categories.all()[0].slug in [self.CATEGORIA_CERTIFICADO, self.CATEGORIA_COMPLEMENTO]
                    for line in self.all_lines())
 
     def tem_contrato_ssl(self):
