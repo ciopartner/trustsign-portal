@@ -259,6 +259,19 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
 
         lines_assinaturas = self.request.basket.get_lines_assinaturas()
         lines_certificados = self.request.basket.get_lines_certificados()
+
+        # Assegurar que o valor das assinatoras + valor dos certificados = valor do carrinho
+        #import ipdb; ipdb.set_trace()
+        amount_carrinho = self.request.basket.total_incl_tax
+        amount_assinaturas = 0
+        for line in lines_assinaturas:
+            amount_assinaturas += line.line_price_incl_tax
+        amount_certificados = 0
+        for line in lines_certificados:
+            amount_certificados += line.line_price_incl_tax
+        if amount_carrinho != amount_certificados + amount_assinaturas:
+            raise UnableToTakePayment('Valor do carrinho diferente da soma das assinaturas e certificados')
+
         for lines in (lines_assinaturas, lines_certificados):
             if lines:
                 try:
