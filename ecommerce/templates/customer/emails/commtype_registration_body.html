@@ -1,6 +1,6 @@
 {% extends "customer/emails/base.html" %}
 
-{% block title %}BEM-VINDO A TRUSTSIGN{% endblock %}
+{% block title %}BEM-VINDO A TRUSTSIGN!{% endblock %}
 
 {% block body %}
         <div style="text-align: center; margin-top: 40px;">
@@ -8,7 +8,7 @@
                 <font face="Tahoma">{{user.first_name}} {{user.last_name}}</font>
             </strong><font face="Tahoma">, Obrigado por se cadastrar na TrustSign.</font>
 
-            <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 200%">
+            <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
                 <font face="Tahoma">Dados cadastrais:</font>
             </h2>
             <font face="Tahoma">CNPJ: {{ user.get_profile.get_cnpj_formatado }}<br/>
@@ -22,11 +22,13 @@
 
 		<table cellpadding="0" cellspacing="0" border="0" align="center">
 			<tr>
-				<td width="200" align="center" bgcolor="#f0f0f0" style="padding: 20px; color: #666; font-size: 14px; font-weight: bold;">
-					<a href="https://{{ site.domain }}/ecommerce/accounts/orders/" style="text-decoration: none; color: #606060"><font face="Tahoma">Compras</font></a>
+				<td width="200" align="center" bgcolor="#f0f0f0" style="padding: 20px; color: #666; font-size: 12px;">
+					<a href="https://{{ site.domain }}/ecommerce/accounts/orders/" style="text-decoration: none; color: #606060; font-size: 14px; font-weight: bold;"><font face="Tahoma">Compras</font></a><br/>
+                    <p><font face="Tahoma">Acesse o histórico de suas compras</font></p>
 				</td>
-				<td width="200" align="center" bgcolor="#f7f7f7" style="padding: 20px; color: #666; font-size: 14px; font-weight: bold;">
-					<a href="https://{{ site.domain }}/ecommerce/accounts/profile/" style="text-decoration: none; color: #606060"><font face="Tahoma">Editar Cadastro</font></a>
+				<td width="200" align="center" bgcolor="#f7f7f7" style="padding: 20px; color: #666; font-size: 12px;">
+					<a href="https://{{ site.domain }}/ecommerce/accounts/profile/" style="text-decoration: none; color: #606060; font-size: 14px; font-weight: bold;"><font face="Tahoma">Editar Cadastro</font></a>
+                    <p><font face="Tahoma">Mantenha seu cadastro sempre atualizado</font></p>
 				</td>
 			</tr>
 		</table>
@@ -49,10 +51,10 @@
 				</td>
 			</tr>
 			<tr>	 -->
-				<td valign="top" bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
-					<a href="https://{{ site.domain }}/portal/suporte-trustsign/manuais/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;"><font face="Tahoma">Manuais</font></a>
-					<p><font face="Tahoma"> Diversos documentos segmentados por solução, para auxílio às principais dúvidas. </font></p>
-				</td>
+{#				<td valign="top" bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">#}
+{#					<a href="https://{{ site.domain }}/portal/suporte-trustsign/manuais/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;"><font face="Tahoma">Manuais</font></a>#}
+{#					<p><font face="Tahoma"> Diversos documentos segmentados por solução, para auxílio às principais dúvidas. </font></p>#}
+{#				</td>#}
 				<!-- <td bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
 					<a href="https://{{ site.domain }}/portal/suporte-trustsign/glossario/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;">Glossário</a>
 					<p> Entenda os termos técnicos mais importantes sobre segurança na internet. </p>
