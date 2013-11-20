@@ -16,12 +16,16 @@
             </tr>
 
                 {% for voucher in vouchers %}
-                    <tr data-product-code="{{ voucher.ssl_product }}" data-status="{{ voucher.emissao.emission_status }}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
+                    <tr data-product-code="{{ voucher.ssl_product }}" data-status="{% if voucher.emissao.is_complemento_disponivel %}disponivel{% else %}utilizado{% endif %}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
                         <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
                         <td class="saldo">1</td>
-                        <td>{{ voucher.order_number }}</td>
+                        <td>
+                            {% if not voucher.emissao.is_complemento_certificado %}
+                                {{ voucher.order_number }}
+                            {% endif %}
+                        </td>
                         <td>
 
                         {% with emissao=voucher.emissao %}
@@ -44,6 +48,10 @@
                                     </ul>
                                 </div>
 
+                            {% elif emissao.is_complemento_disponivel %}
+                                Disponível para uso
+                            {% elif emissao.is_complemento_utilizado %}
+                                Já utilizado
                             {% endif %}
 
                         {% endwith %}
