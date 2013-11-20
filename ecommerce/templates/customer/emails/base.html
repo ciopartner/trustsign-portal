@@ -16,8 +16,8 @@
 
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                             <tr>
-                                <td>
-                                    <img src="http://{{ site.domain }}/static-ecommerce/home/img/icons/mainlogo.png" alt="" width="200px" style="padding: 20px; padding-left: 0; margin-right: 20px; border-right: 1px solid #DDD; margin-bottom:20px;">
+                                <td width="240" style="padding: 20px; padding-left: 0; margin-right: 20px; border-right: 1px solid #DDD;">
+                                    <a href="https://www.trustsign.com.br"><img src="http://{{ site.domain }}/static-ecommerce/home/img/icons/mainlogo.png" alt="" width="200px" ></a>
                                 </td>
                                 <td align="center">
                                     <h1 style="color: #4c4c4c; text-align: center; margin-top: -5px; font-size: 18px;">
@@ -27,11 +27,13 @@
                             </tr>
                         </table>
 
+                        <br>
+
                         <div style="background: #4c4c4c;color: #FFF; font-weight: bold; text-align: center; margin-bottom: 20px">
                             <font face="Tahoma">
                                 <br/>
                                 Esse e-mail é automático. Não é necessário respondê-lo.
-                                <br/>
+                                <br/> &nbsp;
                             </font>
                         </div>
 
@@ -45,7 +47,9 @@
                             <li><font face="Tahoma">Contatos do Financeiro: financeiro@trustsign.com.br - (12) 3308-8420</font></li>
                             <li><font face="Tahoma">Contatos do Comercial: comercial@trustsign.com.br - (11) 3729-3945</font></li>
                             {% block informacoes %}
-                                <li><font face="Tahoma">Consulte suas compras acessando o link “<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Minhas Compras</a>”, após realizar seu login de acesso.</font></li>
+                                <li><font face="Tahoma">Consulte seus dados cadastrais no link "<a href="https://{{ site.domain }}/ecommerce/accounts/">Minha Conta</a>" que é disponibilizado após a autenticação no sistema por meio do link "Entrar".</font></li>
+                                <li><font face="Tahoma">Consulte seus pedidos acessando o link "<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Histórico de Pedidos</a>" na página "<a href="https://{{ site.domain }}/ecommerce/accounts/">Minha Conta</a>"</font></li>
+                                <li><font face="Tahoma">Solicite a emissão dos certificados adquiridos acessando o link "<a href="https://{{ site.domain }}/ecommerce/escolha-voucher/">Processo de Emissão</a>" na página "<a href="https://{{ site.domain }}/ecommerce/accounts/">Minha Conta</a>"</font></li>
                             {% endblock %}
                         </ul>
                     </div>
