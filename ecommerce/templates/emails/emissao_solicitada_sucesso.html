@@ -8,7 +8,7 @@
 
     {% if voucher.is_status_avaliable %}
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_liberada.png' %}" alt="" align="center" /></center>
-    {% elif voucher.is_status_on_going %}
+    {% elif voucher.is_status_ongoing %}
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_andamento.png' %}" alt="" align="center" /></center>
     {% elif voucher.is_status_done %}
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_liberada.png' %}" alt="" align="center" /></center>
