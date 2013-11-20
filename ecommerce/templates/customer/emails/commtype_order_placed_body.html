@@ -4,7 +4,7 @@
 {% block title %}PEDIDO REALIZADO COM SUCESSO!{% endblock %}
 
 {% block body %}
-    <p>Olá,</p>
+    <p><font face="Tahoma">Olá,</font></p>
 
 
 
@@ -16,7 +16,7 @@
 
             {# Mensagem para pagamento OK #}
 
-            <p>Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</p>
+            <p><font face="Tahoma">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
 
             <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_ok.png' %}" alt="" align="center" />
 
@@ -30,8 +30,8 @@
             {% else %}
 
                 {# Mensagem para vouchers pendentes #}
-                <p>Você já pode emitir seus certificados!</p>
-                <p>Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</p>
+                <p><font face="Tahoma">Você já pode emitir seus certificados!</font></p>
+                <p><font face="Tahoma">Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</font></p>
                 <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_pendente.png' %}" alt="" align="center" />
             {% endif %}
 
@@ -39,13 +39,13 @@
     {% else %}
 
         {# Mensagem para Pagamento Pendente #}
-        <p>
+        <p><font face="Tahoma">
             Você acabou de confirmar sua compra!<br/>
             Para acompanhá-la vá em Histórico de Pedidos, localizado em Minha Conta. <br/>
-            O número do seu pedido é: <span style="color: #076644;">{{ order.number }}</span>
+            O número do seu pedido é: <span style="color: #076644;">{{ order.number }}</span></font>
         </p>
 
-        <p>Assim que o seu pagamento for confirmado pela instituição financeira, você receberá um email e estará apto para ativar seus serviços ou iniciar o processo de emissão do certificado.</p>
+        <p><font face="Tahoma">Assim que o seu pagamento for confirmado pela instituição financeira, você receberá um email e estará apto para ativar seus serviços ou iniciar o processo de emissão do certificado.</font></p>
 
         <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_pendente.png' %}" alt="" align="center" />
     {% endif %}
@@ -54,20 +54,20 @@
 
     <table style="width: 100%" cellspacing="0" cellpadding="0">
         <tr>
-            <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF">{% trans 'Product' %}</th>
-            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'Quantity' %}</th>
-            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF">{% trans 'Price' %}</th>
+            <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF"><font face="Tahoma">{% trans 'Product' %}</font></th>
+            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF"><font face="Tahoma">{% trans 'Quantity' %}</font></th>
+            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF"><font face="Tahoma">{% trans 'Price' %}</font></th>
         </tr>
         {% for line in order.lines.all %}
             <tr>
                 <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd">
-                    {{ line.title }}
+                    <font face="Tahoma">{{ line.title }}</font>
                 </td>
                 <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd">
-                    {{ line.quantity }}
+                    <font face="Tahoma">{{ line.quantity }}</font>
                 </td>
                 <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd">
-                    {{ line.line_price_incl_tax|currency:order.currency }}
+                    <font face="Tahoma">{{ line.line_price_incl_tax|currency:order.currency }}</font>
                 </td>
             </tr>
         {% endfor %}
