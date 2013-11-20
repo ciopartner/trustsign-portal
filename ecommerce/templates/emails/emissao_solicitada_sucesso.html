@@ -3,8 +3,8 @@
 {% block title %}Emissão Solicitada com Sucesso{% endblock %}
 
 {% block body %}
-<p>Olá, você acabou de solicitar a emissão do certificado tipo {{ voucher.get_ssl_product_display }}, linha {{ voucher.get_ssl_line_display }} com vigência de {{ voucher.get_ssl_term_display }}.</p>
-<p>Durante todo o processo de emissão cada vez que o status for alterado você receberá um novo e-mail avisando isso.</p>
+<p><font face="Tahoma">Olá, você acabou de solicitar a emissão do certificado tipo {{ voucher.get_ssl_product_display }}, linha {{ voucher.get_ssl_line_display }} com vigência de {{ voucher.get_ssl_term_display }}.</font></p>
+<p><font face="Tahoma">Durante todo o processo de emissão cada vez que o status for alterado você será avisado por meio de um novo e-mail.</font></p>
 {% endblock %}
 
 {% block informacoes %}
