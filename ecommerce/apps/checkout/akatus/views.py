@@ -440,6 +440,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
         log.info('Order #{} com transaction_id {} alterou o status para {}'.format(order_number, transacao_id, status))
 
         # Implementação de um timer que previne a Akatus atualizar o status antes de terminar de criar o objeto Order:
+        order = None
         for n in range(1, 10):
             try:
                 order = Order.objects.get(number=order_number) if order_number else None
@@ -448,6 +449,10 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
                 sleep(n)
                 continue
             break
+        if not order:
+            log.error('Order #{} não foi atualizada para {} por não existir ainda no sistema'.format(order_number,
+                                                                                                     status))
+            return self.get(request, *args, **kwargs)
 
         if status == 'Aprovado':
             try:
