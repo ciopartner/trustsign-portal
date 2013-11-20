@@ -42,7 +42,7 @@
         <div class="span3" style="margin-left: 1px; width: 201px;">
             <div class="basket-title hidden-phone">
                 <div class="row-fluid">
-                    {% if total_certificados or basket.has_trial %}
+                    {% if basket.tem_certificado %}
                         <h4 class="span12 align-center">TOTAL PARA CERTIFICADOS</h4>
                     {% else %}
                         <h4 class="span12 align-center">TOTAL PARA ASSINATURAS</h4>
@@ -50,10 +50,10 @@
                 </div>
             </div>
             <div id="total" class="{% if not total_assinaturas or not total_certificados %}unique_line{% endif %}">
-                {% if total_certificados or basket.has_trial %}
+                {% if basket.tem_certificado %}
                     <h3 style="margin-top: -10px; text-align: center;">{{ total_certificados|currency }}</h3>
 
-                    {% if total_assinaturas %}
+                    {% if basket.tem_assinatura %}
                         <h4 class="basket-title" style="text-align: center; color: rgb(255, 255, 255); padding: 6px; font-size: 110%;">TOTAL PARA ASSINATURAS</h4>
                         <h3 style="margin-top: -10px; text-align: center; ">{{ total_assinaturas|currency }} / mês</h3>
                     {% endif %}
