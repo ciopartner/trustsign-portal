@@ -13,12 +13,12 @@
     <p><font face="Tahoma">Olá,</font></p>
 
     {% if order.is_order_paid %}
-        {% if not order.partially_issued and not order.issued %}
+        {% if not order.is_voucher_partially_issued and not order.is_voucher_issued %}
             {# Mensagem para pagamento OK #}
             <p><font face="Tahoma">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
             <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_ok.png' %}" alt="" align="center" />
         {% else %}
-            {% if order.issued %}
+            {% if order.is_voucher_issued %}
                 {# Mensagem para todos os voucher emitidos #}
                 <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_emitido.png' %}" alt="" align="center" />
             {% else %}
