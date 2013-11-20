@@ -5,13 +5,13 @@
     <div class="fix-row-margin escolha-voucher">
         <h2>Escolha o produto disponível e a ação desejada</h2>
         {% if vouchers %}
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped table-vcenter">
             <tr>
                 <th class="large">Produto</th>
                 <th>Linha</th>
                 <th>Validade</th>
                 <th>Saldo</th>
-                <th>Expira em</th>
+                <th>Pedido</th>
                 <th>Status / Ação</th>
             </tr>
 
@@ -20,8 +20,8 @@
                         <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
-                        <td class="saldo">1 {# TODO: como calcular saldo voucher? #}</td>
-                        <td>{{ voucher.ssl_valid_to|date:"d/m/Y" }}</td>
+                        <td class="saldo">1</td>
+                        <td>{{ voucher.order_number }}</td>
                         <td>
 
                         {% with emissao=voucher.emissao %}

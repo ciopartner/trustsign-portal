@@ -44,7 +44,9 @@
                             <li><font face="Tahoma">Contatos do suporte: suporte@trustsign.com.br - (12) 3308-8420</font></li>
                             <li><font face="Tahoma">Contatos do Financeiro: financeiro@trustsign.com.br - (12) 3308-8420</font></li>
                             <li><font face="Tahoma">Contatos do Comercial: comercial@trustsign.com.br - (11) 3729-3945</font></li>
-                            <li><font face="Tahoma">Consulte suas compras acessando o link “<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Minhas Compras</a>”, após realizar seu login de acesso.</font></li>
+                            {% block informacoes %}
+                                <li><font face="Tahoma">Consulte suas compras acessando o link “<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Minhas Compras</a>”, após realizar seu login de acesso.</font></li>
+                            {% endblock %}
                         </ul>
                     </div>
                 </font>

@@ -13,20 +13,21 @@
 */
 .emissao input[type=text],
 .emissao textarea{
-    width: 270px;
+    width: 235px;
 }
 
 .emissao select, .emissao input[type=file]{
-    width: 284px;
+    width: 249px;
 }
 
 .emissao .nome input[type=text] {
-    width: 126px;
+    width: 109px;
 }
 
 .emissao th{
     padding: 10px;
     text-align: right;
+    width: 120px;
 }
 
 .fqdn-table{
