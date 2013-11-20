@@ -56,8 +56,9 @@
 }
 
 #total.unique_line{
-    min-height: 41px;
-    padding-bottom: 0;
+    min-height: 37px;
+    padding-bottom: 0 !important;
+    padding-top: 14px;
 }
 
 #total h4{

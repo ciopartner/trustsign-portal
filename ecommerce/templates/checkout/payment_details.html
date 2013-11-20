@@ -49,25 +49,23 @@
                     {% endif %}
                 </div>
             </div>
-            <div id="total" class="{% if not total_assinaturas or not total_certificados %}unique_line{% endif %}">
+            <div id="total" style="padding-bottom: 16px;" class="{% if not total_assinaturas or not total_certificados %}unique_line{% endif %}">
                 {% if basket.tem_certificado %}
-                    <h3 style="margin-top: -10px; text-align: center;">{{ total_certificados|currency }}</h3>
 
                     {% if basket.tem_assinatura %}
-                        <h4 class="basket-title" style="text-align: center; color: rgb(255, 255, 255); padding: 6px; font-size: 110%;">TOTAL PARA ASSINATURAS</h4>
-                        <h3 style="margin-top: -10px; text-align: center; ">{{ total_assinaturas|currency }} / mês</h3>
+
+                        <h3 style="margin-top: 5px; text-align: center; margin-bottom: 13px;">{{ total_certificados|currency }}</h3>
+
+                        <h4 class="basket-title" style="margin: 0px -20px 16px; text-align: center; color: #FFF; padding: 6px; font-size: 110%; border-top: 1px solid #FFF">TOTAL PARA ASSINATURAS</h4>
+                        <h3 style="margin: 0; text-align: center; ">{{ total_assinaturas|currency }} / mês</h3>
+                    {% else %}
+                        <h3 style="margin-top: 0px; text-align: center; margin-bottom: 13px;">{{ total_certificados|currency }}</h3>
                     {% endif %}
 
                 {% else %}
                     <h3 style="margin-top: 0px; text-align: center; ">{{ total_assinaturas|currency }} / mês</h3>
                 {% endif %}
 
-
-
-{#                <button class="btn btn-orange btn-block" onclick="$('#form-compra').submit()">Concluir</button>#}
-{#                <br><br><br>#}
-{#                <a href="{% url 'basket:summary' %}" class="pull-right tm10">Editar pedido</a>#}
-{#                <div class="clearfix"></div>#}
             </div>
         </div>
     </div>

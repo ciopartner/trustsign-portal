@@ -36,8 +36,8 @@
 
                         <div class="row-fluid">
                             {% if total_certificados %}
-                                <div class="span6">
-                                    <h2>Certificados</h2>
+                                <div class="span6" style="{% if total_assinaturas %}border-right: 1px solid #DDDDDD; padding-left: 10px;{% endif %}">
+                                    <h2>Total para Certificados</h2>
 
                                     <span class="" style="width: 120px; padding: 3px; padding-bottom: 0; display: inline-block">
                                         <strong style="padding-left: 20px">Parcela</strong>
@@ -67,8 +67,8 @@
                                 </div>
                             {% endif %}
                             {% if total_assinaturas %}
-                            <div class="span6" {% if total_certificados %}style="border-left: 1px solid rgb(221, 221, 221); padding-left: 10px;"{% endif %}>
-                                <h2>Assinaturas</h2>
+                            <div class="span6">
+                                <h2>Total para Assinaturas</h2>
                                 <label class="radio">
                                     <span class="" style="padding: 3px; padding-bottom: 0; display: inline-block">
                                         <input name="assinatura_parcela" value="1" type="radio" checked="checked" />
