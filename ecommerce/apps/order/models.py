@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from oscar.apps.order.abstract_models import AbstractLine, AbstractOrder
 from oscar.core.loading import get_class
 Selector = get_class('partner.strategy', 'Selector')
@@ -18,6 +20,39 @@ class Order(AbstractOrder):
                 ).get(pk=self.basket_id)
                 self._basket.strategy = selector.strategy()
         return self._basket
+
+    @property
+    def is_order_placed(self):
+        return True
+
+    @property
+    def is_order_paid(self):
+        STATUS_PAID = ['Pago', 'Em Processamento', 'Concluído']
+        return self.status in STATUS_PAID
+
+    def vouchers_stats(self):
+        vouchers = self.vouchers.all()
+        vouchers_issued = 0
+        vouchers_unused = 0
+        for voucher in vouchers:
+            if hasattr(voucher, 'emissao'):
+                vouchers_issued += 1
+            else:
+                vouchers_unused += 1
+        return {'vouchers_issued': vouchers_issued, 'voucher_unused': vouchers_unused}
+
+    @property
+    def is_vouchers_partially_issued(self):
+        """
+        Retorna verdadeiro se a ordem possui algum voucher emitido, porém não todos.
+        """
+        v_stats = self.vouchers_stats()
+        return (v_stats['vouchers_issued'] > 0 and v_stats['vouchers_unused'] > 0)
+
+    @property
+    def is_vouchers_issued(self):
+        v_stats = self.vouchers_stats()
+        return (v_stats['vouchers_issued'] > 0 and v_stats['vouchers_unused'] == 0)
 
 
 class Line(AbstractLine):
