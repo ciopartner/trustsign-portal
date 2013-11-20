@@ -246,24 +246,19 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
         # not valid / request refused by bank) then an exception would be
         # raised and handled by the parent PaymentDetail view)
         facade = akatus.Facade()
-
-        lines_assinaturas = self.request.basket.get_lines_assinaturas()
-        lines_certificados = self.request.basket.get_lines_certificados()
-
         source_type, _ = SourceType.objects.get_or_create(name='akatus-creditcard')
-
         parcelas = self.request.POST.get('certificado_parcela')
 
         bankcard.qtd_parcelas = parcelas
-
         bankcard_com_numero = copy(bankcard)
-
         bankcard.user = self.request.user
         bankcard.save()
 
         if not parcelas:
             raise UnableToTakePayment('Selecione a quantidade de parcelas no pagamento por cartão de crédito')
 
+        lines_assinaturas = self.request.basket.get_lines_assinaturas()
+        lines_certificados = self.request.basket.get_lines_certificados()
         for lines in (lines_assinaturas, lines_certificados):
             if lines:
                 try:
