@@ -28,8 +28,7 @@ class VoucherManager(Manager):
 
 
 class Voucher(Model):
-    PRODUTO_SITE_SEGURO = 'site-seguro'
-    PRODUTO_SITE_MONITORADO = 'site-monitorado'
+    # Certificados
     PRODUTO_SSL = 'ssl'
     PRODUTO_SSL_WILDCARD = 'ssl-wildcard'
     PRODUTO_SAN_UCC = 'ssl-san'
@@ -39,10 +38,18 @@ class Voucher(Model):
     PRODUTO_JRE = 'ssl-jre'
     PRODUTO_CODE_SIGNING = 'ssl-cs'
     PRODUTO_SMIME = 'ssl-smime'
+
+    # Domínios, FQDNs e Servidores Adicionais
     PRODUTO_SSL_MDC_DOMINIO = 'ssl-mdc-domain'
     PRODUTO_SSL_EV_MDC_DOMINIO = 'ssl-ev-mdc-domain'
     PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
+    PRODUTO_SSL_WILDCARD_SERVIDOR = 'ssl-wildcard-servidor'
+
+    # Assinaturas
     PRODUTO_PKI = 'pki'
+    PRODUTO_SITE_SEGURO = 'site-seguro'
+    PRODUTO_SITE_MONITORADO = 'site-monitorado'
+
     PRODUTO_CHOICES = (
         (PRODUTO_SSL, 'SSL'),
         (PRODUTO_SSL_WILDCARD, 'SSL Wildcard'),
@@ -56,7 +63,14 @@ class Voucher(Model):
         (PRODUTO_SSL_MDC_DOMINIO, 'MDC Domínio Adicional'),
         (PRODUTO_SSL_EV_MDC_DOMINIO, 'EV MDC Domínio Adicional'),
         (PRODUTO_SSL_SAN_FQDN, 'SAN FQDN Adicional'),
+        (PRODUTO_SSL_WILDCARD_SERVIDOR, 'Wildcard Servidor Adicional')
     )
+
+    PRODUTO_CERTIFICADOS = [PRODUTO_SSL, PRODUTO_EV, PRODUTO_SSL_WILDCARD, PRODUTO_JRE, PRODUTO_CODE_SIGNING,
+                            PRODUTO_SMIME, PRODUTO_SAN_UCC, PRODUTO_MDC, PRODUTO_EV_MDC]
+    PRODUTO_ADICIONAIS   = [PRODUTO_SSL_SAN_FQDN, PRODUTO_SSL_MDC_DOMINIO, PRODUTO_SSL_EV_MDC_DOMINIO,
+                            PRODUTO_SSL_WILDCARD_SERVIDOR]
+    PRODUTO_ASSINATURAS = [PRODUTO_PKI, PRODUTO_SITE_MONITORADO, PRODUTO_SITE_SEGURO]
 
     LINHA_DEGUSTACAO = 'trial'
     LINHA_BASIC = 'basic'
@@ -80,7 +94,7 @@ class Voucher(Model):
         (VALIDADE_ANUAL, '1 ano'),
         (VALIDADE_BIANUAL, '2 anos'),
         (VALIDADE_TRIANUAL, '3 anos'),
-        (VALIDADE_DEGUSTACAO, 'Trial'),
+        (VALIDADE_DEGUSTACAO, '30 dias'),
         (VALIDADE_ASSINATURA_MENSAL, 'Assinatura Mensal'),
         (VALIDADE_ASSINATURA_SEMESTRAL, 'Assinatura Semestral'),
         (VALIDADE_ASSINATURA_ANUAL, 'Assinatura Anual'),
@@ -133,6 +147,8 @@ class Voucher(Model):
     ssl_password = CharField(max_length=128, blank=True, null=True)
 
     order = ForeignKey(Order, related_name='vouchers', blank=True, null=True)
+    # TODO: Criar o campo order_item e incluí-lo na ida e volta do CRM
+
     order_date = DateTimeField()
     order_item_value = DecimalField(decimal_places=2, max_digits=9)
     order_channel = CharField(max_length=64, choices=ORDERCHANNEL_CHOICES)
@@ -448,6 +464,29 @@ class Emissao(Model):
             self.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
 
         self.emission_approver = user
+
+    @property
+    def is_complemento_certificado(self):
+        """
+        Retorna verdadeiro se for um FQDN, Domínio ou Servidor Adicional, checando contra as categorias do produto
+        """
+        # TODO: Quando o order_item estiver indo e voltando do CRM, alterar a consulta para o
+        # voucher.emissao.order_item.product.categories in ....
+        return self.voucher.ssl_product == self.voucher.PRODUTO_ADICIONAIS
+
+    @property
+    def is_complemento_utilizado(self):
+        """
+        Retorna True se for um domínio, fqdn ou servidor adicional e já tiver sido utilizado.
+        """
+        return self.is_complemento_certificado and self.emission_status != self.STATUS_NAO_EMITIDO
+
+    @property
+    def is_complemento_disponivel(self):
+        """
+        Retorna True se for um domínio, fqdn ou servidor adicional e não tiver sido utilizado.
+        """
+        return self.is_complemento_certificado and self.emission_status == self.STATUS_NAO_EMITIDO
 
 
 class Revogacao(Model):
