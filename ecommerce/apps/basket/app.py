@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from oscar.apps.basket import views
 from oscar.apps.basket.app import BasketApplication as CoreBasketApplication
 

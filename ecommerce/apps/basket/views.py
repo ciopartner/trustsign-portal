@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from oscar.apps.basket.views import *
 
 def get_messages(basket, offers_before, offers_after,
@@ -34,7 +35,7 @@ def get_messages(basket, offers_before, offers_after,
     # 'Checkout now' buttons.  We don't want to show these on the basket page.
     if SHOW_NEW_TOTAL:
         msg = render_to_string(
-            'basket/messages/new_total.html',
+            'basket/messages/total.html',
             {'basket': basket,
              'include_buttons': include_buttons})
         offer_messages.append((
