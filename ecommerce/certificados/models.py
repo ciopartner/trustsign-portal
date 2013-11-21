@@ -14,6 +14,7 @@ knu = None
 
 User = get_user_model()
 Order = get_class('order.models', 'Order')
+OrderLine = get_class('order.models', 'OrderLine')
 
 
 class VoucherManager(Manager):
@@ -68,8 +69,8 @@ class Voucher(Model):
 
     PRODUTO_CERTIFICADOS = [PRODUTO_SSL, PRODUTO_EV, PRODUTO_SSL_WILDCARD, PRODUTO_JRE, PRODUTO_CODE_SIGNING,
                             PRODUTO_SMIME, PRODUTO_SAN_UCC, PRODUTO_MDC, PRODUTO_EV_MDC]
-    PRODUTO_CERT_ITENS_ADICIONAIS   = [PRODUTO_SSL_SAN_FQDN, PRODUTO_SSL_MDC_DOMINIO, PRODUTO_SSL_EV_MDC_DOMINIO,
-                            PRODUTO_SSL_WILDCARD_SERVER]
+    PRODUTO_CERT_ITENS_ADICIONAIS = [PRODUTO_SSL_SAN_FQDN, PRODUTO_SSL_MDC_DOMINIO, PRODUTO_SSL_EV_MDC_DOMINIO,
+                                     PRODUTO_SSL_WILDCARD_SERVER]
     PRODUTO_ASSINATURAS = [PRODUTO_PKI, PRODUTO_SITE_MONITORADO, PRODUTO_SITE_SEGURO]
 
     LINHA_DEGUSTACAO = 'trial'
@@ -113,6 +114,7 @@ class Voucher(Model):
 
     customer_cnpj = CharField(max_length=32)
     customer_companyname = CharField(max_length=128)
+    customer_tradename = CharField(max_length=128, blank=True, default='')
     customer_zip = CharField(max_length=16)
     customer_address1 = CharField(max_length=128)
     customer_address2 = CharField(max_length=8, blank=True, default='')
@@ -140,14 +142,14 @@ class Voucher(Model):
     ssl_publickey = TextField(blank=True, null=True)
     ssl_revoked_date = DateTimeField(blank=True, null=True)
     ssl_domains_qty = IntegerField(blank=True, default=0)
-    # TODO: apagar o campo abaixo
-    ssl_seal_html = TextField(blank=True, default='')
+
     ssl_key_size = IntegerField(blank=True, null=True)
     ssl_username = CharField(max_length=32, blank=True, null=True)
     ssl_password = CharField(max_length=128, blank=True, null=True)
 
     order = ForeignKey(Order, related_name='vouchers', blank=True, null=True)
-    # TODO: Criar o campo order_item e incluí-lo na ida e volta do CRM
+    order_line = ForeignKey(OrderLine, related_name='vouchers', blank=True, null=True)
+    # TODO: Incluír o campo order_line na ida e volta do CRM
 
     order_date = DateTimeField()
     order_item_value = DecimalField(decimal_places=2, max_digits=9)
