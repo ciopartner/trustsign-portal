@@ -68,7 +68,7 @@ class Voucher(Model):
 
     PRODUTO_CERTIFICADOS = [PRODUTO_SSL, PRODUTO_EV, PRODUTO_SSL_WILDCARD, PRODUTO_JRE, PRODUTO_CODE_SIGNING,
                             PRODUTO_SMIME, PRODUTO_SAN_UCC, PRODUTO_MDC, PRODUTO_EV_MDC]
-    PRODUTO_ADICIONAIS   = [PRODUTO_SSL_SAN_FQDN, PRODUTO_SSL_MDC_DOMINIO, PRODUTO_SSL_EV_MDC_DOMINIO,
+    PRODUTO_CERT_ITENS_ADICIONAIS   = [PRODUTO_SSL_SAN_FQDN, PRODUTO_SSL_MDC_DOMINIO, PRODUTO_SSL_EV_MDC_DOMINIO,
                             PRODUTO_SSL_WILDCARD_SERVER]
     PRODUTO_ASSINATURAS = [PRODUTO_PKI, PRODUTO_SITE_MONITORADO, PRODUTO_SITE_SEGURO]
 
@@ -282,7 +282,7 @@ class Voucher(Model):
         """
         # TODO: Quando o order_item estiver indo e voltando do CRM, alterar a consulta para o
         # voucher.emissao.order_item.product.categories in ....
-        return self.ssl_product in self.PRODUTO_ADICIONAIS
+        return self.ssl_product in self.PRODUTO_CERT_ITENS_ADICIONAIS
 
     @property
     def is_complemento_utilizado(self):

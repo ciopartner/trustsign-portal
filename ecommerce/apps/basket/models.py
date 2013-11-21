@@ -13,14 +13,14 @@ class Basket(AbstractBasket):
 
     CATEGORIA_ASSINATURA = 'assinatura-de-servicos'
     CATEGORIA_CERTIFICADO = 'certificados-digitais'
-    CATEGORIA_COMPLEMENTO = 'complementos-de-certificados'
+    CATEGORIA_CERT_ITEM_ADICIONAL = 'certificados-itens-adicionais'
 
     def get_lines_assinaturas(self):
         """
         Retorna as linhas de assinaturas
         """
         return self._get_lines(category=[self.CATEGORIA_ASSINATURA],
-                               category_negative=[self.CATEGORIA_CERTIFICADO, self.CATEGORIA_COMPLEMENTO])
+                               category_negative=[self.CATEGORIA_CERTIFICADO, self.CATEGORIA_CERT_ITEM_ADICIONAL])
 
         # TODO: Deletar o código abaixo se o acima funcionar
         #if self._lines_assinaturas is None:
@@ -34,7 +34,7 @@ class Basket(AbstractBasket):
         """
         Retorna as linhas de certificados
         """
-        return self._get_lines(category=[self.CATEGORIA_CERTIFICADO, self.CATEGORIA_COMPLEMENTO],
+        return self._get_lines(category=[self.CATEGORIA_CERTIFICADO, self.CATEGORIA_CERT_ITEM_ADICIONAL],
                                category_negative=self.CATEGORIA_ASSINATURA)
 
         # TODO: Deletar o código abaixo se o acima funcionar
@@ -91,7 +91,7 @@ class Basket(AbstractBasket):
         Retorna verdadeiro se o carrinho possui alguma linha com produto do tipo certificado, ou seja,
         qualquer SSL ou fqdn, dominio ou servidor adicional
         """
-        return any(line.product.categories.all()[0].slug in [self.CATEGORIA_CERTIFICADO, self.CATEGORIA_COMPLEMENTO]
+        return any(line.product.categories.all()[0].slug in [self.CATEGORIA_CERTIFICADO, self.CATEGORIA_CERT_ITEM_ADICIONAL]
                    for line in self.all_lines())
 
     def tem_contrato_ssl(self):

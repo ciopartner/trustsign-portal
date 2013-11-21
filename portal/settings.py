@@ -211,6 +211,9 @@ INSTALLED_APPS = (
     'django_nose'
 )
 
+# Esta setting permite que todos os usuários com acesso ao blogpost possam ver os posts de todos os usuários
+OWNABLE_MODELS_ALL_EDITABLE = ['blog.blogpost']
+
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
 # only parameter and returns a dictionary to add to the context.
