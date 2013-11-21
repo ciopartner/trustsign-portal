@@ -3,7 +3,9 @@ from __future__ import unicode_literals
 from copy import copy
 import os
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.formtools.wizard.views import SessionWizardView
+from django.contrib.sites.models import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail, EmailMessage
@@ -20,7 +22,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from ecommerce.certificados import erros
-from ecommerce.website.utils import limpa_cnpj
+from ecommerce.website.utils import limpa_cnpj, send_template_email
 from libs import comodo
 from ecommerce.certificados.authentication import UserPasswordAuthentication
 from ecommerce.certificados.forms import RevogacaoForm, ReemissaoForm
@@ -32,6 +34,7 @@ from django.conf import settings
 import logging
 from portal.suporte.utils import decode_csr
 
+User = get_user_model()
 Order = get_class('order.models', 'Order')
 log = logging.getLogger('ecommerce.certificados.view')
 
@@ -343,6 +346,19 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
                 log.error('Não existe order o order_number informado.')
                 raise
 
+    def post_save(self, obj, created=False):
+        try:
+            user = User.objects.get(username=obj.customer_cnpj)
+            subject = 'Processo de Emissão Liberado'
+            template = 'emails/emissao_solicitada_sucesso.html'
+            context = {
+                'voucher': obj,
+                'site': get_current_site(self.request),
+            }
+            send_template_email([user.email], subject, template, context)
+        except User.DoesNotExist:
+            log.warning('Emissão liberada de um CNPJ sem usuário cadastrado: {}'.format(obj.customer_cnpj))
+
     def post(self, request, *args, **kwargs):
         if settings.DEBUG:
             log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
@@ -617,16 +633,19 @@ class EmissaoWizardView(SessionWizardView):
             self.envia_email_usuario()
         return HttpResponseRedirect(reverse(self.done_redirect_url))
 
-    def envia_email_usuario(self,):
+    def envia_email_usuario(self):
         voucher = self.get_voucher()
-        html_content = get_template('emails/emissao_solicitada_sucesso.html')
-        email_cliente = voucher.emissao.emission_publickey_sendto
-        context = Context({
-            'voucher': voucher,  # TODO: ver com o Carlos o que vai ser necessário passar pro template
-        })
-        msg = EmailMessage('Emissão iniciada com sucesso', html_content.render(context), to=[email_cliente])
-        msg.content_subtype = "html"  # Main content is now text/html
-        msg.send()
+        try:
+            user = User.objects.get(username=voucher.customer_cnpj)
+            subject = 'Emissão iniciada com sucesso'
+            template = 'emails/emissao_solicitada_sucesso.html'
+            context = {
+                'voucher': voucher,
+                'site': get_current_site(self.request),
+            }
+            send_template_email([user.email], subject, template, context)
+        except User.DoesNotExist:
+            log.warning('Emissão em processamento de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
 
     def get_form_initial(self, step):
         initial = super(EmissaoWizardView, self).get_form_initial(step)

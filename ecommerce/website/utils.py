@@ -121,11 +121,17 @@ def etree_to_dict(t):
     return d
 
 
-def send_template_email(to, subject, template, context, from_email=None, bcc=None,
-                        connection=None, attachments=None, headers=None, cc=None):
+def get_template_email(to, subject, template, context, from_email=None, bcc=None,
+                       connection=None, attachments=None, headers=None, cc=None):
     html_content = get_template(template)
     context = Context(context)
     msg = EmailMessage(subject, html_content.render(context), from_email=from_email,
                        to=to, bcc=bcc, connection=connection, attachments=attachments, headers=headers, cc=cc)
     msg.content_subtype = 'html'
+    return msg
+
+
+def send_template_email(to, subject, template, context, from_email=None, bcc=None,
+                        connection=None, attachments=None, headers=None, cc=None):
+    msg = get_template_email(to, subject, template, context, from_email, bcc, connection, attachments, headers, cc)
     msg.send()

@@ -7,12 +7,15 @@ import os
 import re
 from django.conf import settings
 from logging import getLogger
+from django.contrib.auth import get_user_model
+from django.contrib.sites.models import get_current_site
 from django.core.mail import send_mail, EmailMessage
 from django.template.context import Context
 from django.template.loader import get_template
 from django_cron import CronJobBase, Schedule
 import requests
 from django.utils.timezone import now
+from ecommerce.website.utils import send_template_email, get_template_email
 from libs.crm.crm import CRMClient
 
 log = getLogger('portal.certificados.crons')
@@ -121,42 +124,63 @@ class CheckEmailJob(CronJobBase):
                     if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
                         continue
 
-                    filename = part.get_filename()
-
-                    if not filename:
-                        filename = 'part-%03d%s' % (counter, '.bin')
-                        counter += 1
-
-                    n = now()
-                    ano = str(n.year)
-                    mes = str(n.month)
-                    directory = os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, ano, mes)
-
-                    if not os.path.exists(directory):
-                        os.makedirs(directory)
-
-                    timestamp = str(time()).replace('.', '')
-                    s = filename.split('.')
-                    filename = s[:-1]
-                    ext = s[-1]
-
-                    att_path = os.path.join(directory, '%s-%s.%s' % (filename, timestamp, ext))
-
-                    if not os.path.isfile(att_path):
-                        fp = open(att_path, 'wb')
-                        fp.write(part.get_payload(decode=True))
-                        fp.close()
-
-                    emissao.emission_mail_attachment_path = att_path
+                    emissao.emission_mail_attachment_path = self.extract_attachment(part, counter)
 
                 emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
 
                 emissao.save()
+                self.envia_email_usuario(emissao)
 
             except (IndexError, AttributeError):
                 log.error('Recebeu e-mail fora do padrão (#{})'.format(subject))
             except Emissao.DoesNotExist:
                 log.error('Recebeu e-mail com comodo order inexistente no banco (#{}) '.format(subject))
+
+    def extract_attachment(self, part, counter):
+        filename = part.get_filename()
+
+        if not filename:
+            filename = 'part-%03d%s' % (counter, '.bin')
+            counter += 1
+
+        n = now()
+        ano = str(n.year)
+        mes = str(n.month)
+        directory = os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, ano, mes)
+
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        timestamp = str(time()).replace('.', '')
+        s = filename.split('.')
+        filename = s[:-1]
+        ext = s[-1]
+
+        att_path = os.path.join(directory, '%s-%s.%s' % (filename, timestamp, ext))
+
+        if not os.path.isfile(att_path):
+            fp = open(att_path, 'wb')
+            fp.write(part.get_payload(decode=True))
+            fp.close()
+
+        return att_path
+
+    def envia_email_usuario(self, emissao):
+        User = get_user_model()
+        voucher = emissao.voucher
+        try:
+            user = User.objects.get(username=voucher.customer_cnpj)
+            subject = 'Emissão Concluída'
+            template = 'emails/emissao_solicitada_sucesso.html'
+            context = {
+                'voucher': voucher,
+                'site': get_current_site(None),
+            }
+            msg = get_template_email([user.email], subject, template, context)
+            msg.attach_file(emissao.emission_mail_attachment_path)
+            msg.send()
+        except User.DoesNotExist:
+            log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
 
 
 def chunks(l, n):
