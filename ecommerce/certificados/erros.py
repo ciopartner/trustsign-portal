@@ -93,7 +93,7 @@ ERROS = {
     ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS: 'Erro na CSR: para este produto o tamanho da chave obrigatoriamente deve ser 4096 bits',
     ERRO_EMAIL_CONTATO_DOMINIO_DIFERENTE: 'O e-mail de contato obrigatoriamente precisa pertencer ao domínio do certificado a ser emitido (ou de um dos domínios no caso de certificado para múltiplos domínios)',
     ERRO_SITUACAO_CADASTRAL_INATIVA: 'A situação cadastral da empresa cliente não está ativa na Receita Federal do Brasil. Favor entrar em contato com o suporte.',
-    ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que o campo ORGANIZATION da CSR seja idêntico ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
+    ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ: 'O campo ORGANIZATION da CSR deve ser igual a Razão Social do Cartão CNPJ.',
     ERRO_CSR_ENDERECO_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que os campos de endereço da CSR sejam idênticos ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
     ERRO_DOMINIO_SEM_EMAIL_VALIDACAO: 'Para cada domínio existente na CSR é necessário o preenchimento de um e-mail de validação',
     ERRO_CAMPO_EMAIL_ENVIO_CERT_OBRIGATORIO: 'É obrigatório informar um e-mail para envio da chave pública',
