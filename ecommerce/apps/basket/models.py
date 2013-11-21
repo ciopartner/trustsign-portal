@@ -13,20 +13,13 @@ class Basket(AbstractBasket):
 
     CATEGORIA_ASSINATURA = 'assinatura-de-servicos'
     CATEGORIA_CERTIFICADO = 'certificados-digitais'
-    CATEGORIA_CERT_ITEM_ADICIONAL = 'certificados-itens-adicionais'
+    CATEGORIA_COMPLEMENTO = 'complementos-de-certificados'
 
     def get_lines_assinaturas(self):
-        """
-        Retorna as linhas de assinaturas
-        """
-        return self._get_lines(category=[self.CATEGORIA_ASSINATURA],
-                               category_negative=[self.CATEGORIA_CERTIFICADO, self.CATEGORIA_CERT_ITEM_ADICIONAL])
-
-        # TODO: Deletar o código abaixo se o acima funcionar
-        #if self._lines_assinaturas is None:
-        #    self._lines_assinaturas = [line
-        #                               for line in self.all_lines()
-        #                               if line.product.categories.filter(slug=self.CATEGORIA_ASSINATURA).exists()]
+        if self._lines_assinaturas is None:
+            self._lines_assinaturas = [line
+                                       for line in self.all_lines()
+                                       if line.product.categories.filter(slug=self.CATEGORIA_ASSINATURA).exists()]
 
         return self._lines_assinaturas
 
@@ -34,7 +27,7 @@ class Basket(AbstractBasket):
         """
         Retorna as linhas de certificados
         """
-        return self._get_lines(category=[self.CATEGORIA_CERTIFICADO, self.CATEGORIA_CERT_ITEM_ADICIONAL],
+        return self._get_lines(category=[self.CATEGORIA_CERTIFICADO, self.CATEGORIA_COMPLEMENTO],
                                category_negative=self.CATEGORIA_ASSINATURA)
 
         # TODO: Deletar o código abaixo se o acima funcionar
@@ -54,13 +47,15 @@ class Basket(AbstractBasket):
 
         # Por questões de segurança na soma das linhas e evitar cobrança errada, deve-se verificar os itens abaixo:
         if check_unique_category:
+            pass
             for line in self.all_lines():
-                # Se uma linha possuir mais de uma categoria e forem incompatíveis
-                if line.product.categories.filter(slug__in=category).filter(slug__in=category_negative):
-                    raise Exception('Produto {} possui categorias incompativeis', line.product)
+                pass
+                #if line.product.
+            # TODO: Se uma linha não possuir nenhuma das categorias acima, raise exception
+            # TODO: Se uma linha possuir a categoria ASSINATURA e (CERTIFICADO | COMPLEMENTO), raise exception
 
         lines = [line for line in self.all_lines()
-                 if line.product.categories.filter(slug__in=category).exclude(slug__in=category_negative).exists()]
+                 if line.product.categories.filter(slug__in=category, slug__not__in=category_negative).exists()]
 
         return lines
 
@@ -91,7 +86,7 @@ class Basket(AbstractBasket):
         Retorna verdadeiro se o carrinho possui alguma linha com produto do tipo certificado, ou seja,
         qualquer SSL ou fqdn, dominio ou servidor adicional
         """
-        return any(line.product.categories.all()[0].slug in [self.CATEGORIA_CERTIFICADO, self.CATEGORIA_CERT_ITEM_ADICIONAL]
+        return any(line.product.categories.all()[0].slug in [self.CATEGORIA_CERTIFICADO, self.CATEGORIA_COMPLEMENTO]
                    for line in self.all_lines())
 
     def tem_contrato_ssl(self):
