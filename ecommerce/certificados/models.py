@@ -292,7 +292,7 @@ class Voucher(Model):
         Retorna True se for um domínio, fqdn ou servidor adicional e já tiver sido utilizado.
         """
         return self.is_complemento_certificado and hasattr(self, 'emissao') and \
-               self.emissao.emission_status != self.STATUS_NAO_EMITIDO
+            self.emissao.emission_status != self.STATUS_NAO_EMITIDO
 
     @property
     def is_complemento_disponivel(self):
