@@ -366,4 +366,8 @@ $('form').each(function(){
 
    checkButton();
    $checkboxs.on('click', checkButton);
+
+   $("form").submit(function(){
+      $('.errorlist').remove();
+   });
 });
