@@ -65,6 +65,7 @@ def get_dados_empresa(cnpj):
             data = {
                 'cnpj': cnpj,
                 'razao_social': r.nome_empresarial,
+                'nome_fantasia': r.titulo_estabelecimento,
                 'logradouro': r.logradouro,
                 'numero': r.numero,
                 'complemento': r.complemento,
@@ -80,6 +81,7 @@ def get_dados_empresa(cnpj):
             data = {
                 'cnpj': cnpj,
                 'razao_social': 'CIO Partner',
+                'nome_fantasia': 'CIO Partner',
                 'logradouro': 'Av. Dr. Candido Motta Filho',
                 'numero': '856',
                 'complemento': '1º andar',
