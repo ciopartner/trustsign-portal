@@ -14,7 +14,7 @@ knu = None
 
 User = get_user_model()
 Order = get_class('order.models', 'Order')
-OrderLine = get_class('order.models', 'OrderLine')
+OrderLine = get_class('order.models', 'Line')
 
 
 class VoucherManager(Manager):
