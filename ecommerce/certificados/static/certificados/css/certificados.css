@@ -90,8 +90,16 @@ ul.errorlist{
 .emissao .botoes{
     margin-top: 10px;
     clear: both;
+    text-align: center;
+    /*width: 390px;*/
+    /*float: right;*/
 }
 
+/*.emissao .botoes .btn{*/
+    /*float: none;*/
+/*}*/
+
 .emissao .botoes input[type=button]{
-    margin-right: 34px;
+    margin-right: 4px;
+    width: 121px;
 }
