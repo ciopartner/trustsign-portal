@@ -150,7 +150,9 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
             'parcelas': {
                 'assinaturas': total_assinaturas,
                 'certificados': parcelas_certificados
-            }
+            },
+            'method': self.request.POST.get('source-type'),  # akatus-boleto akatus-creditcard akatus-debitcard no-payment
+
         })
 
         if self.request.method == 'POST':
