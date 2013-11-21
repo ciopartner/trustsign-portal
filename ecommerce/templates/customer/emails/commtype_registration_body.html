@@ -1,12 +1,14 @@
 {% extends "customer/emails/base.html" %}
 
-{% block title %}BEM-VINDO A TRUSTSIGN!{% endblock %}
+{% block title %}BEM-VINDO A TRUSTSIGN{% endblock %}
 
 {% block body %}
         <div style="text-align: center; margin-top: 40px;">
-			<strong>
-                <font face="Tahoma">{{user.first_name}} {{user.last_name}}</font>
-            </strong><font face="Tahoma">, obrigado por se cadastrar na TrustSign.</font>
+            <div style="text-align: center">
+                <strong>
+                    <font face="Tahoma">{{user.first_name}} {{user.last_name}},</font>
+                </strong><font face="Tahoma"> obrigado por se cadastrar na TrustSign.</font>
+            </div>
 
             <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
                 <font face="Tahoma">Dados Cadastrais</font>
@@ -20,49 +22,35 @@
             <font face="Tahoma">Seu Painel de Controle</font>
         </h2>
 
-		<table cellpadding="0" cellspacing="0" border="0" align="center">
-			<tr>
-				<td width="200" align="center" bgcolor="#f0f0f0" style="padding: 20px; color: #666; font-size: 12px;">
-					<a href="https://{{ site.domain }}/ecommerce/accounts/orders/" style="text-decoration: none; color: #606060; font-size: 14px; font-weight: bold;"><font face="Tahoma">Compras</font></a><br/>
+		<table align="center" cellspacing="0" cellpadding="0" border="0" width="66%">
+			<tbody><tr>
+				<td valign="top" align="center" bgcolor="#f0f0f0" width="50%" style="padding: 20px; color: #666; font-size: 12px; border-right: 2px solid #FFF;">
+					<a href="https://{{ site.domain }}/ecommerce/accounts/orders/" style="text-decoration: none; color: #606060; font-size: 14px; font-weight: bold;"><font face="Tahoma">Compras</font></a><br>
                     <p><font face="Tahoma">Acesse o histórico de suas compras</font></p>
 				</td>
-				<td width="200" align="center" bgcolor="#f7f7f7" style="padding: 20px; color: #666; font-size: 12px;">
+				<td valign="top" align="center" bgcolor="#f7f7f7" width="50%" style="padding: 20px; color: #666; font-size: 12px;">
 					<a href="https://{{ site.domain }}/ecommerce/accounts/profile/" style="text-decoration: none; color: #606060; font-size: 14px; font-weight: bold;"><font face="Tahoma">Editar Cadastro</font></a>
                     <p><font face="Tahoma">Mantenha seu cadastro sempre atualizado</font></p>
 				</td>
 			</tr>
-		</table>
+		</tbody></table>
 
 		<h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px"><font face="Tahoma">Suporte TrustSign</font></h2>
 
-		<table cellpadding="0" cellspacing="0" border="0" align="center">
-			<tr>
-				<td valign="top" bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
-					<a href="https://{{ site.domain }}/portal/suporte-trustsign/faq/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;"><font face="Tahoma">FAQ</font></a>
+		<table align="center" cellspacing="0" cellpadding="0" border="0">
+			<tbody><tr>
+				<td bgcolor="#f0f0f0" valign="top" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px; border-right: 2px solid #FFF;">
+					<a style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;" href="https://{{ site.domain }}/portal/suporte-trustsign/faq/"><font face="Tahoma">FAQ</font></a>
 					<p><font face="Tahoma">Diversas respostas segmentadas por solução, para auxílio nas dúvidas mais frequentes. </font></p>
 				</td>
-				<td valign="top" bgcolor="#f7f7f7" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
-					<a href="https://{{ site.domain }}/portal/suporte-trustsign/tutoriais-em-video/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;"><font face="Tahoma">Tutoriais em vídeo</font></a>
+				<td bgcolor="#f7f7f7" valign="top" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px; border-right: 2px solid #FFF">
+					<a style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px; border-right: 2px solid #FFF;" href="https:/{{ site.domain }}/portal/suporte-trustsign/tutoriais-em-video/"><font face="Tahoma">Tutoriais em vídeo</font></a>
 					<p><font face="Tahoma"> Tutoriais rápidos e práticos para auxilio em instalações de certificados e principais dúvidas. </font></p>
-				</td valign="top">
-				<!-- <td bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
-					<a href="https://{{ site.domain }}/portal/suporte-trustsign/tutoriais/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;">Tutoriais</a>
-					<p> Tutoriais em PDF para auxílio às instalações de certificados e principais dúvidas. </p>
 				</td>
-			</tr>
-			<tr>	 -->
-{#				<td valign="top" bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">#}
-{#					<a href="https://{{ site.domain }}/portal/suporte-trustsign/manuais/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;"><font face="Tahoma">Manuais</font></a>#}
-{#					<p><font face="Tahoma"> Diversos documentos segmentados por solução, para auxílio às principais dúvidas. </font></p>#}
-{#				</td>#}
-				<!-- <td bgcolor="#f0f0f0" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
-					<a href="https://{{ site.domain }}/portal/suporte-trustsign/glossario/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;">Glossário</a>
-					<p> Entenda os termos técnicos mais importantes sobre segurança na internet. </p>
-				</td> -->
-				<td valign="top" bgcolor="#f7f7f7" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
-					<a href="https://{{ site.domain }}/portal/suporte-trustsign/ferramentas/" style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;"><font face="Tahoma">Ferramentas</font></a>
+				<td bgcolor="#f0f0f0" valign="top" style="padding: 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
+					<a style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;" href="https://{{ site.domain }}/portal/suporte-trustsign/ferramentas/"><font face="Tahoma">Ferramentas</font></a>
 					<p><font face="Tahoma">  SSL Checker, SSL decoder, Certificate Key Matcher e SSL converter. </font></p>
 				</td>
 			</tr>
-		</table>
+		</tbody></table>
 {% endblock %}
