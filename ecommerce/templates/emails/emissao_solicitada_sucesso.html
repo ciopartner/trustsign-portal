@@ -7,12 +7,12 @@
     <p><font face="Tahoma">Olá, você acabou de solicitar a emissão do certificado tipo {{ voucher.get_ssl_product_display }}, linha {{ voucher.get_ssl_line_display }} com vigência de {{ voucher.get_ssl_term_display }}.</font></p>
     <p><font face="Tahoma">Durante todo o processo de emissão cada vez que o status for alterado você será avisado por meio de um novo e-mail.</font></p>
 
-    {% if voucher.is_status_avaliable %}
-        <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_liberada.png' %}" alt="" align="center" /></center>
+    {% if voucher.is_status_done %}
+        <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_liberada.png' %}" alt="" align="center" /></center>
     {% elif voucher.is_status_ongoing %}
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_andamento.png' %}" alt="" align="center" /></center>
-    {% elif voucher.is_status_done %}
-        <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_liberada.png' %}" alt="" align="center" /></center>
+    {% elif voucher.is_status_avaliable %}
+        <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_liberada.png' %}" alt="" align="center" /></center>
     {% endif %}
 {% endblock %}
 
