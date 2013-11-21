@@ -36,7 +36,7 @@
                     </div>
                 </a>
             </div>
-            <div id="collapseOne" class="accordion-body collapse">
+            <div id="collapseOne" class="accordion-body {% if method == 'akatus-creditcard' %}in {% endif %}collapse">
                 <div class="accordion-inner">
                     <form action="{% url 'checkout:preview' %}" class="form-horizontal" method="post">
 
@@ -111,7 +111,7 @@
 
         <div class="accordion-group">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                <a class="accordion-toggle {% if method == 'akatus-boleto' %}in {% endif %}" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
                     Boleto bancário
                 </a>
             </div>
@@ -143,7 +143,7 @@
                     </div>
                 </a>
             </div>
-            <div id="collapseThree" class="accordion-body collapse">
+            <div id="collapseThree" class="accordion-body  {% if method == 'akatus-debitcard' %}in {% endif %} collapse">
                 <div class="accordion-inner">
                     <p>Para pagamento por débito em conta, o banco nos envia uma confirmação em até <strong>dois dias úteis</strong> após o pagamento.</p>
                     <p>Após essa confirmação o pedido é liberado para emissão.</p>
@@ -151,6 +151,7 @@
 
                     <form action="{% url 'checkout:preview' %}" class="form-inline" method="post">
                         {% csrf_token %}
+
                         <input type="hidden" name="source-type" value="akatus-debitcard" />
                         <button type="submit" data-toggle="tooltip" data-disable-title="Para concluir é necessário aceitar os termos e condições de uso" class="pull-right btn btn-orange">Concluir</button>
 
@@ -168,6 +169,8 @@
                             <input type="radio" name="banco" value="bradesco"/>
                             <img src="{% static 'home/img/payment/thumb_bradesco.gif' %}" alt=""/>
                         </label>
+
+                        {{ debitcard_form.banco.errors }}
 
                         <br><br>
 
