@@ -16,9 +16,9 @@
         {% include 'certificados/includes/dados_produto.html' %}
         {% if form.precisa_carta_cessao %}
             <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}
-                <a href="/static/portal/documentos/carta-de-cessao.pdf">Documento Modelo</a></td></tr>
+                <a href="/static/portal/documentos/carta-de-cessao.pdf" target="_blank">Documento Modelo</a></td></tr>
         {% endif %}
-        <tr><th>E-mail para validação do domínio:</th><td class="emails-validacao">{{ form.emission_dcv_emails }} {{ form.emission_dcv_emails.errors }} <a href="/portal/suporte-trustsign/metodos-alternativos-de-validacao-de-dominio/">Não tenho acesso a nenhum dos e-mails acima</a></td></tr>
+        <tr><th>E-mail para validação do domínio:</th><td class="emails-validacao">{{ form.emission_dcv_emails }} {{ form.emission_dcv_emails.errors }} <a href="/portal/suporte-trustsign/metodos-alternativos-de-validacao-de-dominio/" target="_blank">Não tenho acesso a nenhum dos e-mails acima</a></td></tr>
         <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
         <tr><th>Tipo do Servidor:</th><td>{{ form.emission_server_type }} {{ form.emission_server_type.errors }}</td></tr>
     </table>
