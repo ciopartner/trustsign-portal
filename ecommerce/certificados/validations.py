@@ -5,6 +5,10 @@ from libs.comodo import get_emails_validacao
 from ecommerce.certificados.erros import get_erro_message
 from ecommerce.certificados.models import Voucher
 from portal.suporte.utils import comparacao_fuzzy, get_razao_social_dominio
+from logging import getLogger
+
+
+log = getLogger('ecommerce.certificados.validations')
 
 NOMES_INTERNOS = (
     '.test',
@@ -104,6 +108,7 @@ class ValidateEmissaoCSRMixin(object):
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO))
 
         if csr.get('O').upper() not in (voucher.customer_companyname.upper(), voucher.customer_tradename.upper()):
+            log.info('CSR: {} != Voucher: {}'.format(csr.get('O'), voucher.customer_companyname))
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
 
         key_size = int(csr.get('KeySize'))
