@@ -94,7 +94,7 @@
 {#                    {% endiffeature %}#}
                 </td>
 {#                <td>{{ line.est_dispatch_date|default:"-" }}</td>#}
-                <td>{{ order.date_placed }}</td>
+                <td>{{ order.date_placed|date:"d/m/Y" }}</td>
                 <td>{{ line.quantity }}</td>
 {#                <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>#}
                 <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
@@ -103,7 +103,7 @@
                     <form id="line_form_{{ line.id }}" action="{% url 'customer:order-line' order.number line.id %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="action" value="reorder" />
-                        <button class="btn btn-orange" type="submit">{% trans 'Re-order' %}</button>
+                        <button class="btn btn-orange" type="submit"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</button>
                     </form>
                     {% else %}
                         {% trans 'Not available anymore' %}
@@ -175,7 +175,7 @@
         {% csrf_token %}
         <input type="hidden" name="order_id" value="{{ order.id }}" />
         <input type="hidden" name="action" value="reorder" />
-        <button type="submit" class="btn btn-orange">{% trans 'Re-order all items' %}</button>
+        <button type="submit" class="btn btn-orange span4">{% trans 'Re-order all items' %}</button>
     </form>
 
 {#    <hr>#}

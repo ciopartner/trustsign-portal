@@ -56,7 +56,7 @@ $.fn.quantityForm = function(){
         // --------------------------------------------
         // Constructor
         // --------------------------------------------
-        $field.on('keyup keydown', self.changeEvent);
+//        $field.on('keyup keydown', self.changeEvent);
         //$field.tooltip({ title : "Aperte enter para confirmar.", placement : 'bottom', trigger : 'focus' });
         self.refresh();
 

@@ -18,10 +18,13 @@
         {% endif %}
         <tr><th>Tipo Servidor:</th><td><input type="text" disabled="disabled" value="{{ emissao.get_emission_server_type_display }}"/></td></tr>
         <tr><th>e-mail p/ envio cert.:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_publickey_sendto }}"/></td></tr>
-        <tr id="lista-fqdns">
+        <tr>
             <th>Lista de {% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN's{% else %}domínios{% endif %}:</th>
-            <td>
-                <table class="fqdn-table">
+            <td></td>
+        </tr>
+        <tr id="lista-fqdns">
+            <td colspan="2">
+                <table class="table fqdn-table">
                     <tr>
                         <th>{% if voucher.product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
                         <th>E-mail</th>

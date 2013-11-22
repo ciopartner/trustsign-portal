@@ -87,3 +87,7 @@ footer{
     width: 119px;
     text-transform: uppercase;
 }
+
+.account-profile .search .btn{
+    width: auto;
+}
