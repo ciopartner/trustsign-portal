@@ -1,5 +1,14 @@
 $.fn.quantityForm = function(){
 
+    var self = $(this);
+    var total_itens = 0;
+    var $basket_itens = $('#qtd_carrinho');
+
+
+    self.atualiza_itens_basket = function(){
+        $basket_itens.text(total_itens);
+    };
+
     this.each(function(){
         var self = $(this);
 
@@ -15,7 +24,7 @@ $.fn.quantityForm = function(){
          */
         self.formatNumber = function(num){
             return ("" + num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, function($1) { return $1 + "." });
-        }
+        };
 
         /**
          * Refresh
@@ -38,7 +47,10 @@ $.fn.quantityForm = function(){
          * Get product qtd
          */
         self.getQuantity = function(){
-            return $field.val();
+            var quantity = parseInt($field.val());
+            if (isNaN(quantity) || quantity < 0)
+                return 0;
+            return quantity
         };
 
 
@@ -51,18 +63,19 @@ $.fn.quantityForm = function(){
         };
 
 
-
-
         // --------------------------------------------
         // Constructor
         // --------------------------------------------
+
 //        $field.on('keyup keydown', self.changeEvent);
         //$field.tooltip({ title : "Aperte enter para confirmar.", placement : 'bottom', trigger : 'focus' });
+        total_itens += self.getQuantity();
         self.refresh();
 
         return self;
     });
 
+    self.atualiza_itens_basket();
 };
 
 

@@ -33,6 +33,15 @@ def run_command(comando):
     return read.read()
 
 
+regex_c = re.compile(r'C=(.+?)([,/]|$)')
+regex_st = re.compile(r'ST=(.+?)([,/]|$)')
+regex_l = re.compile(r'L=(.+?)([,/]|$)')
+regex_o = re.compile(r'O=(.+?)([,/]|$)')
+regex_ou = re.compile(r'OU=(.+?)([,/]|$)')
+regex_cn = re.compile(r'CN=(.+?)([,/]|$)')
+regex_email = re.compile(r'emailAddress=(.+?)([,/]|$)')
+
+
 def decode_csr(csr):
 
     d = {
@@ -58,23 +67,22 @@ def decode_csr(csr):
         if 'Subject:' in linha:
             try:
 
-                regex_subject = re.compile(r"^\s*Subject: (C=(.+?)[,/]?)?\s*(ST=(.+?)[,/]?)?\s*(L=(.+?)[,/]?)?\s*(O=(.+?)[,/]?)?\s*(OU=(.+?)[,/]?)?\s*(CN=(.+?)[,/]?)?\s*(emailAddress=(.+?))?$")
-
-                match = regex_subject.match(linha)
-
-                if not match:
-                    raise Exception('Não conseguiu decodificar o subject')
-
-                groups = match.groups()
+                match_cn = regex_cn.findall(linha)
+                match_ou = regex_ou.findall(linha)
+                match_o = regex_o.findall(linha)
+                match_l = regex_l.findall(linha)
+                match_st = regex_st.findall(linha)
+                match_c = regex_c.findall(linha)
+                match_email = regex_email.findall(linha)
 
                 d.update({
-                    'CN': groups[11] or '',
-                    'OU': groups[9] or '',
-                    'O': groups[7] or '',
-                    'L': groups[5] or '',
-                    'S': groups[3] or '',
-                    'C': groups[1] or '',
-                    'Email': groups[13] or '',
+                    'CN': match_cn[0][0] if match_cn else '',
+                    'OU': match_ou[0][0] if match_ou else '',
+                    'O': match_o[0][0] if match_o else '',
+                    'L': match_l[0][0] if match_l else '',
+                    'S': match_st[0][0] if match_st else '',
+                    'C': match_c[0][0] if match_c else '',
+                    'Email': match_email[0][0] if match_email else '',
                     'ok': True,
                 })
 

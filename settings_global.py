@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import os
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 ###########################################
@@ -81,6 +82,21 @@ STATICFILES_FINDERS = (
 ###########
 # LOGGING #
 ###########
+
+def create_logfile(filename, handler_class='logging.handlers.RotatingFileHandler', level='INFO', formatter='verysimple',
+                 mode='a', max_bytes=10485760, backup_count=50):
+    return {
+        'filename': filename,
+        'class': handler_class,
+        'level': level,
+        'formatter': formatter,
+        'mode': mode,
+        'maxBytes': max_bytes,
+        'backupCount': backup_count,
+    }
+
+LOG_DIR = os.path.join(PROJECT_ROOT, 'logs')
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -116,42 +132,10 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
-        'logfile': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'level': 'INFO',
-            'formatter': 'simple',
-            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile.log'),
-            'mode': 'a',
-            'maxBytes': 10485760,
-            'backupCount': 5,
-        },
-        'logfile_comodo': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'level': 'INFO',
-            'formatter': 'verysimple',
-            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile-comodo.log'),
-            'mode': 'a',
-            'maxBytes': 10485760,
-            'backupCount': 50,
-        },
-        'logfile_akatus': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'level': 'INFO',
-            'formatter': 'verysimple',
-            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile-akatus.log'),
-            'mode': 'a',
-            'maxBytes': 10485760,
-            'backupCount': 50,
-        },
-        'logfile_crm': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'level': 'INFO',
-            'formatter': 'verysimple',
-            'filename': os.path.join(PROJECT_ROOT, 'logs', 'logfile-crm.log'),
-            'mode': 'a',
-            'maxBytes': 10485760,
-            'backupCount': 50,
-        }
+        'logfile': create_logfile(os.path.join(LOG_DIR, 'logfile.log')),
+        'logfile_comodo': create_logfile(os.path.join(LOG_DIR, 'logfile-comodo.log')),
+        'logfile_akatus': create_logfile(os.path.join(LOG_DIR, 'logfile-akatus.log')),
+        'logfile_crm': create_logfile(os.path.join(LOG_DIR, 'logfile-crm.log')),
     },
     'loggers': {
         'django.request': {
@@ -185,6 +169,21 @@ LOGGING = {
         }
     },
 }
+
+for logfile in ('logfile', 'logfile_comodo', 'logfile_akatus', 'logfile_crm'):
+    d = LOGGING['handlers'].setdefault(logfile, {})
+    if 'class' not in d:
+        d['class'] = 'logging.handlers.RotatingFileHandler',
+    if 'level' not in d:
+        d['level'] = 'INFO',
+    if 'formatter' not in d:
+        d['formatter'] = 'verysimple',
+    if 'mode' not in d:
+        d['mode'] = 'a',
+    if 'maxBytes' not in d:
+        d['maxBytes'] = 10485760,
+    if 'backupCount' not in d:
+        d['backupCount'] = 50,
 
 
 #############
