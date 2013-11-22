@@ -47,28 +47,47 @@
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_pendente.png' %}" alt="" align="center" /></center>
     {% endif %}
 
-    <p>Os itens selecionados do nesse pedido são: </p>
+    <br/><br/>
 
-    <table style="width: 100%" cellspacing="0" cellpadding="0">
-        <tr>
-            <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Product' %}</font></th>
-            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Quantity' %}</font></th>
-            <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Price' %}</font></th>
-        </tr>
-        {% for line in order.lines.all %}
+    <table cellspacing="0" cellpadding="0" border="0" align="center" width="33%">
+        <tbody>
             <tr>
-                <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
-                    <font face="Tahoma">{{ line.title }}</font>
-                </td>
-                <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
-                    <font face="Tahoma">{{ line.quantity }}</font>
-                </td>
-                <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
-                    <font face="Tahoma">{{ line.line_price_incl_tax|currency:order.currency }}</font>
+                <td bgcolor="#f0f0f0" align="center" valign="top" style="padding:20px;color:rgb(102,102,102);font-size:12px;border-right:2px solid rgb(255,255,255)">
+                    <p align="left"><font face="Tahoma">Número do pedido</font></p>
+                    <span style="text-decoration:none;color:rgb(96,96,96);font-size:18px;font-weight:bold"><font face="Tahoma">{{ order.number }}</font></span><br>
                 </td>
             </tr>
-        {% endfor %}
+        </tbody>
     </table>
+
+    <br/><br/>
+
+    {% if not order.is_order_paid %}
+
+        <p>Os itens selecionados do nesse pedido são: </p>
+
+        <table style="width: 100%" cellspacing="0" cellpadding="0">
+            <tr>
+                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Product' %}</font></th>
+                <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Quantity' %}</font></th>
+                <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Price' %}</font></th>
+            </tr>
+            {% for line in order.lines.all %}
+                <tr>
+                    <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                        <font face="Tahoma">{{ line.title }}</font>
+                    </td>
+                    <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                        <font face="Tahoma">{{ line.quantity }}</font>
+                    </td>
+                    <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                        <font face="Tahoma">{{ line.line_price_incl_tax|currency:order.currency }}</font>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% endif %}
 
     <p>
     {% trans 'Order Total:' %} {{ order.total_incl_tax|currency:order.currency }}
