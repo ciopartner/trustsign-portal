@@ -39,8 +39,7 @@ class Akatus(object):
 
     def call_server(self, method, data):
         url, tipo = self.get_method_details(method)
-        # TODO: Tá dando pau de unicode nesta birosca
-        #log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, data))
+        log.debug(smart_unicode('Request via {} para {}\nDados do Request: {}'.format(tipo, url, data)))
         if tipo == 'GET':
             response = requests.get(url, params=data)
         elif tipo == 'POST':
@@ -50,8 +49,7 @@ class Akatus(object):
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
         resposta = response.text.encode('utf-8')
-        # TODO: Tá dando pau de unicode nesta birosca
-        #log.debug('\nDados do Response: {}'.format(resposta))
+        log.debug(smart_unicode('\nDados do Response: {}'.format(resposta)))
 
         if response.status_code != 200:
             log.error('HTTP Response retornado da Akatus: {}'.format(response.status_code))
