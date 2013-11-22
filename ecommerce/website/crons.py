@@ -24,4 +24,4 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
             order.set_status('Em Processamento')
             for line in order.lines.all():
                 line.set_status('Em Processamento')
-            log.info('Order #%s: alterado status para Em processamento' % order.pk)
+            log.info('Order #%s: alterado status para Em processamento' % order.number)
