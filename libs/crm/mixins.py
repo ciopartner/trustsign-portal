@@ -20,17 +20,17 @@ class OscarToCRMMixin(object):
         crm_client = crm.CRMClient()
         crm_client.login()
 
-        # Passo 2: Criar ou recuperar o cliente
-        cliente_id = crm_client.get_or_create_account(cliente)
+        # Passo 2: Criar ou atualizar o cliente
+        cliente_id = crm_client.update_or_create_account(cliente)
 
-        # Passo 3: Criar o recuperar o contato
+        # Passo 3: Criar ou recuperar o contato
         contato.account_id = cliente_id
         contato_id = crm_client.get_or_create_contact(contato)
 
-        # Passo 3: Criar uma oportunidade para cada transaction_id
-        # Isso se faz necessário porque temos a seguinte regra de pagamento:
-        # - a soma de todos os certificados geram 1 transaction quando pago via cartão de crédito;
-        # - cada assinatura gera uma nova transaction, quando pago via cartão de crédito;
+        # Passo 4: Criar uma oportunidade para cada transaction_id
+        # Isso se faz necessário porque temos a seguinte regra de pagamento via cartão de crédito:
+        # - a soma de todos os certificados geram uma transaction;
+        # - a soma de todas as assinaturas gera uma nova transaction;
 
         # Para cada transação, criar uma oportunidade
         sources = order.sources.all()
@@ -69,6 +69,7 @@ class OscarToCRMMixin(object):
 
         cliente.cnpj = formata_cnpj(profile.cliente_cnpj) if len(profile.cliente_cnpj) < 18 else profile.cliente_cnpj
         cliente.razaosocial = profile.cliente_razaosocial
+        cliente.nomefantasia = profile.cliente_nomefantasia
         cliente.logradouro = profile.cliente_logradouro
         cliente.numero = profile.cliente_numero
         cliente.complemento = profile.cliente_complemento
