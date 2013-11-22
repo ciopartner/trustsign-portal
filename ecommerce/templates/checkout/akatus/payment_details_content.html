@@ -24,6 +24,9 @@
         </div>
 
     {% else %}
+
+        <p>Escolha abaixo o meio de pagamento.</p>
+
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
@@ -113,6 +116,10 @@
             <div class="accordion-heading">
                 <a class="accordion-toggle {% if method == 'akatus-boleto' %}in {% endif %}" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
                     Boleto bancário
+
+                    <div class="pull-right" style="margin-top: -10px;">
+                        <img src="{% static "home/img/payment/thumb_boleto.gif" %}" width="42">
+                    </div>
                 </a>
             </div>
             <div id="collapseTwo" class="accordion-body collapse">
