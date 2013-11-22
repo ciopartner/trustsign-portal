@@ -27,6 +27,7 @@ class Order(AbstractOrder):
 
     @property
     def is_order_paid(self):
+        return False
         STATUS_PAID = ['Pago', 'Em Processamento', 'Concluído']
         return self.status in STATUS_PAID
 

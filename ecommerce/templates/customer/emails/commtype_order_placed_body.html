@@ -5,20 +5,20 @@
     {% if order.is_order_paid %}
         PAGAMENTO APROVADO
     {% else %}
-        PEDIDO REALIZADO COM SUCESSO
+        PEDIDO REALIZADO
     {% endif %}
 {% endblock %}
 
 {% block body %}
     <br/><br/>
     <strong>
-        <font face="Tahoma">{{user.first_name}} {{user.last_name}}</font>
-    </strong><font face="Tahoma">, obrigado por comprar na TrustSign.</font>
+        <font face="Tahoma" style="font-size: 12px; color: #666666">{{user.first_name}} {{user.last_name}},</font>
+    </strong><font face="Tahoma" style="font-size: 12px; color: #666666"> obrigado por comprar na TrustSign.</font>
 
     {% if order.is_order_paid %}
         {% if not order.is_voucher_partially_issued and not order.is_voucher_issued %}
             {# Mensagem para pagamento OK #}
-            <p><font face="Tahoma">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
+            <p ><font face="Tahoma" style="font-size: 12px; color: #666666">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
             <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_ok.png' %}" alt="" align="center" /></center>
         {% else %}
             {% if order.is_voucher_issued %}
@@ -26,24 +26,24 @@
                 <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_emitido.png' %}" alt="" align="center" />
             {% else %}
                 {# Mensagem para vouchers pendentes #}
-                <p><font face="Tahoma">Você já pode emitir seus certificados!</font></p>
-                <p><font face="Tahoma">Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</font></p>
+                <p><font face="Tahoma" style="font-size: 12px; color: #666666">Você já pode emitir seus certificados!</font></p>
+                <p><font face="Tahoma" style="font-size: 12px; color: #666666">Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</font></p>
                 <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_pendente.png' %}" alt="" align="center" /></center>
             {% endif %}
         {% endif %}
     {% else %}
         {# Mensagem para Pagamento Pendente #}
+
         <p>
-            <font face="Tahoma">
-                A partir de agora, você será informado(a) por e-mail sobre o andamento do seu pedido até a emissão do certificado ou ativação do serviço.
-            </font>
+            <font face="Tahoma" style="font-size: 12px; color: #666666">
+                 A partir de agora você será informado por e-mail sobre o andamento do pedido até a emissão do certificado e/ou ativação do serviço.
+            </font style="font-size: 12px; color: #666666">
         </p>
         <p>
-            <font face="Tahoma">
-                No momento estamos aguardando o aviso da instituição financeira sobre a autorização do pagamento, prazo esse que pode variar de acordo com o meio de pagamento escolhido.
+            <font face="Tahoma" style="font-size: 12px; color: #666666">
+                 No momento estamos aguardando o aviso da instituição financeira sobre a autorização do pagamento. Este prazo pode variar com o meio de pagamento escolhido. Assim que o pagamento for confirmado pela instituição financeira, você receberá um email e poderá iniciar o processo de emissão do certificado e/ou ativar os serviços .
             </font>
         </p>
-        <p><font face="Tahoma">Assim que o seu pagamento for confirmado pela instituição financeira, você receberá um email e estará apto para ativar seus serviços ou iniciar o processo de emissão do certificado.</font></p>
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_pendente.png' %}" alt="" align="center" /></center>
     {% endif %}
 
@@ -52,9 +52,9 @@
     <table cellspacing="0" cellpadding="0" border="0" align="center" width="33%">
         <tbody>
             <tr>
-                <td bgcolor="#f0f0f0" align="center" valign="top" style="padding:20px;color:rgb(102,102,102);font-size:12px;border-right:2px solid rgb(255,255,255)">
-                    <p align="left"><font face="Tahoma">Número do pedido</font></p>
-                    <span style="text-decoration:none;color:rgb(96,96,96);font-size:18px;font-weight:bold"><font face="Tahoma">{{ order.number }}</font></span><br>
+                <td bgcolor="#f0f0f0" align="center" valign="top" style="padding:10px 10px 17px 10px;color:rgb(102,102,102);font-size:12px;border-right:2px solid rgb(255,255,255)">
+                    <p style="margin-bottom: 10px; margin-top: 12px"><font face="Tahoma">Número do pedido</font></p>
+                    <span style="text-decoration: none; color: rgb(96, 96, 96); font-size: 22px; font-weight: bold;"><font face="Tahoma">{{ order.number }}</font></span><br>
                 </td>
             </tr>
         </tbody>
@@ -64,65 +64,69 @@
 
     {% if not order.is_order_paid %}
 
-        <p>Os itens selecionados do nesse pedido são: </p>
+        <p style="font-size: 12px; color: #666666"><font face="Tahoma">Os itens selecionados nesse pedido são: </font></p>
 
         <table style="width: 100%" cellspacing="0" cellpadding="0">
             <tr>
-                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Product' %}</font></th>
-                <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Quantity' %}</font></th>
-                <th style="text-align: right; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'Price' %}</font></th>
+                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'PRODUCT' %}</font></th>
+                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'QUANTITY' %}</font></th>
+                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'PRICE' %}</font></th>
             </tr>
             {% for line in order.lines.all %}
                 <tr>
                     <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
                         <font face="Tahoma">{{ line.title }}</font>
                     </td>
-                    <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                    <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
                         <font face="Tahoma">{{ line.quantity }}</font>
                     </td>
-                    <td style="text-align: right; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                    <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
                         <font face="Tahoma">{{ line.line_price_incl_tax|currency:order.currency }}</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" bgcolor="#FAFAFA" style="padding: 5px">
+
                     </td>
                 </tr>
             {% endfor %}
         </table>
 
-    {% endif %}
 
-    <p>
-    {% trans 'Order Total:' %} {{ order.total_incl_tax|currency:order.currency }}
-    </p>
+        <p style="font-size: 12px; color: #666666">
+        {% trans 'Order Total:' %} <strong>{{ order.total_incl_tax|currency:order.currency }}</strong>
+        </p>
+
+    {% endif %}
 
 
 {#    <p>{% trans 'Shipping address:' %}</p>#}
 {#    <p>{% for field in order.shipping_address.active_address_fields %}  {{ field }}<br/>#}
 {#    {% endfor %}</p>#}
 
-    <hr/>
-
     {% if order.basket.tem_contrato_ssl %}
         <div>
-            <a href="https://{{ site.domain }}{% static 'contratos/contrato_certificado_digital.pdf' %}">Termos de uso do Certificado</a>
+            <a href="https://{{ site.domain }}{% static 'contratos/contrato_certificado_digital.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Certificado</font></a>
         </div>
     {% endif %}
     {% if order.basket.tem_contrato_sitemonitorado %}
         <div>
-            <a href="http://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-sitemonitorado.pdf' %}">Termos de uso do Site Monitorado</a>
+            <a href="http://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-sitemonitorado.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Site Monitorado</font></a>
         </div>
     {% endif %}
 
     {% if order.basket.tem_contrato_siteseguro %}
         <div>
-            <a href="https://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-siteseguro.pdf' %}">Termos de uso do Site + Seguro</a>
+            <a href="https://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-siteseguro.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Site + Seguro</font></a>
         </div>
     {% endif %}
     {% if order.basket.tem_contrato_pki %}
         <div>
-            <a href="https://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-pki.pdf' %}">Termos de uso do PKI</a>
+            <a href="https://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-pki.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do PKI</font></a>
         </div>
     {% endif %}
 
     {% if status_url %}
-    <p>{% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}</p>
+    <p><font face="Tahoma" style="font-size: 12px; color: #666666">{% blocktrans %}You can view the status of this order by clicking <a href="{{ status_url }}" title="order status">here</a>{% endblocktrans %}</font></p>
     {% endif %}
 {% endblock %}

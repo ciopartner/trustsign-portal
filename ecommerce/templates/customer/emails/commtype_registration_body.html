@@ -6,14 +6,14 @@
         <div style="text-align: center; margin-top: 40px;">
             <div style="text-align: left">
                 <strong>
-                    <font face="Tahoma">{{user.first_name}} {{user.last_name}},</font>
-                </strong><font face="Tahoma"> obrigado por se cadastrar na TrustSign.</font>
+                    <font face="Tahoma" style="color: #666666;">{{user.first_name}} {{user.last_name}},</font>
+                </strong><font face="Tahoma" style="color: #666666;"> obrigado por se cadastrar na TrustSign.</font>
             </div>
 
             <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
                 <font face="Tahoma">Dados Cadastrais</font>
             </h2>
-            <font face="Tahoma">CNPJ: {{ user.get_profile.get_cnpj_formatado }}<br/>
+            <font face="Tahoma" style="color: #666666;">CNPJ: {{ user.get_profile.get_cnpj_formatado }}<br/>
             Senha: ******</font>
 
 		</div>

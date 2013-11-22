@@ -8,16 +8,10 @@
     <p><font face="Tahoma">Durante todo o processo de emissão cada vez que o status for alterado você será avisado por meio de um novo e-mail.</font></p>
 
     {% if voucher.is_status_done %}
-        <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_liberada.png' %}" alt="" align="center" /></center>
+        <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_liberada.png' %}" alt="" align="center" /></center>
     {% elif voucher.is_status_ongoing %}
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_andamento.png' %}" alt="" align="center" /></center>
     {% elif voucher.is_status_avaliable %}
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/emissao_liberada.png' %}" alt="" align="center" /></center>
     {% endif %}
-{% endblock %}
-
-{% block informacoes %}
-    <li><font face="Tahoma">Consulte seus dados cadastrais no link "<a href="https://{{ site.domain }}/ecommerce/accounts/">Minha Conta</a>" que é disponibilizado após a autenticação no sistema por meio do link "Entrar".</font></li>
-    <li><font face="Tahoma">Consulte seus pedidos acessando o link "<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Histórico de Pedidos</a>" na página "<a href="https://{{ site.domain }}/ecommerce/accounts/">Minha Conta</a>"</font></li>
-    <li><font face="Tahoma">Solicite a emissão dos certificados adquiridos acessando o link "<a href="https://{{ site.domain }}/ecommerce/escolha-voucher/">Processo de Emissão</a>" na página "<a href="https://{{ site.domain }}/ecommerce/accounts/">Minha Conta</a>"</font></li>
 {% endblock %}
