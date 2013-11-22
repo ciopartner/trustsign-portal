@@ -205,7 +205,7 @@ OSCAR_INITIAL_LINE_STATUS = 'Pendente de Pagamento'
 OSCAR_ORDER_STATUS_PIPELINE = {
     'Pendente de Pagamento': ('Em Análise', 'Pago', 'Cancelado', 'Não Aprovado',),
     'Em Análise': ('Pago', 'Cancelado', 'Não Aprovado',),
-    'Pago': ('Estornado', 'Cancelado', 'Em Processamento'),
+    'Pago': ('Estornado', 'Cancelado', 'Em Processamento', 'Concluído'),
     'Em Processamento': ('Concluído', 'Estornado', 'Cancelado'),
     'Concluído': ('Estornado', 'Cancelado'),
     'Cancelado': (),
@@ -215,7 +215,7 @@ OSCAR_ORDER_STATUS_PIPELINE = {
 OSCAR_LINE_STATUS_PIPELINE = {
     'Pendente de Pagamento': ('Em Análise', 'Pago', 'Cancelado', 'Não Aprovado',),
     'Em Análise': ('Pago', 'Cancelado', 'Não Aprovado',),
-    'Pago': ('Estornado', 'Cancelado', 'Em Processamento'),
+    'Pago': ('Estornado', 'Cancelado', 'Em Processamento', 'Concluído'),
     'Em Processamento': ('Concluído', 'Estornado', 'Cancelado'),
     'Concluído': ('Estornado', 'Cancelado'),
     'Cancelado': (),
