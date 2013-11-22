@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
+from django.core.cache import cache
 import requests
 
 from ecommerce.certificados.models import Voucher
@@ -11,13 +12,23 @@ from portal.suporte.utils import url_parse, get_emails_dominio
 
 log = logging.getLogger('libs.comodo')
 
-CODIGO_SSL = 488
-CODIGO_SSL_WILDCARD = 489
+# CÓDIGOS ANTIGOS
+#CODIGO_SSL = 488
+#CODIGO_SSL_WILDCARD = 489
+#CODIGO_SSL_SAN = 492
+#CODIGO_SSL_EV = 337
+#CODIGO_SSL_EV_MDC = 410
+#CODIGO_MDC = 335
+#CODIGO_TRIAL = 342
+
+# CÓDIGOS NOVOS
+CODIGO_SSL = 301
+CODIGO_SSL_WILDCARD = 343
 CODIGO_SSL_SAN = 492
 CODIGO_SSL_EV = 337
 CODIGO_SSL_EV_MDC = 410
 CODIGO_MDC = 335
-CODIGO_TRIAL = 342
+CODIGO_TRIAL = 43  # 342 é o antigo (trial de 90 dias)
 
 CODIGOS_PRODUTOS = {
     Voucher.PRODUTO_SSL: CODIGO_SSL,
@@ -58,6 +69,11 @@ def get_emails_validacao_padrao(dominio):
 
 
 def get_emails_validacao_whois(dominio):
+    emails = cache.get('whois-{}'.format(dominio))
+
+    if emails is not None:
+        return emails
+
     dominio = limpa_dominio(dominio)
 
     if dominio.endswith('.br'):
@@ -69,8 +85,12 @@ def get_emails_validacao_whois(dominio):
         'domainName': dominio
     })
 
-    return [r[12:] for r in response.text.splitlines()
-            if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+    emails = [r[12:] for r in response.text.splitlines()
+              if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+
+    cache.set('whois-{}'.format(dominio), emails, 86400)  # cache de 1 dia
+
+    return emails
 
 
 def get_emails_validacao(dominio):
@@ -140,7 +160,7 @@ def emite_certificado(emissao):
             log.error('ERRO EMISSAO > params: %s | response: %s' % (params, r))
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
-            log.info('EMISSAO > params: %s | response: %s' % (params, r))
+            log.info('EMISSAO > params: %s \nResponse: %s' % (params, r))
 
         return r
 

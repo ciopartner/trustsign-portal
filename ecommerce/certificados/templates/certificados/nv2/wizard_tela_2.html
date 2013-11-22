@@ -1,5 +1,6 @@
 {% extends 'certificados/wizard_base.html' %}
 {% load static %}
+
 {% block coluna-esquerda %}
     {% include 'certificados/includes/dados_cliente.html' %}
     {% include 'certificados/includes/form_callback.html' %}
@@ -10,19 +11,23 @@
 
     {{ form.non_field_errors }}
 
-    <table class="table">
+    <table>
         {% include 'certificados/includes/dados_produto.html' %}
 
         {% if form.precisa_carta_cessao %}
-            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}</td></tr>
+            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}
+            <a href="/static/portal/documentos/carta-de-cessao.pdf" target="_blank">Documento Modelo</a></td></tr>
         {% endif %}
 
         <tr><th>Tipo do Servidor:</th><td>{{ form.emission_server_type }} {{ form.emission_server_type.errors }}</td></tr>
         <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
-        <tr id="lista-fqdns">
+        <tr>
             <th>Lista de {% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN's{% else %}domínios{% endif %}:</th>
-            <td>
-                <table class="fqdn-table">
+            <td></td>
+        </tr>
+        <tr id="lista-fqdns">
+            <td colspan="2">
+                <table class="table fqdn-table">
                     <tr>
                         <th>{% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
                         <th>E-mail</th>
@@ -30,7 +35,7 @@
                     {% for fqdn in form.get_domains_csr %}
                         <tr data-fqdn="{{ fqdn }}" id="fqdn-{{ forloop.counter0 }}">
                             <td>{{ fqdn }}</td>
-                            <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}"  href="#windowEscolheEmail">escolher</a></td>
+                            <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}" href="#windowEscolheEmail">escolher</a></td>
                         </tr>
                     {% endfor %}
                 </table>

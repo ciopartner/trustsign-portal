@@ -8,38 +8,48 @@
 </head>
 <body>
 
-    <table width="700" border="0">
-        <tr>
+    <table style="border: 1px solid #DDD; " width="525" border="0" cellpadding="0" cellspacing="0">
+        <tbody><tr>
             <td>
-                <font face="Tahoma">
-                    <div style="font-family: Tahoma,Geneva,sans-serif; font-size: 12px; padding: 20px; border: 1px solid #DDD; width: 700px; margin: 0 auto; color: #4c4c4c">
+                    <div style="font-family: Tahoma,Geneva,sans-serif; font-size: 12px; padding: 20px; margin: 0 auto; color: #4c4c4c">
 
-                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                            <tr>
-                                <td>
-                                    <img src="http://{{ site.domain }}/static-ecommerce/home/img/icons/mainlogo.png" alt="" width="200px" style="padding: 20px; padding-left: 0; margin-right: 20px; border-right: 1px solid #DDD; margin-bottom:20px;">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tbody><tr>
+                                <td style="padding: 20px; margin-right: 20px; border-right: 1px solid #DDD;" width="185">                                    <a href="https://www.trustsign.com.br"><img src="http://{{ site.domain }}/static-ecommerce/home/img/icons/mainlogo.png" alt=""></a>
                                 </td>
                                 <td align="center">
-                                    <h1 style="color: #4c4c4c; text-align: center; margin-top: -5px; font-size: 18px;">{% block title %}{% endblock %}</h1>
+                                    <h1 style="color: #4c4c4c; text-align: center; margin-top: -5px; font-size: 18px;">
+                                        <font face="Tahoma">{% block title %}{% endblock %}</font>
+                                    </h1>
                                 </td>
                             </tr>
                         </table>
-
-                        <div style="background: #4c4c4c; padding: 10px; color: #FFF; font-weight: bold; text-align: center; margin-bottom: 20px">
-                            Esse e-mail é automático. Não é necessário respondê-lo.
-                        </div>
+                    </div>
+                        <br>
+            <tr>
+                    <td style="background: #4c4c4c;color: #FFF; text-align: center; padding: 5px;">
+                            <font face="Tahoma">
+                                Esse e-mail é automático. Não é necessário respondê-lo.
+                            </font>
+                    </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px;">
 
                         {% block body %}{% endblock %}
 
-                        <h3 style="color: #076644; margin-top: 40px;">Informações importantes:</h3>
-                        <ul>
-                            <li>Contatos do suporte: suporte@trustsign.com.br - (12) 3308-8420</li>
-                            <li>Contatos do Financeiro: financeiro@trustsign.com.br - (12) 3308-8420</li>
-                            <li>Contatos do Comercial: comercial@trustsign.com.br - (11) 3729-3945</li>
-                            <li>Consulte suas compras acessando o link “<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Minhas Compras</a>”, após realizar seu login de acesso.</li>
+                        <h3 style="color: #076644; margin-top: 40px;">
+                            <font face="Tahoma">Informações importantes:</font>
+                        </h3>
+                        <ul style="margin: 0; padding: 0">
+                            <li><font face="Tahoma" style="font-size: 12px">Contatos do suporte: suporte@trustsign.com.br - (12) 3308-8420</font></li>
+                            <li><font face="Tahoma" style="font-size: 12px">Contatos do Financeiro: financeiro@trustsign.com.br - (12) 3308-8420</font></li>
+                            <li><font face="Tahoma" style="font-size: 12px">Contatos do Comercial: comercial@trustsign.com.br - (11) 3729-3945</font></li>
+                            <li><font face="Tahoma" style="font-size: 12px">Consulte seus dados cadastrais no link "<a href="https://{{ site.domain }}/ecommerce/accounts/">Minha Conta</a>".</font></li>
+                            <li><font face="Tahoma" style="font-size: 12px">Consulte seus pedidos acessando o link "<a href="https://{{ site.domain }}/ecommerce/accounts/orders/">Histórico de Pedidos</a>"</font></li>
+                            <li><font face="Tahoma" style="font-size: 12px">Solicite a emissão dos certificados adquiridos acessando o link "<a href="https://{{ site.domain }}/ecommerce/escolha-voucher/">Processo de Emissão</a>"</font></li>
                         </ul>
-                    </div>
-                </font>
+
             </td>
         </tr>
     </table>

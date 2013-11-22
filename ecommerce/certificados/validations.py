@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from ecommerce.certificados import erros as e
-from libs.comodo import get_emails_validacao_padrao, get_emails_validacao
+from libs.comodo import get_emails_validacao
 from ecommerce.certificados.erros import get_erro_message
 from ecommerce.certificados.models import Voucher
 from portal.suporte.utils import comparacao_fuzzy, get_razao_social_dominio
+from logging import getLogger
+
+
+log = getLogger('ecommerce.certificados.validations')
 
 NOMES_INTERNOS = (
     '.test',
@@ -103,8 +107,9 @@ class ValidateEmissaoCSRMixin(object):
                                                                 Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO))
 
-        # if not comparacao_fuzzy(csr.get('O'), voucher.customer_companyname):
-        #     raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
+        if csr.get('O').upper() not in (voucher.customer_companyname.upper(), voucher.customer_tradename.upper()):
+            log.info('CSR: {} != Voucher: {}'.format(csr.get('O'), voucher.customer_companyname))
+            raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
 
         key_size = int(csr.get('KeySize'))
         if voucher.ssl_product in (Voucher.PRODUTO_SMIME, Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
@@ -197,10 +202,6 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             dominios = csr.get('dnsNames', [])
 
         emails = valor.split(' ')
-        url = fields.get('emission_url')
-
-        if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and url not in dominios:
-            dominios.insert(0, url)
 
         if len(dominios) != len(emails):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
@@ -210,7 +211,7 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
                 continue
 
-            if email not in get_emails_validacao_padrao(dominio):
+            if email not in get_emails_validacao(dominio):
                 raise self.ValidationError(get_erro_message(e.ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO) % (email, dominio))
         return valor
 

@@ -10,6 +10,19 @@ from django.utils.encoding import smart_unicode
 import requests
 from unicodedata import normalize
 from nltk import metrics
+from logging import getLogger
+
+
+log = getLogger('portal.suporte.utils')
+
+
+def cria_arquivo_temporario(conteudo, delete=False):
+    file_in = NamedTemporaryFile(delete=delete)
+    file_in.write(conteudo)
+    path_in = file_in.name
+    file_in.close()
+
+    return path_in
 
 
 def run_command(comando):
@@ -20,7 +33,85 @@ def run_command(comando):
     return read.read()
 
 
-def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True):
+def decode_csr(csr):
+
+    d = {
+        'POBox': '',
+        'STREET1': '',
+        'STREET2': '',
+        'STREET3': '',
+        'PostalCode': '',
+        'Phone': '',
+        'KeySize': 0,
+        'dnsNames': [],
+        'ok': True,
+
+    }
+
+    path_in = cria_arquivo_temporario(csr)
+
+    resposta = run_command('openssl req -in %s -noout -text | grep "DNS\|Subject:\|Key:"' % path_in)
+
+    os.remove(path_in)
+
+    for linha in resposta.splitlines(False):
+        if 'Subject:' in linha:
+            try:
+
+                regex_subject = re.compile(r"^\s*Subject: (C=(.+?)[,/]?)?\s*(ST=(.+?)[,/]?)?\s*(L=(.+?)[,/]?)?\s*(O=(.+?)[,/]?)?\s*(OU=(.+?)[,/]?)?\s*(CN=(.+?)[,/]?)?\s*(emailAddress=(.+?))?$")
+
+                match = regex_subject.match(linha)
+
+                if not match:
+                    raise Exception('Não conseguiu decodificar o subject')
+
+                groups = match.groups()
+
+                d.update({
+                    'CN': groups[11] or '',
+                    'OU': groups[9] or '',
+                    'O': groups[7] or '',
+                    'L': groups[5] or '',
+                    'S': groups[3] or '',
+                    'C': groups[1] or '',
+                    'Email': groups[13] or '',
+                    'ok': True,
+                })
+
+            except:
+                log.warning('Erro na decodificação da CSR (KeySize): %s\n' % csr)
+                return {
+                    'ok': False
+                }
+
+        elif 'Public-Key:' in linha:
+            try:
+
+                d['KeySize'] = int(re.findall('[0-9]+', linha)[0])
+
+            except (IndexError, ValueError):
+                log.warning('Erro na decodificação da CSR (KeySize): %s\n' % csr)
+                return {
+                    'ok': False
+                }
+
+        elif 'DNS' in linha:
+            try:
+
+                d['dnsNames'] = [s[4:] for s in map(str.strip, linha.split(','))]
+
+            except:
+                log.warning('Erro na decodificação da CSR (DNS): %s\n' % csr)
+                return {
+                    'ok': False
+                }
+
+    d['subject_ok'] = bool(d.get('CN') and d.get('O') and d.get('L') and d.get('S') and d.get('C'))
+
+    return d
+
+
+def decode_csr_comodo(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True):
     """
     Retorna um dict com os campos decodificados da CSR conforme abaixo:
 
@@ -83,11 +174,10 @@ def decode_csr(csr, show_key_size=True, show_csr_hashes=True, show_san_dns=True)
 
     dnsnames = d['dnsNames']
 
-    file_in = NamedTemporaryFile(delete=False)
-    file_in.write(csr)
-    path_in = file_in.name
-    file_in.close()
+    path_in = cria_arquivo_temporario(csr)
+
     csr_data = run_command('openssl req -in %s -noout -text | grep DNS' % path_in)
+
     os.remove(path_in)
 
     for entry in csr_data.strip().split(','):

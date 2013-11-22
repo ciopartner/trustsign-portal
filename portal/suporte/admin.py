@@ -1,11 +1,13 @@
 from django.contrib import admin
-from django.forms import ModelForm, ModelMultipleChoiceField
+from django.forms import ModelMultipleChoiceField
+from mezzanine.core.admin import TabularDynamicInlineAdmin
+from mezzanine.core.forms import DynamicInlineAdminForm
 from mezzanine.pages.admin import PageAdmin
 from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question, FerramentasPage, \
     TaggedItem, Tag, TutorialPage, Tutorial, VideoTutorialPage, VideoTutorial
 
 
-class TaggedItemForm(ModelForm):
+class TaggedItemForm(DynamicInlineAdminForm):
     tags_field = ModelMultipleChoiceField(Tag.objects.all(), required=False, label='tags')
 
     def __init__(self, *args, **kwargs):
@@ -39,7 +41,7 @@ class QuestionForm(TaggedItemForm):
         model = Question
 
 
-class QuestionAdminInline(admin.TabularInline):
+class QuestionAdminInline(TabularDynamicInlineAdmin):
     model = Question
     form = QuestionForm
 
@@ -55,7 +57,7 @@ class TutorialForm(TaggedItemForm):
         model = Tutorial
 
 
-class TutorialAdminInline(admin.TabularInline):
+class TutorialAdminInline(TabularDynamicInlineAdmin):
     model = Tutorial
     form = TutorialForm
 
@@ -71,7 +73,7 @@ class ItemForm(TaggedItemForm):
         model = Item
 
 
-class ItemAdminInline(admin.TabularInline):
+class ItemAdminInline(TabularDynamicInlineAdmin):
     model = Item
     form = ItemForm
 
@@ -87,7 +89,7 @@ class ManualForm(TaggedItemForm):
         model = Manual
 
 
-class ManualAdminInline(admin.TabularInline):
+class ManualAdminInline(TabularDynamicInlineAdmin):
     model = Manual
     form = ManualForm
 
@@ -96,7 +98,7 @@ class ManualPageAdmin(PageAdmin):
     inlines = (ManualAdminInline,)
 
 
-class VideoTutorialInline(admin.TabularInline):
+class VideoTutorialInline(TabularDynamicInlineAdmin):
     model = VideoTutorial
 
 

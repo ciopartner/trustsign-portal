@@ -21,11 +21,14 @@
             {% endblock %}
         </div>
 
-        {% block botoes %}
-            <input type="submit" value="Enviar" class="btn btn-primary pull-right lm5" />
+        <div class="botoes">
+            {% block botoes %}
 
-            <input type="button" value="Voltar" class="btn pull-right" onclick="history.back()"/>
-        {% endblock %}
+                <input type="submit" value="ENVIAR" class="btn btn-success pull-right lm5 span2" />
+
+                <input type="button" value="VOLTAR" class="btn pull-right span2" onclick="history.back()"/>
+            {% endblock %}
+        </div>
 
         {% csrf_token %}
         {{ wizard.management_form }}

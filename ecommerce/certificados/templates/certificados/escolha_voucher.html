@@ -5,37 +5,40 @@
     <div class="fix-row-margin escolha-voucher">
         <h2>Escolha o produto disponível e a ação desejada</h2>
         {% if vouchers %}
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped table-vcenter">
             <tr>
                 <th class="large">Produto</th>
                 <th>Linha</th>
                 <th>Validade</th>
                 <th>Saldo</th>
-                <th>Expira em</th>
+                <th>Pedido</th>
                 <th>Status / Ação</th>
             </tr>
 
                 {% for voucher in vouchers %}
-                    <tr>
+                    <tr data-product-code="{{ voucher.ssl_product }}" data-status="{% if voucher.emissao.is_complemento_disponivel %}disponivel{% else %}utilizado{% endif %}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
                         <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
-                        <td>1 {# TODO: como calcular saldo voucher? #}</td>
-                        <td>{{ voucher.ssl_valid_to|date:"d/m/Y" }}</td>
+                        <td class="saldo">1</td>
                         <td>
+                            {% if not voucher.emissao.is_complemento_certificado %}
+                                {{ voucher.order_number }}
+                            {% endif %}
+                        </td>
+                        <td>
+
                         {% with emissao=voucher.emissao %}
-
-
                             {% if not emissao %}
                                 {% if voucher.has_emissao_url %}
-                                    <a class="btn btn-primary btn-block no-uppercase" href="{{ voucher.get_emissao_url }}">Emitir</a>
+                                    <a class="btn btn-success btn-block no-uppercase" href="{{ voucher.get_emissao_url }}">EMITIR</a>
                                 {% endif %}
                             {% elif emissao.em_processamento %}
                                 Em processamento
                             {% elif emissao.emitido %}
 
                                 <div class="btn-group btn-block">
-                                    <button class="btn dropdown-toggle btn-block btn-primary no-uppercase" data-toggle="dropdown">Ação <span class="caret"></span></button>
+                                    <button class="btn dropdown-toggle btn-block btn-success no-uppercase" data-toggle="dropdown">Ação <span class="caret"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
                                         <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>
@@ -43,17 +46,56 @@
                                         <li><a href="{{ voucher.get_publickey_url }}">Certificado</a></li>
                                     </ul>
                                 </div>
-
                             {% endif %}
+
                         {% endwith %}
-                        </td>
+                        {# Para tratar o status dos FQDNs, Domínios e Servidores Adicionais #}
+                        {% if voucher.is_complemento_disponivel %}
+                            Disponível para uso
+                        {% elif voucher.is_complemento_utilizado %}
+                            Já utilizado
+                        {% endif %}
+                    </td>
                     </tr>
                 {% endfor %}
 
             </table>
 
         {% else %}
-            <p>Você ainda não possui certificados para emitir. Se você acabou de realizar a compra, aguarde alguns minutos após o pagamento ter sido aprovado.</p>
+            <p>Você ainda não possui certificados para emitir.
+                Se você acabou de realizar a compra, aguarde alguns minutos após o pagamento ter sido aprovado.</p>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block extrascripts %}
+    {{ block.super }}
+    <script type="application/javascript">
+        $(function(){
+
+            var $products = $('[data-product-code=ssl-ev-mdc-domain],[data-product-code=ssl-mdc-domain], [data-product-code=ssl-san-fqdn]');
+
+
+            for(var i=0; i < $products.length; i++){
+
+                var prod_code = $products.eq(i).data('product-code');
+                var prod_status = $products.eq(i).data('status');
+                var prod_line = $products.eq(i).data('line');
+                var prod_term = $products.eq(i).data('term');
+
+                for(var j=i+1; j < $products.length; j++){
+
+                    if(prod_code == $products.eq(j).data('product-code'))
+                        if(prod_status == $products.eq(j).data('status'))
+                            if(prod_line == $products.eq(j).data('line'))
+                                if(prod_term == $products.eq(j).data('term')){
+                                    $products.eq(j).remove();
+                                    $products.eq(i).find('.saldo').text(parseInt($products.eq(i).find('.saldo').text()) + 1);
+                                }
+
+                }
+            }
+
+        });
+    </script>
 {% endblock %}

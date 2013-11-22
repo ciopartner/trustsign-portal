@@ -15,6 +15,7 @@ from libs.akatus import facade as akatus
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
 from oscar.apps.checkout import views
 from libs.crm.mixins import OscarToCRMMixin
+from time import sleep
 import requests
 import logging
 
@@ -149,7 +150,9 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
             'parcelas': {
                 'assinaturas': total_assinaturas,
                 'certificados': parcelas_certificados
-            }
+            },
+            'method': self.request.POST.get('source-type'),  # akatus-boleto akatus-creditcard akatus-debitcard no-payment
+
         })
 
         if self.request.method == 'POST':
@@ -245,23 +248,31 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
         # not valid / request refused by bank) then an exception would be
         # raised and handled by the parent PaymentDetail view)
         facade = akatus.Facade()
-
-        lines_assinaturas = self.request.basket.get_lines_assinaturas()
-        lines_certificados = self.request.basket.get_lines_certificados()
-
         source_type, _ = SourceType.objects.get_or_create(name='akatus-creditcard')
-
         parcelas = self.request.POST.get('certificado_parcela')
 
         bankcard.qtd_parcelas = parcelas
-
         bankcard_com_numero = copy(bankcard)
-
         bankcard.user = self.request.user
         bankcard.save()
 
         if not parcelas:
             raise UnableToTakePayment('Selecione a quantidade de parcelas no pagamento por cartão de crédito')
+
+        lines_assinaturas = self.request.basket.get_lines_assinaturas()
+        lines_certificados = self.request.basket.get_lines_certificados()
+
+        # Assegurar que o valor das assinatoras + valor dos certificados = valor do carrinho
+        #import ipdb; ipdb.set_trace()
+        amount_carrinho = self.request.basket.total_incl_tax
+        amount_assinaturas = 0
+        for line in lines_assinaturas:
+            amount_assinaturas += line.line_price_incl_tax
+        amount_certificados = 0
+        for line in lines_certificados:
+            amount_certificados += line.line_price_incl_tax
+        if amount_carrinho != amount_certificados + amount_assinaturas:
+            raise UnableToTakePayment('Valor do carrinho diferente da soma das assinaturas e certificados')
 
         for lines in (lines_assinaturas, lines_certificados):
             if lines:
@@ -374,6 +385,12 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
         if self.request.POST.get('source-type') == 'no-payment':
             order.set_status('Pago')
 
+        # Se o ambiente for de testes, vamos setar o pedido como pago
+        if settings.AKATUS_ENVIRONMENT == 'TST':
+            order.set_status('Pago')
+            for line in order.lines.all():
+                line.set_status('Pago')
+
         return self.handle_successful_order(order)
 
 
@@ -432,7 +449,20 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
 
         log.info('Order #{} com transaction_id {} alterou o status para {}'.format(order_number, transacao_id, status))
 
-        order = Order.objects.get(number=order_number)
+        # Implementação de um timer que previne a Akatus atualizar o status antes de terminar de criar o objeto Order:
+        order = None
+        for n in range(1, 10):
+            try:
+                order = Order.objects.get(number=order_number) if order_number else None
+            except Order.DoesNotExist:
+                log.info('Order #{} ainda não criada no sistema'.format(order_number, transacao_id, status))
+                sleep(n)
+                continue
+            break
+        if not order:
+            log.error('Order #{} não foi atualizada para {} por não existir ainda no sistema'.format(order_number,
+                                                                                                     status))
+            return self.get(request, *args, **kwargs)
 
         if status == 'Aprovado':
             try:

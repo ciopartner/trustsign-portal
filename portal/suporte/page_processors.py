@@ -1,10 +1,13 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from StringIO import StringIO
-import pprint
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
 from portal.suporte.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
 from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage, VideoTutorialPage
+from logging import getLogger
+
+log = getLogger('portal.suporte.page_processors')
 
 
 @processor_for(FAQPage)
@@ -66,48 +69,53 @@ def ferramentas_processor(request, page):
 
     if request.method == 'POST':
         op = request.POST.get('operation')
-        if op == 'ssl-checker':
-            ssl_checker_form = SSLCheckerForm(request.POST)
-            if ssl_checker_form.is_valid():
-                resultado = ssl_checker_form.processa()
-        elif op == 'csr-decoder':
-            csr_decoder_form = CSRDecoderForm(request.POST)
-            if csr_decoder_form.is_valid():
-                try:
-                    resultado = csr_decoder_form.processa()
-                except:
-                    resultado = {
-                        'ok': False
-                    }
+        try:
+            if op == 'ssl-checker':
+                ssl_checker_form = SSLCheckerForm(request.POST)
+                if ssl_checker_form.is_valid():
+                    resultado = ssl_checker_form.processa()
+            elif op == 'csr-decoder':
+                csr_decoder_form = CSRDecoderForm(request.POST)
+                if csr_decoder_form.is_valid():
+                    try:
+                        resultado = csr_decoder_form.processa()
+                    except:
+                        resultado = {
+                            'ok': False
+                        }
 
-        elif op == 'certificate-key-matcher':
-            certificate_key_matcher_form = CertificateKeyMatcherForm(request.POST, request.FILES)
-            if certificate_key_matcher_form.is_valid():
-                try:
-                    resultado = certificate_key_matcher_form.processa()
-                except Exception:
-                    resultado = {
-                        'ok': False
-                    }
-        elif op == 'ssl-converter':
-            nomes = {
-                SSLConverterForm.STANDARD_PEM: ('%s.cer', 'application/octet-stream'),
-                SSLConverterForm.DER_BINARY: ('%s.der', 'application/octet-stream'),
-                SSLConverterForm.P7B_PKCS_7: ('%s.p7b', 'application/x-pkcs7-certificates'),
-                SSLConverterForm.PFX_PKCS_12: ('%s.p12', 'application/x-pkcs12'),
-            }
+            elif op == 'certificate-key-matcher':
+                certificate_key_matcher_form = CertificateKeyMatcherForm(request.POST, request.FILES)
+                if certificate_key_matcher_form.is_valid():
+                    try:
+                        resultado = certificate_key_matcher_form.processa()
+                    except Exception:
+                        resultado = {
+                            'ok': False
+                        }
+            elif op == 'ssl-converter':
+                nomes = {
+                    SSLConverterForm.STANDARD_PEM: ('%s.cer', 'application/octet-stream'),
+                    SSLConverterForm.DER_BINARY: ('%s.der', 'application/octet-stream'),
+                    SSLConverterForm.P7B_PKCS_7: ('%s.p7b', 'application/x-pkcs7-certificates'),
+                    SSLConverterForm.PFX_PKCS_12: ('%s.p12', 'application/x-pkcs12'),
+                }
 
-            ssl_converter_form = SSLConverterForm(request.POST, request.FILES)
-            if ssl_converter_form.is_valid():
-                certificado = ssl_converter_form.processa()
-                tipo = int(ssl_converter_form.cleaned_data['tipo_para_converter'])
+                ssl_converter_form = SSLConverterForm(request.POST, request.FILES)
+                if ssl_converter_form.is_valid():
+                    certificado = ssl_converter_form.processa()
+                    tipo = int(ssl_converter_form.cleaned_data['tipo_para_converter'])
 
-                nome = '.'.join(ssl_converter_form.cleaned_data['certificado'].name.split('.')[:-1])
+                    nome = '.'.join(ssl_converter_form.cleaned_data['certificado'].name.split('.')[:-1])
 
-                response = HttpResponse(StringIO(certificado), content_type=nomes[tipo][1])
-                response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0] % nome
+                    response = HttpResponse(StringIO(certificado), content_type=nomes[tipo][1])
+                    response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0] % nome
 
-                return response
+                    return response
+        except:
+            log.exception('Ocorreu uma exceção nas ferramentas')
+            if op == 'ssl-converter':
+                resultado = 'erro'
     else:
         op = ''
 

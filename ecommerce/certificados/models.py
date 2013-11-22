@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
 from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextField, DecimalField, EmailField, \
     OneToOneField, FileField, BooleanField, IntegerField, permalink, Manager, Q
 from hashlib import md5
@@ -13,6 +14,7 @@ knu = None
 
 User = get_user_model()
 Order = get_class('order.models', 'Order')
+OrderLine = get_class('order.models', 'Line')
 
 
 class VoucherManager(Manager):
@@ -27,8 +29,7 @@ class VoucherManager(Manager):
 
 
 class Voucher(Model):
-    PRODUTO_SITE_SEGURO = 'site-seguro'
-    PRODUTO_SITE_MONITORADO = 'site-monitorado'
+    # Certificados
     PRODUTO_SSL = 'ssl'
     PRODUTO_SSL_WILDCARD = 'ssl-wildcard'
     PRODUTO_SAN_UCC = 'ssl-san'
@@ -38,10 +39,18 @@ class Voucher(Model):
     PRODUTO_JRE = 'ssl-jre'
     PRODUTO_CODE_SIGNING = 'ssl-cs'
     PRODUTO_SMIME = 'ssl-smime'
+
+    # Domínios, FQDNs e Servidores Adicionais
     PRODUTO_SSL_MDC_DOMINIO = 'ssl-mdc-domain'
     PRODUTO_SSL_EV_MDC_DOMINIO = 'ssl-ev-mdc-domain'
     PRODUTO_SSL_SAN_FQDN = 'ssl-san-fqdn'
+    PRODUTO_SSL_WILDCARD_SERVER = 'ssl-wildcard-servidor'
+
+    # Assinaturas
     PRODUTO_PKI = 'pki'
+    PRODUTO_SITE_SEGURO = 'site-seguro'
+    PRODUTO_SITE_MONITORADO = 'site-monitorado'
+
     PRODUTO_CHOICES = (
         (PRODUTO_SSL, 'SSL'),
         (PRODUTO_SSL_WILDCARD, 'SSL Wildcard'),
@@ -55,15 +64,22 @@ class Voucher(Model):
         (PRODUTO_SSL_MDC_DOMINIO, 'MDC Domínio Adicional'),
         (PRODUTO_SSL_EV_MDC_DOMINIO, 'EV MDC Domínio Adicional'),
         (PRODUTO_SSL_SAN_FQDN, 'SAN FQDN Adicional'),
+        (PRODUTO_SSL_WILDCARD_SERVER, 'Wildcard Servidor Adicional')
     )
+
+    PRODUTO_CERTIFICADOS = [PRODUTO_SSL, PRODUTO_EV, PRODUTO_SSL_WILDCARD, PRODUTO_JRE, PRODUTO_CODE_SIGNING,
+                            PRODUTO_SMIME, PRODUTO_SAN_UCC, PRODUTO_MDC, PRODUTO_EV_MDC]
+    PRODUTO_CERT_ITENS_ADICIONAIS = [PRODUTO_SSL_SAN_FQDN, PRODUTO_SSL_MDC_DOMINIO, PRODUTO_SSL_EV_MDC_DOMINIO,
+                                     PRODUTO_SSL_WILDCARD_SERVER]
+    PRODUTO_ASSINATURAS = [PRODUTO_PKI, PRODUTO_SITE_MONITORADO, PRODUTO_SITE_SEGURO]
 
     LINHA_DEGUSTACAO = 'trial'
     LINHA_BASIC = 'basic'
     LINHA_PRO = 'pro'
     LINHA_PRIME = 'prime'
     LINHA_CHOICES = (
-        (LINHA_DEGUSTACAO, 'Degustação'),
-        (LINHA_BASIC, 'Basico'),
+        (LINHA_DEGUSTACAO, 'Trial'),
+        (LINHA_BASIC, 'Basic'),
         (LINHA_PRO, 'Pro'),
         (LINHA_PRIME, 'Prime'),
     )
@@ -79,7 +95,7 @@ class Voucher(Model):
         (VALIDADE_ANUAL, '1 ano'),
         (VALIDADE_BIANUAL, '2 anos'),
         (VALIDADE_TRIANUAL, '3 anos'),
-        (VALIDADE_DEGUSTACAO, 'Trial'),
+        (VALIDADE_DEGUSTACAO, '30 dias'),
         (VALIDADE_ASSINATURA_MENSAL, 'Assinatura Mensal'),
         (VALIDADE_ASSINATURA_SEMESTRAL, 'Assinatura Semestral'),
         (VALIDADE_ASSINATURA_ANUAL, 'Assinatura Anual'),
@@ -98,6 +114,7 @@ class Voucher(Model):
 
     customer_cnpj = CharField(max_length=32)
     customer_companyname = CharField(max_length=128)
+    customer_tradename = CharField(max_length=128, blank=True, default='')
     customer_zip = CharField(max_length=16)
     customer_address1 = CharField(max_length=128)
     customer_address2 = CharField(max_length=8, blank=True, default='')
@@ -125,13 +142,15 @@ class Voucher(Model):
     ssl_publickey = TextField(blank=True, null=True)
     ssl_revoked_date = DateTimeField(blank=True, null=True)
     ssl_domains_qty = IntegerField(blank=True, default=0)
-    # TODO: apagar o campo abaixo
-    ssl_seal_html = TextField(blank=True, default='')
+
     ssl_key_size = IntegerField(blank=True, null=True)
     ssl_username = CharField(max_length=32, blank=True, null=True)
     ssl_password = CharField(max_length=128, blank=True, null=True)
 
     order = ForeignKey(Order, related_name='vouchers', blank=True, null=True)
+    order_line = ForeignKey(OrderLine, related_name='vouchers', blank=True, null=True)
+    # TODO: Incluír o campo order_line na ida e volta do CRM
+
     order_date = DateTimeField()
     order_item_value = DecimalField(decimal_places=2, max_digits=9)
     order_channel = CharField(max_length=64, choices=ORDERCHANNEL_CHOICES)
@@ -258,6 +277,65 @@ class Voucher(Model):
 <img name="trustseal" alt="Site Autêntico" src="%s/static/" border="0" title="Clique para Validar" />
 </a>''' % (url_validacao, url_imagem_selo)
 
+    @property
+    def is_complemento_certificado(self):
+        """
+        Retorna verdadeiro se for um FQDN, Domínio ou Servidor Adicional, checando contra as categorias do produto
+        """
+        # TODO: Quando o order_item estiver indo e voltando do CRM, alterar a consulta para o
+        # voucher.emissao.order_item.product.categories in ....
+        return self.ssl_product in self.PRODUTO_CERT_ITENS_ADICIONAIS
+
+    @property
+    def is_complemento_utilizado(self):
+        """
+        Retorna True se for um domínio, fqdn ou servidor adicional e já tiver sido utilizado.
+        """
+        return self.is_complemento_certificado and hasattr(self, 'emissao') and \
+            self.emissao.emission_status != self.STATUS_NAO_EMITIDO
+
+    @property
+    def is_complemento_disponivel(self):
+        """
+        Retorna True se for um domínio, fqdn ou servidor adicional e não tiver sido utilizado.
+        """
+        return self.is_complemento_certificado and not hasattr(self, 'emissao')
+
+    @property
+    def is_status_available(self):
+        """
+        Retorna True se o status é de voucher disponível para emissão
+        """
+        return not hasattr(self, 'emissao')
+
+    @property
+    def is_status_ongoing(self):
+        """
+        Retorna True se o status é de emissão em andamento
+        """
+        STATUS_ONGOING = [Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE, Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
+                          Emissao.STATUS_EMISSAO_ENVIADO_COMODO, Emissao.STATUS_REEMISSAO_ENVIADO_COMODO,
+                          Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
+                          Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE, Emissao.STATUS_REVOGACAO_ENVIADO_COMODO,
+                          Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
+                          ]
+        return hasattr(self, 'emissao') and self.emissao.emission_status in STATUS_ONGOING
+
+    @property
+    def is_status_done(self):
+        """
+        Retorna True se o status é de emissão terminada
+        """
+        STATUS_DONE = [Emissao.STATUS_EMITIDO, Emissao.STATUS_EMITIDO_SELO_PENDENTE, Emissao.STATUS_REEMITIDO,
+                       Emissao.STATUS_REVOGADO, Emissao.STATUS_REVOGADO_SELO_PENDENTE,
+                       Emissao.STATUS_ADICIONAL_USADO]
+        return hasattr(self, 'emissao') and self.emissao.emission_status in STATUS_DONE
+
+
+class DominioValidator(RegexValidator):
+    regex = r'^(\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
+    message = 'Domínio inválido'
+
 
 class Emissao(Model):
     SERVIDOR_TIPO_CHOICES = (
@@ -356,7 +434,7 @@ class Emissao(Model):
     requestor_user = ForeignKey(User, related_name='emissoes')
     requestor_timestamp = DateTimeField(auto_now_add=True)
 
-    emission_url = CharField(max_length=256, blank=True, null=True)
+    emission_url = CharField(max_length=256, blank=True, null=True, validators=[DominioValidator()])
     emission_urls = TextField(blank=True, null=True)
     emission_csr = TextField(blank=True, null=True)
 

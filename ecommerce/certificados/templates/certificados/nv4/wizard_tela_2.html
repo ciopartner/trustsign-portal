@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block coluna-direita %}
-    {{ form.errors }}
     <h2>Dados Específicos do Produto Escolhido</h2>
 
     {{ form.non_field_errors }}
@@ -16,23 +15,27 @@
         {% include 'certificados/includes/dados_produto.html' %}
 
         {% if form.precisa_carta_cessao %}
-            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}</td></tr>
+            <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}
+            <a href="/static/portal/documentos/carta-de-cessao.pdf" target="_blank">Documento Modelo</a></td></tr>
         {% endif %}
 
         <tr><th>Tipo do Servidor:</th><td>{{ form.emission_server_type }} {{ form.emission_server_type.errors }}</td></tr>
         <tr><th>E-mail para envio do certificado:</th><td>{{ form.emission_publickey_sendto }} {{ form.emission_publickey_sendto.errors }}</td></tr>
-        <tr id="lista-fqdns">
+        <tr>
             <th>Lista de {% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN's{% else %}domínios{% endif %}:</th>
-            <td>
-                <table class="fqdn-table">
+            <td></td>
+        </tr>
+        <tr id="lista-fqdns">
+            <td colspan="2">
+                <table class="table fqdn-table">
                     <tr>
                         <th>{% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
                         <th>E-mail</th>
                     </tr>
                     {% for fqdn in form.get_domains_csr %}
-                        <tr id="fqdn-{{ forloop.counter0 }}">
+                        <tr data-fqdn="{{ fqdn }}" id="fqdn-{{ forloop.counter0 }}">
                             <td>{{ fqdn }}</td>
-                            <td><span></span><a data-toggle="modal" href="#windowEscolheEmail">escolher</a></td>
+                            <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}" href="#windowEscolheEmail">escolher</a></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -42,8 +45,10 @@
         </tr>
         <tr><th>Constrato Social:</th><td>{{ form.emission_articles_of_incorporation }} {{ form.emission_articles_of_incorporation.errors }}</td></tr>
         <tr><th>Comprovante de Endereço:</th><td>{{ form.emission_address_proof }} {{ form.emission_address_proof.errors }}</td></tr>
-        <tr><th>CCSA:</th><td>{{ form.emission_ccsa }} {{ form.emission_ccsa.errors }}</td></tr>
-        <tr><th>EVCR:</th><td>{{ form.emission_evcr }} {{ form.emission_evcr.errors }}</td></tr>
+        <tr><th>CCSA:</th><td>{{ form.emission_ccsa }} {{ form.emission_ccsa.errors }}
+                            <a href="/static/portal/documentos/ccsa.pdf" target="_blank">Documento Modelo</a></td></tr>
+        <tr><th>EVCR:</th><td>{{ form.emission_evcr }} {{ form.emission_evcr.errors }}
+                        <a href="/static/portal/documentos/ev_certificate_request.pdf" target="_blank">Documento Modelo</a></td></tr>
 
     </table>
     {{ form.emission_url }}

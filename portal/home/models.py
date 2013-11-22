@@ -69,6 +69,7 @@ class TrustSignProfile(Model):
 
     cliente_cnpj = CharField(max_length=32, blank=True, default='')
     cliente_razaosocial = CharField(max_length=128, blank=True, default='')
+    cliente_nomefantasia = CharField(max_length=128, blank=True, default='')
     cliente_logradouro = CharField(max_length=128, blank=True, default='')
     cliente_numero = CharField(max_length=16, blank=True, default='')
     cliente_complemento = CharField(max_length=64, blank=True, default='')

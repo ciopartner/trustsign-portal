@@ -65,6 +65,7 @@ def get_dados_empresa(cnpj):
             data = {
                 'cnpj': cnpj,
                 'razao_social': r.nome_empresarial,
+                'nome_fantasia': r.titulo_estabelecimento,
                 'logradouro': r.logradouro,
                 'numero': r.numero,
                 'complemento': r.complemento,
@@ -80,6 +81,7 @@ def get_dados_empresa(cnpj):
             data = {
                 'cnpj': cnpj,
                 'razao_social': 'CIO Partner',
+                'nome_fantasia': 'CIO Partner',
                 'logradouro': 'Av. Dr. Candido Motta Filho',
                 'numero': '856',
                 'complemento': '1º andar',
@@ -119,11 +121,17 @@ def etree_to_dict(t):
     return d
 
 
-def send_template_email(to, subject, template, context, from_email=None, bcc=None,
-                        connection=None, attachments=None, headers=None, cc=None):
+def get_template_email(to, subject, template, context, from_email=None, bcc=None,
+                       connection=None, attachments=None, headers=None, cc=None):
     html_content = get_template(template)
     context = Context(context)
     msg = EmailMessage(subject, html_content.render(context), from_email=from_email,
                        to=to, bcc=bcc, connection=connection, attachments=attachments, headers=headers, cc=cc)
     msg.content_subtype = 'html'
+    return msg
+
+
+def send_template_email(to, subject, template, context, from_email=None, bcc=None,
+                        connection=None, attachments=None, headers=None, cc=None):
+    msg = get_template_email(to, subject, template, context, from_email, bcc, connection, attachments, headers, cc)
     msg.send()

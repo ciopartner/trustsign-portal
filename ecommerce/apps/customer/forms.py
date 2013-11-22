@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm as AuthPasswordChangeForm
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.forms import CharField, TextInput, BooleanField, ChoiceField, EmailField
@@ -46,6 +47,7 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
     cnpj = BRCNPJField(label='CNPJ', widget=TextInput(attrs={'class': 'mask-cnpj'}))
 
     razao_social = CharFieldDisabled(max_length=128, label='Razão Social')
+    nome_fantasia = CharFieldDisabled(max_length=128, label='Nome Fantasia')
     logradouro = CharFieldDisabled(max_length=128)
     numero = CharFieldDisabled(max_length=16, label='Número')
     complemento = CharFieldDisabled(max_length=64)
@@ -61,15 +63,15 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
 
     cliente_ecommerce = BooleanField(label='e-commerce', help_text='Seu site realiza operações de e-commerce?', required=False)
     cliente_tipo_negocio = ChoiceField(label='Tipo do Negócio', choices=TrustSignProfile.TIPO_NEGOCIO_CHOICES)
-    cliente_fonte_potencial = ChoiceField(label='Fonte do Potencial', choices=TrustSignProfile.FONTE_POTENCIAL_CHOICES)
+    cliente_fonte_potencial = ChoiceField(label='Como chegou até nós', choices=TrustSignProfile.FONTE_POTENCIAL_CHOICES)
 
     email_nfe = EmailField(label='e-Mail p/ envio da NFe')
 
     class Meta:
         model = User
-        fields = ('cnpj', 'razao_social', 'logradouro', 'numero', 'complemento', 'cep', 'bairro', 'cidade', 'uf',
-                  'situacao_cadastral', 'cliente_tipo_negocio', 'cliente_fonte_potencial', 'cliente_ecommerce', 'nome',
-                  'sobrenome', 'telefone_principal', 'email', 'email_nfe')
+        fields = ('cnpj', 'razao_social', 'nome_fantasia', 'logradouro', 'numero', 'complemento', 'cep', 'bairro',
+                  'cidade', 'uf',  'situacao_cadastral', 'cliente_tipo_negocio', 'cliente_fonte_potencial',
+                  'cliente_ecommerce', 'nome', 'sobrenome', 'telefone_principal', 'email', 'email_nfe')
 
     def clean_cnpj(self):
         cnpj = self.cleaned_data['cnpj']
@@ -113,6 +115,7 @@ class EmailUserCreationForm(CoreEmailUserCreationForm):
 
         profile.cliente_cnpj = data_empresa['cnpj']
         profile.cliente_razaosocial = data_empresa['razao_social']
+        profile.cliente_nomefantasia = data_empresa['nome_fantasia']
         profile.cliente_logradouro = data_empresa['logradouro']
         profile.cliente_numero = data_empresa['numero']
         profile.cliente_complemento = data_empresa['complemento']
@@ -197,3 +200,8 @@ class ProfileForm(CoreProfileForm):
         user.save()
 
         return profile
+
+
+class PasswordChangeForm(AuthPasswordChangeForm):
+
+    new_password1 = PasswordField(label=_("New password"),)

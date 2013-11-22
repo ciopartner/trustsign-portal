@@ -13,13 +13,13 @@
         <div class="well">
             {% if resultado and op == 'csr-decoder' %}
                 {% if resultado.ok %}
-                    <p><b>Signature:</b> valid</p>
+                    <p><b>Signature:</b> Válida</p>
                     <p><b>Key Size:</b> {{ resultado.KeySize }}</p>
-                    <p><b>Subject</b>: {% if resultado.subject_ok %}Does not contain empty values{% else %}Does contain empty values{% endif %}</p>
+                    <p><b>Subject</b>: {% if resultado.subject_ok %}Ok, não possui campos em branco.{% else %}Possui campos em branco.{% endif %}</p>
                     <hr>
                     <p><b>Common Name:</b> {{ resultado.CN }}</p>
-                    <p><b>Organizational Unit Name:</b> {{ resultado.OU }}</p>
                     <p><b>Organization Name:</b> {{ resultado.O }}</p>
+                    <p><b>Organizational Unit Name:</b> {{ resultado.OU }}</p>
                     <p><b>Post Office Box:</b> {{ resultado.POBox }}</p>
                     <p><b>Street Address 1:</b> {{ resultado.STREET1 }}</p>
                     <p><b>Street Address 2:</b> {{ resultado.STREET2 }}</p>
@@ -30,6 +30,7 @@
                     <p><b>Country Name:</b> {{ resultado.C }}</p>
                     <p><b>Email Address:</b> {{ resultado.Email }}</p>
                     <p><b>Telephone Number:</b> {{ resultado.Phone }}</p>
+                    <p><b>DNS:</b> {% for dominio in resultado.dnsNames  %}{{ dominio }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
                 {% else %}
                     <p>O CSR possui uma assinatura inválida.</p>
                 {% endif %}

@@ -3,12 +3,13 @@ from __future__ import unicode_literals
 from copy import copy
 import os
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.formtools.wizard.views import SessionWizardView
+from django.contrib.sites.models import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail, EmailMessage
 from django.core.urlresolvers import reverse
-from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.template import Context
 from django.template.loader import get_template
@@ -21,6 +22,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from ecommerce.certificados import erros
+from ecommerce.website.utils import limpa_cnpj, send_template_email
 from libs import comodo
 from ecommerce.certificados.authentication import UserPasswordAuthentication
 from ecommerce.certificados.forms import RevogacaoForm, ReemissaoForm
@@ -30,7 +32,9 @@ from ecommerce.certificados.serializers import EmissaoNv0Serializer, EmissaoNv1S
     ReemissaoSerializer, EmissaoValidaSerializer, EmissaoNvBSerializer
 from django.conf import settings
 import logging
+from portal.suporte.utils import decode_csr
 
+User = get_user_model()
 Order = get_class('order.models', 'Order')
 log = logging.getLogger('ecommerce.certificados.view')
 
@@ -332,12 +336,28 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
     serializer_class = VoucherSerializer
 
     def pre_save(self, obj):
+        #cnpj do CRM vem com máscara:
+        obj.customer_cnpj = limpa_cnpj(obj.customer_cnpj)
+
         if obj.order_number:
             try:
                 obj.order = Order.objects.get(number=obj.order_number)
             except Order.DoesNotExist:
                 log.error('Não existe order o order_number informado.')
                 raise
+
+    def post_save(self, obj, created=False):
+        try:
+            user = User.objects.get(username=obj.customer_cnpj)
+            subject = 'Processo de Emissão Liberado'
+            template = 'emails/emissao_solicitada_sucesso.html'
+            context = {
+                'voucher': obj,
+                'site': get_current_site(self.request),
+            }
+            send_template_email([user.email], subject, template, context)
+        except User.DoesNotExist:
+            log.warning('Emissão liberada de um CNPJ sem usuário cadastrado: {}'.format(obj.customer_cnpj))
 
     def post(self, request, *args, **kwargs):
         if settings.DEBUG:
@@ -536,13 +556,15 @@ class EscolhaVoucherView(ListView):
     context_object_name = 'vouchers'
 
     def get_queryset(self):
-        qs = Voucher.objects.select_related('emissao').filter(
-            Q(emissao__isnull=True) | ~Q(emissao__emission_status__in=(
+        qs = Voucher.objects.select_related('emissao').exclude(
+            emissao__emission_status__in=(
                 Emissao.STATUS_REVOGADO, Emissao.STATUS_EXPIRADO, Emissao.STATUS_OCORREU_ERRO_COMODO
-            )))
+            ))
+
         user = self.request.user
         if not user.is_superuser and user.get_profile().is_cliente:
             qs = qs.filter(customer_cnpj=user.username)
+
         return qs
 
 
@@ -611,16 +633,19 @@ class EmissaoWizardView(SessionWizardView):
             self.envia_email_usuario()
         return HttpResponseRedirect(reverse(self.done_redirect_url))
 
-    def envia_email_usuario(self,):
+    def envia_email_usuario(self):
         voucher = self.get_voucher()
-        html_content = get_template('emails/emissao_solicitada_sucesso.html')
-        email_cliente = voucher.emissao.emission_publickey_sendto
-        context = Context({
-            'voucher': voucher,  # TODO: ver com o Carlos o que vai ser necessário passar pro template
-        })
-        msg = EmailMessage('Emissão iniciada com sucesso', html_content.render(context), to=[email_cliente])
-        msg.content_subtype = "html"  # Main content is now text/html
-        msg.send()
+        try:
+            user = User.objects.get(username=voucher.customer_cnpj)
+            subject = 'Emissão iniciada com sucesso'
+            template = 'emails/emissao_solicitada_sucesso.html'
+            context = {
+                'voucher': voucher,
+                'site': get_current_site(self.request),
+            }
+            send_template_email([user.email], subject, template, context)
+        except User.DoesNotExist:
+            log.warning('Emissão em processamento de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
 
     def get_form_initial(self, step):
         initial = super(EmissaoWizardView, self).get_form_initial(step)
@@ -637,7 +662,10 @@ class EmissaoWizardView(SessionWizardView):
                 'callback_observacao': voucher.customer_callback_note,
             })
 
-            if not self.revisao:
+            if self.revisao:
+                initial['emission_url'] = self.instance.emission_url
+                initial['emission_csr'] = self.instance.emission_csr
+            else:
                 cd = self.get_cleaned_data_for_step('tela-1')
                 initial['emission_url'] = cd['emission_url']
                 initial['emission_csr'] = cd['emission_csr']
@@ -663,8 +691,10 @@ class EmissaoWizardView(SessionWizardView):
 
             if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
                 if not emissao.emission_urls:
-                    dominios = ' '.join(form.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
-                    emissao.emission_urls = dominios
+                    dominios = form.get_csr_decoded(emissao.emission_csr).get('dnsNames', [])
+                    if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
+                        dominios.insert(0, emissao.emission_url)
+                    emissao.emission_urls = ' '.join(dominios)
         return data
 
     def get_context_data(self, form, **kwargs):
@@ -714,6 +744,14 @@ class EmissaoWizardView(SessionWizardView):
                 send_mail('[Alerta-Ecommerce] Solicitação pendente #%s' % voucher.crm_hash, message, settings.DEFAULT_FROM_EMAIL, [settings.TRUSTSIGN_VALIDACAO_EMAIL])
         else:
             emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
+
+        if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
+            if not emissao.emission_urls:
+                csr = decode_csr(emissao.emission_csr)
+                dominios = csr.get('dnsNames', [])
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and emissao.emission_url not in dominios:
+                    dominios.insert(0, emissao.emission_url)
+                emissao.emission_urls = ' '.join(dominios)
 
         emissao.save()
 

@@ -37,6 +37,7 @@ h3{
     border-bottom: 1px solid #DDD;
     padding-bottom: 5px;
     margin-bottom: 5px;
+    color: #000000;
 }
 .left-menu aside i{
     width: 45px;
@@ -1866,6 +1867,19 @@ div.ferramentas select{
     width: 300px;
 }
 
+div.ferramentas .errorlist {
+    margin: 0;
+    padding: 0 0 10px 0;
+    color: #B94A48;
+    font-size: 130%;
+    font-weight: bold;
+}
+div.ferramentas .errorlist li {
+    padding: 0 0 5px 0;
+    list-style: none;
+}
+
+
 /*   PÁGINA 404   */
 
 .frame-404 {
@@ -1968,7 +1982,7 @@ div.ferramentas select{
 
 .linha-pergunta-concluida{
     background: #aaa;
-    width: 10.5%%;
+    width: 10.5%;
     height: 5px;
     transition: width 1s;
 }
@@ -2214,7 +2228,7 @@ h3.title{
     background: url("../img/youtube/youtube-seta.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     content: "";
     height: 23px;
-    left: 78px;
+    left: 60px;
     pointer-events: none;
     position: absolute;
     top: 39px;
@@ -2223,11 +2237,14 @@ h3.title{
 
 #video-tutorial .video img{
     float: left;
+    height: 100px;
     margin-right: 10px;
-    width: 200px;
+    width: 150px;
 }
 
-#video-tutorial .video h2{
+#video-tutorial .video h3{
     margin-top: 0;
     color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
 }

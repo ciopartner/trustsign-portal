@@ -13,22 +13,35 @@
 */
 .emissao input[type=text],
 .emissao textarea{
-    width: 270px;
+    width: 235px;
 }
 
 .emissao select, .emissao input[type=file]{
-    width: 284px;
+    width: 249px;
 }
 
 .emissao .nome input[type=text] {
-    width: 126px;
+    width: 109px;
 }
 
 .emissao th{
     padding: 10px;
     text-align: right;
+    width: 120px;
 }
 
+.fqdn-table{
+    width: 100%;
+    background: #ccc;
+    border-spacing: 1px;
+    border-collapse: separate;
+}
+
+.fqdn-table th, .fqdn-table td{
+    text-align: center;
+    border-top: none;
+    background: #fff;
+}
 .emissao.th{
     padding: 10px;
 }
@@ -72,4 +85,21 @@ ul.errorlist{
 
 #windowEscolheEmail input[type=radio]{
     margin: 4px
+}
+
+.emissao .botoes{
+    margin-top: 10px;
+    clear: both;
+    text-align: center;
+    /*width: 390px;*/
+    /*float: right;*/
+}
+
+/*.emissao .botoes .btn{*/
+    /*float: none;*/
+/*}*/
+
+.emissao .botoes input[type=button]{
+    margin-right: 4px;
+    width: 121px;
 }

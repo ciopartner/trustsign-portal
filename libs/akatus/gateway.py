@@ -39,23 +39,23 @@ class Akatus(object):
 
     def call_server(self, method, data):
         url, tipo = self.get_method_details(method)
-
+        # TODO: Tá dando pau de unicode nesta birosca
+        #log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, data))
         if tipo == 'GET':
             response = requests.get(url, params=data)
         elif tipo == 'POST':
             response = requests.post(url, data=data)
         else:
-            log.warning('URLs do Akatus.METHODS configurado errado')
+            log.error('URLs do Akatus.METHODS configurado errado')
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
         resposta = response.text.encode('utf-8')
-
-        log.debug('URL[{}]: {}'.format(response.status_code, url))
-        log.debug('Request: {}'.format(smart_unicode(data)))
-        log.debug('Response: {}'.format(smart_unicode(resposta)))
+        # TODO: Tá dando pau de unicode nesta birosca
+        #log.debug('\nDados do Response: {}'.format(resposta))
 
         if response.status_code != 200:
-            log.warning('Ocorreu um erro durante a chamada do método: {}\ndata: {} \nresponse: {}\n'.format(method, data, resposta))
+            log.error('HTTP Response retornado da Akatus: {}'.format(response.status_code))
+            log.error('Dados enviados para a Akatus via {}: {}'.format(method, data))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
         if url.endswith('.xml'):

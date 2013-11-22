@@ -93,7 +93,7 @@ ERROS = {
     ERRO_CSR_PRODUTO_EXIGE_CHAVE_4096_BITS: 'Erro na CSR: para este produto o tamanho da chave obrigatoriamente deve ser 4096 bits',
     ERRO_EMAIL_CONTATO_DOMINIO_DIFERENTE: 'O e-mail de contato obrigatoriamente precisa pertencer ao domínio do certificado a ser emitido (ou de um dos domínios no caso de certificado para múltiplos domínios)',
     ERRO_SITUACAO_CADASTRAL_INATIVA: 'A situação cadastral da empresa cliente não está ativa na Receita Federal do Brasil. Favor entrar em contato com o suporte.',
-    ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que o campo ORGANIZATION da CSR seja idêntico ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
+    ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ: 'O campo ORGANIZATION da CSR deve ser igual a Razão Social do Cartão CNPJ.',
     ERRO_CSR_ENDERECO_DIFERENTE_CNPJ: 'É obrigatória a carta de cessão preenchida. É necessário que os campos de endereço da CSR sejam idênticos ao do Cartão CNPJ para que este arquivo não seja obrigatório.',
     ERRO_DOMINIO_SEM_EMAIL_VALIDACAO: 'Para cada domínio existente na CSR é necessário o preenchimento de um e-mail de validação',
     ERRO_CAMPO_EMAIL_ENVIO_CERT_OBRIGATORIO: 'É obrigatório informar um e-mail para envio da chave pública',
@@ -118,7 +118,7 @@ ERROS = {
     ERRO_VOUCHER_JA_CANCELADO: 'Este Cupom de Emissão já se encontra cancelado',
     ERRO_CSR_REEMISSAO_CHAVE_PUBLICA: 'Na CSR do processo de reemissão só é possível alterar a chave pública',
     ERRO_OBTER_RAZAOSOCIAL_DOMINIO: 'Não foi possível recuperar a Razão Social a partir do domínio informado (possível problema no whois, contacte o suporte)',
-    ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO: 'Erro na CSR: O campo COMMON NAME (CN) deve conter o nome de um domínio',
+    ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO: 'O domínio informado deve ser igual ao domínio da CSR',
     ERRO_CSR_INVALIDA_DOMINIO_NAO_CONTIDO_NA_CSR: 'O domínio ou FQDN primário deve estar contido na lista de domínios da CSR',
 
     ERRO_EMISSAO_NAO_EXISTENTE: 'Emissão não existente',
