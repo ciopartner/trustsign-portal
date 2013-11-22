@@ -39,6 +39,10 @@ class OscarToCRMMixin(object):
             for t in s.transactions.all():
                 transactions.append(t)
 
+        # Produtos com preço zerado não possuem transaction, porém precisam ser enviados para o CRM
+        if order.lines.filter(paymentevent__reference__isnull=True).exists():
+            transactions.append(None)
+
         # Para cada transação, crie uma oportunidade e inclua todos os produtos daquela transação
         for t in transactions:
             # Cria a oportunidade
