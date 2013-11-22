@@ -73,7 +73,7 @@ class Voucher(Model):
                                      PRODUTO_SSL_WILDCARD_SERVER]
     PRODUTO_ASSINATURAS = [PRODUTO_PKI, PRODUTO_SITE_MONITORADO, PRODUTO_SITE_SEGURO]
 
-    LINHA_DEGUSTACAO = 'trial'
+    LINHA_DEGUSTACAO = 'na'
     LINHA_BASIC = 'basic'
     LINHA_PRO = 'pro'
     LINHA_PRIME = 'prime'
