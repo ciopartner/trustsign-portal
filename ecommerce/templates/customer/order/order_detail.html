@@ -94,7 +94,7 @@
 {#                    {% endiffeature %}#}
                 </td>
 {#                <td>{{ line.est_dispatch_date|default:"-" }}</td>#}
-                <td>{{ order.date_placed }}</td>
+                <td>{{ order.date_placed|date:"d/m/Y" }}</td>
                 <td>{{ line.quantity }}</td>
 {#                <td>{{ line.line_price_before_discounts_excl_tax|currency:order.currency }}</td>#}
                 <td>{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</td>
