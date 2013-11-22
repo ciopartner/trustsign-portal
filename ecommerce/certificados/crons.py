@@ -9,13 +9,11 @@ from django.conf import settings
 from logging import getLogger
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import get_current_site
-from django.core.mail import send_mail, EmailMessage
-from django.template.context import Context
-from django.template.loader import get_template
+from django.core.mail import send_mail
 from django_cron import CronJobBase, Schedule
 import requests
 from django.utils.timezone import now
-from ecommerce.website.utils import send_template_email, get_template_email
+from ecommerce.website.utils import get_template_email
 from libs.crm.crm import CRMClient
 
 log = getLogger('portal.certificados.crons')
@@ -124,12 +122,11 @@ class CheckEmailJob(CronJobBase):
                     if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
                         continue
 
-                    emissao.emission_mail_attachment_path = self.extract_attachment(part, counter)
+                    emissao.emission_mail_attachment_path, counter = self.extract_attachment(part, counter)
 
                 emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
 
                 emissao.save()
-                self.envia_email_usuario(emissao)
 
             except (IndexError, AttributeError):
                 log.error('Recebeu e-mail fora do padrão (#{})'.format(subject))
@@ -163,24 +160,7 @@ class CheckEmailJob(CronJobBase):
             fp.write(part.get_payload(decode=True))
             fp.close()
 
-        return att_path
-
-    def envia_email_usuario(self, emissao):
-        User = get_user_model()
-        voucher = emissao.voucher
-        try:
-            user = User.objects.get(username=voucher.customer_cnpj)
-            subject = 'Emissão Concluída'
-            template = 'emails/emissao_solicitada_sucesso.html'
-            context = {
-                'voucher': voucher,
-                'site': get_current_site(None),
-            }
-            msg = get_template_email([user.email], subject, template, context)
-            msg.attach_file(emissao.emission_mail_attachment_path)
-            msg.send()
-        except User.DoesNotExist:
-            log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
+        return att_path, counter
 
 
 def chunks(l, n):
@@ -264,7 +244,7 @@ class AtivaSelosJob(CronJobBase):
         })
 
     def processa_ativado(self, voucher):
-        # TODO: decidir onde atualizar o contrato da reemissão, e como enviar o arquivo para o CRM
+        # TODO: decidir onde atualizar o contrato da emissão, e como enviar o arquivo para o CRM
         self.atualiza_contrato(voucher, 'valido', seal_html=voucher.get_seal_html)
         self.envia_email_cliente(voucher)
 
@@ -277,14 +257,21 @@ class AtivaSelosJob(CronJobBase):
             self.envia_email_suporte(voucher, status)
 
     def envia_email_cliente(self, voucher):
-        html_content = get_template('emails/envio_certificado_e_selo.html')
-        email_cliente = voucher.emissao.emission_publickey_sendto
-        context = Context({
-            'voucher': voucher,  # TODO: ver com o Carlos o que vai ser necessário passar pro template
-        })
-        msg = EmailMessage('Certificado Digital e Selo TrustSign', html_content.render(context), to=[email_cliente])
-        msg.content_subtype = "html"  # Main content is now text/html
-        msg.send()
+        User = get_user_model()
+        emissao = voucher.emissao
+        try:
+            user = User.objects.get(username=voucher.customer_cnpj)
+            subject = 'Emissão Concluída'
+            template = 'emails/emissao_solicitada_sucesso.html'
+            context = {
+                'voucher': voucher,
+                'site': get_current_site(None),
+            }
+            msg = get_template_email([user.email], subject, template, context)
+            msg.attach_file(emissao.emission_mail_attachment_path)
+            msg.send()
+        except User.DoesNotExist:
+            log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
 
     def envia_email_suporte(self, voucher, status):
         message = 'Ocorreu um erro ao atualizar o contrato no CRM do voucher #%s para o status <%s>\ncliente: %s' % (voucher.crm_hash,

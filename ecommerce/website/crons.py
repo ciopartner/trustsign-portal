@@ -1,9 +1,13 @@
 # coding=utf-8
 from logging import getLogger
+from django.contrib.auth import get_user_model
+from django.contrib.sites.models import get_current_site
 from django_cron import CronJobBase, Schedule
 from oscar.core.loading import get_class
+from ecommerce.website.utils import send_template_email
 from libs.crm.mixins import OscarToCRMMixin
 
+User = get_user_model()
 log = getLogger('ecommerce.website.crons')
 
 
@@ -25,3 +29,16 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
             for line in order.lines.all():
                 line.set_status('Em Processamento')
             log.info('Order #%s: alterado status para Em processamento' % order.number)
+
+
+    def send_email(self, order):
+        try:
+            subject = 'Processo de Emissão Liberado'
+            template = 'customer/emails/pedido_concluido.html'
+            context = {
+                'order': order,
+                'site': get_current_site(None),
+            }
+            send_template_email([order.user.email], subject, template, context)
+        except User.DoesNotExist:
+            log.warning('Emissão liberada sem usuário da order #{}'.format(order.number))

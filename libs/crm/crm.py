@@ -398,6 +398,8 @@ class CRMClient(object):
 
         self.set_entry('Contracts', data)
 
+        #TODO: enviar ao CRM o certificate_file
+
     def update_or_create_account(self, cliente):
         """
         Atualiza a account se existir, senão cria a mesma

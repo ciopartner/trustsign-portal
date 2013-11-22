@@ -346,19 +346,6 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
                 log.error('Não existe order o order_number informado.')
                 raise
 
-    def post_save(self, obj, created=False):
-        try:
-            user = User.objects.get(username=obj.customer_cnpj)
-            subject = 'Processo de Emissão Liberado'
-            template = 'emails/emissao_solicitada_sucesso.html'
-            context = {
-                'voucher': obj,
-                'site': get_current_site(self.request),
-            }
-            send_template_email([user.email], subject, template, context)
-        except User.DoesNotExist:
-            log.warning('Emissão liberada de um CNPJ sem usuário cadastrado: {}'.format(obj.customer_cnpj))
-
     def post(self, request, *args, **kwargs):
         if settings.DEBUG:
             log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
@@ -637,7 +624,7 @@ class EmissaoWizardView(SessionWizardView):
         voucher = self.get_voucher()
         try:
             user = User.objects.get(username=voucher.customer_cnpj)
-            subject = 'Emissão iniciada com sucesso'
+            subject = 'Emissão Solicitada com Sucesso'
             template = 'emails/emissao_solicitada_sucesso.html'
             context = {
                 'voucher': voucher,
