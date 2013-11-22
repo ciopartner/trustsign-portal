@@ -53,7 +53,7 @@ class Akatus(object):
 
         if response.status_code != 200:
             log.error('HTTP Response retornado da Akatus: {}'.format(response.status_code))
-            log.error('Dados enviados para a Akatus via {}: {}'.format(method, data))
+            log.error('Dados enviados para a Akatus via {}: {}'.format(method, smart_unicode(data)))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 
         if url.endswith('.xml'):

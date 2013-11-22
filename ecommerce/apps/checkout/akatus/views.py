@@ -249,7 +249,7 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
         # raised and handled by the parent PaymentDetail view)
         facade = akatus.Facade()
         source_type, _ = SourceType.objects.get_or_create(name='akatus-creditcard')
-        parcelas = self.request.POST.get('certificado_parcela')
+        parcelas = self.request.POST.get('certificado_parcela', '1')
 
         bankcard.qtd_parcelas = parcelas
         bankcard_com_numero = copy(bankcard)
@@ -265,13 +265,11 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
         # Assegurar que o valor das assinatoras + valor dos certificados = valor do carrinho
         #import ipdb; ipdb.set_trace()
         amount_carrinho = self.request.basket.total_incl_tax
-        amount_assinaturas = 0
-        for line in lines_assinaturas:
-            amount_assinaturas += line.line_price_incl_tax
-        amount_certificados = 0
-        for line in lines_certificados:
-            amount_certificados += line.line_price_incl_tax
+        amount_assinaturas = sum(line.line_price_incl_tax for line in lines_assinaturas)
+        amount_certificados = sum(line.line_price_incl_tax for line in lines_certificados)
+
         if amount_carrinho != amount_certificados + amount_assinaturas:
+            log.info('amount_assinaturas: {} - amount_certificados: {} - basket: {}'.format(amount_assinaturas, amount_certificados, amount_carrinho))
             raise UnableToTakePayment('Valor do carrinho diferente da soma das assinaturas e certificados')
 
         for lines in (lines_assinaturas, lines_certificados):
