@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-from oscar.apps.basket.views import *
+import json
+from django.contrib import messages
+from django.http import HttpResponse
+from django.template import RequestContext
+from django.template.loader import render_to_string
+from oscar.apps.basket.views import BasketView as CoreBasketView
+
 
 def get_messages(basket, offers_before, offers_after,
                  include_buttons=True):
@@ -41,5 +47,18 @@ def get_messages(basket, offers_before, offers_after,
         offer_messages.append((
             messages.INFO, msg))
 
-
     return offer_messages
+
+
+class BasketView(CoreBasketView):
+
+    def json_response(self, ctx, flash_messages):
+        basket_html = render_to_string(
+            'basket/partials/basket_content.html',
+            RequestContext(self.request, ctx))
+        payload = {
+            'content_html': basket_html,
+            'total_items': self.request.basket.num_items,
+            'messages': flash_messages.to_json()}
+        return HttpResponse(json.dumps(payload),
+                            content_type="application/json")
