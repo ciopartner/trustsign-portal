@@ -50,6 +50,7 @@ class ClienteCRM(object):
 
         self.cnpj = None
         self.razaosocial = None
+        self.nomefantasia = None
         self.logradouro = None
         self.numero = None
         self.complemento = None
@@ -274,13 +275,16 @@ class CRMClient(object):
 
         return response_data
 
-    def set_entry_account(self, cliente):
+    def set_entry_account(self, cliente, update_id=None):
         """
         Cria uma account no CRM
+        Se for informado update_id, atualiza em vez de inserir
         """
-        response = self.set_entry('Accounts', {
+
+        data = {
             'corporate_tax_registry_c': cliente.cnpj,
             'name': cliente.razaosocial,
+            'trading_name_c': cliente.nomefantasia,
             'billing_address_street': cliente.logradouro,
             'billing_address_number_c': cliente.numero,
             'billing_address_complement_c': cliente.complemento,
@@ -294,7 +298,12 @@ class CRMClient(object):
             'industry': cliente.tipo_negocio,
             'e_commerce_c': cliente.is_ecommerce,
             'lead_source': cliente.fonte_do_potencial,
-        })
+        }
+
+        if update_id is not None:
+            data['id'] = update_id
+
+        response = self.set_entry('Accounts', data)
 
         return response['id']
 
@@ -389,13 +398,15 @@ class CRMClient(object):
 
         self.set_entry('Contracts', data)
 
-    def get_or_create_account(self, cliente):
+    def update_or_create_account(self, cliente):
+        """
+        Atualiza a account se existir, senão cria a mesma
+        """
         account_id = self.get_account(cliente.cnpj)['entry_list']
 
-        return account_id[0]['id'] if account_id else self.set_entry_account(cliente)
+        return self.set_entry_account(cliente, account_id[0]['id'] if account_id else None)
 
     def get_or_create_contact(self, contato):
-
         contact_id = self.get_contact(contato.account_id, contato.nome, contato.sobrenome)['entry_list']
 
         return contact_id[0]['id'] if contact_id else self.set_entry_contact(contato)
@@ -409,7 +420,7 @@ class CRMClient(object):
         try:
             self.login()
 
-            account_id = self.get_or_create_account(cliente)
+            account_id = self.update_or_create_account(cliente)
 
             contato.account_id = account_id
             contact_id = self.get_or_create_contact(contato)
