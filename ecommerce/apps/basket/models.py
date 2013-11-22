@@ -55,7 +55,7 @@ class Basket(AbstractBasket):
             # TODO: Se uma linha possuir a categoria ASSINATURA e (CERTIFICADO | COMPLEMENTO), raise exception
 
         lines = [line for line in self.all_lines()
-                 if line.product.categories.filter(slug__in=category, slug__not__in=category_negative).exists()]
+                 if line.product.categories.filter(slug__in=category).exclude(slug__in=category_negative).exists()]
 
         return lines
 
