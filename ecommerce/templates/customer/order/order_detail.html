@@ -175,7 +175,7 @@
         {% csrf_token %}
         <input type="hidden" name="order_id" value="{{ order.id }}" />
         <input type="hidden" name="action" value="reorder" />
-        <button type="submit" class="btn btn-orange">{% trans 'Re-order all items' %}</button>
+        <button type="submit" class="btn btn-orange span4">{% trans 'Re-order all items' %}</button>
     </form>
 
 {#    <hr>#}
