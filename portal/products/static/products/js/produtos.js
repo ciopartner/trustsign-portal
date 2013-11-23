@@ -46,7 +46,7 @@ $(document).ready(function () {
             product_code = additional_code;
 
             var $btn_buy = $("#btn-confirm-buy");
-            $btn_buy.bind('click');
+            $btn_buy.off();
             $btn_buy.on('click', function(e){
                 e.preventDefault();
 
