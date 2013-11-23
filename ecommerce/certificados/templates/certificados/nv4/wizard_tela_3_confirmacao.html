@@ -12,7 +12,7 @@
 
     <table>
         {% include 'certificados/includes/dados_produto.html' %}
-        <tr><th>Domínio:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_url }}"/></td></tr>
+{#        <tr><th>Domínio:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_url }}"/></td></tr>#}
         {% if emissao.emission_assignment_letter %}
             <tr><th>Carta de cessão:</th><td><input type="text" disabled="disabled" value="{{ emissao.emission_assignment_letter.name }}"/></td></tr>
         {% endif %}

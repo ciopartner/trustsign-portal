@@ -21,13 +21,17 @@
 }
 
 .emissao .nome input[type=text] {
-    width: 109px;
+    width: 108px;
 }
 
 .emissao th{
     padding: 10px;
     text-align: right;
     width: 120px;
+}
+
+.emissao tr th{
+    vertical-align: top;
 }
 
 .fqdn-table{
