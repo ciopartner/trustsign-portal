@@ -18,7 +18,9 @@
     {% if order.is_order_paid %}
         {% if not order.is_voucher_partially_issued and not order.is_voucher_issued %}
             {# Mensagem para pagamento OK #}
-            <p ><font face="Tahoma" style="font-size: 12px; color: #666666">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
+            <div style="text-align: justify">
+                <p><font face="Tahoma" style="font-size: 12px; color: #666666">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
+            </div>
             <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_ok.png' %}" alt="" align="center" /></center>
         {% else %}
             {% if order.is_voucher_issued %}
@@ -26,24 +28,27 @@
                 <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_emitido.png' %}" alt="" align="center" />
             {% else %}
                 {# Mensagem para vouchers pendentes #}
-                <p><font face="Tahoma" style="font-size: 12px; color: #666666">Você já pode emitir seus certificados!</font></p>
-                <p><font face="Tahoma" style="font-size: 12px; color: #666666">Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</font></p>
+                <div style="text-align: justify">
+                    <p><font face="Tahoma" style="font-size: 12px; color: #666666">Você já pode emitir seus certificados!</font></p>
+                    <p><font face="Tahoma" style="font-size: 12px; color: #666666">Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</font></p>
+                </div>
                 <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_pendente.png' %}" alt="" align="center" /></center>
             {% endif %}
         {% endif %}
     {% else %}
         {# Mensagem para Pagamento Pendente #}
-
-        <p>
-            <font face="Tahoma" style="font-size: 12px; color: #666666">
-                 A partir de agora você será informado por e-mail sobre o andamento do pedido até a emissão do certificado e/ou ativação do serviço.
-            </font style="font-size: 12px; color: #666666">
-        </p>
-        <p>
-            <font face="Tahoma" style="font-size: 12px; color: #666666">
-                 No momento estamos aguardando o aviso da instituição financeira sobre a autorização do pagamento. Este prazo pode variar com o meio de pagamento escolhido. Assim que o pagamento for confirmado pela instituição financeira, você receberá um email e poderá iniciar o processo de emissão do certificado e/ou ativar os serviços .
-            </font>
-        </p>
+        <div style="text-align: justify">
+            <p>
+                <font face="Tahoma" style="font-size: 12px; color: #666666">
+                     A partir de agora você será informado por e-mail sobre o andamento do pedido até a emissão do certificado e/ou ativação do serviço.
+                </font style="font-size: 12px; color: #666666">
+            </p>
+            <p>
+                <font face="Tahoma" style="font-size: 12px; color: #666666">
+                     No momento estamos aguardando o aviso da instituição financeira sobre a autorização do pagamento. Este prazo pode variar com o meio de pagamento escolhido. Assim que o pagamento for confirmado pela instituição financeira, você receberá um email e poderá iniciar o processo de emissão do certificado e/ou e/ou ativação do serviço.
+                </font>
+            </p>
+        </div>
         <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_pendente.png' %}" alt="" align="center" /></center>
     {% endif %}
 
@@ -86,16 +91,26 @@
                 </tr>
                 <tr>
                     <td colspan="3" bgcolor="#FAFAFA" style="padding: 5px">
-
+                        <font face="Tahoma" style="font-size: 12px; color: #666666">
+                            <strong>Valor total do pedido:</strong> {{ order.total_incl_tax|currency:order.currency }}
+                        </font>
                     </td>
                 </tr>
             {% endfor %}
         </table>
 
 
+        <br>
+
         <p style="font-size: 12px; color: #666666">
-        {% trans 'Order Total:' %} <strong>{{ order.total_incl_tax|currency:order.currency }}</strong>
+            <font face="Tahoma">
+                A forma de pagamento escolhida foi: <br>
+                {{ paymant_method }} - Valor {{ order.total_incl_tax|currency:order.currency }}
+            </font>
         </p>
+
+        <br>
+
 
     {% endif %}
 
