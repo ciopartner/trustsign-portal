@@ -51,6 +51,10 @@ h3{
 
 
 /* Bootstrap 80% */
+.btn{
+    text-transform: uppercase;
+}
+
 .form-horizontal .control-label{
     width: 150px;
 }

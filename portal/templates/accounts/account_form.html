@@ -15,8 +15,8 @@
     <form class="form-horizontal" method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
     {% fields_for form %}
     <div class="form-actions no-color">
-        <input class="btn btn-primary" type="submit" value="{{ title }}">
-        <a class="btn" href="{{ url_ecommerce }}password-reset/">Esqueci minha senha</a>
+        <input class="btn btn-primary" type="submit" value="{{ title }}" style="margin-right: 20px;">
+        <a class="btn" href="{{ url_ecommerce }}password-reset/">Esqueci a senha</a>
     </div>
     </form>
 </fieldset>
