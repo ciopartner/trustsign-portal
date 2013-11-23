@@ -15,6 +15,7 @@
         {% include 'certificados/includes/dados_produto.html' %}
 
         {% if form.precisa_carta_cessao %}
+            <tr><th></th><td>Verificamos que a razão social da empresa diverge da razão social do proprietário de pelo menos um domínio. Por isso é necessário anexar a carta abaixo para cada domínio divergente.<br><br></td></tr>
             <tr><th>Carta de Cessão:</th><td>{{ form.emission_assignment_letter}} {{ form.emission_assignment_letter.errors }}
             <a href="/static/portal/documentos/carta-de-cessao.pdf" target="_blank">Documento Modelo</a></td></tr>
         {% endif %}
