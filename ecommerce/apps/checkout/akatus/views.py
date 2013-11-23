@@ -463,6 +463,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
             return self.get(request, *args, **kwargs)
 
         # TODO: Colocar este cara no post_save
+        # TODO: Este e-mail não está sendo enviado. Consultar quem está enviando o e-mail de pago
         if status == 'Aprovado':
             try:
                 lines = order.lines.filter(paymentevent_set__reference=transacao_id)
