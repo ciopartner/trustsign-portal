@@ -151,11 +151,11 @@ class OscarToCRMMixin(object):
         Return a list of products to send to CRM
         Note that products without transaction (as trial) are also processed
         """
-        transaction_id = transaction.reference if transaction else None
+        transaction_id = transaction.reference if transaction else 'n/a'
         produtos = []
 
         lines = order.lines.filter(paymentevent__reference=transaction_id) if transaction else \
-                order.lines.filter(paymentevent_reference__isnull=True)
+                order.lines.filter(paymentevent__reference__isnull=True)
         for line in lines:
             produto = crm.ProdutoCRM()
             produto.codigo = line.partner_sku
