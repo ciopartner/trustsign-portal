@@ -111,7 +111,7 @@ class OscarToCRMMixin(object):
         Return a oportunity to send to CRM
         A intenção é criar uma oportunidade para cada transação de cartão de crédito.
         """
-        transaction_id = transaction.reference
+        transaction_id = transaction.reference or 'n/a'
         oportunidade = crm.OportunidadeCRM()
         oportunidade.numero_pedido = order.number
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
@@ -119,16 +119,17 @@ class OscarToCRMMixin(object):
         oportunidade.valor_total = str(order.total_incl_tax)
         oportunidade.parcelas = '1'
 
-        if transaction.boleto_id:
+        if transaction is None:
+            # Para o caso de pedido de valor zerado (trial)
+            oportunidade.tipo_pagamento = oportunidade.TIPO_GRATIS
+        elif transaction.boleto_id:
             # Para pagamento com boleto
             oportunidade.tipo_pagamento = oportunidade.TIPO_BOLETO
             oportunidade.pag_boleto_transacao_id = transaction_id
-
         elif transaction.debitcard_id:
             # Para pagamento com cartão de débito
             oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_DEBITO
             oportunidade.pag_debito_transacao_id = transaction_id
-
         elif transaction.bankcard_id:
             # Para pagamento com cartão de crédito
             oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_CREDITO
@@ -138,7 +139,6 @@ class OscarToCRMMixin(object):
             oportunidade.pag_credito_ultimos_digitos = transaction.bankcard.number[-4:]
             oportunidade.pag_credito_transacao_id = transaction_id
             oportunidade.parcelas = transaction.bankcard.qtd_parcelas
-
         else:
             # Para pagamento fiado....
             raise crm.CRMClient.CRMError('Faltam os dados de pagamento')
@@ -149,11 +149,14 @@ class OscarToCRMMixin(object):
     def get_produtos_crm(order, transaction):
         """
         Return a list of products to send to CRM
+        Note that products without transaction (as trial) are also processed
         """
-        transaction_id = transaction.reference
+        transaction_id = transaction.reference if transaction else None
         produtos = []
 
-        for line in order.lines.filter(paymentevent__reference=transaction_id):
+        lines = order.lines.filter(paymentevent__reference=transaction_id) if transaction else \
+                order.lines.filter(paymentevent_reference__isnull=True)
+        for line in lines:
             produto = crm.ProdutoCRM()
             produto.codigo = line.partner_sku
             produto.quantidade = line.quantity

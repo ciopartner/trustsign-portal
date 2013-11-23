@@ -69,6 +69,7 @@ class OportunidadeCRM(object):
     TIPO_CARTAO_CREDITO = 'cartao_credito'
     TIPO_CARTAO_DEBITO = 'cartao_debito'
     TIPO_BOLETO = 'boleto_bancario'
+    TIPO_GRATIS = 'n/a'
 
     def __init__(self):
         self.account_id = None
@@ -405,6 +406,16 @@ class CRMClient(object):
         Atualiza a account se existir, senão cria a mesma
         """
         account_id = self.get_account(cliente.cnpj)['entry_list']
+
+        # TODO: Somente atualizar o CRM se um dos campos abaixo estiver alterado:
+        # - Razão Social
+        # - Nome Fantasia
+        # - Logradouro, Número, Complemento, Bairro, Cidade, Estado, CEP
+        # - Situação Cadastral (veja que aqui talvez precise de um de-para)
+        # - Telefone Principal
+        # - e-commerce (veja que aqui talvez precise de um de-para)
+        # - Tipo de Negócio (veja que aqui talvez precise de um de-para)
+        # - Fonte do Potencial (veja que aqui talvez precise de um de-para)
 
         return self.set_entry_account(cliente, account_id[0]['id'] if account_id else None)
 
