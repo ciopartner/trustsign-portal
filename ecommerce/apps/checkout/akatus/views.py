@@ -462,6 +462,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
                                                                                                      status))
             return self.get(request, *args, **kwargs)
 
+        # TODO: Colocar este cara no post_save
         if status == 'Aprovado':
             try:
                 lines = order.lines.filter(paymentevent_set__reference=transacao_id)
@@ -479,7 +480,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
                         'site': get_current_site(self.request),
                         'lines': order.lines.all()
                     }
-                    send_template_email([order.user.email], subject, template, context)
+                    #send_template_email([order.user.email], subject, template, context)
 
                 if lines:
                     event = lines[0].paymentevent_set.all()[0]
