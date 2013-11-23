@@ -105,7 +105,7 @@
         <p style="font-size: 12px; color: #666666">
             <font face="Tahoma">
                 A forma de pagamento escolhida foi: <br>
-                {{ paymant_method }} - Valor {{ order.total_incl_tax|currency:order.currency }}
+                {{ order.get_payment_method }} - Valor {{ order.total_incl_tax|currency:order.currency }}
             </font>
         </p>
 
