@@ -85,7 +85,6 @@ def send_email_order_placed(sender, instance, **kwargs):
     """
     Send the order placed e-mail
     """
-    import ipdb; ipdb.set_trace()
     order = instance
     subject = 'Pedido Realizado com Sucesso'
     template = 'customer/emails/commtype_order_placed_body.html'
