@@ -5955,7 +5955,7 @@ msgstr "A equipe"
 #: templates/oscar/customer/emails/commtype_order_placed_subject.txt:1
 #, python-format
 msgid "Confirmation of order %(number)s"
-msgstr "Confirmação do pedido %(number)s"
+msgstr "Pagamento Aprovado do pedido %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:5
 #, python-format
