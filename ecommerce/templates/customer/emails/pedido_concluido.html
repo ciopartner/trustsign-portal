@@ -1,1 +1,79 @@
-{# TODO: TBD template do email de emissão concluída #}
+{# Chamado no CRON do CRM #}
+{% extends "customer/emails/base.html" %}
+
+{% block title %}LIBERADO PARA EMISSÃO{% endblock %}
+
+{% block block %}
+
+
+
+    <br/><br/>
+    <strong>
+        <font face="Tahoma" style="font-size: 12px; color: #666666">{{order.user.first_name}} {{order.user.last_name}},</font>
+    </strong><font face="Tahoma" style="font-size: 12px; color: #666666"> obrigado por comprar na TrustSign.</font>
+
+
+        <div align="justify" style="text-align: justify;">
+            <p align="justify">
+                <font face="Tahoma" style="font-size: 12px; color: #666666">
+                     A partir de agora você já pode iniciar o processo de emissão de certificados através do link "<a href="https://{{ site.domain }}/ecommerce/escolha-voucher/">Processo de Emissão</a>".
+                </font style="font-size: 12px; color: #666666">
+            </p>
+            <p align="justify">
+                <font face="Tahoma" style="font-size: 12px; color: #666666">
+                     Para os produtos PKI, Site+Seguro e Site Monitorado, os serviços serão automaticamente ativados e você receberá em breve, por e-mail, o seu login e senha de acesso ao sistema.
+                </font>
+            </p>
+        </div>
+        <br>
+        <center><img src="http://{{ site.domain }}/static-ecommerce/ecommerce/img/status/vouchers_emitido.png" alt="" align="center" /></center>
+
+
+    <br/><br/>
+
+    <table cellspacing="0" cellpadding="0" border="0" align="center" width="33%">
+        <tbody>
+            <tr>
+                <td bgcolor="#f0f0f0" align="center" valign="top" style="padding:10px 10px 17px 10px;color:rgb(102,102,102);font-size:12px;border-right:2px solid rgb(255,255,255)">
+                    <p style="margin-bottom: 10px; margin-top: 12px"><font face="Tahoma">Número do pedido</font></p>
+                    <span style="text-decoration: none; color: rgb(96, 96, 96); font-size: 22px; font-weight: bold;"><font face="Tahoma">{{ order.number }}</font></span><br>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/><br/>
+
+
+
+        <p style="font-size: 12px; color: #666666"><font face="Tahoma">Os itens selecionados nesse pedido são: </font></p>
+
+        <table style="width: 100%" cellspacing="0" cellpadding="0">
+            <tr>
+                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'PRODUCT' %}</font></th>
+                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'QUANTITY' %}</font></th>
+                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">{% trans 'PRICE' %}</font></th>
+            </tr>
+            {% for line in order.lines.all %}
+                <tr>
+                    <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                        <font face="Tahoma">{{ line.title }}</font>
+                    </td>
+                    <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                        <font face="Tahoma">{{ line.quantity }}</font>
+                    </td>
+                    <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
+                        <font face="Tahoma">{{ line.line_price_incl_tax|currency:order.currency }}</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" bgcolor="#FAFAFA" style="padding: 5px">
+                        <font face="Tahoma" style="font-size: 12px; color: #666666">
+                            <strong>Valor total do pedido:</strong> {{ order.total_incl_tax|currency:order.currency }}
+                        </font>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+{% endblock %}
