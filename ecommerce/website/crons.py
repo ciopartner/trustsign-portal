@@ -26,6 +26,8 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
             self.send_order_to_crm(order)
 
             order.set_status('Em Processamento')
+            self.send_email(order)
+
             for line in order.lines.all():
                 line.set_status('Em Processamento')
             log.info('Order #%s: alterado status para Em processamento' % order.number)
@@ -39,6 +41,7 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
                 'order': order,
                 'site': get_current_site(None),
             }
+            log.info('Enviando e-mail de Processo de Emissão Liberado para o pedido #{}'.format(order.number))
             send_template_email([order.user.email], subject, template, context)
         except User.DoesNotExist:
             log.warning('Emissão liberada sem usuário da order #{}'.format(order.number))
