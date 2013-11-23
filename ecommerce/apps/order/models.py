@@ -55,6 +55,22 @@ class Order(AbstractOrder):
         v_stats = self.vouchers_stats()
         return (v_stats['vouchers_issued'] > 0 and v_stats['vouchers_unused'] == 0)
 
+    @property
+    def get_payment_method(self):
+        """
+        Método responsável por retornar o nome do meio de pagamento ao template.
+        """
+        if hasattr(self, 'sources'):
+            pm = self.sources.all()[0].source_type.name
+            if pm=='akatus-boleto':
+                return 'Boleto'
+            elif pm=='akatus-debito':
+                return 'Cartão de Débito'
+            elif pm=='akatus-credito':
+                return 'Cartão de Crédito'
+            else:
+                return pm
+        return 'Sem Informações de Pagamento'
 
 class Line(AbstractLine):
     def is_payment_event_permitted(self, event_type, quantity):
