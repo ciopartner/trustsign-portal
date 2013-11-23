@@ -111,7 +111,7 @@ class OscarToCRMMixin(object):
         Return a oportunity to send to CRM
         A intenção é criar uma oportunidade para cada transação de cartão de crédito.
         """
-        transaction_id = transaction.reference or 'n/a'
+        transaction_id = transaction.reference if transaction else 'n/a'
         oportunidade = crm.OportunidadeCRM()
         oportunidade.numero_pedido = order.number
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
