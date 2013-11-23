@@ -25,19 +25,18 @@
     <h1>Sucesso!</h1>
 
     <div class="well">
-        <h3>Seu pedido foi registrado e um e-mail de confirmação foi enviado - o número do seu pedido é: </h3>
-        <h2 style="margin-bottom: 0">{{ order.number }}</h2>
+        <h3>Seu pedido foi registrado e um e-mail de confirmação foi enviado - o número do seu pedido é: <span style="color: #227D5E; font-weight: bold; line-height: 100%; margin-top: 10px;">{{ order.number }}</span></h3>
     </div>
 
     {% if transacoes_com_url %}
         <div class="well">
-            <h4>Caso uma nova janela não tenha sido aberta, clique no botão abaixo:</h4>
+            <h3>Caso uma nova janela não tenha sido aberta, clique no botão abaixo:</h3> <br>
             {% for tipo, url in transacoes_com_url %}
                 <script>window.open("{{ url }}");</script>
                 {% if tipo == 'boleto' %}
-                    <div><a class="btn btn-orange" target="_blank" href="{{ url }}">VISUALIZAR BOLETO</a></div>
+                    <div><a class="btn btn-primary" target="_blank" href="{{ url }}">VISUALIZAR BOLETO</a></div>
                 {% elif tipo == 'debitcard' %}
-                    <div><a class="btn btn-orange" target="_blank" href="{{ url }}">EFETUAR PAGAMENTO</a></div>
+                    <div><a class="btn btn-primary" target="_blank" href="{{ url }}">EFETUAR PAGAMENTO</a></div>
                 {% endif %}
             {% endfor %}
         </div>
@@ -113,7 +112,7 @@
     </div>
 
     {% for line in order.lines.all %}
-        <div class="basket-items">
+        <div class="basket-items" style="padding: 0 10px;">
             <div class="row-fluid">
                 {#                <div class="span2">#}
                 {#                    <div class="image_container">#}
@@ -131,7 +130,9 @@
                 {#                    {{ line.est_dispatch_date|default:"-" }}#}
                 {#                </div>#}
                 <div class="span3">
-                    {{ line.quantity }}
+                    <p class="price_color">
+                        {{ line.quantity }}
+                    </p>
                 </div>
                 <div class="span2 align-left">
                     <p class="price_color">{{ line.line_price_before_discounts_incl_tax|currency:order.currency }}</p>
@@ -160,7 +161,7 @@
             <p><a onclick="window.print()" href="#" class="btn btn-block">{% trans "Print this page" %}</a></p>
         </div>
         <div class="span3 offset6">
-            <p><a href="{{ url_continuar_comprando }}" class="btn btn-primary btn-block btn-orange">{% trans "Continue shopping" %}</a></p>
+            <p><a href="{{ url_continuar_comprando }}" style="height: 26px;" class="btn btn-block btn-orange">{% trans "Continue shopping" %}</a></p>
         </div>
         {#        </div>#}
     </div>

@@ -26,19 +26,19 @@
                                 {{ voucher.order_number }}
                             {% endif %}
                         </td>
-                        <td>
+                        <td width="70">
 
                         {% with emissao=voucher.emissao %}
                             {% if not emissao %}
                                 {% if voucher.has_emissao_url %}
-                                    <a class="btn btn-success btn-block no-uppercase" href="{{ voucher.get_emissao_url }}">EMITIR</a>
+                                    <a class="btn btn-success span2 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
                                 {% endif %}
                             {% elif emissao.em_processamento %}
                                 Em processamento
                             {% elif emissao.emitido %}
 
                                 <div class="btn-group btn-block">
-                                    <button class="btn dropdown-toggle btn-block btn-success no-uppercase" data-toggle="dropdown">Ação <span class="caret"></span></button>
+                                    <button class="btn dropdown-toggle span2 btn-success no-uppercase" style="margin: 0" data-toggle="dropdown">Ação <span class="caret"></span></button>
                                     <ul class="dropdown-menu">
                                         <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
                                         <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>

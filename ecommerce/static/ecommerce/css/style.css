@@ -84,9 +84,16 @@ footer{
 }
 
 .account-profile .btn{
-    width: 119px;
+    float: right;
+    margin-left: 10px;
     text-transform: uppercase;
+    width: 100px;
 }
+
+.account-profile button.btn{
+    width: 126px;
+}
+
 
 .account-profile .search .btn{
     width: auto;
