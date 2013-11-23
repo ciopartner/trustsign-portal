@@ -11,9 +11,9 @@
 
     {{ form.non_field_errors }}
 
-    <table>
+    <table class="emissao">
         {% include 'certificados/includes/dados_produto.html' %}
         <tr><th>CSR:</th><td>{{ form.emission_csr }} {{ form.emission_csr.errors }}</td></tr>
     </table>
-    <p style="text-align: right;">Dúvidas para gerar a CSR? Clique <a href="/portal/suporte-trustsign/tutoriais/" target="_window">aqui</a></p>
+    <p align="right">Dúvidas para gerar a CSR? Clique <a href="/portal/suporte-trustsign/tutoriais/" target="_window">aqui</a></p>
 {% endblock %}

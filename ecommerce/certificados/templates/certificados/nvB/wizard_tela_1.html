@@ -8,14 +8,14 @@
     <h3>Dados Específicos do Produto Escolhido</h3>
     {{ form.non_field_errors }}
 
-    <table>
+    <table class="emissao">
         {% include 'certificados/includes/dados_produto.html' %}
 
     </table>
 
     <h3>Dados de Callback</h3>
 
-    <table>
+    <table class="emissao">
         <tr class="nome"><th>Nome</th><td>{{ form.callback_nome }} {{ form.callback_sobrenome }}
             {{ form.callback_nome.errors }}{{ form.callback_sobrenome.errors }}</td></tr>
         <tr><th>e-mail Corporativo</th><td>{{ form.callback_email }} {{ form.callback_email.errors }}</td></tr>
