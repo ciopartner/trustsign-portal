@@ -53,6 +53,7 @@ h3{
 /* Bootstrap 80% */
 .btn{
     text-transform: uppercase;
+    font-size: 11px !important;
 }
 
 .form-horizontal .control-label{
@@ -1617,7 +1618,7 @@ img.size-thumbnail{
 	padding:5px;
 	line-height:80px;
 	text-align:center;
-	border-bottom:#DADEE3 1px solid;
+	border-bottom: #DADEE3 1px solid !important;
 }
 
 
@@ -1625,8 +1626,8 @@ img.size-thumbnail{
 	border-right: none;
 }
 
-.principais-clientes > li:nth-last-child(-1n+7) > div{
-	border-bottom: none;
+.principais-clientes > li.no-bottom > div{
+	border-bottom: 0px !important;
 }
 
 .principais-clientes > li > div a[href]{

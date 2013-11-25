@@ -7931,3 +7931,12 @@ msgstr "Senha baseada em uma palavra do dicionário"
 #, python-format
 msgid "Based on a common sequence of characters"
 msgstr "Senha baseada em uma sequencia comum de caracters"
+
+msgid "PRODUCT"
+msgstr "PRODUTO"
+
+msgid "QUANTITY"
+msgstr "QUANTIDADE"
+
+msgid "PRICE"
+msgstr "PREÇO"
