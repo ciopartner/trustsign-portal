@@ -274,7 +274,7 @@ class Voucher(Model):
         url_imagem_selo = '%s/static/selos-clientes/selo-%s-%s-pt.png' % (seals_server_url, tipo, hash_url)
 
         return '''<a href="%s" target="_blank">
-<img name="trustseal" alt="Site Autêntico" src="%s/static/" border="0" title="Clique para Validar" />
+<img name="trustseal" alt="Site Autêntico" src="%s" border="0" title="Clique para Validar" />
 </a>''' % (url_validacao, url_imagem_selo)
 
     @property
