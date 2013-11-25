@@ -9,7 +9,7 @@ from django.http import Http404
 from django.views.generic import TemplateView
 from oscar.core.loading import get_class
 from ecommerce.apps.payment.forms import DebitcardForm
-from ecommerce.website.utils import remove_message, send_template_email
+from ecommerce.website.utils import remove_message
 from libs.akatus import facade as akatus
 
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
@@ -275,6 +275,14 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
 
         for lines in (lines_assinaturas, lines_certificados):
             if lines:
+
+                total = sum(line.line_price_incl_tax for line in lines)
+
+                if total <= 0:
+                    # Pro caso de ter um pedido com assinatura e certificado trial,
+                    # as linhas do trial estarão com total zerado.
+                    continue
+
                 try:
                     response = facade.post_payment(self.request, order_number, lines=lines,
                                                    bankcard=bankcard_com_numero, tipo='akatus-creditcard',
@@ -283,7 +291,6 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
                 except InvalidGatewayRequestError as e:
                     raise UnableToTakePayment(e.message)
 
-                total = sum(line.line_price_incl_tax for line in lines)
 
                 # Request was successful - record the "payment source".  As this
                 # request was a 'pre-auth', we set the 'amount_allocated' - if we had
@@ -383,6 +390,12 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
 
         if self.request.POST.get('source-type') == 'no-payment':
             order.set_status('Pago')
+            for line in order.lines.all():
+                line.set_status('Pago')
+        else:
+            for line in order.lines.all():
+                if line.line_price_incl_tax == 0:
+                    line.set_status('Pago')
 
         # Se o ambiente for de testes, vamos setar o pedido como pago
         #if settings.AKATUS_ENVIRONMENT == 'TST':

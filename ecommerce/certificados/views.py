@@ -8,11 +8,9 @@ from django.contrib.formtools.wizard.views import SessionWizardView
 from django.contrib.sites.models import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
-from django.template import Context
-from django.template.loader import get_template
 from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView, TemplateView
 from oscar.core.loading import get_class
