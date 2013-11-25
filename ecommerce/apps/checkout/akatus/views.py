@@ -140,6 +140,7 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
             parcelas_certificados[0]['juros'] = Decimal(0)
 
         ctx.update({
+            'is_test_environment': settings.AKATUS_ENVIRONMENT == 'TST',
             'bankcard_form': kwargs.get('bankcard_form', BankcardForm()),
             'debitcard_form': kwargs.get('debitcard_form', DebitcardForm()),
 

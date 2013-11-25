@@ -266,19 +266,19 @@ if ENVIRONMENT == 'DEV':
     URL_PORTAL = '/portal/'
     URL_ECOMMERCE = '/ecommerce/'
     # Para que haja compartilhamento de sessions...
-    SESSION_COOKIE_DOMAIN = 'localhost'
+    SESSION_COOKIE_DOMAIN = None
 elif ENVIRONMENT == 'QAS':
     DEBUG = True
     URL_PORTAL = '/portal/'
     URL_ECOMMERCE = '/ecommerce/'
     # Para que haja compartilhamento de sessions...
-    SESSION_COOKIE_DOMAIN = 't.trustsign.com.br'
+    SESSION_COOKIE_DOMAIN = 'www.t.trustsign.com.br'
 elif ENVIRONMENT == 'PRD':
     DEBUG = False
     URL_PORTAL = '/portal/'
     URL_ECOMMERCE = '/ecommerce/'
     # Para que haja compartilhamento de sessions...
-    SESSION_COOKIE_DOMAIN = 'trustsign.com.br'
+    SESSION_COOKIE_DOMAIN = 'www.trustsign.com.br'
 
 URL_CONTINUAR_COMPRANDO = URL_PORTAL
 
