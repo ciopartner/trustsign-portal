@@ -188,10 +188,8 @@ class AtivaSelosJob(CronJobBase):
             websites = self.extrai_websites()
 
             for line in ('basic', 'pro', 'prime'):
-                lista = list(websites[line])
-                if lista:
-                    for chunk in chunks(lista, settings.SEALS_MAX_WEBSITES_PER_REQUEST):
-                        self.processa(line, chunk)
+                for website in websites[line]:
+                    self.processa(line, website)
             self.post_do()
         except Exception as e:
             log.exception(self.error_message)
@@ -227,20 +225,24 @@ class AtivaSelosJob(CronJobBase):
         for voucher in self.get_queryset():
             if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
                 if voucher.emissao.emission_urls:
-                    websites[voucher.ssl_line].update(voucher.emissao.get_lista_dominios())
+                    websites[voucher.ssl_line].update((d, voucher.customer_cnpj, voucher.customer_companyname)
+                                                      for d in voucher.emissao.get_lista_dominios())
                 else:
                     log.warning('voucher multi-dominio sem urls #%s' % voucher.pk)
 
-            if voucher.ssl_product != Voucher.PRODUTO_SAN_UCC:
-                websites[voucher.ssl_line].add(voucher.emissao.emission_url)
+            if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC:
+                websites[voucher.ssl_line].add((voucher.emissao.emission_url, voucher.customer_cnpj, voucher.customer_companyname))
 
         return websites
 
-    def processa(self, line, chunk):
+    def processa(self, line, website):
+        url, cnpj, razaosocial = website
         requests.post('%s/api/v1/ativar/%s/' % (settings.SEALS_SERVER_URL, line), {
             'username': settings.SEALS_USERNAME,
             'password': settings.SEALS_PASSWORD,
-            'websites': ','.join(chunk)
+            'websites': url,
+            'cnpj': cnpj,
+            'razaosocial': razaosocial,
         })
 
     def processa_ativado(self, voucher):
@@ -294,11 +296,14 @@ class DesativaSelosRevogadosJob(AtivaSelosJob):
         self._vouchers = Voucher.objects.select_related('emissao').filter(emissao__emission_status=Emissao.STATUS_REVOGADO_SELO_PENDENTE)
         return self._vouchers
 
-    def processa(self, line, websites):
+    def processa(self, line, website):
+        url, cnpj, razaosocial = website
         requests.post('%s/api/v1/desativar/%s/' % (settings.SEALS_SERVER_URL, line), {
             'username': settings.SEALS_USERNAME,
             'password': settings.SEALS_PASSWORD,
-            'websites': ','.join(websites)
+            'websites': url,
+            'cnpj': cnpj,
+            'razaosocial': razaosocial,
         })
 
     def post_do(self):
