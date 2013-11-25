@@ -363,10 +363,8 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
                 voucher = self.object
                 try:
                     order = voucher.order
-                    # TODO: Lógica furada... a comparação é com o número de certificados e não com num_items
-                    if order.vouchers.count() == order.num_items:
+                    if order.vouchers.count() == order.num_items_certificados:
                         order.set_status('Concluído')
-                        # TODO: Imagino que temos que setar o status das linhas também, certo?
 
                 except Order.DoesNotExist:
                     pass

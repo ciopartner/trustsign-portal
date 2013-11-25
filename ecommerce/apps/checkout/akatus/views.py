@@ -140,6 +140,7 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
             parcelas_certificados[0]['juros'] = Decimal(0)
 
         ctx.update({
+            'is_test_environment': settings.AKATUS_ENVIRONMENT == 'TST',
             'bankcard_form': kwargs.get('bankcard_form', BankcardForm()),
             'debitcard_form': kwargs.get('debitcard_form', DebitcardForm()),
 
@@ -384,10 +385,10 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
             order.set_status('Pago')
 
         # Se o ambiente for de testes, vamos setar o pedido como pago
-        if settings.AKATUS_ENVIRONMENT == 'TST':
-            order.set_status('Pago')
-            for line in order.lines.all():
-                line.set_status('Pago')
+        #if settings.AKATUS_ENVIRONMENT == 'TST':
+        #    order.set_status('Pago')
+        #    for line in order.lines.all():
+        #        line.set_status('Pago')
 
         return self.handle_successful_order(order)
 

@@ -96,10 +96,12 @@
                         <div class="">
                             {% csrf_token %}
                             {% include 'partials/form_fields.html' with form=bankcard_form %}
-                            <div class="alert alert-warning">
-                                <h4>{% trans "Demo card" %}</h4>
-                                <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>
-                            </div>
+                            {% if is_test_environment %}
+                                <div class="alert alert-warning">
+                                    <h4>{% trans "Demo card" %}</h4>
+                                    <p>{% trans "You can use a magic card number of 4551870000000183 together with an CVV number." %}</p>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="pull-left">
                             {% include 'partials/contratos_checkbox.html' %}
