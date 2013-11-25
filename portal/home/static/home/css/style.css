@@ -1538,15 +1538,15 @@ img.size-thumbnail{
 	display:block;
 	line-height:104px;
 	text-align:center;
-	border-bottom:#DADEE3 1px solid;
+	border-bottom:#DADEE3 1px solid !important;
 }
 
 .nossa-diferenca > li:nth-child(3n+3) > div{
 	border-right: none;
 }
 
-.nossa-diferenca > li:nth-last-child(-1n+3) > div{
-	border-bottom: none;
+.nossa-diferenca > li.no-bottom > div{
+	border-bottom: none !important;
 }
 
 .nossa-diferenca .suporte-especializado {
