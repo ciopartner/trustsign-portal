@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.db.models.signals import post_save
 
 from oscar.apps.order.abstract_models import AbstractLine, AbstractOrder
 from oscar.core.loading import get_class
-from ecommerce.website.utils import send_template_email
 
 Selector = get_class('partner.strategy', 'Selector')
 
@@ -115,25 +113,5 @@ class Line(AbstractLine):
 
     def is_shipping_event_permitted(self, event_type, quantity):
         return True
-
-
-def send_email_order_placed(sender, instance, **kwargs):
-    """
-    Send the order placed e-mail
-    """
-    order = instance
-    subject = 'Pedido Realizado com Sucesso'
-    template = 'customer/emails/commtype_order_placed_body.html'
-    context = {
-        'user': order.user,
-        'order': order,
-        'site': order.site.domain,
-    }
-    if kwargs.get('created', True):
-        send_template_email([order.user.email], subject, template, context)
-
-
-# Register a signal to send the Pedido Realizado com Sucesso
-post_save.connect(send_email_order_placed, sender=Order, dispatch_uid="email_order_placed")
 
 from oscar.apps.order.models import *
