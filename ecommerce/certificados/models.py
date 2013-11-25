@@ -48,7 +48,7 @@ class Voucher(Model):
 
     # Assinaturas
     PRODUTO_PKI = 'pki'
-    PRODUTO_SITE_SEGURO = 'site-seguro'
+    PRODUTO_SITE_SEGURO = 'site-mais-seguro'
     PRODUTO_SITE_MONITORADO = 'site-monitorado'
 
     PRODUTO_CHOICES = (
