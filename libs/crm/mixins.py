@@ -1,5 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
+from datetime import timedelta
+from django.conf import settings
 from django.utils.timezone import now
 from oscar.core.loading import get_class
 import crm
@@ -128,6 +130,8 @@ class OscarToCRMMixin(object):
             oportunidade.tipo_pagamento = oportunidade.TIPO_BOLETO
             oportunidade.pag_boleto_transacao_id = transaction_id
             oportunidade.email_boleto = oportunidade.email_nfe
+            d = now() + timedelta(days=settings.BOLETO_DIAS_VENCTO)
+            oportunidade.data_pagamento_boleto = d.strftime('%Y-%m-%d')
         elif transaction.debitcard_id:
             # Para pagamento com cartão de débito
             oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_DEBITO

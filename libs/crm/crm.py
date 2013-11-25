@@ -356,6 +356,7 @@ class CRMClient(object):
                 #'data_pgto_c': oportunidade.data_pagamento_boleto
                 'parcelas_c': oportunidade.parcelas,
                 'email_nf_boleto_c': oportunidade.email_boleto,
+                'data_pgto_c': oportunidade.data_pagamento_boleto
             })
 
         response = self.set_entry('Opportunities', data)
