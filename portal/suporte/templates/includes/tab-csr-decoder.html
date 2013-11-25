@@ -8,29 +8,90 @@
                 {{ form_csr_decoder }}
                 <tr><td colspan="2"><input type="submit" class="btn btn-primary span2 pull-right" value="Decoder"/></td></tr>
             </table>
+
+            <script>
+                $(function(){
+                  $("#id_csr").bind('input propertychange', function(){
+                      $(this).parents('form').submit();
+                  });
+                })
+            </script>
             {% csrf_token %}
         </div>
         <div class="well">
             {% if resultado and op == 'csr-decoder' %}
                 {% if resultado.ok %}
-                    <p><b>Signature:</b> Válida</p>
-                    <p><b>Key Size:</b> {{ resultado.KeySize }}</p>
-                    <p><b>Subject</b>: {% if resultado.subject_ok %}Ok, não possui campos em branco.{% else %}Possui campos em branco.{% endif %}</p>
-                    <hr>
-                    <p><b>Common Name:</b> {{ resultado.CN }}</p>
-                    <p><b>Organization Name:</b> {{ resultado.O }}</p>
-                    <p><b>Organizational Unit Name:</b> {{ resultado.OU }}</p>
-                    <p><b>Post Office Box:</b> {{ resultado.POBox }}</p>
-                    <p><b>Street Address 1:</b> {{ resultado.STREET1 }}</p>
-                    <p><b>Street Address 2:</b> {{ resultado.STREET2 }}</p>
-                    <p><b>Street Address 3:</b> {{ resultado.STREET3 }}</p>
-                    <p><b>Locality Name:</b> {{ resultado.L }}</p>
-                    <p><b>State or Province Name:</b> {{ resultado.S }}</p>
-                    <p><b>Postal Code:</b> {{ resultado.PostalCode }}</p>
-                    <p><b>Country Name:</b> {{ resultado.C }}</p>
-                    <p><b>Email Address:</b> {{ resultado.Email }}</p>
-                    <p><b>Telephone Number:</b> {{ resultado.Phone }}</p>
-                    <p><b>DNS:</b> {% for dominio in resultado.dnsNames  %}{{ dominio }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+                    <table class="table">
+                        <tr>
+                            <th>Signature</th>
+                            <td>Válida</td>
+                        </tr>
+                        <tr>
+                            <th>Key Size</th>
+                            <td>{{ resultado.KeySize }}</td>
+                        </tr>
+                        <tr>
+                            <th>Subject</th>
+                            <td>{% if resultado.subject_ok %}Ok, não possui campos em branco.{% else %}Possui campos em branco.{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Common Name</th>
+                            <td>{{ resultado.CN }}</td>
+                        </tr>
+                        <tr>
+                            <th>Organization Name</th>
+                            <td>{{ resultado.O }}</td>
+                        </tr>
+                        <tr>
+                            <th>Organizational Unit Name</th>
+                            <td>{{ resultado.OU }}</td>
+                        </tr>
+                        <tr>
+                            <th>Post Office Box</th>
+                            <td>{{ resultado.POBox }}</td>
+                        </tr>
+                        <tr>
+                            <th>Street Address 1</th>
+                            <td>{{ resultado.STREET1 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Street Address 2</th>
+                            <td>{{ resultado.STREET2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Street Address 3</th>
+                            <td>{{ resultado.STREET3 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Locality Name</th>
+                            <td>{{ resultado.L }}</td>
+                        </tr>
+                        <tr>
+                            <th>State or Province Name</th>
+                            <td>{{ resultado.S }}</td>
+                        </tr>
+                        <tr>
+                            <th>Postal Code</th>
+                            <td>{{ resultado.PostalCode }}</td>
+                        </tr>
+                        <tr>
+                            <th>Country Name</th>
+                            <td>{{ resultado.C }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email Address</th>
+                            <td>{{ resultado.Email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Telephone Number</th>
+                            <td>{{ resultado.Phone }}</td>
+                        </tr>
+                        <tr>
+                            <th>DNS:</th>
+                            <td>{% for dominio in resultado.dnsNames  %}{{ dominio }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                        </tr>
+                    </table>
                 {% else %}
                     <p>O CSR possui uma assinatura inválida.</p>
                 {% endif %}

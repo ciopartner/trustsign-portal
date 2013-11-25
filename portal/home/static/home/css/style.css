@@ -1807,6 +1807,10 @@ div.ferramentas ul.nav-tabs li{
     height: 155px;
 }
 
+div.ferramentas.small ul.nav-tabs li{
+    height: 105px;
+}
+
 div.ferramentas ul.nav-tabs li img{
     width: 100%;
 }
@@ -1821,6 +1825,10 @@ div.ferramentas ul.nav-tabs li:last-child{
 
 div.ferramentas ul.nav-tabs li:hover{
     background: #ddd;
+}
+
+div.ferramentas ul.nav-tabs li.active{
+    background: #CCC;
 }
 
 div.ferramentas ul.nav-tabs a{
