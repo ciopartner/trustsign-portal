@@ -1626,7 +1626,7 @@ img.size-thumbnail{
 	border-right: none;
 }
 
-.principais-clientes > li:nth-last-child(-1n+7) > div{
+.principais-clientes > li.no-bottom > div{
 	border-bottom: 0px !important;
 }
 
