@@ -1,3 +1,11 @@
 .video-thumb{
     width: 130px;
 }
+
+.footer-item-icon{
+    width: 350px;
+}
+.footer-item-icon a,
+.footer-item-icon a > img{
+    float: left;
+}
