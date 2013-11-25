@@ -296,6 +296,8 @@ CRM_PASSWORD_HASH = '<mudar no local_settings.py>'
 CRM_OPORTUNITY_ASSIGNED_USER_ID = '<mudar no local_settings.py>'
 CRM_OPORTUNITY_MANUFACTURERS_ID = '<mudar no local_settings.py>'
 
+BOLETO_DIAS_VENCTO = 5
+
 CRON_CLASSES = [
     'website.crons.EnviaOrdersCRMCronJob',
 
