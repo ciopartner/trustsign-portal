@@ -9,3 +9,7 @@
 .footer-item-icon a > img{
     float: left;
 }
+
+footer-social .footer-item-icon{
+    width: auto;
+}
