@@ -32,7 +32,7 @@
                     {% for dominio, email in emissao.get_dominios_x_emails %}
                         <tr id="fqdn-{{ forloop.counter0 }}">
                             <td>{{ dominio }}</td>
-                            <td><span>{{ email }}</span></td>
+                            <td><span>{% if email == 'none' %}-----{% else %}{{ email }}{% endif %}</span></td>
                         </tr>
                     {% endfor %}
                 </table>

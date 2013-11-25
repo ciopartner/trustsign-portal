@@ -204,12 +204,11 @@ class ValidateEmissaoValidacaoEmail(object):
             raise self.ValidationError(get_erro_message(e.ERRO_EMAIL_VALIDACAO_INVALIDO))
         return valor
 
+
 @insere_metodos_validacao('emission_dcv_emails')
 class ValidateEmissaoValidacaoEmailMultiplo(object):
 
     def _valida_emission_dcv_emails(self, valor, fields):
-        voucher = self.get_voucher()
-
         dominios = fields.get('emission_urls')
 
         if dominios:
