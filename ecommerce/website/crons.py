@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from logging import getLogger
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import get_current_site
@@ -31,7 +32,6 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
             for line in order.lines.all():
                 line.set_status('Em Processamento')
             log.info('Order #%s: alterado status para Em processamento' % order.number)
-
 
     def send_email(self, order):
         try:
