@@ -118,6 +118,7 @@ class OscarToCRMMixin(object):
         oportunidade.data_pagto = now().strftime('%Y-%m-%d')
         oportunidade.valor_total = str(order.total_incl_tax)
         oportunidade.parcelas = '1'
+        oportunidade.email_nfe = order.user.get_profile().email_nfe
 
         if transaction is None:
             # Para o caso de pedido de valor zerado (trial)
@@ -126,6 +127,7 @@ class OscarToCRMMixin(object):
             # Para pagamento com boleto
             oportunidade.tipo_pagamento = oportunidade.TIPO_BOLETO
             oportunidade.pag_boleto_transacao_id = transaction_id
+            oportunidade.email_boleto = oportunidade.email_nfe
         elif transaction.debitcard_id:
             # Para pagamento com cartão de débito
             oportunidade.tipo_pagamento = oportunidade.TIPO_CARTAO_DEBITO
