@@ -32,9 +32,9 @@
                             {% if not emissao %}
                                 {% if voucher.has_emissao_url %}
                                     {% if voucher.ssl_product == 'ssl-san' %}
-                                         <a class="btn btn-success span2 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
+                                         <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
                                     {% else %}
-                                         <a class="btn btn-success span2 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
+                                         <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
                                     {% endif %}
                                 {% endif %}
                             {% elif emissao.em_processamento %}
