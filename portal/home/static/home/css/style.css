@@ -1618,7 +1618,7 @@ img.size-thumbnail{
 	padding:5px;
 	line-height:80px;
 	text-align:center;
-	border-bottom:#DADEE3 1px solid;
+	border-bottom: #DADEE3 1px solid !important;
 }
 
 
@@ -1627,7 +1627,7 @@ img.size-thumbnail{
 }
 
 .principais-clientes > li:nth-last-child(-1n+7) > div{
-	border-bottom: none;
+	border-bottom: 0px !important;
 }
 
 .principais-clientes > li > div a[href]{
