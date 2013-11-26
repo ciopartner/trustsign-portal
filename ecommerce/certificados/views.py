@@ -347,32 +347,32 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
                 raise
 
     def post(self, request, *args, **kwargs):
-        if settings.DEBUG:
-            self.log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
+        self.log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
         try:
             if serializer.is_valid():
                 self.pre_save(serializer.object)
-                self.object = serializer.save(force_insert=True)
-                self.post_save(self.object, created=True)
-                headers = self.get_success_headers(serializer.data)
+                if not serializer.object.order_number:  # TODO: retirar if depois que o CRM acertar a API
+                    self.object = serializer.save(force_insert=True)
+                    self.post_save(self.object, created=True)
+                    headers = self.get_success_headers(serializer.data)
 
-                voucher = self.object
-                try:
-                    order = voucher.order
-                    if order.vouchers.count() == order.num_items_certificados:
-                        order.set_status('Concluído')
+                    voucher = self.object
+                    try:
+                        order = voucher.order
+                        if order and order.vouchers.count() == order.num_items_certificados:
+                            order.set_status('Concluído')
+                        self.log.info('Criação de Voucher Concluída: #{}'.format(voucher.crm_hash))
+                    except Order.DoesNotExist:
+                        pass
 
-                except Order.DoesNotExist:
-                    pass
-
-                return Response({}, status=status.HTTP_200_OK, headers=headers)
+                    return Response({}, status=status.HTTP_200_OK, headers=headers)
         except:
             self.log.exception('Ocorreu uma exceção: {}'.format(serializer.errors))
 
-
         self.log.error('Criação de Voucher não processada:\n{}'.format(serializer.errors))
+
         return self.error_response(serializer)
 
 
