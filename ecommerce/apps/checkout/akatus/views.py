@@ -447,6 +447,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
     _payment_events = None
 
     def post(self, request, *args, **kwargs):
+        log.info('Akatus NIP Post')
         log.info('AKATUS STATUS CHANGED POST: {}'.format(self.request.POST))
 
         token = self.request.POST.get('token')
