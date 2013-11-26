@@ -2208,6 +2208,15 @@ h3.title{
     margin-top: 23px;
 }
 
+@-moz-document url-prefix() {
+    #product-price .tabbable{
+        width: 637px;
+    }
+    #product-price .box-price:nth-child(3){
+        width: 25.1%;
+    }
+}
+
 #comprar-message{
     float: right;
     margin-top: 0;
