@@ -459,7 +459,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
         transacao_id = self.request.POST['transacao_id']
         status = self.request.POST['status']
 
-        log.info('Order #{} com transaction_id {} alterou o status para {}'.format(order_number, transacao_id, status))
+        log.info('Order #{} com transaction_id {} solicitou alteração do status para {}'.format(order_number, transacao_id, status))
 
         # Implementação de um timer que previne a Akatus atualizar o status antes de terminar de criar o objeto Order:
         order = None
@@ -479,14 +479,17 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
         # TODO: Colocar este cara no post_save
         # TODO: Este e-mail não está sendo enviado. Consultar quem está enviando o e-mail de pago
         if status == 'Aprovado':
+            log.info('Alterando order #{} para Pago...'.format(order_number))
             try:
                 lines = order.lines.filter(paymentevent__reference=transacao_id)
 
                 for line in lines:
                     line.set_status('Pago')
+                    log.info('Linha da ordem agora possui status Pago')
 
                 if order.lines.count() == order.lines.filter(status='Pago').count():
                     order.set_status('Pago')
+                    log.info('Ordem agora possui status Pago')
                     subject = 'Pagamento Aprovado'
                     template = 'customer/commtype_order_placed_body.html'
                     context = {
