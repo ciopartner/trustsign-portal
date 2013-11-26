@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from logging import getLogger
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import get_current_site
+from django.utils import translation
 from django_cron import CronJobBase, Schedule
 from oscar.core.loading import get_class
 from ecommerce.website.utils import send_template_email
@@ -22,16 +23,21 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
 
     def do(self):
-        Order = get_class('order.models', 'Order')
-        for order in Order.objects.filter(status='Pago')[:20]:
-            self.send_order_to_crm(order)
+        cur_language = translation.get_language()
+        try:
+            translation.activate('pt_BR')
+            Order = get_class('order.models', 'Order')
+            for order in Order.objects.filter(status='Pago')[:20]:
+                self.send_order_to_crm(order)
 
-            order.set_status('Em Processamento')
-            self.send_email(order)
+                order.set_status('Em Processamento')
+                self.send_email(order)
 
-            for line in order.lines.all():
-                line.set_status('Em Processamento')
-            log.info('Order #%s: alterado status para Em processamento' % order.number)
+                for line in order.lines.all():
+                    line.set_status('Em Processamento')
+                log.info('Order #%s: alterado status para Em processamento' % order.number)
+        finally:
+            translation.activate(cur_language)
 
     def send_email(self, order):
         try:
