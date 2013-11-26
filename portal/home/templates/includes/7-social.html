@@ -95,7 +95,7 @@
                 {% for blog_post in recent_posts %}
                     <div class="margin-top" style="clear: both;">
                         <a class="home-text3" href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
-                        <div class="all-body-text5 line-height-140">{{ blog_post.content | safe | striptags |truncatewords_html:24 }}</div>
+                        <div class="all-body-text5 line-height-140" style="height: 55px;">{{ blog_post.content | safe | striptags |truncatewords_html:24 }}</div>
                         <a href="{{ blog_post.get_absolute_url }}">[Leia mais]</a>
                     </div>
                 {% endfor %}
