@@ -347,13 +347,14 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
                 raise
 
     def post(self, request, *args, **kwargs):
-        self.log.info('Criação de Voucher Solicitada:\n{}'.format(request.DATA))
+        self.log.info('Solicitação de crição de voucher!')
+        self.log.info('Criacao de Voucher Solicitada:\n{}'.format(request.DATA))
 
         serializer = self.get_serializer(data=request.DATA, files=request.FILES)
         try:
             if serializer.is_valid():
                 self.pre_save(serializer.object)
-                if not serializer.object.order_number:  # TODO: retirar if depois que o CRM acertar a API
+                if hasattr(serializer.object, 'order_number') and not serializer.object.order_number:  # TODO: retirar if depois que o CRM acertar a API
                     self.object = serializer.save(force_insert=True)
                     self.post_save(self.object, created=True)
                     headers = self.get_success_headers(serializer.data)
