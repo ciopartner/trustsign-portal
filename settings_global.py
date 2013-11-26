@@ -76,6 +76,7 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 
@@ -262,7 +263,7 @@ DATABASES = {
 
 ENVIRONMENT = os.getenv('TRUSTSIGN_ENVIRONMENT', 'DEV')
 if ENVIRONMENT == 'DEV':
-    DEBUG = True
+    DEBUG = False
     URL_PORTAL = '/portal/'
     URL_ECOMMERCE = '/ecommerce/'
     # Para que haja compartilhamento de sessions...
