@@ -273,7 +273,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
 }
 
-SEALS_SERVER_URL = 'http://security.trustsign.com.br'
+SEALS_SERVER_URL = 'https://security.trustsign.com.br'
 SEALS_USERNAME = '<mudar no local_settings.py>'
 SEALS_PASSWORD = '<mudar no local_settings.py>'
 SEALS_MAX_WEBSITES_PER_REQUEST = 50
