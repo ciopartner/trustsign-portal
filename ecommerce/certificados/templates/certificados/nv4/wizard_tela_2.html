@@ -33,10 +33,14 @@
                         <th>{% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}Domínio{% endif %}</th>
                         <th>E-mail</th>
                     </tr>
-                    {% for fqdn in form.get_domains_csr %}
+                    {% for fqdn, emails in form.get_dict_domains_email.iteritems %}
                         <tr data-fqdn="{{ fqdn }}" id="fqdn-{{ forloop.counter0 }}">
                             <td>{{ fqdn }}</td>
-                            <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}" href="#windowEscolheEmail">escolher</a></td>
+                            {% if emails|length == 0 %}
+                                <td><span>-----</span></td>
+                            {% else %}
+                                <td><span></span> <a data-toggle="modal" data-fqdn="{{ fqdn }}" href="#windowEscolheEmail">escolher</a></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>

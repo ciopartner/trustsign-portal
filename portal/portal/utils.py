@@ -29,6 +29,8 @@ class JSONResponseMixin(object):
 
 class JSONView(JSONResponseMixin, TemplateView):
     def render_to_response(self, context, **response_kwargs):
+        if 'erro' in context:
+            response_kwargs['status'] = 400
         return self.render_to_json_response(context, **response_kwargs)
 
 

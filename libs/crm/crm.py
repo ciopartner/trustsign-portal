@@ -78,6 +78,8 @@ class OportunidadeCRM(object):
         self.data_pedido = None
         self.valor_total = None
         self.tipo_pagamento = None
+        self.email_nfe = None
+        self.email_boleto = None
 
         # cartão de credito
         self.pag_credito_titular = None
@@ -326,7 +328,7 @@ class CRMClient(object):
             'sales_stage': 'Closed Won',
             'opportunity_type': 'New Business',
             'data_pgto_c': oportunidade.data_pagto,
-            'parcelas': oportunidade.parcelas,
+            'nota_fiscal_c': oportunidade.email_nfe,
         }
 
         if oportunidade.is_credito():
@@ -336,6 +338,7 @@ class CRMClient(object):
                 'bandeira_c': oportunidade.pag_credito_bandeira,
                 'id_transacao_c': oportunidade.pag_credito_transacao_id,
                 'ultimos_digitos_c': oportunidade.pag_credito_ultimos_digitos,
+                'numero_parcela_credito_c': oportunidade.parcelas,
             })
         elif oportunidade.is_debito():
             data.update({
@@ -344,12 +347,16 @@ class CRMClient(object):
                 #'bandeira_debito_c': oportunidade.pag_debito_bandeira,
                 'transaction_id_debito_c': oportunidade.pag_debito_transacao_id,
                 #'ultimos_digitos_debito_c': oportunidade.pag_debito_ultimos_digitos,
+                'numero_parcela_debito_c': oportunidade.parcelas,
             })
         elif oportunidade.is_boleto():
             data.update({
                 'nosso_numero_c': oportunidade.pag_boleto_transacao_id,
                 #'nosso_numero_c': oportunidade.nosso_numero,
                 #'data_pgto_c': oportunidade.data_pagamento_boleto
+                'parcelas_c': oportunidade.parcelas,
+                'email_nf_boleto_c': oportunidade.email_boleto,
+                'data_pgto_c': oportunidade.data_pagamento_boleto
             })
 
         response = self.set_entry('Opportunities', data)

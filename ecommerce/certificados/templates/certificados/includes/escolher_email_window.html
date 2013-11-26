@@ -4,26 +4,28 @@
         <h3>Escolha os e-mails de validação para o {% if voucher.ssl_product == voucher.PRODUTO_SAN_UCC %}FQDN{% else %}domínio{% endif %}.</h3>
     </div>
     {%  for dominio, emails in form.get_dict_domains_email.iteritems %}
-    <div class="modal-body {% if forloop.counter0 %}hidden{% endif %}" data-fqdn="{{ dominio }}" data-count="{{ forloop.counter0 }}">
-        <span class="dominio"></span>
+        {% if emails %}
+            <div class="modal-body {% if forloop.counter0 %}hidden{% endif %}" data-fqdn="{{ dominio }}" data-count="{{ forloop.counter0 }}">
+                <span class="dominio"></span>
 
-        <table>
-            {% for email in emails %}
-            <tr>
-                <td>
-                    <label>
-                        <input type="radio" name="email{{ forloop.parentloop.counter0 }}" value="{{ email }}">
-                        <span>{{ email }}</span>
-                    </label>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        <a href="/portal/suporte-trustsign/metodos-alternativos-de-validacao-de-dominio/" target="_blank">Não tenho acesso a nenhum dos e-mails acima</a>
-    </div>
+                <table>
+                    {% for email in emails %}
+                        <tr>
+                            <td>
+                                <label>
+                                    <input type="radio" name="email{{ forloop.parentloop.counter0 }}" value="{{ email }}">
+                                    <span>{{ email }}</span>
+                                </label>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <a href="/portal/suporte-trustsign/metodos-alternativos-de-validacao-de-dominio/" target="_blank">Não tenho acesso a nenhum dos e-mails acima</a>
+            </div>
+        {% endif %}
     {% endfor %}
     <div class="modal-footer">
-{#        <a class="prev-icon" href="#">Anterior</a> - <a class="next-icon" href="#">Próximo</a>#}
+        {#        <a class="prev-icon" href="#">Anterior</a> - <a class="next-icon" href="#">Próximo</a>#}
         <a href="#" class="btn pull-right span2" data-dismiss="modal">Ok</a>
     </div>
 </div>

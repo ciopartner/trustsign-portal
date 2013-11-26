@@ -55,7 +55,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_DIRNAME
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = "/static-ecommerce/"
+STATIC_URL = "/static/ecommerce/"
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -295,6 +295,8 @@ CRM_USERNAME = '<mudar no local_settings.py>'
 CRM_PASSWORD_HASH = '<mudar no local_settings.py>'
 CRM_OPORTUNITY_ASSIGNED_USER_ID = '<mudar no local_settings.py>'
 CRM_OPORTUNITY_MANUFACTURERS_ID = '<mudar no local_settings.py>'
+
+BOLETO_DIAS_VENCTO = 5
 
 CRON_CLASSES = [
     'website.crons.EnviaOrdersCRMCronJob',

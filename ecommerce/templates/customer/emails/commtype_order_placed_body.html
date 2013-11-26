@@ -21,18 +21,18 @@
             <div style="text-align: justify">
                 <p><font face="Tahoma" style="font-size: 12px; color: #666666">Seu pagamento foi aprovado. Em breve você receberá instruções de como ativar seus serviços ou emitir seus certificados.</font></p>
             </div>
-            <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_ok.png' %}" alt="" align="center" /></center>
+            <center><img src="https://{{ site.domain }}{% static 'ecommerce/img/status/pagto_ok.png' %}" alt="" align="center" /></center>
         {% else %}
             {% if order.is_voucher_issued %}
                 {# Mensagem para todos os voucher emitidos #}
-                <img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_emitido.png' %}" alt="" align="center" />
+                <img src="https://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_emitido.png' %}" alt="" align="center" />
             {% else %}
                 {# Mensagem para vouchers pendentes #}
                 <div style="text-align: justify">
                     <p><font face="Tahoma" style="font-size: 12px; color: #666666">Você já pode emitir seus certificados!</font></p>
                     <p><font face="Tahoma" style="font-size: 12px; color: #666666">Acesse: http://{{ site.domain }}/ecommerce/escolha-voucher/</font></p>
                 </div>
-                <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_pendente.png' %}" alt="" align="center" /></center>
+                <center><img src="https://{{ site.domain }}{% static 'ecommerce/img/status/vouchers_pendente.png' %}" alt="" align="center" /></center>
             {% endif %}
         {% endif %}
     {% else %}
@@ -49,7 +49,7 @@
                 </font>
             </p>
         </div>
-        <center><img src="http://{{ site.domain }}{% static 'ecommerce/img/status/pagto_pendente.png' %}" alt="" align="center" /></center>
+        <center><img src="https://{{ site.domain }}{% static 'ecommerce/img/status/pagto_pendente.png' %}" alt="" align="center" /></center>
     {% endif %}
 
     <br/><br/>
@@ -89,16 +89,17 @@
                         <font face="Tahoma">{{ line.line_price_incl_tax|currency:order.currency }}</font>
                     </td>
                 </tr>
-                <tr>
-                    <td colspan="3" bgcolor="#FAFAFA" style="padding: 5px">
-                        <font face="Tahoma" style="font-size: 12px; color: #666666">
-                            <strong>Valor total do pedido:</strong> {{ order.total_incl_tax|currency:order.currency }}
-                        </font>
-                    </td>
-                </tr>
             {% endfor %}
+            <tr>
+                <td colspan="3" bgcolor="#FAFAFA" style="padding: 5px">
+                    <font face="Tahoma" style="font-size: 12px; color: #666666">
+                        <strong>Valor total do pedido:</strong> {{ order.total_incl_tax|currency:order.currency }}
+                    </font>
+                </td>
+            </tr>
         </table>
 
+    {% else %}
 
         <br>
 
@@ -109,10 +110,9 @@
             </font>
         </p>
 
-        <br>
-
-
     {% endif %}
+
+    <br>
 
 
 {#    <p>{% trans 'Shipping address:' %}</p>#}
@@ -121,23 +121,23 @@
 
     {% if order.basket.tem_contrato_ssl %}
         <div>
-            <a href="https://{{ site.domain }}{% static 'contratos/contrato_certificado_digital.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Certificado</font></a>
+            <a href="https://{{ site.domain }}{% static 'documentos/contrato_certificado_digital.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Certificado</font></a>
         </div>
     {% endif %}
     {% if order.basket.tem_contrato_sitemonitorado %}
         <div>
-            <a href="http://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-sitemonitorado.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Site Monitorado</font></a>
+            <a href="http://{{ site.domain }}{% static 'documentos/contrato-digital-trustsign-sitemonitorado.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Site Monitorado</font></a>
         </div>
     {% endif %}
 
     {% if order.basket.tem_contrato_siteseguro %}
         <div>
-            <a href="https://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-siteseguro.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Site + Seguro</font></a>
+            <a href="https://{{ site.domain }}{% static 'documentos/contrato-digital-trustsign-siteseguro.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do Site + Seguro</font></a>
         </div>
     {% endif %}
     {% if order.basket.tem_contrato_pki %}
         <div>
-            <a href="https://{{ site.domain }}{% static 'contratos/contrato-digital-trustsign-pki.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do PKI</font></a>
+            <a href="https://{{ site.domain }}{% static 'documentos/contrato-digital-trustsign-pki.pdf' %}"><font face="Tahoma" style="font-size: 12px;">Termos de uso do PKI</font></a>
         </div>
     {% endif %}
 

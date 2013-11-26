@@ -53,6 +53,7 @@ h3{
 /* Bootstrap 80% */
 .btn{
     text-transform: uppercase;
+    font-size: 11px !important;
 }
 
 .form-horizontal .control-label{
@@ -1537,15 +1538,15 @@ img.size-thumbnail{
 	display:block;
 	line-height:104px;
 	text-align:center;
-	border-bottom:#DADEE3 1px solid;
+	border-bottom:#DADEE3 1px solid !important;
 }
 
 .nossa-diferenca > li:nth-child(3n+3) > div{
 	border-right: none;
 }
 
-.nossa-diferenca > li:nth-last-child(-1n+3) > div{
-	border-bottom: none;
+.nossa-diferenca > li.no-bottom > div{
+	border-bottom: none !important;
 }
 
 .nossa-diferenca .suporte-especializado {
@@ -1617,7 +1618,7 @@ img.size-thumbnail{
 	padding:5px;
 	line-height:80px;
 	text-align:center;
-	border-bottom:#DADEE3 1px solid;
+	border-bottom: #DADEE3 1px solid !important;
 }
 
 
@@ -1625,8 +1626,8 @@ img.size-thumbnail{
 	border-right: none;
 }
 
-.principais-clientes > li:nth-last-child(-1n+7) > div{
-	border-bottom: none;
+.principais-clientes > li.no-bottom > div{
+	border-bottom: 0px !important;
 }
 
 .principais-clientes > li > div a[href]{
@@ -1806,6 +1807,10 @@ div.ferramentas ul.nav-tabs li{
     height: 155px;
 }
 
+div.ferramentas.small ul.nav-tabs li{
+    height: 105px;
+}
+
 div.ferramentas ul.nav-tabs li img{
     width: 100%;
 }
@@ -1820,6 +1825,10 @@ div.ferramentas ul.nav-tabs li:last-child{
 
 div.ferramentas ul.nav-tabs li:hover{
     background: #ddd;
+}
+
+div.ferramentas ul.nav-tabs li.active{
+    background: #CCC;
 }
 
 div.ferramentas ul.nav-tabs a{

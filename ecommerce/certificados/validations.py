@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import re
 from ecommerce.certificados import erros as e
 from libs.comodo import get_emails_validacao
 from ecommerce.certificados.erros import get_erro_message
@@ -20,6 +21,21 @@ NOMES_INTERNOS = (
     '.priv',
     '.localdomain',
 )
+
+regex_ip_10 = r'10\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
+regex_ip_172 = r'172\.(1[6-9]|2[0-9]|3[0-1])\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
+regex_ip_192_168 = r'192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
+
+regex_ip_internos = re.compile(r'^({}|{}|{})$'.format(regex_ip_10, regex_ip_172, regex_ip_192_168))
+
+
+def is_nome_interno(dominio):
+    final_dominio = '.%s' % dominio.split('.')[-1]
+
+    if '.' not in dominio or final_dominio in NOMES_INTERNOS:
+        return True
+
+    return bool(re.match(regex_ip_internos, dominio))
 
 
 def insere_metodos_validacao(field):
@@ -164,8 +180,9 @@ class ValidateEmissaoCSRMixin(object):
                 if '*' in dominio:
                     raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_COM_WILDCARD))
 
-                final_dominio = '.%s' % dominio.split('.')[-1]
-                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC and is_nome_interno(dominio):
+                    if voucher.ssl_term != Voucher.VALIDADE_ANUAL:
+                        raise self.ValidationError('Emissões de domínios internos devem ter vigência de 1 ano')
                     continue
 
                 razao_social = get_razao_social_dominio(dominio)
@@ -187,12 +204,11 @@ class ValidateEmissaoValidacaoEmail(object):
             raise self.ValidationError(get_erro_message(e.ERRO_EMAIL_VALIDACAO_INVALIDO))
         return valor
 
+
 @insere_metodos_validacao('emission_dcv_emails')
 class ValidateEmissaoValidacaoEmailMultiplo(object):
 
     def _valida_emission_dcv_emails(self, valor, fields):
-        voucher = self.get_voucher()
-
         dominios = fields.get('emission_urls')
 
         if dominios:
@@ -207,11 +223,10 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             raise self.ValidationError(get_erro_message(e.ERRO_DOMINIO_SEM_EMAIL_VALIDACAO))
 
         for dominio, email in zip(dominios, emails):
-            final_dominio = '.%s' % dominio.split('.')[-1]
-            if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC and final_dominio in NOMES_INTERNOS:
-                continue
-
-            if email not in get_emails_validacao(dominio):
+            if is_nome_interno(dominio):
+                if email != 'none':
+                    raise self.ValidationError('Valor inválido para email interno')
+            elif email not in get_emails_validacao(dominio):
                 raise self.ValidationError(get_erro_message(e.ERRO_EMAIL_VALIDACAO_INVALIDO_PARA_DOMINIO) % (email, dominio))
         return valor
 

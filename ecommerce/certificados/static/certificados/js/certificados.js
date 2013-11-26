@@ -52,11 +52,14 @@ $(document).ready(function () {
         for(var i=0; i < lista.length; i++){
 
             var val = lista[i];
-            var $tr = $('.fqdn-table tr').eq(i + 1);
-            var fqdn = $tr.data('fqdn');
 
-            $tr.find('span').text(val);
-            $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').find('input[value="' + val + '"]');
+            if(val !== 'none'){
+                var $tr = $('.fqdn-table tr').eq(i + 1);
+                var fqdn = $tr.data('fqdn');
+
+                $tr.find('span').text(val);
+                $('#windowEscolheEmail .modal-body[data-fqdn="' + fqdn + '"]').find('input[value="' + val + '"]');
+            }
         }
     }
 

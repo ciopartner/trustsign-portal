@@ -48,7 +48,7 @@ class Voucher(Model):
 
     # Assinaturas
     PRODUTO_PKI = 'pki'
-    PRODUTO_SITE_SEGURO = 'site-seguro'
+    PRODUTO_SITE_SEGURO = 'site-mais-seguro'
     PRODUTO_SITE_MONITORADO = 'site-monitorado'
 
     PRODUTO_CHOICES = (
@@ -274,7 +274,7 @@ class Voucher(Model):
         url_imagem_selo = '%s/static/selos-clientes/selo-%s-%s-pt.png' % (seals_server_url, tipo, hash_url)
 
         return '''<a href="%s" target="_blank">
-<img name="trustseal" alt="Site Autêntico" src="%s/static/" border="0" title="Clique para Validar" />
+<img name="trustseal" alt="Site Autêntico" src="%s" border="0" title="Clique para Validar" />
 </a>''' % (url_validacao, url_imagem_selo)
 
     @property
@@ -333,7 +333,8 @@ class Voucher(Model):
 
 
 class DominioValidator(RegexValidator):
-    regex = r'^(\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
+    r255 = r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
+    regex = r'^((\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{{2,}})|{r255}\.{r255}\.{r255}\.{r255})$'.format(r255=r255)
     message = 'Domínio inválido'
 
 

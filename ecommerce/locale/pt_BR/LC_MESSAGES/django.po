@@ -5333,7 +5333,7 @@ msgstr "Escolha uma opção"
 
 #: templates/oscar/checkout/thank_you.html:8
 msgid "Confirmation of order"
-msgstr "Confirmação do pedido"
+msgstr "Pagamento Aprovado"
 
 #: templates/oscar/checkout/thank_you.html:15
 #, python-format
@@ -5955,7 +5955,7 @@ msgstr "A equipe"
 #: templates/oscar/customer/emails/commtype_order_placed_subject.txt:1
 #, python-format
 msgid "Confirmation of order %(number)s"
-msgstr "Confirmação do pedido %(number)s"
+msgstr "[TrustSign] Confirmação do Pedido %(number)s"
 
 #: templates/oscar/customer/emails/commtype_password_changed_body.html:5
 #, python-format
@@ -7931,3 +7931,12 @@ msgstr "Senha baseada em uma palavra do dicionário"
 #, python-format
 msgid "Based on a common sequence of characters"
 msgstr "Senha baseada em uma sequencia comum de caracters"
+
+msgid "PRODUCT"
+msgstr "PRODUTO"
+
+msgid "QUANTITY"
+msgstr "QUANTIDADE"
+
+msgid "PRICE"
+msgstr "PREÇO"
