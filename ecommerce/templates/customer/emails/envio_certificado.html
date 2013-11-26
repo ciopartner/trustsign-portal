@@ -1,15 +1,18 @@
 {% extends 'customer/emails/base.html' %}
 {% load static %}
 
-{% block title %}EMISSÃO SOLICITADA{% endblock %}
+{% block title %}CERTIFICADO TRUSTSIGN{% endblock %}
 
 {% block body %}
 
     <br>
-    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Seu processo de emissão foi iniciado com sucesso. A partir de agora você será informado sobre o status da sua emissão.</font></p>
+    <p><font face="Tahoma" style="font-size: 12px; color: #666;">A requisição de emissão do seu certificado digital foi aprovada e está concluída. O registro em anexo foi emitido para a URL:  www.XXXXXXXXX.com.br.</font></p>
+    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Recomendamos fortemente que seja realizado um backup de seu certificado por precaução.</font></p>
+    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Se houver alguma dificuldade na instalação do seu certificado, entre outras dúvidas técnicas, entre em contato com o nosso suporte.</font></p>
 
+    <center><img align="middle" alt="" src="http://{{ site.domain }}/static/ecommerce/ecommerce/img/status/emissao_finalizada.png"></center>
 
-    <center><img align="middle" alt="" src="http://{{ site.domain }}/static/ecommerce/ecommerce/img/status/emissao_iniciada.png"></center>
+    <br>
 
     {% if voucher.order_number %}
     <br>
