@@ -59,8 +59,7 @@ class Basket(AbstractBasket):
 
         return lines
 
-    def add_product(self, *args, **kwargs):
-
+    def _clear_cache(self):
         # clear caches
         self._lines_assinaturas = None
         self._lines_certificados = None
@@ -70,6 +69,12 @@ class Basket(AbstractBasket):
         self._tem_contrato_pki = None
         self._has_trial = None
 
+    def flush(self):
+        self._clear_cache()
+        return super(self.__class__, self).flush()
+
+    def add_product(self, *args, **kwargs):
+        self._clear_cache()
         return super(self.__class__, self).add_product(*args, **kwargs)
 
     def tem_assinatura(self):

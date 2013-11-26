@@ -1,7 +1,9 @@
 # coding=utf-8
 from __future__ import unicode_literals
+from django.core.exceptions import PermissionDenied
 from django.forms import ValidationError
 from django.http import Http404
+from django.views.generic import RedirectView
 from localflavor.br.forms import BRCNPJField
 from oscar.apps.basket.views import BasketAddView
 from oscar.apps.catalogue.models import Product
@@ -26,11 +28,6 @@ class GetCNPJDataView(JSONView):
         if cnpj:
             return self.get_cnpj_data(cnpj)
         return {'erro': 'cnpj não encontrado'}
-
-    def render_to_response(self, context, **response_kwargs):
-        if 'erro' in context:
-            response_kwargs['status'] = 400
-        return super(GetCNPJDataView, self).render_to_response(context, **response_kwargs)
 
     def get_cnpj_data(self, cnpj):
         try:
@@ -109,3 +106,15 @@ class AdicionarProdutoView(BasketAddView, JSONFormView):
 
     def form_invalid(self, form):
         return self.render_to_response(form.errors, status=400)
+
+
+class EsvaziarCarrinhoView(RedirectView):
+
+    url = '/ecommerce/basket/'
+
+    def get(self, *args, **kwargs):
+        try:
+            self.request.basket.flush()
+        except:
+            pass
+        return super(EsvaziarCarrinhoView, self).get(*args, **kwargs)
