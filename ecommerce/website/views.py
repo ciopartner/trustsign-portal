@@ -1,6 +1,5 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from django.core.exceptions import PermissionDenied
 from django.forms import ValidationError
 from django.http import Http404
 from django.views.generic import RedirectView

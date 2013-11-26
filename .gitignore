@@ -6,7 +6,9 @@
 .coverage
 .idea
 local_settings.py
+/attachments
 /static
+/ecommerce/static_collected
 /portal/static
 /portal/static-portal
 /ecommerce/static_root

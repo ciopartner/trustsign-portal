@@ -10,6 +10,7 @@ from logging import getLogger
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import get_current_site
 from django.core.mail import send_mail
+from django.utils import translation
 from django_cron import CronJobBase, Schedule
 import requests
 from django.utils.timezone import now
@@ -32,47 +33,53 @@ class EnviaComodoJob(CronJobBase):
         from libs import comodo
         from ecommerce.certificados.models import Emissao, Revogacao
 
-        status_envio_pendente = (
-            Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
-            Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
-            Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
-        )
+        cur_language = translation.get_language()
+        try:
+            translation.activate('pt_BR')
 
-        for emissao in Emissao.objects.select_related('voucher', 'revogacao').filter(
-                emission_status__in=status_envio_pendente):
-            try:
-                if emissao.emission_status == Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE:
-                    voucher = emissao.voucher
-                    # TODO: retirar if após implementar api comodo para os outros produtos
-                    if voucher.ssl_product not in (voucher.PRODUTO_SMIME,
-                                                   voucher.PRODUTO_CODE_SIGNING,
-                                                   voucher.PRODUTO_JRE):
-                        resposta = comodo.emite_certificado(emissao)
+            status_envio_pendente = (
+                Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE,
+                Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE,
+                Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE,
+            )
 
-                        emissao.comodo_order = resposta['orderNumber']
-                        emissao.emission_cost = resposta['totalCost']
-                        emissao.emission_status = Emissao.STATUS_EMISSAO_ENVIADO_COMODO
+            for emissao in Emissao.objects.select_related('voucher', 'revogacao').filter(
+                    emission_status__in=status_envio_pendente):
+                try:
+                    if emissao.emission_status == Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE:
+                        voucher = emissao.voucher
+                        # TODO: retirar if após implementar api comodo para os outros produtos
+                        if voucher.ssl_product not in (voucher.PRODUTO_SMIME,
+                                                       voucher.PRODUTO_CODE_SIGNING,
+                                                       voucher.PRODUTO_JRE):
+                            resposta = comodo.emite_certificado(emissao)
 
-                elif emissao.emission_status == Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE:
-                    # Como o ambiente de testes não existe para reemissão...
-                    if not settings.COMODO_ENVIAR_COMO_TESTE:
-                        comodo.reemite_certificado(emissao)
-                        emissao.emission_status = emissao.STATUS_REEMISSAO_ENVIADO_COMODO
-                else:
-                    try:
-                        comodo.revoga_certificado(emissao.revogacao)
-                        emissao.status = Emissao.STATUS_REVOGACAO_ENVIADO_COMODO
+                            emissao.comodo_order = resposta['orderNumber']
+                            emissao.emission_cost = resposta['totalCost']
+                            emissao.emission_status = Emissao.STATUS_EMISSAO_ENVIADO_COMODO
 
-                    except Revogacao.DoesNotExist:
-                        log.error('Tentando revogar uma emissão sem criar a revogação no banco')
+                    elif emissao.emission_status == Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE:
+                        # Como o ambiente de testes não existe para reemissão...
+                        if not settings.COMODO_ENVIAR_COMO_TESTE:
+                            comodo.reemite_certificado(emissao)
+                            emissao.emission_status = emissao.STATUS_REEMISSAO_ENVIADO_COMODO
+                    else:
+                        try:
+                            comodo.revoga_certificado(emissao.revogacao)
+                            emissao.status = Emissao.STATUS_REVOGACAO_ENVIADO_COMODO
 
-            except comodo.ComodoError as e:
-                log.error('Ocorreu um erro(%s) na chamada da comodo da emissao: %s' % (e.code, emissao))
+                        except Revogacao.DoesNotExist:
+                            log.error('Tentando revogar uma emissão sem criar a revogação no banco')
 
-                emissao.emission_status = Emissao.STATUS_OCORREU_ERRO_COMODO
-                emissao.emission_error_message = '%s (%s)' % (e.comodo_message, e.code)
+                except comodo.ComodoError as e:
+                    log.error('Ocorreu um erro(%s) na chamada da comodo da emissao: %s' % (e.code, emissao))
 
-            emissao.save()
+                    emissao.emission_status = Emissao.STATUS_OCORREU_ERRO_COMODO
+                    emissao.emission_error_message = '%s (%s)' % (e.comodo_message, e.code)
+
+                emissao.save()
+        finally:
+            translation.activate(cur_language)
 
 
 class CheckEmailJob(CronJobBase):
@@ -89,49 +96,55 @@ class CheckEmailJob(CronJobBase):
 
         #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
 
-        m = imaplib.IMAP4_SSL(settings.CERTIFICADOS_IMAP_SERVER)
-        m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
-        m.select("INBOX")
+        cur_language = translation.get_language()
+        try:
+            translation.activate('pt_BR')
 
-        resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')
-        items = items[0].split()
+            m = imaplib.IMAP4_SSL(settings.CERTIFICADOS_IMAP_SERVER)
+            m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
+            m.select("INBOX")
 
-        for emailid in items:
-            resp, data = m.fetch(emailid, "(RFC822)")
-            email_body = data[0][1]
-            mail = email.message_from_string(email_body)
+            resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')
+            items = items[0].split()
 
-            if mail.get_content_maintype() != 'multipart':
-                continue
+            for emailid in items:
+                resp, data = m.fetch(emailid, "(RFC822)")
+                email_body = data[0][1]
+                mail = email.message_from_string(email_body)
 
-            subject = mail.get('subject')
+                if mail.get_content_maintype() != 'multipart':
+                    continue
 
-            try:
-                comodo_order = re.match('.*ORDER #([0-9]+).*', subject).groups(0)[0]
-                emissao = Emissao.objects.select_related('voucher').get(comodo_order=comodo_order)
+                subject = mail.get('subject')
 
-                text_content = str(list(mail.get_payload()[0].walk())[1])
-                certificado = re.match('.*(-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----).*',
-                                       text_content, re.S).groups(0)[0]
+                try:
+                    comodo_order = re.match('.*ORDER #([0-9]+).*', subject).groups(0)[0]
+                    emissao = Emissao.objects.select_related('voucher').get(comodo_order=comodo_order)
 
-                emissao.emission_certificate = certificado
+                    text_content = str(list(mail.get_payload()[0].walk())[1])
+                    certificado = re.match('.*(-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----).*',
+                                           text_content, re.S).groups(0)[0]
 
-                counter = 1
+                    emissao.emission_certificate = certificado
 
-                for part in mail.walk():
-                    if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
-                        continue
+                    counter = 1
 
-                    emissao.emission_mail_attachment_path, counter = self.extract_attachment(part, counter)
+                    for part in mail.walk():
+                        if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
+                            continue
 
-                emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
+                        emissao.emission_mail_attachment_path, counter = self.extract_attachment(part, counter)
 
-                emissao.save()
+                    emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
 
-            except (IndexError, AttributeError):
-                log.error('Recebeu e-mail fora do padrão (#{})'.format(subject))
-            except Emissao.DoesNotExist:
-                log.error('Recebeu e-mail com comodo order inexistente no banco (#{}) '.format(subject))
+                    emissao.save()
+
+                except (IndexError, AttributeError):
+                    log.error('Recebeu e-mail fora do padrão (#{})'.format(subject))
+                except Emissao.DoesNotExist:
+                    log.error('Recebeu e-mail com comodo order inexistente no banco (#{}) '.format(subject))
+        finally:
+            translation.activate(cur_language)
 
     def extract_attachment(self, part, counter):
         filename = part.get_filename()
@@ -153,14 +166,16 @@ class CheckEmailJob(CronJobBase):
         filename = s[:-1]
         ext = s[-1]
 
-        att_path = os.path.join(directory, '%s-%s.%s' % (filename, timestamp, ext))
+        relative_path = '%s-%s.%s' % (filename, timestamp, ext)
+
+        att_path = os.path.join(directory, relative_path)
 
         if not os.path.isfile(att_path):
             fp = open(att_path, 'wb')
             fp.write(part.get_payload(decode=True))
             fp.close()
 
-        return att_path, counter
+        return relative_path, counter
 
 
 def chunks(l, n):
@@ -184,17 +199,22 @@ class AtivaSelosJob(CronJobBase):
     error_message = 'Ocorreu um exceção ao executar o cronjob AtivaSelos'
 
     def do(self):
+        cur_language = translation.get_language()
         try:
-            websites = self.extrai_websites()
+            translation.activate('pt_BR')
+            try:
+                websites = self.extrai_websites()
 
-            for line in ('basic', 'pro', 'prime'):
-                for website in websites[line]:
-                    self.processa(line, website)
-            self.post_do()
-        except Exception as e:
-            log.exception(self.error_message)
-            raise e  # joga a exceção novamente para o django-cron tentar executar o job
-                     # novamente depois de alguns minutos e enviar o email de aviso
+                for line in ('basic', 'pro', 'prime'):
+                    for website in websites[line]:
+                        self.processa(line, website)
+                self.post_do()
+            except Exception as e:
+                log.exception(self.error_message)
+                raise e  # joga a exceção novamente para o django-cron tentar executar o job
+                         # novamente depois de alguns minutos e enviar o email de aviso
+        finally:
+            translation.activate(cur_language)
 
     def post_do(self):
         from ecommerce.certificados.models import Emissao
