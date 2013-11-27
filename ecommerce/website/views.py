@@ -109,6 +109,7 @@ class AdicionarProdutoView(BasketAddView, JSONFormView):
 
 class EsvaziarCarrinhoView(RedirectView):
 
+    permanent = False
     url = '/ecommerce/basket/'
 
     def get(self, *args, **kwargs):
