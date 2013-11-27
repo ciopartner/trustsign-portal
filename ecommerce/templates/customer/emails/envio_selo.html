@@ -1,15 +1,19 @@
 {% extends 'customer/emails/base.html' %}
 {% load static %}
 
-{% block title %}EMISSÃO SOLICITADA{% endblock %}
+{% block title %}SELO TRUSTSIGN{% endblock %}
 
 {% block body %}
 
     <br>
-    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Seu processo de emissão foi iniciado com sucesso. A partir de agora você será informado sobre o status da sua emissão.</font></p>
+    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Segue abaixo o código de exibição do selo de validação da TrustSign.</font></p>
+    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Para exibi-lo, favor inseri-lo no local desejado, dentro do código fonte do site.</font></p>
 
+<pre>codigo-html</pre>
 
-    <center><img align="middle" alt="" src="http://{{ site.domain }}/static/ecommerce/ecommerce/img/status/emissao_iniciada.png"></center>
+    <center><img align="middle" alt="" src="http://{{ site.domain }}/static/ecommerce/ecommerce/img/status/emissao_finalizada.png"></center>
+
+    <br>
 
     {% if voucher.order_number %}
     <br>

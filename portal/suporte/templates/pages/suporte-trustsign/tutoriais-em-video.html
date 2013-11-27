@@ -49,7 +49,7 @@
             {% for video in videos %}
                 <div class="span6 video">
                     <a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">
-                        <img src="http://www.t.trustsign.com.br{{ video.video_thumb.url }}" alt=""/>
+                        <img src="https://www.trustsign.com.br{{ video.video_thumb.url }}" alt=""/>
                     </a>
                     <h3><a onclick="abreVideo('{{ video.video_url }}?rel=0&autoplay=1');" href="#modal-video" data-toggle="modal">{{ video.titulo }}</a></h3>
                     <div>{{ video.descricao|richtext_filter|safe  }}</div>

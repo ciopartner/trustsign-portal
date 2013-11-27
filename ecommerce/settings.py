@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 # Django settings for ecommerce project.
 
 # Importa todas as opcoes default do OSCAR
 from oscar.defaults import *
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 SITE_ID = 1
@@ -102,6 +103,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 # List of callables that know how to import templates from various sources.
@@ -271,7 +273,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
 }
 
-SEALS_SERVER_URL = 'http://security.trustsign.com.br'
+SEALS_SERVER_URL = 'https://security.trustsign.com.br'
 SEALS_USERNAME = '<mudar no local_settings.py>'
 SEALS_PASSWORD = '<mudar no local_settings.py>'
 SEALS_MAX_WEBSITES_PER_REQUEST = 50

@@ -6,8 +6,13 @@ from django.utils.timezone import now
 from oscar.core.loading import get_class
 import crm
 from ecommerce.website.utils import formata_cnpj
+from logging import getLogger
+
 
 Bankcard = get_class('payment.models', 'Bankcard')
+
+
+log = getLogger('ecommerce')
 
 
 class OscarToCRMMixin(object):
@@ -55,7 +60,9 @@ class OscarToCRMMixin(object):
 
             # Cria os produtos da oportunidade
             produtos = self.get_produtos_crm(order, transaction=t)
+            log.info('Quantidade de Produtos: {}'.format(len(produtos)))
             for produto in produtos:
+                log.info('Enviou uma birosca de um produto')
                 produto.account_id = contato_id
                 produto.opportunity_id = oportunidade_id
                 crm_client.set_entry_products(produto)
@@ -159,10 +166,14 @@ class OscarToCRMMixin(object):
         """
         transaction_id = transaction.reference if transaction else 'n/a'
         produtos = []
+        log.info('Entrando em get_produtos_crm - transaction_id = {}'.format(transaction_id))
 
         lines = order.lines.filter(paymentevent__reference=transaction_id) if transaction else \
                 order.lines.filter(paymentevent__reference__isnull=True)
+
+        log.info('Linhas computadas: {}'.format(lines.count()))
         for line in lines:
+            log.info('Linha: {}'.format(line.quantity))
             produto = crm.ProdutoCRM()
             produto.codigo = line.partner_sku
             produto.quantidade = line.quantity

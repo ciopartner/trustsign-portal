@@ -152,10 +152,10 @@ class CRMClient(object):
         """
         response = None
 
-        if settings.DEBUG:
-            log.info('\n\n')
-            log.info('Metodo: {}'.format(method))
-            log.info('Request ao Sugar: {}'.format(rest_data))
+
+        log.info('\n\n')
+        log.info('Metodo: {}'.format(method))
+        log.info('Request ao Sugar: {}'.format(rest_data))
 
         if not self.session_id and method != 'login':
             raise self.CRMError('Desconectado')
@@ -174,8 +174,7 @@ class CRMClient(object):
             log.exception('Ocorreu um erro na chamada do crm: %s' % response.text if response is not None else '')
             raise self.CRMError('Ocorreu um erro na chamada do metodo %s na CRM, verifique o log' % method)
 
-        if settings.DEBUG:
-            log.info('Response: {}'.format(resposta))
+        log.info('Response: {}'.format(resposta))
 
         return resposta
 

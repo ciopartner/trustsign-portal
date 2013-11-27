@@ -333,7 +333,8 @@ class Voucher(Model):
 
 
 class DominioValidator(RegexValidator):
-    regex = r'^(\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,})$'
+    r255 = r'(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
+    regex = r'^((\*\.)?[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{{2,}})|{r255}\.{r255}\.{r255}\.{r255})$'.format(r255=r255)
     message = 'Domínio inválido'
 
 

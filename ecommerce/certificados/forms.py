@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from collections import OrderedDict
 import re
 
 from django.forms import ModelForm, CharField, EmailField, PasswordInput, HiddenInput, ChoiceField, RadioSelect, Form, TextInput
@@ -141,23 +142,20 @@ class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, Valid
                 url = self.initial['emission_url']
                 if url not in dominios:
                     dominios.insert(0, url)
-                self.initial['emission_dcv_emails'] = ' '.join('none' if is_nome_interno(dominio) else '' for dominio in dominios)
-            else:
-                self.initial['emission_dcv_emails'] = ' ' * (len(dominios) - 1)
+            self.initial['emission_dcv_emails'] = ' '.join('none' if is_nome_interno(dominio) else '' for dominio in dominios)
 
         super(EmissaoTela2MultiplosDominios, self).__init__(**kwargs)
 
     def get_dict_domains_email(self):
         if not hasattr(self, '_dict_domains_email'):
-            d = {}
+            d = OrderedDict()
             for dominio in self.get_domains_csr():
                 if is_nome_interno(dominio):
                     d[dominio] = []
                 else:
                     d[dominio] = get_emails_validacao(dominio)
             self._dict_domains_email = d
-        else:
-            return self._dict_domains_email
+        return self._dict_domains_email
 
 
 class EmissaoNv1Tela1Form(EmissaoTela1Form):

@@ -54,6 +54,7 @@ h3{
 .btn{
     text-transform: uppercase;
     font-size: 11px !important;
+    font-family: Tahoma,Geneva,sans-serif !important;
 }
 
 .form-horizontal .control-label{
@@ -1276,7 +1277,7 @@ img.size-thumbnail{
 }
 
 .sharebar .facebook iframe{
-    width: 53px!important;
+    width: 56px !important;
 }
 
 .sharebar .twitter{
@@ -2110,7 +2111,7 @@ h3.title{
     min-height: 118px;
     border: 1px solid #ddd;
     box-sizing: border-box;
-    width: 539px;
+    width: 538px;
     float: right;
     overflow: inherit;
     -moz-box-sizing: border-box;
@@ -2134,7 +2135,7 @@ h3.title{
 }
 
 #product-price .box-price{
-    width: 25.15%;
+    width: 25%;
     float: left;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -2205,6 +2206,15 @@ h3.title{
 }
 #product-price .box-price h3{
     margin-top: 23px;
+}
+
+@-moz-document url-prefix() {
+    #product-price .tabbable{
+        width: 637px;
+    }
+    #product-price .box-price:nth-child(3){
+        width: 25.1%;
+    }
 }
 
 #comprar-message{
