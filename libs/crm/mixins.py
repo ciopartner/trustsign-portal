@@ -168,8 +168,9 @@ class OscarToCRMMixin(object):
         produtos = []
         log.info('Entrando em get_produtos_crm - transaction_id = {}'.format(transaction_id))
 
-        lines = order.lines.filter(paymentevent__reference=transaction_id) if transaction else \
-                order.lines.filter(paymentevent__reference__isnull=True)
+        # Como podem existir vários paymentevents, é necessário pegar as lines distintas:
+        lines = order.lines.filter(paymentevent__reference=transaction_id).distinct() if transaction else \
+                order.lines.filter(paymentevent__reference__isnull=True).distinct()
 
         log.info('Linhas computadas: {}'.format(lines.count()))
         for line in lines:
