@@ -8,6 +8,11 @@ def split1000(s, sep='.'):
     return s if len(s) <= 3 else split1000(s[:-3], sep) + sep + s[-3:]
 
 
+def split_ponto(price):
+        num, dec = str(price).split('.')
+        return split1000(num), dec
+
+
 @processor_for(Product)
 def product_processor(request, page):
     #sql = '''
@@ -19,7 +24,7 @@ def product_processor(request, page):
     #where p.product_code = %s'''
 
     sql = '''
-        select cp.upc, cao_line.option, cao_term.option, s.price_excl_tax from catalogue_product as cp
+        select cp.upc, cao_line.option, cao_term.option, s.price_excl_tax, oo.id, oo.label, ooi.price_discount from catalogue_product as cp
            inner join catalogue_productattribute as cpa on cp.product_class_id =  cpa.product_class_id
            inner join catalogue_productattributevalue as cpav on cpa.id = cpav.attribute_id and cp.id = cpav.product_id
            inner join catalogue_attributeoption as cao on cao.id = cpav.value_option_id
@@ -33,6 +38,8 @@ def product_processor(request, page):
            inner join catalogue_attributeoption as cao_term on cao_term.id = cpav_term.value_option_id
 
            inner join partner_stockrecord s  on s.product_id = cp.id
+           left join offer_fixedpriceofferitem ooi on ooi.product_id=cp.id
+           left join offer_fixedpriceoffer oo on oo.id=ooi.offer_id and oo.status='Open' and oo.start_datetime < DATETIME('now') and oo.end_datetime > DATETIME('now')
         where cpa.code='ssl_code' and cpa_line.code='ssl_line' and cpa_term.code='ssl_term' and cao.option=%s
     '''
 
@@ -41,7 +48,7 @@ def product_processor(request, page):
 
     data = {
         'product_code': page.product.product_code,
-        'additional_product_code' : page.product.additional_product_code,
+        'additional_product_code': page.product.additional_product_code,
         'precos': {
             'basic': {
                 'termsubscription_1m': {},
@@ -74,15 +81,29 @@ def product_processor(request, page):
         }
     }
 
-    for upc, product_line, product_term, price in cursor.fetchall():
+    for upc, product_line, product_term, price, offer_id, offer_label, price_discount in cursor.fetchall():
+        print upc, product_line, product_term, price, offer_id, offer_label, price_discount
         if price is None:
             price = Decimal(0)
 
+        if offer_id is not None and price_discount is not None:
+            price_regular = price
+            price_regular = price_regular.quantize(Decimal('0.01'))
+            price = price_discount
+        else:
+            price_regular = None
+
         price = price.quantize(Decimal('0.01'))
-        x = data['precos'][product_line]['term%s' % product_term]
-        num, dec = str(price).split('.')
-        x['price_tpl'] = split1000(num), dec
-        x['price'] = price
+
+        data['precos'][product_line]['term%s' % product_term].update({
+            'price_tpl': split_ponto(price),
+            'price': price,
+            'has_discount': price_regular is not None,
+            'price_regular': price_regular,
+            'price_regular_tpl': split_ponto(price_regular) if price_regular else None,
+            'label': offer_label,
+        })
+
 
     for line in ('basic', 'pro', 'prime', 'na'):
 
