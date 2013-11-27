@@ -1,51 +1,17 @@
 {% extends 'customer/emails/base.html' %}
 {% load static %}
 
-{% block title %}CERTIFICADO E SELO TRUSTSIGN{% endblock %}
+{% block title %}EMISSÃO FINALIZADA{% endblock %}
 
 {% block body %}
 
     <br>
+    <br>
 
     <center><img align="middle" alt="" src="http://{{ site.domain }}/static/ecommerce/ecommerce/img/status/emissao_finalizada.png"></center>
+    {% if voucher.order_number %}
 
     <br/>
-
-
-    <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
-        <font face="Tahoma">CERTIFICADO TRUSTSIGN</font>
-    </h2>
-
-    <br>
-    <p><font face="Tahoma" style="font-size: 12px; color: #666;">A requisição de emissão do seu certificado digital foi aprovada e está concluída. O registro em anexo foi emitido para a URL:  {{ voucher.emissao.emission_url }}.</font></p>
-    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Recomendamos fortemente que seja realizado um backup de seu certificado por precaução.</font></p>
-    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Se houver alguma dificuldade na instalação do seu certificado, entre outras dúvidas técnicas, entre em contato com o nosso suporte.</font></p>
-
-
-    <br>
-
-    <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
-        <font face="Tahoma">SELO TRUSTSIGN</font>
-    </h2>
-
-    <br>
-    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Segue abaixo o código de exibição do selo de validação da TrustSign.</font></p>
-    <p><font face="Tahoma" style="font-size: 12px; color: #666;">Para exibi-lo, favor inseri-lo no local desejado, dentro do código fonte do site.</font></p>
-
-    <table>
-        <tr>
-            <td bgcolor="#f0f0f0">
-                {{ voucher.get_seal_html|safe }}
-            </td>
-            <td bgcolor="#f7f7f7">
-<pre></pre>
-            </td>
-        </tr>
-    </table>
-
-    {% if voucher.order_number %}
-    <br>
-    <br>
 
     <table cellspacing="0" cellpadding="0" border="0" align="center" width="33%">
         <tbody>
@@ -59,23 +25,51 @@
     </table>
     {% endif %}
 
-    <br>
-    <br>
-    <br>
+    <br/>
 
-    <table cellspacing="0" cellpadding="0" style="width: 100%">
-            <tbody><tr>
-                <th style="text-align: left; padding:5px; background: #333333; color: #FFFFFF; font-size: 12px;"><font face="Tahoma">PRODUTO EMITIDO</font></th>
-            </tr>
 
-            <tr>
-                <td style="text-align: left; padding:5px; background: #E5E5E5; border-bottom: 1px solid #dddddd; font-size: 12px;">
-                    <font face="Tahoma" style="font-size: 12px; color: #666666">
-                        {{ voucher.get_ssl_product_display }} &ndash; {{ voucher.get_ssl_line_display }} &ndash; {{ voucher.get_ssl_term_display }}
-                    </font>
-                </td>
-            </tr>
+    <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
+        <font face="Tahoma">Certificado Digital</font>
+    </h2>
 
+    <p align="justify" style="text-align: justify"><font face="Tahoma" style="font-size: 12px; color: #666;">A requisição de emissão do seu certificado digital foi aprovada e está concluída. O registro em anexo foi emitido para a URL:  {{ voucher.emissao.emission_url }}.</font></p>
+    <p align="justify" style="text-align: justify"><font face="Tahoma" style="font-size: 12px; color: #666;">Recomendamos fortemente que seja realizado um backup de seu certificado por precaução. Se houver alguma dificuldade na instalação do seu certificado, entre outras dúvidas técnicas, entre em contato com o nosso suporte.</font></p>
+
+    <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
+        <font face="Tahoma">Selo de Segurança</font>
+    </h2>
+
+    <p align="justify" style="text-align: justify"><font face="Tahoma" style="font-size: 12px; color: #666;">Segue abaixo o código de exibição do selo de validação da TrustSign. <br>Para exibi-lo, favor inseri-lo no local desejado, dentro do código fonte do site.</font></p>
+
+    <table cellpadding="10">
+        <tr>
+            <td bgcolor="#f0f0f0">
+                {{ voucher.get_seal_html|safe }}
+            </td>
+            <td bgcolor="#f7f7f7">
+<p><font face="Tahoma" style="font-size: 12px; color: #666;">{{ voucher.get_seal_html }}</font></pre>
+            </td>
+        </tr>
+    </table>
+
+
+    <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px"><font face="Tahoma">Suporte TrustSign</font></h2>
+
+    <table align="center" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr>
+            <td bgcolor="#f0f0f0" valign="top" style="padding: 20px 10px; color: #666; text-align: center; width: 25%;  font-size: 12px; border-right: 2px solid #FFF;">
+                <a style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;" href="https://{{ site.domain }}/portal/suporte-trustsign/faq/"><font face="Tahoma">FAQ</font></a>
+                <p><font face="Tahoma">Diversas respostas segmentadas por solução, para auxílio nas dúvidas mais frequentes. </font></p>
+            </td>
+            <td bgcolor="#f7f7f7" valign="top" style="padding: 20px 10px; color: #666; text-align: center; width: 25%;  font-size: 12px; border-right: 2px solid #FFF">
+                <a style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px; border-right: 2px solid #FFF;" href="https:/{{ site.domain }}/portal/suporte-trustsign/tutoriais-em-video/"><font face="Tahoma">Tutoriais em vídeo</font></a>
+                <p><font face="Tahoma"> Tutoriais rápidos e práticos para auxilio em instalações de certificados e principais dúvidas. </font></p>
+            </td>
+            <td bgcolor="#f0f0f0" valign="top" style="padding: 20px 10px; color: #666; text-align: center; width: 25%;  font-size: 12px;">
+                <a style="font-weight: bold; text-decoration: none; color: #606060; font-size: 14px;" href="https://{{ site.domain }}/portal/suporte-trustsign/ferramentas/"><font face="Tahoma">Ferramentas</font></a>
+                <p><font face="Tahoma">  SSL Checker, SSL decoder, Certificate Key Matcher e SSL converter. </font></p>
+            </td>
+        </tr>
     </tbody></table>
 
 {% endblock %}
