@@ -1,10 +1,11 @@
 {% extends 'customer/emails/base.html' %}
 {% load static %}
 
-{% block title %}CERTIFICADO E SELO TRUSTSIGN{% endblock %}
+{% block title %}EMISSÃO FINALIZADA{% endblock %}
 
 {% block body %}
 
+    <br>
     <br>
 
     <center><img align="middle" alt="" src="http://{{ site.domain }}/static/ecommerce/ecommerce/img/status/emissao_finalizada.png"></center>
@@ -28,14 +29,14 @@
 
 
     <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
-        <font face="Tahoma">Certificado TrustSign</font>
+        <font face="Tahoma">Certificado Digital</font>
     </h2>
 
     <p align="justify" style="text-align: justify"><font face="Tahoma" style="font-size: 12px; color: #666;">A requisição de emissão do seu certificado digital foi aprovada e está concluída. O registro em anexo foi emitido para a URL:  {{ voucher.emissao.emission_url }}.</font></p>
     <p align="justify" style="text-align: justify"><font face="Tahoma" style="font-size: 12px; color: #666;">Recomendamos fortemente que seja realizado um backup de seu certificado por precaução. Se houver alguma dificuldade na instalação do seu certificado, entre outras dúvidas técnicas, entre em contato com o nosso suporte.</font></p>
 
     <h2 style="color: #015a9c; text-align: center; margin-top: 40px; font-size: 20px">
-        <font face="Tahoma">Selo TrustSign</font>
+        <font face="Tahoma">Selo de Segurança</font>
     </h2>
 
     <p align="justify" style="text-align: justify"><font face="Tahoma" style="font-size: 12px; color: #666;">Segue abaixo o código de exibição do selo de validação da TrustSign. <br>Para exibi-lo, favor inseri-lo no local desejado, dentro do código fonte do site.</font></p>
