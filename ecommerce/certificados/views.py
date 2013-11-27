@@ -354,7 +354,8 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
         try:
             if serializer.is_valid():
                 self.pre_save(serializer.object)
-                if serializer.object.order_number:  # TODO: retirar if depois que o CRM acertar a API
+                # TODO: retirar if abaixo depois que o CRM acertar a API
+                if serializer.object.order_number and serializer.object.order_number.isdigit():
                     self.object = serializer.save(force_insert=True)
                     self.post_save(self.object, created=True)
                     headers = self.get_success_headers(serializer.data)
