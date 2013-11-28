@@ -213,17 +213,32 @@
 
                     <tr class="all-body-text5  price">
                         <td style="background: #FFF"></td>
-                        <td class="tdbls bbs">
+                        <td class="tdbls bbs td-price">
+                            {% if precos.basic.termsubscription_1m.price_regular %}
+                                <div class="promotion-line">
+                                    <span class="old-price">de R$ {{ precos.basic.termsubscription_1m.price_regular }}</span> <span class="new-price">por</span>
+                                </div>
+                            {% endif %}
                             <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.basic.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.basic.termsubscription_1m.price_tpl.1 }}</sub></h2>
                             <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="basic" data-comprar-produto="site-mais-seguro" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
                         </td>
-                        <td class="tdbls bbs">
+                        <td class="tdbls bbs td-price">
+                            {% if precos.pro.termsubscription_1m.price_regular %}
+                                <div class="promotion-line">
+                                    <span class="old-price">de R$ {{ precos.pro.termsubscription_1m.price_regular }}</span> <span class="new-price">por</span>
+                                </div>
+                            {% endif %}
                             <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.pro.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.pro.termsubscription_1m.price_tpl.1 }}</sub></h2>
                             <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="pro" data-comprar-produto="site-mais-seguro" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
                         </td>
-                        <td class="tdbls bbs tdbrs">
+                        <td class="tdbls bbs tdbrs td-price">
+                            {% if precos.prime.termsubscription_1m.price_regular %}
+                                <div class="promotion-line">
+                                    <span class="old-price">de R$ {{ precos.prime.termsubscription_1m.price_regular }}</span> <span class="new-price">por</span>
+                                </div>
+                            {% endif %}
                             <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.prime.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.prime.termsubscription_1m.price_tpl.1 }}</sub></h2>
                             <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="prime" data-comprar-produto="site-mais-seguro" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>

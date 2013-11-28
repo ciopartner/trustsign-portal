@@ -544,4 +544,27 @@ tbody.bor-tb > tr:last-child td:last-child{
     display: none;
 }
 
+.promotion-line{
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+.promotion-line .old-price{
+    text-decoration: line-through;
+}
+
+.promotion-line .new-price{
+    font-weight: bold;
+    color: #CB772E;
+}
+
+.td-price{
+    vertical-align: bottom !important;
+}
+.td-price .promotion-line{
+    left: auto;
+    text-align: center;
+    width: 140px;
+    position: static;
+}
 /*//////comprar table closed here//////*/

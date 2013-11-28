@@ -241,6 +241,11 @@
             <div class="tab-pane active" id="lA">
                 <div class="box-price tblrp10">
                     <div class="line">Basic</div>
+                    {% if precos.basic.term1year.price_regular %}
+                        <div class="promotion-line">
+                            <span class="old-price">de R$ {{ precos.basic.term1year.price_regular }}</span> <span class="new-price">por</span>
+                        </div>
+                    {% endif %}
                     <h3>R$ {{ precos.basic.term1year.price_tpl.0 }}<sup>,{{ precos.basic.term1year.price_tpl.1 }}</sup></h3>
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
                 </div>
