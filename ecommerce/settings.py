@@ -163,8 +163,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
-    'website',
-    'certificados',
+    'ecommerce.website',
+    'ecommerce.certificados',
 
     'portal.home',
 

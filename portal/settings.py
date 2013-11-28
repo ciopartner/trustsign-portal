@@ -200,12 +200,12 @@ INSTALLED_APPS = (
 
     'django_extensions',
 
-    "mezzanine_custom",
+    "portal.mezzanine_custom",
 
-    "home",
-    "products",
-    "melhor_solucao",
-    'suporte',
+    "portal.home",
+    "portal.products",
+    "portal.melhor_solucao",
+    'portal.suporte',
 
     'south',
 
