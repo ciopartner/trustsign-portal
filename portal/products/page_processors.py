@@ -104,7 +104,6 @@ def product_processor(request, page):
             'label': offer_label,
         })
 
-
     for line in ('basic', 'pro', 'prime', 'na'):
 
         data_line = data.setdefault('precos', {})[line]
@@ -120,9 +119,16 @@ def product_processor(request, page):
     cursor = connection.cursor()
     cursor.execute(sql, [page.product.additional_product_code])
 
-    for upc, product_line, product_term, price in cursor.fetchall():
+    for upc, product_line, product_term, price, offer_id, offer_label, price_discount in cursor.fetchall():
         if price is None:
             price = Decimal(0)
+
+        if offer_id is not None and price_discount is not None:
+            price_regular = price
+            price_regular = price_regular.quantize(Decimal('0.01'))
+            price = price_discount
+        else:
+            price_regular = None
 
         price = price.quantize(Decimal('0.01'))
 
@@ -131,6 +137,14 @@ def product_processor(request, page):
             .setdefault(product_line, {})\
             .setdefault('term%s' % product_term, {})
 
-        x['price'] = price
+        x.update({
+            'price_tpl': split_ponto(price),
+            'price': price,
+            'has_discount': price_regular is not None,
+            'price_regular': price_regular,
+            'price_regular_tpl': split_ponto(price_regular) if price_regular else None,
+            'label': offer_label,
+        })
+
 
     return data
