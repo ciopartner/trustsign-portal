@@ -21,6 +21,7 @@ MANAGERS = ADMINS
 ALLOWED_HOSTS = [
     '*.ciopartner.com.br',
     '*.trustsign.com.br',
+    'localhost:8000',
 ]
 
 # Para evitar as URLs com problema no LIGHTTPD

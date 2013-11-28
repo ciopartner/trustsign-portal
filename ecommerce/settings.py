@@ -120,7 +120,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'website.middlewares.XsSharing',
+    'ecommerce.website.middlewares.XsSharing',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
@@ -163,8 +163,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
-    'website',
-    'certificados',
+    'ecommerce.website',
+    'ecommerce.certificados',
 
     'portal.home',
 
@@ -272,7 +272,7 @@ TRUSTSIGN_SISTEMA_EMAIL = 'sistema@trustsign.com.br'
 USAR_KNU = False  # Usado para retornar um dummy dict em vez de chamar a KNU para desenvolvimento
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': 'certificados.authentication.UserPasswordAuthentication'
+    'DEFAULT_AUTHENTICATION_CLASSES': 'ecommerce.certificados.authentication.UserPasswordAuthentication'
 }
 
 SEALS_SERVER_URL = 'https://security.trustsign.com.br'
@@ -303,13 +303,13 @@ CRM_OPORTUNITY_MANUFACTURERS_ID = '<mudar no local_settings.py>'
 BOLETO_DIAS_VENCTO = 5
 
 CRON_CLASSES = [
-    'website.crons.EnviaOrdersCRMCronJob',
+    'ecommerce.website.crons.EnviaOrdersCRMCronJob',
 
-    'certificados.crons.EnviaComodoJob',
-    'certificados.crons.CheckEmailJob',
-    'certificados.crons.AtivaSelosJob',
-    'certificados.crons.DesativaSelosRevogadosJob',
-    'certificados.crons.DesativaSelosExpiradosJob',
+    'ecommerce.certificados.crons.EnviaComodoJob',
+    'ecommerce.certificados.crons.CheckEmailJob',
+    'ecommerce.certificados.crons.AtivaSelosJob',
+    'ecommerce.certificados.crons.DesativaSelosRevogadosJob',
+    'ecommerce.certificados.crons.DesativaSelosExpiradosJob',
 
     # This example cron check last cron jobs results. If they were unsuccessfull 10 times in row, it sends email to user
     'django_cron.cron.FailedRunsNotificationCronJob'

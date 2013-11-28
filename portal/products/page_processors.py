@@ -15,13 +15,6 @@ def split_ponto(price):
 
 @processor_for(Product)
 def product_processor(request, page):
-    #sql = '''
-    #SELECT p.upc, p.product_line, p.product_term, s.price_excl_tax
-    #FROM
-    #   catalogue_product p
-    #inner join partner_stockrecord s
-    #    on s.product_id = p.id
-    #where p.product_code = %s'''
 
     sql = '''
         select cp.upc, cao_line.option, cao_term.option, s.price_excl_tax, oo.id, oo.label, ooi.price_discount from catalogue_product as cp
