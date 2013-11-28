@@ -98,7 +98,12 @@
 
                     <h3>R$ {{ precos.na.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.na.termsubscription_1m.price_tpl.1 }}</sub></h3>
                     Mensalidade
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="na" data-term="subscription_1m" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="na" data-term="subscription_1m" class="btn btn-orange">
+                        <img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                        {% if precos.na.termsubscription_1m.label %}
+                            <img src="/media/{{ precos.na.termsubscription_1m.label }}" />
+                        {% endif %}
+                    </a>
                 </div>
             </div>
         </div>

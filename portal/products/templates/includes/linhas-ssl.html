@@ -176,58 +176,139 @@
             <div class="tab-pane active" id="lA">
                 <div class="box-price tblrp10">
                     <div class="line">Basic</div>
+                    {% if precos.basic.term1year.price_regular %}
+                        <div class="promotion-line">
+                            <span class="old-price">de R$ {{ precos.basic.term1year.price_regular }}</span> <span class="new-price">por</span>
+                        </div>
+                    {% endif %}
                     <h3>R$ {{ precos.basic.term1year.price_tpl.0 }}<sup>,{{ precos.basic.term1year.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-additional-price="R$ {{ adicional.precos.basic.term1year.price }}" {% if adicional.precos.basic.term1year %}data-additional="true"{% endif %} data-additional-product-code="{{ additional_product_code }}"  data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-additional-price="R$ {{ adicional.precos.basic.term1year.price }}" {% if adicional.precos.basic.term1year %}data-additional="true"{% endif %} data-additional-product-code="{{ additional_product_code }}"  data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                        {% if precos.basic.term1year.label %}
+                            <img src="/media/{{ precos.basic.term1year.label }}" />
+                        {% endif %}
+                    </a>
                 </div>
                 <div class="box-price tblrp10">
                     <div class="line">Pro</div>
+                    {% if precos.pro.term1year.price_regular %}
+                        <div class="promotion-line">
+                            <span class="old-price">de R$ {{ precos.pro.term1year.price_regular }}</span> <span class="new-price">por</span>
+                        </div>
+                    {% endif %}
                     <h3>R$ {{ precos.pro.term1year.price_tpl.0 }}<sup>,{{ precos.pro.term1year.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-additional-price="R$ {{ adicional.precos.pro.term1year.price }}" {% if adicional.precos.pro.term1year %}data-additional="true"{% endif %} data-additional-product-code="{{ additional_product_code }}"  data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-additional-price="R$ {{ adicional.precos.pro.term1year.price }}" {% if adicional.precos.pro.term1year %}data-additional="true"{% endif %} data-additional-product-code="{{ additional_product_code }}"  data-term="1year" class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                        {% if precos.pro.term1year.label %}
+                            <img src="/media/{{ precos.pro.term1year.label }}" />
+                        {% endif %}
+                    </a>
                 </div>
                 <div class="box-price tblrp10">
                     <div class="line">Prime</div>
+                    {% if precos.prime.term1year.price_regular %}
+                        <div class="promotion-line">
+                            <span class="old-price">de R$ {{ precos.prime.term1year.price_regular }}</span> <span class="new-price">por</span>
+                        </div>
+                    {% endif %}
                     <h3>R$ {{ precos.prime.term1year.price_tpl.0 }}<sup>,{{ precos.prime.term1year.price_tpl.1 }}</sup></h3>
-                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-additional-product-code="{{ additional_product_code }}"  data-term="1year" data-additional-price="R$ {{ adicional.precos.prime.term1year.price }}" {% if adicional.precos.prime.term1year %}data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                    <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-additional-product-code="{{ additional_product_code }}"  data-term="1year" data-additional-price="R$ {{ adicional.precos.prime.term1year.price }}" {% if adicional.precos.prime.term1year %}data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                        {% if precos.prime.term1year.label %}
+                            <img src="/media/{{ precos.prime.term1year.label }}" />
+                        {% endif %}
+                    </a>
                 </div>
             </div>
             {% block price %}
                 <div class="tab-pane" id="lB">
                     <div class="box-price tblrp10">
                         <div class="line">Basic</div>
+                        {% if precos.basic.term2years.price_regular %}
+                            <div class="promotion-line">
+                                <span class="old-price">de R$ {{ precos.basic.term2years.price_regular }}</span> <span class="new-price">por</span>
+                            </div>
+                        {% endif %}
                         <h3>R$ {{ precos.basic.term2years.price_tpl.0 }}<sup>,{{ precos.basic.term2years.price_tpl.1 }}</sup></h3>
                         <small>Economia de {{ precos.basic.term2years.discount }}%</small>
-                        <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-additional-product-code="{{ additional_product_code }}"  data-term="2years" data-additional-price="R$ {{ adicional.precos.basic.term2years.price }}" {% if adicional.precos.basic.term2years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                        <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-additional-product-code="{{ additional_product_code }}"  data-term="2years" data-additional-price="R$ {{ adicional.precos.basic.term2years.price }}" {% if adicional.precos.basic.term2years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                            {% if precos.basic.term2years.label %}
+                                <img src="/media/{{ precos.basic.term2years.label }}" />
+                            {% endif %}
+                        </a>
                     </div>
                     <div class="box-price tblrp10">
                         <div class="line">Pro</div>
+                        {% if precos.pro.term2years.price_regular %}
+                            <div class="promotion-line">
+                                <span class="old-price">de R$ {{ precos.pro.term2years.price_regular }}</span> <span class="new-price">por</span>
+                            </div>
+                        {% endif %}
                         <h3>R$ {{ precos.pro.term2years.price_tpl.0 }}<sup>,{{ precos.pro.term2years.price_tpl.1 }}</sup></h3>
                         <small>Economia de {{ precos.pro.term2years.discount }}%</small>
-                        <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-additional-product-code="{{ additional_product_code }}"  data-term="2years" data-additional-price="R$ {{ adicional.precos.pro.term2years.price }}" {% if adicional.precos.pro.term2years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                        <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-additional-product-code="{{ additional_product_code }}"  data-term="2years" data-additional-price="R$ {{ adicional.precos.pro.term2years.price }}" {% if adicional.precos.pro.term2years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                            {% if precos.pro.term2years.label %}
+                                <img src="/media/{{ precos.pro.term2years.label }}" />
+                            {% endif %}
+                        </a>
                     </div>
                     <div class="box-price tblrp10">
                         <div class="line">Prime</div>
+                        {% if precos.prime.term2years.price_regular %}
+                            <div class="promotion-line">
+                                <span class="old-price">de R$ {{ precos.prime.term2years.price_regular }}</span> <span class="new-price">por</span>
+                            </div>
+                        {% endif %}
                         <h3>R$ {{ precos.prime.term2years.price_tpl.0 }}<sup>,{{ precos.prime.term2years.price_tpl.1 }}</sup></h3>
-                        <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-additional-product-code="{{ additional_product_code }}"  data-term="2years" data-additional-price="R$ {{ adicional.precos.prime.term2years.price }}" {% if adicional.precos.prime.term2years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                        <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-additional-product-code="{{ additional_product_code }}"  data-term="2years" data-additional-price="R$ {{ adicional.precos.prime.term2years.price }}" {% if adicional.precos.prime.term2years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                            {% if precos.prime.term2years.label %}
+                                <img src="/media/{{ precos.prime.term2years.label }}" />
+                            {% endif %}
+                        </a>
                         <small>Economia de {{ precos.prime.term2years.discount }}%</small>
                     </div>
                 </div>
                 <div class="tab-pane" id="lC">
                     <div class="box-price tblrp10">
                         <div class="line">Basic</div>
+                        {% if precos.basic.term3years.price_regular %}
+                            <div class="promotion-line">
+                                <span class="old-price">de R$ {{ precos.basic.term3years.price_regular }}</span> <span class="new-price">por</span>
+                            </div>
+                        {% endif %}
                         <h3>R$ {{ precos.basic.term3years.price_tpl.0 }}<sup>,{{ precos.basic.term3years.price_tpl.1 }}</sup></h3>
                         <small>Economia de {{ precos.basic.term3years.discount }}%</small>
-                        <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-additional-product-code="{{ additional_product_code }}"  data-term="3years" data-additional-price="R$ {{ adicional.precos.basic.term3years.price }}" {% if adicional.precos.basic.term3years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                        <a href="" data-comprar-produto="{{ product_code }}" data-line="basic" data-additional-product-code="{{ additional_product_code }}"  data-term="3years" data-additional-price="R$ {{ adicional.precos.basic.term3years.price }}" {% if adicional.precos.basic.term3years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                            {% if precos.basic.term3years.label %}
+                                <img src="/media/{{ precos.basic.term3years.label }}" />
+                            {% endif %}
+                        </a>
                     </div>
                     <div class="box-price tblrp10">
                         <div class="line">Pro</div>
+                        {% if precos.pro.term3years.price_regular %}
+                            <div class="promotion-line">
+                                <span class="old-price">de R$ {{ precos.pro.term3years.price_regular }}</span> <span class="new-price">por</span>
+                            </div>
+                        {% endif %}
                         <h3>R$ {{ precos.pro.term3years.price_tpl.0 }}<sup>,{{ precos.pro.term3years.price_tpl.1 }}</sup></h3>
                         <small>Economia de {{ precos.pro.term3years.discount }}%</small>
-                        <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-additional-product-code="{{ additional_product_code }}"  data-term="3years" data-additional-price="R$ {{ adicional.precos.pro.term3years.price }}" {% if adicional.precos.pro.term3years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                        <a href="" data-comprar-produto="{{ product_code }}" data-line="pro" data-additional-product-code="{{ additional_product_code }}"  data-term="3years" data-additional-price="R$ {{ adicional.precos.pro.term3years.price }}" {% if adicional.precos.pro.term3years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                            {% if precos.pro.term3years.label %}
+                                <img src="/media/{{ precos.pro.term3years.label }}" />
+                            {% endif %}
+                        </a>
                     </div>
                     <div class="box-price tblrp10">
                         <div class="line">Prime</div>
+                        {% if precos.prime.term3years.price_regular %}
+                            <div class="promotion-line">
+                                <span class="old-price">de R$ {{ precos.prime.term3years.price_regular }}</span> <span class="new-price">por</span>
+                            </div>
+                        {% endif %}
                         <h3>R$ {{ precos.prime.term3years.price_tpl.0 }}<sup>,{{ precos.prime.term3years.price_tpl.1 }}</sup></h3>
-                        <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-additional-product-code="{{ additional_product_code }}"  data-term="3years" data-additional-price="R$ {{ adicional.precos.prime.term3years.price }}" {% if adicional.precos.prime.term3years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                        <a href="" data-comprar-produto="{{ product_code }}" data-line="prime" data-additional-product-code="{{ additional_product_code }}"  data-term="3years" data-additional-price="R$ {{ adicional.precos.prime.term3years.price }}" {% if adicional.precos.prime.term3years %} data-additional="true"{% endif %} class="btn btn-orange"><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                            {% if precos.prime.term3years.label %}
+                                <img src="/media/{{ precos.prime.term3years.label }}" />
+                            {% endif %}
+                        </a>
                         <small>Economia de {{ precos.prime.term3years.discount }}%</small>
                     </div>
                 </div>
@@ -236,7 +317,6 @@
         </div>
 
         <div class="clearfix"></div>
-
         <div id="comprar-message"></div>
 
     </div>

@@ -233,7 +233,11 @@
                             {% endif %}
                             <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.basic.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.basic.termsubscription_1m.price_tpl.1 }}</sub></h2>
-                            <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="basic" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                            <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="basic" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                                {% if precos.basic.termsubscription_1m.label %}
+                                    <img src="/media/{{ precos.basic.termsubscription_1m.label }}" />
+                                {% endif %}
+                            </a>
                         </td>
                         <td class="tdbls bbs td-price">
                             {% if precos.pro.termsubscription_1m.price_regular %}
@@ -243,7 +247,11 @@
                             {% endif %}
                             <h3 class="textac">Mensalidade</h3>
                             <h2 class="textac price-color">R$ {{ precos.pro.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.pro.termsubscription_1m.price_tpl.1 }}</sub></h2>
-                            <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="pro" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar</a>
+                            <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="pro" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                                {% if precos.pro.termsubscription_1m.label %}
+                                    <img src="/media/{{ precos.pro.termsubscription_1m.label }}" />
+                                {% endif %}
+                            </a>
                         </td>
                         <td class="tdbls bbs tdbrs" style="vertical-align: middle">
                             <a href="/portal/suporte-trustsign/atendimento-por-e-mail/" class="textac price-color display-inlineblock">Consulte nossa equipe</a>
