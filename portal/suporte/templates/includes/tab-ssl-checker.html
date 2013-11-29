@@ -9,8 +9,8 @@
             </table>
             {% csrf_token %}
         </div>
-        <div class="well">
-            {% if resultado and op == 'ssl-checker' %}
+        {% if resultado and op == 'ssl-checker' %}
+            <div class="well">
                 {% if resultado.ok %}
                     <table class="table">
                         <tr><th width="200">Valid To:</th><td>{{ resultado.cert_validity_notAfter}}</td></tr>
@@ -26,7 +26,7 @@
                 {% else %}
                     <p>Não foi encontrado certificado SSL em {{ form_ssl_checker.url.value }}. Tenha certeza que a url está correta e que a porta SSL está aberta no firewall.</p>
                 {% endif %}
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </form>
 </div>
