@@ -267,7 +267,7 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = OSCAR_FROM_EMAIL = 'alessandro.reichert@ciop
 
 TRUSTSIGN_SUPORTE_EMAIL = 'suporte@trustsign.com.br'
 TRUSTSIGN_VALIDACAO_EMAIL = 'validacao@trustsign.com.br'
-TRUSTSIGN_SISTEMA_EMAIL = 'sistema@trustsign.com.br'
+TRUSTSIGN_SISTEMA_EMAIL = 'sistemas@trustsign.com.br'
 
 USAR_KNU = False  # Usado para retornar um dummy dict em vez de chamar a KNU para desenvolvimento
 
