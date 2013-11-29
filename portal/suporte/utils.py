@@ -63,6 +63,11 @@ def decode_csr(csr):
 
     os.remove(path_in)
 
+    if not resposta:
+        return {
+            'ok': False
+        }
+
     for linha in resposta.splitlines(False):
         if 'Subject:' in linha:
             try:
@@ -113,6 +118,8 @@ def decode_csr(csr):
                 return {
                     'ok': False
                 }
+        else:
+            raise Exception('csr invalida')
 
     d['subject_ok'] = bool(d.get('CN') and d.get('O') and d.get('L') and d.get('S') and d.get('C'))
 

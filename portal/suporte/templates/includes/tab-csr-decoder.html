@@ -12,7 +12,10 @@
             <script>
                 $(function(){
                   $("#id_csr").bind('input propertychange', function(){
-                      $(this).parents('form').submit();
+                      var p = /^-----BEGIN (NEW )?CERTIFICATE REQUEST-----[\s\S]*-----END (NEW )?CERTIFICATE REQUEST-----$/m;
+                      if (p.test($(this).val())){
+                          $(this).parents('form').submit();
+                      }
                   });
                 })
             </script>
