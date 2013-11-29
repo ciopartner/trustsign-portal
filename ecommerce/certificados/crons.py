@@ -74,8 +74,7 @@ class EnviaComodoJob(CronJobBase):
                 except comodo.ComodoError as e:
                     log.error('Ocorreu um erro(%s) na chamada da comodo da emissao: %s' % (e.code, emissao))
 
-                    emissao.emission_status = Emissao.STATUS_OCORREU_ERRO_COMODO
-                    emissao.emission_error_message = '%s (%s)' % (e.comodo_message, e.code)
+                    emissao.set_erro_comodo('%s (%s)' % (e.comodo_message, e.code))
 
                 emissao.save()
         finally:

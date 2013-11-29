@@ -570,7 +570,9 @@ class VouchersPendentesListView(ListView):
             raise PermissionDenied
         return Voucher.objects.select_related('emissao').filter(
             emissao__emission_status__in=(
-                Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE, Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE
+                Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE, Emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE,
+                Emissao.STATUS_EMISSAO_ERRO_COMODO, Emissao.STATUS_REEMISSAO_ERRO_COMODO,
+                Emissao.STATUS_REVOGACAO_ERRO_COMODO,
             ))
 
 
@@ -961,6 +963,27 @@ class AprovaVoucherPendenteView(TemplateView):
         emissao.save()
 
         messages.info(self.request, 'Certificado aprovado com sucesso')
+
+        return HttpResponseRedirect(reverse('voucher-pendentes-lista'))
+
+
+class ReenviaVoucherComodoView(TemplateView):
+
+    def render_to_response(self, context, **response_kwargs):
+        user = self.request.user
+        if not user.get_profile().is_trustsign and not user.is_superuser:
+            raise PermissionDenied
+
+        try:
+            emissao = Emissao.objects.select_related('voucher').get(crm_hash=self.kwargs['crm_hash'])
+        except Emissao.DoesNotExist:
+            raise Http404
+
+        emissao.marca_reenvio_comodo()
+
+        emissao.save()
+
+        messages.info(self.request, 'Certificado agendado para reenvio à Comodo')
 
         return HttpResponseRedirect(reverse('voucher-pendentes-lista'))
 
