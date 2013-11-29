@@ -1,0 +1,8 @@
+{% extends 'customer/emails/base.html' %}
+
+{% block body %}
+<b>Código do voucher:</b> {{ voucher.crm_hash }} <br>
+<b>CNPJ:</b>{{ voucher.customer_cnpj }} <br>
+<b>Código do Erro na Comodo:</b> {{ erro_comodo.codigo }} <br>
+<b>Descrição do Erro:</b> {{ erro_comodo.mensagem }} <br>
+{% endblock %}

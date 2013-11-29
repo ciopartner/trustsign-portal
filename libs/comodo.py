@@ -7,6 +7,7 @@ from django.core.cache import cache
 import requests
 
 from ecommerce.certificados.models import Voucher
+from ecommerce.website.utils import send_template_email
 from portal.suporte.utils import url_parse, get_emails_dominio
 
 
@@ -97,6 +98,24 @@ def get_emails_validacao(dominio):
     return get_emails_validacao_padrao(dominio) + get_emails_validacao_whois(dominio)
 
 
+def envia_email_erro(tipo, voucher, erro_codigo, erro_mensagem):
+
+    if tipo not in ('emissao', 'revogação', 'reemissão'):
+        return
+
+    subject = '[ERRO]Ocorreu um erro ao enviar a {} para a Comodo({}) #{}'.format(tipo, erro_codigo, voucher.crm_hash)
+    template = 'customer/emails/erro_comodo.html'
+    context = {
+        'voucher': voucher,
+        'erro_comodo': {
+            'codigo': erro_codigo,
+            'mensagem': erro_mensagem,
+        },
+    }
+
+    send_template_email(settings.TRUSTSIGN_SISTEMA_EMAIL, subject, template, context)
+
+
 def emite_certificado(emissao):
     try:
         voucher = emissao.voucher
@@ -158,6 +177,7 @@ def emite_certificado(emissao):
 
         if r['errorCode'] != '0':
             log.error('ERRO EMISSAO > params: %s | response: %s' % (params, r))
+            envia_email_erro('emissão', voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
             log.info('EMISSAO > params: %s \nResponse: %s' % (params, r))
@@ -187,6 +207,7 @@ def revoga_certificado(revogacao):
 
         if r['errorCode'] != '0':
             log.error('ERRO REVOGAÇÃO > params: %s | response: %s' % (params, r))
+            envia_email_erro('revogação', revogacao.emission.voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
             log.info('REVOGAÇÃO > params: %s | response: %s' % (params, r))
@@ -219,6 +240,7 @@ def reemite_certificado(emissao):
 
         if r['errorCode'] != '0':
             log.error('ERRO REEMISSÃO > params: %s | response: %s' % (params, r))
+            envia_email_erro('reemissão', emissao.voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
             log.info('REEMISSÃO > params: %s | response: %s' % (params, r))
