@@ -567,4 +567,8 @@ tbody.bor-tb > tr:last-child td:last-child{
     width: 140px;
     position: static;
 }
+
+.td-price .btn{
+    height: 25px;
+}
 /*//////comprar table closed here//////*/
