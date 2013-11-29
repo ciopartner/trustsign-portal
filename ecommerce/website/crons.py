@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.sites.models import get_current_site
 from django.utils import translation
 from django_cron import CronJobBase, Schedule
+from oscar.apps.order.exceptions import InvalidLineStatus
 from oscar.core.loading import get_class
 from ecommerce.website.utils import send_template_email
 from libs.crm.mixins import OscarToCRMMixin
@@ -31,11 +32,16 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
                 self.send_order_to_crm(order)
 
                 order.set_status('Em Processamento')
-                self.send_email(order)
 
                 for line in order.lines.all():
-                    line.set_status('Em Processamento')
-                log.info('Order #%s: alterado status para Em processamento' % order.number)
+                    try:
+                        line.set_status('Em Processamento')
+                    except InvalidLineStatus:
+                        log.warning('Order #{}: erro ao alterar o status da linha para Em Processamento'.format(order.number))
+
+                self.send_email(order)
+
+                log.info('Order #{}: alterado status para Em processamento'.format(order.number))
         finally:
             translation.activate(cur_language)
 
