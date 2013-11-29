@@ -8,18 +8,26 @@ class FixedPriceOffer(Model):
     A fixed price offer cause Oscar doesn't have one yet
     """
     OPEN, SUSPENDED = "Open", "Suspended"
-    status = CharField(max_length=64, default=OPEN)
+    CHOICES_STATUS = (
+        (OPEN, 'Aberta'),
+        (SUSPENDED, 'Finalizada'),
+    )
+    status = CharField(max_length=64, default=OPEN, choices=CHOICES_STATUS)
 
-    start_datetime = DateTimeField(blank=True, null=True)
-    end_datetime = DateTimeField(blank=True, null=True, help_text=_("Offers are active until the end of the 'end date'"))
+    title = CharField(max_length=128)
+
+    start_datetime = DateTimeField()
+    end_datetime = DateTimeField(help_text=_("Offers are active until the end of the 'end date'"))
 
     label = ImageField(upload_to='offers/labels', blank=True, null=True)
+
+    def __unicode__(self):
+        return self.title
 
     def clean(self):
         if (self.start_datetime and self.end_datetime and
             self.start_datetime > self.end_datetime):
-            raise ValidationError(
-                _('End date should be later than start date'))
+            raise ValidationError(_('End date should be later than start date'))
 
     @property
     def is_open(self):
@@ -44,6 +52,9 @@ class FixedPriceOfferItem(Model):
     offer = ForeignKey('offer.FixedPriceOffer', related_name='items')
     product = ForeignKey('catalogue.Product', related_name='fixed_price_offer_items')
     price_discount = DecimalField(max_digits=12, decimal_places=2)
+
+    def __unicode__(self):
+        return '{} ({}): R$ {}'.format(self.offer, self.product, self.price_discount)
 
 
 from oscar.apps.offer.models import *
