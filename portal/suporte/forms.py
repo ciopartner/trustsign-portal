@@ -50,9 +50,9 @@ class SSLCheckerForm(Form):
             altera_datas(resultado, ('cert_validity_notBefore', 'cert_validity_notAfter', ))
             resultado['expira_em'] = (resultado['cert_validity_notAfter'] - date.today()).days
 
-
             resultado['cert_subject_DN'] = urllib.unquote(resultado['cert_subject_DN']).replace('\\r\\n', '\r\n')
             resultado['cert_issuer_DN'] = urllib.unquote(resultado['cert_issuer_DN']).replace('\\r\\n', '\r\n')
+
         sans = []
         site_listed = False
         for k, v in resultado.iteritems():
