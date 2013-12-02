@@ -149,7 +149,7 @@ def emite_certificado(emissao):
             'stateOrProvinceName': voucher.customer_state,
             'postalCode': voucher.customer_zip,
             'countryName': 'BR',
-            'emailAddress': 'none',
+            'emailAddress': 'certificatebox@trustsign.com.br',
             'isCustomerValidated': 'Y',
             'foreignOrderNumber': emissao.crm_hash,
             #'checkFONIsUnique': 'Y', # comentei só pra ficar mais facil de testar, senao teria q criar um voucher toda hora
