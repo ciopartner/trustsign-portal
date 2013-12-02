@@ -67,9 +67,7 @@ class SSLCheckerForm(Form):
 
 
 class CSRDecodeError(Exception):
-    def __init__(self, erros, *args, **kwargs):
-        self.erros = erros
-        super(CSRDecodeError, self).__init__(*args, **kwargs)
+    pass
 
 
 class CSRDecoderForm(Form):
@@ -78,8 +76,10 @@ class CSRDecoderForm(Form):
     operation = CharField(widget=HiddenInput, initial='csr-decoder')
 
     def processa(self):
-        csr = self.cleaned_data['csr']
-        return decode_csr(csr)
+        csr = decode_csr(self.cleaned_data['csr'])
+        if not csr['ok']:
+            raise CSRDecodeError()
+        return csr
 
 
 class CertificateKeyMatcherForm(Form):

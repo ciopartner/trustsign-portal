@@ -251,6 +251,10 @@ class Voucher(Model):
     def get_publickey_url(self):
         return 'chave-publica', (), {'crm_hash': self.crm_hash}
 
+    @permalink
+    def get_reenvio_comodo_url(self):
+        return 'reenvia-voucher-comodo', (), {'crm_hash': self.crm_hash}
+
     @property
     def get_seal_html(self):
         try:
@@ -386,20 +390,21 @@ class Emissao(Model):
     STATUS_EMISSAO_ENVIADO_COMODO = 3
     STATUS_EMITIDO_SELO_PENDENTE = 4
     STATUS_EMITIDO = 5
+    STATUS_EMISSAO_ERRO_COMODO = 91
 
     STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE = 10
     STATUS_REEMISSAO_ENVIADO_COMODO = 11
     STATUS_REEMITIDO = 12
+    STATUS_REEMISSAO_ERRO_COMODO = 92
 
     STATUS_REVOGACAO_APROVACAO_PENDENTE = 20
     STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE = 21
     STATUS_REVOGACAO_ENVIADO_COMODO = 22
     STATUS_REVOGADO_SELO_PENDENTE = 23
     STATUS_REVOGADO = 24
+    STATUS_REVOGACAO_ERRO_COMODO = 93
 
     STATUS_EXPIRADO = 90
-
-    STATUS_OCORREU_ERRO_COMODO = 91
 
     STATUS_ADICIONAL_USADO = 12
 
@@ -411,19 +416,21 @@ class Emissao(Model):
         (STATUS_EMISSAO_ENVIADO_COMODO, 'Emissão Solicitada'),
         (STATUS_EMITIDO_SELO_PENDENTE, 'Certificado Emitido, Selo Pendente'),
         (STATUS_EMITIDO, 'Certificado Emitido'),
+        (STATUS_EMISSAO_ERRO_COMODO, 'Ocorreu um erro interno durante a emissão'),
 
         (STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE, 'Reemissão Em Processamento'),
         (STATUS_REEMISSAO_ENVIADO_COMODO, 'Reemissão Solicitada'),
         (STATUS_REEMITIDO, 'Certificado Reemitido'),
+        (STATUS_REEMISSAO_ERRO_COMODO, 'Ocorreu um erro interno durante a reemissão'),
 
         (STATUS_REVOGACAO_APROVACAO_PENDENTE, 'Revogação Pendente de Revisão'),
         (STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE, 'Revogação Em Processamento'),
         (STATUS_REVOGACAO_ENVIADO_COMODO, 'Revogação Solicitada'),
         (STATUS_REVOGADO_SELO_PENDENTE, 'Certificado Revogado, Selo Pendente'),
         (STATUS_REVOGADO, 'Certificado Revogado'),
+        (STATUS_REVOGACAO_ERRO_COMODO, 'Ocorreu um erro interno durante a revogação'),
 
         (STATUS_EXPIRADO, 'Certificado Expirado'),
-        (STATUS_OCORREU_ERRO_COMODO, 'Ocorreu um erro interno'),
 
         (STATUS_ADICIONAL_USADO, 'Adicional usado'),
     )
@@ -514,6 +521,11 @@ class Emissao(Model):
     def emitido(self):
         return self.emission_status in (Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO)
 
+    @property
+    def ocorreu_erro(self):
+        return self.emission_status in (Emissao.STATUS_EMISSAO_ERRO_COMODO, Emissao.STATUS_REEMISSAO_ERRO_COMODO,
+                                        Emissao.STATUS_REVOGACAO_ERRO_COMODO)
+
     def aprova(self, user):
         if self.emission_status == Emissao.STATUS_EMISSAO_APROVACAO_PENDENTE:
             self.emission_status = Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
@@ -521,6 +533,28 @@ class Emissao(Model):
             self.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
 
         self.emission_approver = user
+
+    def marca_reenvio_comodo(self):
+        if self.emission_status == Emissao.STATUS_EMISSAO_ERRO_COMODO:
+            self.emission_status = Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
+        elif self.emission_status == Emissao.STATUS_REEMISSAO_ERRO_COMODO:
+            self.emission_status = Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE
+        elif self.emission_status == Emissao.STATUS_REVOGACAO_ERRO_COMODO:
+            self.emission_status = Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE
+        else:
+            return
+        self.emission_error_message = None
+
+    def set_erro_comodo(self, mensagem):
+        if self.emission_status == Emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE:
+            self.emission_status = Emissao.STATUS_EMISSAO_ERRO_COMODO
+        elif self.emission_status == Emissao.STATUS_REEMISSAO_ENVIO_COMODO_PENDENTE:
+            self.emission_status = Emissao.STATUS_REEMISSAO_ERRO_COMODO
+        elif self.emission_status == Emissao.STATUS_REVOGACAO_ENVIO_COMODO_PENDENTE:
+            self.emission_status = Emissao.STATUS_REVOGACAO_ERRO_COMODO
+        else:
+            return
+        self.emission_error_message = mensagem
 
 
 class Revogacao(Model):

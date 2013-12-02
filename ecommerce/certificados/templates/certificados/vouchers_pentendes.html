@@ -4,6 +4,7 @@
 {% block content %}
     <div class="escolha-voucher fix-row-margin">
         <h2>Certificados pendentes de envio à Comodo</h2>
+    {{ vouchers }}
         <table class="table">
             <tr>
                 <th>Cliente</th>
@@ -25,10 +26,16 @@
                     <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.order_date|date:"d/m/Y" }}</td>
                     <td{% if voucher.sla_estourado %} class="red"{% endif %}>{{ voucher.sla_since }}h / {{ voucher.tempo_em_espera }}h</td>
                     <td>
-                        {% if emissao.emission_status == emissao.STATUS_EMISSAO_APROVACAO_PENDENTE %}
+                        {% if emissao.emission_status == emissao.STATUS_EMISSAO_APROVACAO_PENDENTE or emissao.emission_status == emissao.STATUS_EMISSAO_ERRO_COMODO %}
                             Emissão
-                        {% elif emissao.emission_status == emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE %}
+                        {% elif emissao.emission_status == emissao.STATUS_REEMISSAO_ERRO_COMODO %}
+                            Reemissão
+                        {% elif emissao.emission_status == emissao.STATUS_REVOGACAO_APROVACAO_PENDENTE or emissao.emission_status == emissao.STATUS_REVOGACAO_ERRO_COMODO%}
                             Revogação
+                        {% endif %}
+
+                        {% if emissao.ocorreu_erro and emissao.emission_error_message %}
+                            <span class="badge badge-important" title="{{ emissao.emission_error_message }}" rel="tooltip">!</span>
                         {% endif %}
                     </td>
                     <td>
@@ -38,16 +45,18 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ voucher.get_revisao_url }}" target="_blank">Revisar</a></li>
                                 {% if emissao.emission_reviewer %}
-                                    <li>
-                                        <a href="{{ voucher.get_aprova_voucher_pendente_url }}" target="_blank">Aprovar</a>
-                                    </li>
+                                    {% if emissao.ocorreu_erro %}
+                                        <li>
+                                            <a href="{{ voucher.get_reenvio_comodo_url }}" target="_blank">Reenviar a Comodo</a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a href="{{ voucher.get_aprova_voucher_pendente_url }}" target="_blank">Aprovar</a>
+                                        </li>
+                                    {% endif %}
                                 {% endif %}
                             </ul>
                         </div>
-
-                        {% if emissao.emission_error_message %}
-                            <span class="badge badge-important" title="{{ emissao.emission_error_message }}" rel="tooltip">!</span>
-                        {% endif %}
 
                     </td>
 
