@@ -263,7 +263,7 @@ class Voucher(Model):
             return ''
 
         seals_server_url = settings.SEALS_SERVER_URL
-        url_validacao = '%s?url=%s' % (seals_server_url, emissao.emission_url)
+        url_validacao = '%s/?url=%s' % (seals_server_url, emissao.emission_url)
 
         if self.ssl_line == Voucher.LINHA_BASIC:
             tipo = 'basic'
