@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <div class="tab-pane {% if op == 'csr-decoder' %}active{% endif %}" id="tab-csr-decoder">
     <form action="" method="POST" >
         <div class="well">
@@ -28,18 +29,30 @@
                     <table class="table">
                         <tr>
                             <th>Signature</th>
-                            <td>Válida</td>
+                            <td class="text-success">
+                                <div class="alert alert-success">
+                                    <img src="{% static "home/img/table-yes.png" %}" alt=""/> Válida
+                                </div>
+                            </td>
                         </tr>
                         {% if resultado.KeySize %}
                         <tr>
                             <th>Key Size</th>
-                            <td>{{ resultado.KeySize }}</td>
+                            <td>
+                                {{ resultado.KeySize }}
+                                {% if resultado.KeySize < 2048 %}
+                                    <div class="alert alert-warning">
+                                        <img src="{% static "home/img/table-warning.png" %}" alt=""/>
+                                        A TrustSign não trabalha com chaves inferiores a 2048 bits porque as mesmas não são consideradas seguras
+                                    </div>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endif %}
-                        <tr>
-                            <th>Subject</th>
-                            <td>{% if resultado.subject_ok %}Ok, não possui campos em branco.{% else %}Possui campos em branco.{% endif %}</td>
-                        </tr>
+{#                        <tr>#}
+{#                            <th>Subject</th>#}
+{#                            <td>{% if resultado.subject_ok %}Ok, não possui campos em branco.{% else %}Possui campos em branco.{% endif %}</td>#}
+{#                        </tr>#}
                         {% if resultado.CN %}
                         <tr>
                             <th>Common Name</th>
@@ -125,7 +138,7 @@
 
                     </table>
                 {% else %}
-                    <p>O CSR possui uma assinatura inválida.</p>
+                    <p class="text-error"><img src="{% static "home/img/table-no.png" %}" alt=""/> O CSR possui uma assinatura inválida.</p>
                 {% endif %}
             </div>
         {% endif %}
