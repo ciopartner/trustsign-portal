@@ -1277,7 +1277,7 @@ img.size-thumbnail{
 }
 
 .sharebar .facebook iframe{
-    width: 56px !important;
+    width: 58px !important;
 }
 
 .sharebar .twitter{
@@ -2270,4 +2270,8 @@ h3.title{
     color: #333;
     font-weight: bold;
     margin-bottom: 10px;
+}
+
+#id_csr{
+    font-size: 12px;
 }
