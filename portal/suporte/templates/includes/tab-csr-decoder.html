@@ -30,21 +30,21 @@
                         <tr>
                             <th>Signature</th>
                             <td class="text-success">
-                                <div class="alert alert-success">
-                                    <img src="{% static "home/img/table-yes.png" %}" alt=""/> Válida
-                                </div>
+                                <img src="{% static "home/img/table-yes.png" %}" alt=""/> Válida
                             </td>
                         </tr>
                         {% if resultado.KeySize %}
                         <tr>
                             <th>Key Size</th>
                             <td>
-                                {{ resultado.KeySize }}
+                                {% if resultado.keySize >= 2048 %}
+                                    <img src="{% static "home/img/table-yes.png" %}" alt=""/>
+                                {% else %}
+                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>
+                                {% endif %}
+                                    {{ resultado.KeySize }}
                                 {% if resultado.KeySize < 2048 %}
-                                    <div class="alert alert-warning">
-                                        <img src="{% static "home/img/table-warning.png" %}" alt=""/>
-                                        A TrustSign não trabalha com chaves inferiores a 2048 bits porque as mesmas não são consideradas seguras
-                                    </div>
+                                    - A TrustSign não trabalha com chaves inferiores a 2048 bits porque as mesmas não são consideradas seguras
                                 {% endif %}
                             </td>
                         </tr>
@@ -56,73 +56,73 @@
                         {% if resultado.CN %}
                         <tr>
                             <th>Common Name</th>
-                            <td>{{ resultado.CN }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.CN }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.O %}
                         <tr>
                             <th>Organization Name</th>
-                            <td>{{ resultado.O }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.O }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.OU %}
                         <tr>
                             <th>Organizational Unit Name</th>
-                            <td>{{ resultado.OU }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.OU }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.POBox %}
                         <tr>
                             <th>Post Office Box</th>
-                            <td>{{ resultado.POBox }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.POBox }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.STREET1 %}
                         <tr>
                             <th>Street Address 1</th>
-                            <td>{{ resultado.STREET1 }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.STREET1 }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.STREET2 %}
                         <tr>
                             <th>Street Address 2</th>
-                            <td>{{ resultado.STREET2 }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.STREET2 }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.STREET3 %}
                         <tr>
                             <th>Street Address 3</th>
-                            <td>{{ resultado.STREET3 }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.STREET3 }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.L %}
                         <tr>
                             <th>Locality Name</th>
-                            <td>{{ resultado.L }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.L }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.S %}
                         <tr>
                             <th>State or Province Name</th>
-                            <td>{{ resultado.S }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.S }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.PostalCode %}
                         <tr>
                             <th>Postal Code</th>
-                            <td>{{ resultado.PostalCode }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.PostalCode }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.C %}
                         <tr>
                             <th>Country Name</th>
-                            <td>{{ resultado.C }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.C }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.Email %}
                         <tr>
                             <th>Email Address</th>
-                            <td>{{ resultado.Email }}</td>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.Email }}</td>
                         </tr>
                         {% endif %}
                         {% if resultado.Phone %}
@@ -133,7 +133,15 @@
                         {% endif %}
                         <tr>
                             <th>DNS:</th>
-                            <td>{% for dominio in resultado.dnsNames  %}{{ dominio }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                            <td>
+                                <ul>
+                                {% for dominio in resultado.dnsNames  %}
+                                    <li>
+                                        {{ dominio }}
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            </td>
                         </tr>
 
                     </table>
