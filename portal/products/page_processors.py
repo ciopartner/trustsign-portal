@@ -42,6 +42,7 @@ def product_processor(request, page):
     data = {
         'product_code': page.product.product_code,
         'additional_product_code': page.product.additional_product_code,
+        'show_discount': True,
         'precos': {
             'basic': {
                 'termsubscription_1m': {},
@@ -88,6 +89,9 @@ def product_processor(request, page):
 
         price = price.quantize(Decimal('0.01'))
 
+        if price_regular is not None:
+            data['show_discount'] = False
+
         data['precos'][product_line]['term%s' % product_term].update({
             'price_tpl': split_ponto(price),
             'price': price,
@@ -129,6 +133,9 @@ def product_processor(request, page):
             .setdefault('precos', {})\
             .setdefault(product_line, {})\
             .setdefault('term%s' % product_term, {})
+
+        if price_regular is not None:
+            data['show_discount'] = False
 
         x.update({
             'price_tpl': split_ponto(price),
