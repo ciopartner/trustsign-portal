@@ -55,9 +55,10 @@ class SSLCheckerForm(Form):
 
         sans = []
         site_listed = False
+        url_wildcard = '.'.join(['*'] + url.split('.')[1:])
         for k, v in resultado.iteritems():
             if k.startswith('cert_san_'):
-                if url == v:
+                if v in (url, url_wildcard):
                     site_listed = True
                 sans.append(v)
 
