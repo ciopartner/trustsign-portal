@@ -103,7 +103,7 @@ class CheckEmailJob(CronJobBase):
             m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
             m.select("INBOX")
 
-            resp, items = m.search(None, '(FROM "noreply_support@comodo.com") (UNSEEN)')
+            resp, items = m.search(None, 'FROM', 'Comodo Security Service', 'UNSEEN', 'SUBJECT', 'Certificate')
             items = items[0].split()
 
             for emailid in items:
@@ -115,7 +115,7 @@ class CheckEmailJob(CronJobBase):
                     continue
 
                 subject = mail.get('subject')
-                log.info('Get e-mail from certificatebox. Assunto: {}'.format(subject))
+                log.info('Processando e-mail no certificatebox: {}'.format(subject))
 
                 try:
                     comodo_order = re.match('.*ORDER #([0-9]+).* - Your', subject).groups(0)[0]
