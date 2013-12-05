@@ -115,10 +115,13 @@ class CheckEmailJob(CronJobBase):
                     continue
 
                 subject = mail.get('subject')
+                log.info('Get e-mail from certificatebox. Assunto: {}'.format(subject))
 
                 try:
-                    comodo_order = re.match('.*ORDER #([0-9]+).*', subject).groups(0)[0]
+                    comodo_order = re.match('.*ORDER #([0-9]+).* - Your', subject).groups(0)[0]
                     emissao = Emissao.objects.select_related('voucher').get(comodo_order=comodo_order)
+                    if emissao:
+                        log.info('Comodo Order: {}'.format(comodo_order))
 
                     text_content = str(list(mail.get_payload()[0].walk())[1])
                     certificado = re.match('.*(-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----).*',
