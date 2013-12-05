@@ -770,7 +770,7 @@ msgstr "%(status)s carrinho (dono: %(owner)s, linhas: %(num_lines)d)"
 msgid ""
 "Due to technical limitations we are not able to ship more than %(threshold)d"
 " items in one order."
-msgstr "Devido a limitações técnicas não somos capazes de entregar mais que %(threshold)d itens em um pedido."
+msgstr "Você pode adicionar até %(threshold)d itens em um pedido."
 
 #: apps/basket/abstract_models.py:472
 msgid "Line Reference"
