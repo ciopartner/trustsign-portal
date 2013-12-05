@@ -37,12 +37,14 @@
                         <tr>
                             <th>Key Size</th>
                             <td>
-                                {% if resultado.keySize >= 2048 %}
-                                    <img src="{% static "home/img/table-yes.png" %}" alt=""/>
+                                {% if resultado.KeySize < 2048 %}
+                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>|
                                 {% else %}
-                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>
+                                    <img src="{% static "home/img/table-yes.png" %}" alt=""/>
                                 {% endif %}
+
                                     {{ resultado.KeySize }}
+
                                 {% if resultado.KeySize < 2048 %}
                                     - A TrustSign não trabalha com chaves inferiores a 2048 bits porque as mesmas não são consideradas seguras
                                 {% endif %}
