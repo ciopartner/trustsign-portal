@@ -491,7 +491,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
                 if order.lines.count() == order.lines.filter(status='Pago').count():
                     order.set_status('Pago')
                     log.info('Ordem agora possui status Pago')
-                    subject = 'Pagamento Aprovado'
+                    subject = '[TrustSign] Pagamento Aprovado'
                     template = 'customer/commtype_order_placed_body.html'
                     context = {
                         'user': order.user,

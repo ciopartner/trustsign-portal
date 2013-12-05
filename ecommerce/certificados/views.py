@@ -627,7 +627,7 @@ class EmissaoWizardView(SessionWizardView):
         voucher = self.get_voucher()
         try:
             user = User.objects.get(username=voucher.customer_cnpj)
-            subject = 'Emissão Solicitada com Sucesso'
+            subject = '[TrustSign] Emissão Solicitada com Sucesso'
             template = 'customer/emails/emissao_solicitada_sucesso.html'
             context = {
                 'voucher': voucher,

@@ -47,7 +47,7 @@ class EnviaOrdersCRMCronJob(CronJobBase, OscarToCRMMixin):
 
     def send_email(self, order):
         try:
-            subject = 'Processo de Emissão Liberado'
+            subject = '[TrustSign] Processo de Emissão Liberado'
             template = 'customer/emails/pedido_concluido.html'
             context = {
                 'order': order,

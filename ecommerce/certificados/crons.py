@@ -282,7 +282,7 @@ class AtivaSelosJob(CronJobBase):
         emissao = voucher.emissao
         try:
             user = User.objects.get(username=voucher.customer_cnpj)
-            subject = 'Certificado TrustSign'
+            subject = '[TrustSign] Seu Novo Certificado'
             template = 'customer/emails/envio_certificado.html'
             context = {
                 'voucher': voucher,
