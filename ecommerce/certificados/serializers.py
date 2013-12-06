@@ -14,7 +14,7 @@ class VoucherSerializer(ModelSerializer):
 
     class Meta:
         model = Voucher
-        fields = ['crm_hash', 'customer_cnpj', 'customer_companyname', 'customer_zip', 'customer_address1',
+        fields = ['crm_hash', 'crm_user', 'customer_cnpj', 'customer_companyname', 'customer_zip', 'customer_address1',
                   'customer_address2', 'customer_address3', 'customer_address4', 'customer_city', 'customer_state',
                   'customer_country', 'customer_registration_status', 'customer_callback_firstname',
                   'customer_callback_lastname', 'customer_callback_email', 'customer_callback_phone',

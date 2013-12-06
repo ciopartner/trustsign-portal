@@ -5,6 +5,10 @@
     <div class="fix-row-margin escolha-voucher">
         <h2>Escolha o produto disponível e a ação desejada</h2>
         {% if vouchers %}
+            <form action="">
+                <label for="q_id">CNPJ/Razão Social</label><input type="text" name="q" id="q_id"/>
+                <label for="hide_status_final_id">CNPJ/Razão Social</label><input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/>
+            </form>
         <table class="table table-bordered table-striped table-vcenter">
             <tr>
                 <th class="large">Produto</th>
@@ -12,6 +16,7 @@
                 <th>Validade</th>
                 <th>Saldo</th>
                 <th>Pedido</th>
+                <th>Meu Cliente?</th>
                 <th>Status / Ação</th>
             </tr>
 
@@ -26,44 +31,75 @@
                                 {{ voucher.order_number }}
                             {% endif %}
                         </td>
-                        <td width="70">
-
-                        {% with emissao=voucher.emissao %}
-                            {% if not emissao %}
-                                {% if voucher.has_emissao_url %}
-                                    {% if voucher.ssl_product == 'ssl-san' %}
-                                         <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
-                                    {% else %}
-                                         <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
-                                    {% endif %}
-                                {% endif %}
-                            {% elif emissao.em_processamento %}
-                                Em processamento
-                            {% elif emissao.emitido %}
-
-                                <div class="btn-group btn-block">
-                                    <button class="btn dropdown-toggle span2 btn-success no-uppercase" style="margin: 0" data-toggle="dropdown">Ação <span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
-                                        <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>
-                                        <li><a href="{{ voucher.get_sealcode_url }}">HTML Selo</a></li>
-                                        <li><a href="{{ voucher.get_publickey_url }}">Certificado</a></li>
-                                    </ul>
-                                </div>
+                        <td>
+                            {% if voucher.is_my_cliente %}
+                                <img src="{% static "home/img/table-warning.png" %}" alt=""/>
                             {% endif %}
+                        </td>
+                        <td width="70">
+                            {% with emissao=voucher.emissao %}
+                                {% if not emissao %}
+                                    {% if voucher.has_emissao_url %}
+                                        {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
+                                            {% if voucher.ssl_product == 'ssl-san' %}
+                                                 <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
+                                            {% else %}
+                                                 <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
+                                            {% endif %}
+                                        {% else %}
+                                            Sem Autorização
+                                        {% endif %}
+                                    {% endif %}
+                                {% elif emissao.em_processamento %}
+                                    Em processamento
+                                {% elif emissao.emitido %}
 
-                        {% endwith %}
-                        {# Para tratar o status dos FQDNs, Domínios e Servidores Adicionais #}
-                        {% if voucher.is_complemento_disponivel %}
-                            Disponível para uso
-                        {% elif voucher.is_complemento_utilizado %}
-                            Já utilizado
-                        {% endif %}
-                    </td>
+                                    {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
+
+                                        <div class="btn-group btn-block">
+                                            <button class="btn dropdown-toggle span2 btn-success no-uppercase" style="margin: 0" data-toggle="dropdown">Ação <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
+                                                <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>
+                                                <li><a href="{{ voucher.get_sealcode_url }}">HTML Selo</a></li>
+                                                <li><a href="{{ voucher.get_publickey_url }}">Certificado</a></li>
+                                            </ul>
+                                        </div>
+
+                                    {% endif %}
+
+                                {% else %}
+                                    {{ emissao.get_emission_status_display }}
+                                {% endif %}
+
+                            {% endwith %}
+                            {# Para tratar o status dos FQDNs, Domínios e Servidores Adicionais #}
+                            {% if voucher.is_complemento_disponivel %}
+                                Disponível para uso
+                            {% elif voucher.is_complemento_utilizado %}
+                                Já utilizado
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
 
             </table>
+
+            {% if is_paginated %}
+                <div class="pagination">
+                    <span class="page-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&hide_status_final={{ request.GET.hide_status_final }}">anterior</a>
+                        {% endif %}
+                        <span class="page-current">
+                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                        </span>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&hide_status_final={{ request.GET.hide_status_final }}">próximo</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
 
         {% else %}
             <p>Você ainda não possui certificados para emitir.

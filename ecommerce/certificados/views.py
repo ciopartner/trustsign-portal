@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.utils.timezone import now
 from django.views.generic import ListView, CreateView, UpdateView, TemplateView
@@ -545,15 +546,37 @@ class EscolhaVoucherView(ListView):
     template_name = 'certificados/escolha_voucher.html'
     model = Voucher
     context_object_name = 'vouchers'
+    paginate_by = 50
 
     def get_queryset(self):
         qs = Voucher.objects.select_related('emissao')
 
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(Q(customer_cnpj__icontains=query) | Q(customer_companyname__icontains=query))
+
+        if self.request.GET.get('hide_status_final') == '1':
+            qs = qs.exclude(emissao__emission_status__in=(
+                Emissao.STATUS_EMITIDO, Emissao.STATUS_REEMITIDO, Emissao.STATUS_REVOGADO
+            ))
+
         user = self.request.user
-        if not user.is_superuser and user.get_profile().is_cliente:
+
+        if not user.has_perm('certificados.view_all_vouchers'):
+            if not user.has_perm('certificados.do_emission_process'):
+                raise PermissionDenied
             qs = qs.filter(customer_cnpj=user.username)
 
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(EscolhaVoucherView, self).get_context_data(**kwargs)
+        vouchers = context['vouchers']
+
+        for voucher in vouchers:
+            voucher.is_my_client = not voucher.crm_user or self.request.user.get_profile().crm_user == voucher.crm_user
+
+        return context
 
 
 class VouchersPendentesListView(ListView):
@@ -606,7 +629,9 @@ class EmissaoWizardView(SessionWizardView):
             raise PermissionDenied()
 
         user = self.request.user
-        if (voucher.customer_cnpj != user.username or user.get_profile().is_trustsign) and not user.is_superuser:
+        if voucher.customer_cnpj != user.username and not user.has_perm('certificados.issue_all_vouchers') \
+                and not (user.has_perm('certificados.issue_client_vouchers') and (not voucher.crm_user
+                                                                                  or voucher.crm_user == user.get_profile().crm_user)):
             raise PermissionDenied()
 
         return super(EmissaoWizardView, self).dispatch(request, *args, **kwargs)

@@ -109,6 +109,7 @@ class Voucher(Model):
     )
 
     crm_hash = CharField(max_length=128, unique=True)
+    crm_user = CharField(max_length=128, blank=True, null=True)
     comodo_order = CharField(max_length=128, blank=True, null=True)
     order_number = CharField(max_length=32, blank=True, null=True)
 
@@ -158,6 +159,14 @@ class Voucher(Model):
     order_canceled_reason = TextField(blank=True, null=True)
 
     objects = VoucherManager()
+
+    class Meta:
+        permissions = (
+            ("view_all_vouchers", "Can view all vouchers"),
+            ("issue_client_vouchers", "Can issue only client vouchers"),
+            ("issue_all_vouchers", "Can issue all vouchers"),
+        )
+        ordering = ('customer_cnpj', 'ssl_product', 'ssl_line', 'ssl_term', 'order_date')
 
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)

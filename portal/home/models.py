@@ -61,6 +61,7 @@ class TrustSignProfile(Model):
     )
 
     user = OneToOneField(User)
+    crm_user = CharField(max_length=128, blank=True, null=True)
     foto = ImageField(upload_to='profiles/fotos', blank=True, null=True)
     date_of_birth = DateField(blank=True, null=True)
     bio = TextField(blank=True, default='')
