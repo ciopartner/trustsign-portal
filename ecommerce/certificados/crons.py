@@ -91,9 +91,9 @@ class CheckEmailJob(CronJobBase):
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
 
     def do(self):
-        from ecommerce.certificados.models import Emissao
-
         #  http://stackoverflow.com/questions/348630/how-can-i-download-all-emails-with-attachments-from-gmail
+
+        from ecommerce.certificados.models import Emissao
 
         cur_language = translation.get_language()
         try:
@@ -103,7 +103,7 @@ class CheckEmailJob(CronJobBase):
             m.login(settings.CERTIFICADOS_EMAIL_USERNAME, settings.CERTIFICADOS_EMAIL_PASSWORD)
             m.select("INBOX")
 
-            resp, items = m.search(None, 'FROM', 'Comodo Security Service', 'UNSEEN', 'SUBJECT', 'Certificate')
+            resp, items = m.search(None, 'FROM', '"Comodo Security Service"', 'UNSEEN', 'SUBJECT', '"Certificate"')
             items = items[0].split()
 
             for emailid in items:
@@ -118,27 +118,11 @@ class CheckEmailJob(CronJobBase):
                 log.info('Processando e-mail no certificatebox: {}'.format(subject))
 
                 try:
-                    comodo_order = re.match('.*ORDER #([0-9]+).*', subject).groups(0)[0]
-                    emissao = Emissao.objects.select_related('voucher').get(comodo_order=comodo_order)
-                    if emissao:
-                        log.info('Comodo Order: {}'.format(comodo_order))
 
-                    text_content = str(list(mail.get_payload()[0].walk())[1])
-                    certificado = re.match('.*(-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----).*',
-                                           text_content, re.S).groups(0)[0]
-
-                    emissao.emission_certificate = certificado
-
-                    counter = 1
-
-                    for part in mail.walk():
-                        if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
-                            continue
-
-                        emissao.emission_mail_attachment_path, counter = self.extract_attachment(part, counter)
-
+                    emissao = self.get_emissao(subject)
+                    emissao.emission_certificate = self.extract_certificate(mail)
+                    emissao.emission_mail_attachment_path = self.get_attachment_path(mail)
                     emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
-
                     emissao.save()
 
                 except (IndexError, AttributeError):
@@ -147,6 +131,41 @@ class CheckEmailJob(CronJobBase):
                     log.error('Recebeu e-mail com comodo order inexistente no banco (#{}) '.format(subject))
         finally:
             translation.activate(cur_language)
+
+    def get_emissao(self, subject):
+        from ecommerce.certificados.models import Emissao
+
+        comodo_order = self.extract_comodo_order(subject)
+        emissao = Emissao.objects.select_related('voucher').get(comodo_order=comodo_order)
+
+        if emissao:
+            log.info('Comodo Order: {}'.format(comodo_order))
+
+        return emissao
+
+    def get_attachment_path(self, mail):
+        counter = 1
+        path = None
+        for part in mail.walk():
+            if part.get_content_maintype() == 'multipart' or part.get('Content-Disposition') is None:
+                continue
+
+            path, counter = self.extract_attachment(part, counter)
+
+        if not path:
+            log.error('Não conseguiu extrair o anexo')
+            raise Exception('Não conseguiu extrair o anexo')
+
+        return path
+
+
+    def extract_comodo_order(self, subject):
+        return re.match('.*ORDER #([0-9]+).*', subject).groups(0)[0]
+
+    def extract_certificate(self, mail):
+        text_content = str(list(mail.get_payload()[0].walk())[1])
+        return re.match('.*(-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----).*',
+                        text_content, re.S).groups(0)[0]
 
     def extract_attachment(self, part, counter):
         filename = part.get_filename()
