@@ -173,13 +173,13 @@ var header1search = function () {
             //$('.searchareain2').fadeOut();
             $('.tmpsearch').css({'width': '0', 'opacity': '1', 'padding-left': '0', 'padding-right': '0', 'padding-bottom': '0'});
             $('.searchareain').parent('li').animate({
-                                                        width: $('#appendedInputButton').width() + 55, /* right: 0,*/ opacity: 1
-                                                    }, 100, "linear", function () {
+                width: $('#appendedInputButton').width() + 55, /* right: 0,*/ opacity: 1
+            }, 100, "linear", function () {
                 //alert("all done");
             });
             $('.tmpsearch').animate({
-                                        width: $('#appendedInputButton').width() + 53, /* right: 0,*/ opacity: 1
-                                    }, 100, "linear", function () {
+                width: $('#appendedInputButton').width() + 53, /* right: 0,*/ opacity: 1
+            }, 100, "linear", function () {
                 //alert("all done");
             });
 
@@ -198,22 +198,22 @@ var header1search = function () {
         if ($(this).parent().hasClass('bloksearch')) {
 
             $('.searchareain').parent('li').animate({
-                                                        width: 30, /* right: 0,*/ opacity: 1
-                                                    }, 100, "linear", function () {
+                width: 30, /* right: 0,*/ opacity: 1
+            }, 100, "linear", function () {
                 //alert("all done");
             });
 
 
             $('.tmpsearch').animate({
-                                        width: 0, opacity: 1
-                                    }, 100, "linear", function () {
+                width: 0, opacity: 1
+            }, 100, "linear", function () {
                 //alert("all done");
                 $('.tmpsearch').css({'padding-left': '0', 'padding-right': '0', 'padding-bottom': '0'});
                 //$('.searchareain2').fadeIn();
                 $('.searchareain').parent().removeClass('bloksearch');
             });
         }
-            $('.searchareain img').show();
+        $('.searchareain img').show();
     });
 }
 
@@ -238,8 +238,8 @@ var header1search2 = function () {
             //$('.searchareain2').fadeOut();
             $('.tmpsearch').css({'width': '0', 'opacity': '1', 'padding-left': '10px', 'padding-right': '10px', 'padding-bottom': '0'});
             $('.tmpsearch').animate({
-                                        width: ertwwi, /* right: 0,*/ opacity: 1
-                                    }, 100, "linear", function () {
+                width: ertwwi, /* right: 0,*/ opacity: 1
+            }, 100, "linear", function () {
                 //alert("all done");
             });
         }
@@ -256,8 +256,8 @@ var header1search2 = function () {
         if ($(this).parent().hasClass('bloksearch')) {
 
             $('.tmpsearch').animate({
-                                        width: 0, opacity: 1
-                                    }, 100, "linear", function () {
+                width: 0, opacity: 1
+            }, 100, "linear", function () {
                 //alert("all done");
                 $('.tmpsearch').css({'padding-left': '0', 'padding-right': '0', 'padding-bottom': '0'});
                 //$('.searchareain2').fadeIn();
@@ -340,34 +340,43 @@ $('#id_credito_cpf').mask('999.999.999-99');
 $('#id_credito_telefone').mask("(99) 9999-9999");
 
 $('form').each(function(){
-   var self = $(this);
-   var $checkboxs = self.find("[type=checkbox][required=true]");
-   var $submit = self.find('[type=submit]');
-   var checked = true;
+    var self = $(this);
+    var $checkboxs = self.find("[type=checkbox][required=true]");
+    var $submit = self.find('[type=submit]');
+    var checked = true;
 
-   function checkButton(){
-       checked = true;
-       $checkboxs.each(function(){
-           checked = checked && $(this).is(":checked");
-       });
+    function checkButton(){
+        checked = true;
+        $checkboxs.each(function(){
+            checked = checked && $(this).is(":checked");
+        });
 
-       $submit.attr('title', $submit.data('disable-title'));
+        $submit.attr('title', $submit.data('disable-title'));
 //       $submit.tooltip();
 
-       if(!checked){
-           $submit.attr("disabled", "disabled");
+        if(!checked){
+            $submit.attr("disabled", "disabled");
 //           $submit.tooltip('enable');
-       }else{
-           $submit.removeAttr("disabled");
+        }else{
+            $submit.removeAttr("disabled");
 //           $submit.tooltip('disable');
-           $submit.attr('title', '');
-       }
-   }
+            $submit.attr('title', '');
+        }
+    }
 
-   checkButton();
-   $checkboxs.on('click', checkButton);
+    checkButton();
+    $checkboxs.on('click', checkButton);
 
-   $("form").submit(function(){
-      $('.errorlist').remove();
-   });
+    $("form").submit(function(){
+        $('.errorlist').remove();
+    });
+
+    $("#id_number").validateCreditCard(function(result){
+        if(result.card_type){
+            $('.credit-card-icon').not('.' + result.card_type.name).animate({'opacity': 0.25},500);
+            $('.credit-card-icon.' + result.card_type.name).animate({'opacity': 1},500)
+        }else{
+            $('.credit-card-icon').animate({'opacity': 1},500)
+        }
+    });
 });
