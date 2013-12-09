@@ -6,19 +6,21 @@
         <h2>Escolha o produto disponível e a ação desejada</h2>
         {% if vouchers %}
             <form action="">
-                <label for="q_id">CNPJ/Razão Social</label><input type="text" name="q" id="q_id"/>
-                <label for="hide_status_final_id">CNPJ/Razão Social</label><input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/>
+                {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers %}
+                    <label for="q_id">CNPJ/Razão Social</label><input type="text" name="q" id="q_id"/>
+                {% endif %}
+                <label for="hide_status_final_id">Exibir Somente Vouchers Disponíveis?</label><input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/>
             </form>
-        <table class="table table-bordered table-striped table-vcenter">
-            <tr>
-                <th class="large">Produto</th>
-                <th>Linha</th>
-                <th>Validade</th>
-                <th>Saldo</th>
-                <th>Pedido</th>
-                <th>Meu Cliente?</th>
-                <th>Status / Ação</th>
-            </tr>
+            <table class="table table-bordered table-striped table-vcenter">
+                <tr>
+                    <th class="large">Produto</th>
+                    <th>Linha</th>
+                    <th>Validade</th>
+                    <th>Saldo</th>
+                    <th>Pedido</th>
+                    <th>Meu Cliente?</th>
+                    <th>Status / Ação</th>
+                </tr>
 
                 {% for voucher in vouchers %}
                     <tr data-product-code="{{ voucher.ssl_product }}" data-status="{% if voucher.emissao.is_complemento_disponivel %}disponivel{% else %}utilizado{% endif %}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
@@ -42,9 +44,9 @@
                                     {% if voucher.has_emissao_url %}
                                         {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
                                             {% if voucher.ssl_product == 'ssl-san' %}
-                                                 <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
+                                                <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
                                             {% else %}
-                                                 <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
+                                                <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
                                             {% endif %}
                                         {% else %}
                                             Sem Autorização
