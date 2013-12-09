@@ -158,7 +158,6 @@ class CheckEmailJob(CronJobBase):
 
         return path
 
-
     def extract_comodo_order(self, subject):
         return re.match('.*ORDER #([0-9]+).*', subject).groups(0)[0]
 
@@ -180,6 +179,7 @@ class CheckEmailJob(CronJobBase):
         directory = os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, ano, mes)
 
         if not os.path.exists(directory):
+            # cria as pastas de ano e mês
             os.makedirs(directory)
 
         timestamp = str(time()).replace('.', '')
@@ -187,9 +187,9 @@ class CheckEmailJob(CronJobBase):
         filename = '.'.join(s[:-1])
         ext = s[-1]
 
-        relative_path = '%s-%s.%s' % (filename, timestamp, ext)
+        relative_path = os.path.join(ano, mes, '%s-%s.%s' % (filename, timestamp, ext))
 
-        att_path = os.path.join(directory, relative_path)
+        att_path = os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, relative_path)
 
         if not os.path.isfile(att_path):
             fp = open(att_path, 'wb')
@@ -311,7 +311,7 @@ class AtivaSelosJob(CronJobBase):
                 'site': get_current_site(None),
             }
             msg = get_template_email([user.email], subject, template, context)
-            msg.attach_file(emissao.emission_mail_attachment_path)
+            msg.attach_file(os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, emissao.emission_mail_attachment_path))
             msg.send()
         except User.DoesNotExist:
             log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
