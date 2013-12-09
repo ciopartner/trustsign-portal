@@ -206,6 +206,7 @@ INSTALLED_APPS = (
     "portal.products",
     "portal.melhor_solucao",
     'portal.suporte',
+    'portal.banners',
 
     'south',
 
