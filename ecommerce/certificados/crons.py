@@ -184,7 +184,7 @@ class CheckEmailJob(CronJobBase):
 
         timestamp = str(time()).replace('.', '')
         s = filename.split('.')
-        filename = s[:-1]
+        filename = '.'.join(s[:-1])
         ext = s[-1]
 
         relative_path = '%s-%s.%s' % (filename, timestamp, ext)
