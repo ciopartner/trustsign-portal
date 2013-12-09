@@ -9,7 +9,10 @@
                 {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers %}
                     <label for="q_id">CNPJ/Razão Social</label><input type="text" name="q" id="q_id"/>
                 {% endif %}
-                <label for="hide_status_final_id">Exibir Somente Vouchers Disponíveis?</label><input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/>
+                <label class="checkbox" for="hide_status_final_id">Exibir Somente Vouchers Disponíveis? <input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/></label>
+                <input type="submit" value="filtrar" class="btn btn-primary span2"/>
+                <div class="clearfix"></div>
+                <hr/>
             </form>
             <table class="table table-bordered table-striped table-vcenter">
                 <tr>
