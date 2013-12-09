@@ -3,6 +3,7 @@ from django.contrib.auth import login as auth_login
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 from django.utils.http import is_safe_url
+from django.views.generic import TemplateView
 from mezzanine.utils.views import render
 from django.utils.translation import ugettext as _
 from .forms import LoginForm
@@ -26,3 +27,11 @@ def login(request, template="accounts/login.html"):
         return HttpResponseRedirect(redirect_to)
     context = {"form": form, "title": _("Log in")}
     return render(request, template, context)
+
+
+class HomeView(TemplateView):
+    template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        return context

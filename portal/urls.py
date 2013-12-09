@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
+from django.views.generic import TemplateView
 
 from mezzanine.core.views import direct_to_template
-from home.views import login
+from home.views import login, HomeView
 
 
 admin.autodiscover()
@@ -30,7 +31,7 @@ urlpatterns = patterns(
     # one out.
 
     #url('^/$', direct_to_template, {'template': 'index.html'}, name='home'),
-    url('^portal/$', direct_to_template, {'template': 'index.html'}, name='home'),
+    url('^portal/$', HomeView.as_view(), name='home'),
 
     url('^portal/accounts/login/$', login),
     (r'^portal/accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/portal/'}),
