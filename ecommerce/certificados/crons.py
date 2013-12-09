@@ -310,7 +310,8 @@ class AtivaSelosJob(CronJobBase):
                 'voucher': voucher,
                 'site': get_current_site(None),
             }
-            msg = get_template_email([user.email], subject, template, context)
+            email_cliente = emissao.emission_publickey_sendto if emissao.emission_publickey_sendto else user.email
+            msg = get_template_email([email_cliente], subject, template, context)
             msg.attach_file(os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, emissao.emission_mail_attachment_path))
             msg.send()
         except User.DoesNotExist:
