@@ -249,3 +249,50 @@ def reemite_certificado(emissao):
     except Exception as e:
         log.error('ERRO REEMISSÃO > erro desconhecido: %s' % e)
         raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
+
+
+def emite_jre_cs(emissao):
+    try:
+        voucher = emissao.voucher
+        code_ppp = {
+            '1year': 1511,
+            '2years': 1512,
+            '3years': 1509,
+        }
+        params = {
+            'loginName': settings.COMODO_LOGIN_NAME,
+            'loginPassword': settings.COMODO_LOGIN_PASSWORD,
+
+            'ap': '',
+            'reseller': 'y',
+
+            '1_PPP': code_ppp[emissao.voucher.ssl_term],
+            '1_csr': emissao.emission_csr,
+
+            'organizationName': voucher.customer_companyname,
+            'organizationalUnitName': '',
+            'postOfficeBox': '',
+            'streetAddress1': voucher.customer_address1,
+            'streetAddress2': voucher.customer_address2,
+            'streetAddress3': voucher.customer_address3,
+            'localityName': voucher.customer_city,
+            'stateOrProvinceName': voucher.customer_state,
+            'postalCode': voucher.customer_zip,
+            'countryName': 'BR',
+        }
+
+        response = requests.post(settings.COMODO_API_EMISSAO_JRE_CS_URL, params)
+
+        r = url_parse(response.text)
+
+        if r['errorCode'] != '0':
+            log.error('ERRO EMISSÃO JRE/CS > params: {} | response: {}'.format(params, r))
+            envia_email_erro('emissão', emissao.voucher, r['errorCode'], r['errorMessage'])
+            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+
+        log.info('EMISSÂO JRE/CS > params: {} | response: {}'.format(params, r))
+
+        return r
+    except Exception as e:
+        log.error('ERRO EMISSÃO JRE/CS > erro desconhecido: %s' % e)
+        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
