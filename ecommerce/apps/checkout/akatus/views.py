@@ -9,7 +9,7 @@ from django.http import Http404
 from django.views.generic import TemplateView
 from oscar.core.loading import get_class
 from ecommerce.apps.payment.forms import DebitcardForm
-from ecommerce.website.utils import remove_message
+from ecommerce.website.utils import remove_message, send_template_email
 from libs.akatus import facade as akatus
 
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
@@ -473,7 +473,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
                 continue
             break
         if not order:
-            log.error('Order #{} não foi atualizada para {} por não existir ainda no sistema'.format(order_number,
+            log.error('Order #{} não foi atualizada para {} por não existir no sistema'.format(order_number,
                                                                                                      status))
             return self.get(request, *args, **kwargs)
 
@@ -492,7 +492,7 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
                     order.set_status('Pago')
                     log.info('Ordem agora possui status Pago')
                     subject = '[TrustSign] Pagamento Aprovado'
-                    template = 'customer/commtype_order_placed_body.html'
+                    template = 'customer/emails/commtype_order_placed_body.html'
                     context = {
                         'user': order.user,
                         'order': order,
@@ -509,6 +509,34 @@ class StatusChangedView(TemplateView, PaymentEventMixin):
                 log.error('Não encontrou a order #{}'.format(order_number))
             except Line.DoesNotExist:
                 log.error('Não encontrou a line com partner_line_reference={} da order #{}'.format(transacao_id, order_number))
+        elif status == 'Cancelado':
+            log.info('Alterando as linhas da order #{} para Cancelado...'.format(order_number))
+            try:
+                lines = order.lines.filter(paymentevent__reference=transacao_id)
+
+                for line in lines:
+                    line.set_status('Cancelado')
+                    log.info('Linha[{}] da ordem agora possui status Cancelado'.format(line.pk))
+
+                if order.lines.count() == order.lines.filter(status='Cancelado').count():
+                    order.set_status('Cancelado')
+
+                subject = '[TrustSign] Pagamento Cancelado'
+                template = 'customer/emails/pedido_cancelado.html'
+                context = {
+                    'user': order.user,
+                    'order': order,
+                    'site': get_current_site(self.request),
+                    'all_lines': order.lines.all(),
+                    'canceled_lines': lines,
+                }
+                send_template_email([settings.TRUSTSIGN_SISTEMA_EMAIL], subject, template, context)
+
+            except Order.DoesNotExist:
+                log.error('Não encontrou a order #{}'.format(order_number))
+            except Line.DoesNotExist:
+                log.error('Não encontrou a line com partner_line_reference={} da order #{}'.format(transacao_id, order_number))
+
         else:
             profile = order.user.get_profile()
             message = 'número do pedido: %s \n CNPJ: %s \n razão social: %s \n valor do pedido: %s \n status: %s' % (

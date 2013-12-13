@@ -1,0 +1,9 @@
+{% extends 'customer/emails/base.html' %}
+
+{% block body %}
+    <p><b>Usuário:</b> {{ user }}</p>
+    <p><b>Pedido:</b> {{ order }}</p>
+    <p><b>Site:</b> {{ site }}</p>
+    <p><b>Todas as linhas:</b> {{ all_lines }}</p>
+    <p><b>Linhas Canceladas:</b>{{ canceled_lines }}</p>
+{% endblock %}
