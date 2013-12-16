@@ -85,7 +85,7 @@ STATICFILES_FINDERS = (
 # LOGGING #
 ###########
 
-def create_logfile(filename, handler_class='logging.handlers.RotatingFileHandler', level='INFO', formatter='verysimple',
+def create_logfile(filename, handler_class='logging.handlers.RotatingFileHandler', level='DEBUG', formatter='verysimple',
                  mode='a', max_bytes=10485760, backup_count=50):
     return {
         'filename': filename,
