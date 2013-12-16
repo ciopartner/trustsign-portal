@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from copy import deepcopy
 from decimal import Decimal
 import json
 from django.conf import settings
@@ -39,7 +40,11 @@ class Akatus(object):
 
     def call_server(self, method, data):
         url, tipo = self.get_method_details(method)
-        log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, smart_unicode(data)))
+        # Mascarar o conteúdo do cartão de crédito no data_secure
+        data_secure = deepcopy(data)
+        # TODO: Substituir cada dígito do número do cartão por um X, deixando somente os 4 últimos dígitos legíveis
+        # TODO: Substituir cada dígito do código de segurança por um X
+        log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, smart_unicode(data_secure)))
         if tipo == 'GET':
             response = requests.get(url, params=data)
         elif tipo == 'POST':
