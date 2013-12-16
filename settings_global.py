@@ -85,8 +85,8 @@ STATICFILES_FINDERS = (
 # LOGGING #
 ###########
 
-def create_logfile(filename, handler_class='logging.handlers.RotatingFileHandler', level='DEBUG', formatter='verysimple',
-                 mode='a', max_bytes=10485760, backup_count=50):
+def create_logfile(filename, handler_class='logging.handlers.RotatingFileHandler', level='DEBUG',
+                   formatter='verysimple', mode='a', max_bytes=10485760, backup_count=50):
     return {
         'filename': filename,
         'class': handler_class,
@@ -171,21 +171,6 @@ LOGGING = {
         }
     },
 }
-
-for logfile in ('logfile', 'logfile_comodo', 'logfile_akatus', 'logfile_crm'):
-    d = LOGGING['handlers'].setdefault(logfile, {})
-    if 'class' not in d:
-        d['class'] = 'logging.handlers.RotatingFileHandler',
-    if 'level' not in d:
-        d['level'] = 'INFO',
-    if 'formatter' not in d:
-        d['formatter'] = 'verysimple',
-    if 'mode' not in d:
-        d['mode'] = 'a',
-    if 'maxBytes' not in d:
-        d['maxBytes'] = 10485760,
-    if 'backupCount' not in d:
-        d['backupCount'] = 50,
 
 
 #############
