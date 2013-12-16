@@ -19,7 +19,6 @@ class BannersManager(Manager):
 
 
 class Banners(Orderable):
-    json.dump()
     image = models.ImageField(upload_to='banners')
     url = models.URLField(blank=True, null=True)
     pub_date = models.DateTimeField(verbose_name=u'Data de publicação')
