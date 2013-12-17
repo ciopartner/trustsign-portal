@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
+import base64
 from django.conf import settings
 import requests
 import json
@@ -394,18 +395,49 @@ class CRMClient(object):
 
         return response['id']
 
-    def update_contract(self, crm_hash, status, seal_html=None, certificate_file=None):
+    def set_entry_notes(self, crm_hash):
+        """
+        Cria um note no CRM
+        """
+        response = self.set_entry('Notes', {
+            'name': 'arquivo_zip',
+            'parenty_type': 'Contracts',
+            'parent_id': crm_hash,
+        })
+
+        return response['id']
+
+    def set_note_attachment(self, crm_hash, note_id, arquivo):
+        """
+        Anexa um arquivo à um note
+        """
+        response = self.call_crm('set_note_attachment', [{
+            'id': note_id,
+            'filename': 'certificado.zip',
+            'file': base64.encodestring(arquivo.read()),
+            'related_module_id': crm_hash,
+            'related_module_name': 'Contracts'
+        }])
+
+        return response['id']
+
+    def update_contract(self, crm_hash, status, comodo_order, dominio, start_date, end_date, seal_html, certificate_file):
         data = {
             'id': crm_hash,
-            'status': status
+            'status': status,
+            'start_date': start_date.strftime('%Y-%m-%d'),
+            'end_date': end_date.strftime('%Y-%m-%d'),
+            'name': dominio,
+            'order01_c': comodo_order,
+            'seal_html_c': seal_html
         }
 
-        if seal_html is not None:
-            data['seal_html_c'] = seal_html
+        contract_id = self.set_entry('Contracts', data)
 
-        self.set_entry('Contracts', data)
+        note_id = self.set_entry_notes(crm_hash)
+        attachment_id = self.set_note_attachment(crm_hash, note_id, certificate_file)
 
-        #TODO: enviar ao CRM o certificate_file
+        return contract_id, note_id, attachment_id
 
     def update_or_create_account(self, cliente):
         """
@@ -463,13 +495,13 @@ class CRMClient(object):
 
         log.info('Finalizando a postagem do pedido #%s' % oportunidade.numero_pedido)
 
-    def atualizar_contrato(self, crm_hash, status, seal_html=None, certificate_file=None):
+    def atualizar_contrato(self, crm_hash, status, comodo_order, dominio, start_date, end_date, seal_html, certificate_file):
         log.info('Atualizando o contrato #%s' % crm_hash)
 
         try:
             self.login()
 
-            self.update_contract(crm_hash, status, seal_html, certificate_file)
+            self.update_contract(crm_hash, status, comodo_order, dominio, start_date, end_date, seal_html, certificate_file)
 
             self.logout()
 

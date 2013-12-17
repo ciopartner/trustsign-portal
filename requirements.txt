@@ -41,3 +41,4 @@ django-passwords==0.2.0
 lxml==3.2.4
 suds==0.4
 BeautifulSoup==3.2.1
+python-dateutil==2.2

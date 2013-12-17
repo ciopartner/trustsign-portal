@@ -16,6 +16,7 @@ import requests
 from django.utils.timezone import now
 from ecommerce.website.utils import get_template_email
 from libs.crm.crm import CRMClient
+from libs.ssl_utils import certificate_decode
 
 log = getLogger('portal.certificados.crons')
 
@@ -121,6 +122,11 @@ class CheckEmailJob(CronJobBase):
 
                     emissao = self.get_emissao(subject)
                     emissao.emission_certificate = self.extract_certificate(mail)
+
+                    dados_certificado = certificate_decode(emissao.emission_certificate)
+                    emissao.voucher.ssl_valid_from = dados_certificado['validity']['not_before']
+                    emissao.voucher.ssl_valid_to = dados_certificado['validity']['not_after']
+
                     emissao.emission_mail_attachment_path = self.get_attachment_path(mail)
                     emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
                     emissao.save()
@@ -287,14 +293,19 @@ class AtivaSelosJob(CronJobBase):
         })
 
     def processa_ativado(self, voucher):
-        # TODO: decidir onde atualizar o contrato da emissão, e como enviar o arquivo para o CRM
-        self.atualiza_contrato(voucher, 'valido', seal_html=voucher.get_seal_html)
+        self.atualiza_contrato(voucher, 'valido')
         self.envia_email_cliente(voucher)
 
-    def atualiza_contrato(self, voucher, status, seal_html=None, certificate_file=None):
+    def atualiza_contrato(self, voucher, status):
         try:
             client = CRMClient()
-            client.atualizar_contrato(voucher.crm_hash, status, seal_html, certificate_file)
+            with open(voucher.emissao.emission_mail_attachment_path, 'rb') as certificate_file:
+                dominio = voucher.emissao.emission_url
+                start_date = voucher.ssl_valid_from
+                end_date = voucher.ssl_valid_to
+                seal_html = voucher.get_seal_html
+                client.atualizar_contrato(voucher.crm_hash, status, voucher.comodo_order, dominio, start_date, end_date,
+                                          seal_html, certificate_file)
         except Exception as e:
             log.exception('Ocorreu um erro ao atualizar o contrato do voucher #%s para o status <%s>' % (voucher.crm_hash, status))
             self.envia_email_suporte(voucher, status)
