@@ -5,15 +5,7 @@
     <div class="fix-row-margin escolha-voucher">
         <h2>Escolha o produto disponível e a ação desejada</h2>
         {% if vouchers %}
-            <form action="">
-                {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers %}
-                    <label for="q_id">CNPJ/Razão Social</label><input type="text" name="q" id="q_id"/>
-                {% endif %}
-                <label class="checkbox" for="hide_status_final_id">Exibir Somente Vouchers Disponíveis? <input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/></label>
-                <input type="submit" value="filtrar" class="btn btn-primary span2"/>
-                <div class="clearfix"></div>
-                <hr/>
-            </form>
+            {% include "certificados/includes/filter_form.html" %}
             <table class="table table-bordered table-striped table-vcenter">
                 <tr>
                     <th class="large">Produto</th>
@@ -107,8 +99,14 @@
             {% endif %}
 
         {% else %}
-            <p>Você ainda não possui certificados para emitir.
-                Se você acabou de realizar a compra, aguarde alguns instantes após o pagamento ter sido aprovado.</p>
+            {% if request.GET.q %}
+                {% include "certificados/includes/filter_form.html" %}
+                <a href="/ecommerce/escolha-voucher/" class="btn span2 pull-right">Voltar</a>
+                <h3>Nenhum certificado encontrado para o CPNJ {{ request.GET.q }}</h3>
+            {% else %}
+                <p>Você ainda não possui certificados para emitir.
+                    Se você acabou de realizar a compra, aguarde alguns instantes após o pagamento ter sido aprovado.</p>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}
