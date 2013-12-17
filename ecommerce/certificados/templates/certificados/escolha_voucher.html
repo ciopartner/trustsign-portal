@@ -13,7 +13,9 @@
                     <th>Validade</th>
                     <th>Saldo</th>
                     <th>Pedido</th>
-                    <th>Meu Cliente?</th>
+                    {% if perms.certificados.issue_client_vouchers %}
+                        <th>Meu Cliente?</th>
+                    {% endif %}
                     <th>Status / Ação</th>
                 </tr>
 
@@ -28,16 +30,18 @@
                                 {{ voucher.order_number }}
                             {% endif %}
                         </td>
-                        <td>
-                            {% if voucher.is_my_cliente %}
-                                <img src="{% static "home/img/table-warning.png" %}" alt=""/>
-                            {% endif %}
-                        </td>
+                        {% if perms.certificados.issue_client_vouchers %}
+                            <td>
+                                {% if voucher.is_my_cliente %}
+                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>
+                                {% endif %}
+                            </td>
+                        {% endif %}
                         <td width="70">
                             {% with emissao=voucher.emissao %}
                                 {% if not emissao %}
                                     {% if voucher.has_emissao_url %}
-                                        {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
+                                        {% if voucher.customer_cnpj == user.username or perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
                                             {% if voucher.ssl_product == 'ssl-san' %}
                                                 <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
                                             {% else %}
@@ -51,7 +55,7 @@
                                     Em processamento
                                 {% elif emissao.emitido %}
 
-                                    {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
+                                    {% if voucher.customer_cnpj == user.username or perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
 
                                         <div class="btn-group btn-block">
                                             <button class="btn dropdown-toggle span2 btn-success no-uppercase" style="margin: 0" data-toggle="dropdown">Ação <span class="caret"></span></button>

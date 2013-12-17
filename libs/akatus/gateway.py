@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from copy import deepcopy
 from decimal import Decimal
 import json
 from django.conf import settings
@@ -14,6 +15,11 @@ import re
 from ecommerce.website.utils import xml_to_dict
 
 log = logging.getLogger('libs.akatus.gateway')
+
+
+pattern_safe_data_carrinho = re.compile(r'<transacao>(.*)<numero>(\d{10,})(\d{4})</numero>(.*)'
+                                        r'<codigo_de_seguranca>(\d+)</codigo_de_seguranca>(.*)</transacao>',
+                                        flags=re.DOTALL | re.MULTILINE)
 
 
 class Akatus(object):
@@ -39,7 +45,17 @@ class Akatus(object):
 
     def call_server(self, method, data):
         url, tipo = self.get_method_details(method)
-        log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, smart_unicode(data)))
+
+        data_secure = smart_unicode(deepcopy(data))
+
+        if method == 'carrinho':
+            def replace_x(match):
+                a, b, c, d, e, f = match.groups()
+                pattern = '<transacao>{}<numero>{}{}</numero>{}<codigo_de_seguranca>{}</codigo_de_seguranca>{}</transacao>'
+                return pattern.format(a, 'X' * len(b), c, d, 'X' * len(e), f)
+            data_secure = re.sub(pattern_safe_data_carrinho, replace_x, data_secure)
+
+        log.debug('Request via {} para {}\nDados do Request: {}'.format(tipo, url, data_secure))
         if tipo == 'GET':
             response = requests.get(url, params=data)
         elif tipo == 'POST':
@@ -54,7 +70,7 @@ class Akatus(object):
         if response.status_code != 200:
             log.error('URL chamada: {}'.format(url))
             log.error('HTTP Response retornado da Akatus: {}'.format(response.status_code))
-            log.error('Dados enviados para a Akatus via {}: {}'.format(method, smart_unicode(data)))
+            log.error('Dados enviados para a Akatus via {}: {}'.format(method, data_secure))
             log.error('Dados retornados da Akatus via {}: {}'.format(method, smart_unicode(resposta)))
             raise GatewayError('Ocorreu um erro durante a chamada do gateway')
 

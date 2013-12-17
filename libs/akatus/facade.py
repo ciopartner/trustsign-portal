@@ -73,7 +73,7 @@ class Facade(object):
             }],
             'telefones': [{
                 'tipo': 'comercial',
-                'numero': int(limpa_telefone(profile.callback_telefone_principal) or 0)
+                'numero': limpa_telefone(profile.callback_telefone_principal)
             }]
         }
 
@@ -93,15 +93,15 @@ class Facade(object):
 
         return {
             'tipo': 'akatus-creditcard',
-            'numero': int(bankcard.number.replace('-', '')),
+            'numero': bankcard.number.replace('-', ''),
             'parcelas': parcelas,
-            'codigo_de_seguranca': int(bankcard.cvv),
+            'codigo_de_seguranca': bankcard.cvv,
             'expiracao': bankcard.expiry_month(),
             'desconto': 0.0,
             'peso': 0.0,
             'frete': 0.0,
             'moeda': 'BRL',
-            'referencia': str(order_number),
+            'referencia': order_number,
             'meio_de_pagamento': meio_de_pagamento,
 
             'portador': {
