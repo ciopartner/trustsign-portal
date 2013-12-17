@@ -551,7 +551,7 @@ class EscolhaVoucherView(ListView):
     def get_queryset(self):
         qs = Voucher.objects.select_related('emissao')
 
-        query = self.request.GET.get('q')
+        query = limpa_cnpj(self.request.GET.get('q'))
         if query:
             qs = qs.filter(Q(customer_cnpj__icontains=query) | Q(customer_companyname__icontains=query))
 
