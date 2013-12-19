@@ -1,0 +1,254 @@
+{% extends "oscar/dashboard/users/detail.html" %}
+{% load url from future %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block dashboard_content %}
+    <div class="row-fluid">
+        <div class="">
+            <div class="table-header">
+                <h2>{% trans "General" %}</h2>
+            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <td>{{ customer.get_full_name|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Email" %}</th>
+                    <td>{{ customer.email }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Active" %}?</th>
+                    <td>
+                        {% if customer.is_active %}Yes{% else %}No{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{% trans "Superuser" %}?</th>
+                    <td>{{ customer.is_superuser }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Staff" %}?</th>
+                    <td>{{ customer.is_staff }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Last login" %}</th>
+                    <td>{{ customer.last_login }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Date joined" %}</th>
+                    <td>{{ customer.date_joined }}</td>
+                </tr>
+                {% with record=customer.userrecord %}
+                <tr>
+                    <th>{% trans "Products viewed" %}</th>
+                    <td>{{ record.num_product_views|default:0 }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Number of orders" %}</th>
+                    <td>{{ record.num_orders|default:0 }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Number of ordered items" %}</th>
+                    <td>{{ record.num_order_items|default:0 }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Total spent" %}</th>
+                    <td>{{ record.total_spent|default:0|currency }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Reviews written" %}</th>
+                    <td>{{ customer.reviews.count }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Date joined" %}</th>
+                    <td>{{ customer.date_joined }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Actions" %}</th>
+                    <td>
+                        <form id="password_reset_form" action="{% url 'dashboard:user-password-reset' pk=customer.id %}" method="post" class="form-horizontal">
+                            {% csrf_token %}
+                            {% include 'partials/form_fields.html' %}
+                            <button type="submit" class="btn btn-primary btn-large">{% trans 'Send password reset email' %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endwith %}
+            </table>
+        </div>
+
+        <div class="tabbable dashboard">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#user_orders" data-toggle="tab">{% trans "Orders" %}</a></li>
+                <li><a href="#user_addresses" data-toggle="tab">{% trans "Addresses" %}</a></li>
+                <li><a href="#user_reviews" data-toggle="tab">{% trans "Reviews" %}</a></li>
+                <li><a href="#user_profile" data-toggle="tab">{% trans "Profile" %}</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="user_orders" class="tab-pane active">
+                    <table class="table table-striped table-bordered table-hover">
+                        <caption>{% trans "Orders" %}</caption>
+                        {% if customer.orders.count %}
+                            <tr>
+                                <th>{% trans "Order Number" %}</th>
+                                <th>{% trans "Num items" %}</th>
+                                <th>{% trans "Total value" %}</th>
+                                <th>{% trans "Date placed" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th></th>
+                            </tr>
+                            {% for order in customer.orders.all %}
+                                <tr>
+                                    <td>{{ order.number }}</td>
+                                    <td>{{ order.num_items }}</td>
+                                    <td>{{ order.basket_total_incl_tax|currency }}</td>
+                                    <td>{{ order.date_placed|date:"d/m/y H:s" }}</td>
+                                    <td>{{ order.status }}</td>
+                                    <td><a href="{% url 'dashboard:order-detail' order.number %}" class="btn btn-info">{% trans "View" %}</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td>{% trans "This customer has not placed any orders yet." %}</td></tr>
+                        {% endif %}
+                    </table>
+
+                </div>
+
+                <div id="user_addresses" class="tab-pane">
+                    <h2>{% trans "Addresses" %}</h2>
+                    <div class="row-fluid">
+                        {% for address in customer.addresses.all %}
+
+                            <div class="span3">
+                                <div class="well well-info">
+                                    {% for field in address.active_address_fields %}
+                                        {{ field }}<br/>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% if forloop.counter|divisibleby:4 %}
+                            </div>
+                            {% if not forloop.last %}
+                                <div class="row-fluid">
+                                {% endif %}
+                            {% endif %}
+                        {% empty %}
+                            <p>{% trans "This customer has not saved any addresses." %}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div id="user_reviews" class="tab-pane">
+                    <table class="table table-striped table-bordered table-hover">
+                        <caption>{% trans "Reviews" %}</caption>
+                        {% if customer.reviews.count %}
+                            <tr>
+                                <th>{% trans "Product ID" %}</th>
+                                <th>{% trans "Score" %}</th>
+                                <th>{% trans "Title" %}</th>
+                                <th>{% trans "Body" %}</th>
+                                <th>{% trans "Date created" %}</th>
+                            </tr>
+                            {% for review in customer.reviews.all %}
+                                <tr>
+                                    <td>{{ review.product_id }}</td>
+                                    <td>{{ review.score }}</td>
+                                    <td>{{ review.title }}</td>
+                                    <td>{{ review.body }}</td>
+                                    <td>{{ review.date_created }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td>{% trans "This customer has not written any reviews yet." %}</td></tr>
+                        {% endif %}
+                    </table>
+
+                </div>
+
+                <div id="user_profile" class="tab-pane">
+                    {% with profile=user.get_profile %}
+                        <table class="table table-striped table-bordered table-hover">
+                            <caption>{% trans "Profile" %}</caption>
+                            <tr>
+                                <th>Nome</th>
+                                <td>{{ profile.callback_nome }}</td>
+                            </tr>
+                            <tr>
+                                <th>Sobrenome</th>
+                                <td>{{ profile.callback_sobrenome }}</td>
+                            </tr>
+                            <tr>
+                                <th>Email Corporativo</th>
+                                <td>{{ profile.callback_email_corporativo }}</td>
+                            </tr>
+                            <tr>
+                                <th>Telefone</th>
+                                <td>{{ profile.callback_telefone_principal }}</td>
+                            </tr>
+                            <tr>
+                                <th>Data de Nascimento</th>
+                                <td>{{ profile.date_of_birth }}</td>
+                            </tr>
+                            <tr>
+                                <th>E-Mail p/ envio da NFe:</th>
+                                <td>{{ profile.email_nfe }}</td>
+                            </tr>
+                            <tr>
+                                <th>CNPJ</th>
+                                <td>{{ profile.cliente_cnpj }}</td>
+                            </tr>
+                            <tr>
+                                <th>Razão Social</th>
+                                <td>{{ profile.cliente_razaosocial }}</td>
+                            </tr>
+                            <tr>
+                                <th>Nome Fantasia</th>
+                                <td>{{ profile.cliente_nomefantasia }}</td>
+                            </tr>
+                            <tr>
+                                <th>Endereço</th>
+                                <td>{{ profile.cliente_logradouro }}, {{ profile.cliente_numero }}</td>
+                            </tr>
+                            <tr>
+                                <th>Complemento</th>
+                                <td>{{ profile.cliente_complemento }}</td>
+                            </tr>
+                            <tr>
+                                <th>CEP</th>
+                                <td>{{ profile.cliente_cep }}</td>
+                            </tr>
+                            <tr>
+                                <th>Bairro</th>
+                                <td>{{ profile.cliente_bairro }}</td>
+                            </tr>
+                            <tr>
+                                <th>Cidade</th>
+                                <td>{{ profile.cliente_cidade }}</td>
+                            </tr>
+                            <tr>
+                                <th>UF</th>
+                                <td>{{ profile.cliente_uf }}</td>
+                            </tr>
+                            <tr>
+                                <th>Situação Cadastral</th>
+                                <td>{{ profile.cliente_situacao_cadastral }}</td>
+                            </tr>
+                            <tr>
+                                <th>Tipo do Negócio:</th>
+                                <td>{{ profile.cliente_fonte_potencial }}</td>
+                            </tr>
+                            <tr>
+                                <th>É um E-Commerce?</th>
+                                <td>{% if profile.cliente_ecommerce %}Sim{% else %}Não{% endif %}</td>
+                            </tr>
+                        </table>
+                    {% endwith %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
