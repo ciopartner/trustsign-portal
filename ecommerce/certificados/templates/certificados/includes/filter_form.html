@@ -1,20 +1,23 @@
 <form action="">
     <table class="table table-bordered table-striped" width="100%">
         <tr>
+            <th>FILTRO</th>
+            <th>VALOR</th>
+        </tr>
+        <tr>
             {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers %}
                 <th>
                     CNPJ/Razão Social
                 </th>
+                <td width="65%"><input type="text" name="q" id="q_id" class="input-block-level"/></td>
             {% endif %}
-            <th>Exibir Somente Vouchers Disponíveis?</th>
-            <th></th>
         </tr>
         <tr>
-            {% if perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers %}
-                <td><input type="text" name="q" id="q_id" class="input-block-level mask-cnpj"/></td>
-            {% endif %}
-            <td><input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/></td>
-            <td width="70"><input type="submit" value="filtrar" class="btn btn-primary span1" style="width: 87px;"/></td>
+            <th>Exibir Somente Vouchers Disponíveis?</th>
+            <td>
+                <input type="submit" value="filtrar" class="btn btn-primary pull-right" style="width: 86px"/>
+                <input type="checkbox" name="hide_status_final" value="1" id="hide_status_final_id"/>
+            </td>
         </tr>
     </table>
 

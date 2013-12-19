@@ -1,5 +1,5 @@
 {% extends 'certificados/wizard_base.html' %}
-{% load static %}
+{% load static cnpj_filter %}
 
 {% block content %}
     <div class="fix-row-margin escolha-voucher">
@@ -9,12 +9,13 @@
             <table class="table table-bordered table-striped table-vcenter">
                 <tr>
                     <th class="large">Produto</th>
+                    <th>CNPJ</th>
                     <th>Linha</th>
                     <th>Validade</th>
                     <th>Saldo</th>
                     <th>Pedido</th>
                     {% if perms.certificados.issue_client_vouchers %}
-                        <th>Meu Cliente?</th>
+                        <th>Vendedor</th>
                     {% endif %}
                     <th>Status / Ação</th>
                 </tr>
@@ -22,6 +23,7 @@
                 {% for voucher in vouchers %}
                     <tr data-product-code="{{ voucher.ssl_product }}" data-status="{% if voucher.emissao.is_complemento_disponivel %}disponivel{% else %}utilizado{% endif %}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
                         <td>{{ voucher.get_ssl_product_display }}</td>
+                        <td>{{ voucher.customer_cnpj|format_cnpj }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
                         <td class="saldo">1</td>
@@ -32,9 +34,16 @@
                         </td>
                         {% if perms.certificados.issue_client_vouchers %}
                             <td>
-                                {% if voucher.is_my_cliente %}
-                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>
-                                {% endif %}
+{#                                {% if voucher.is_my_cliente %}#}
+{#                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>#}
+{#                                {% endif %}#}
+                                <div{% if not voucher.is_my_cliente %} style="opacity: 0.5"{% endif %}>
+                                    {% if voucher.crm_user %}
+                                        {{ voucher.crm_user }}
+                                    {% else %}
+                                        --
+                                    {% endif %}
+                                </div>
                             </td>
                         {% endif %}
                         <td width="70">
@@ -102,7 +111,7 @@
             {% if request.GET.q %}
                 {% include "certificados/includes/filter_form.html" %}
                 <a href="/ecommerce/escolha-voucher/" class="btn span2 pull-right">Voltar</a>
-                <h3>Nenhum certificado encontrado para o CPNJ {{ request.GET.q }}</h3>
+                <h3>Nenhum certificado encontrado para o CPNJ/Razão Social {{ request.GET.q }}</h3>
             {% else %}
                 <p>Você ainda não possui certificados para emitir.
                     Se você acabou de realizar a compra, aguarde alguns instantes após o pagamento ter sido aprovado.</p>
