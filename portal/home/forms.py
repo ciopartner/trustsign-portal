@@ -5,10 +5,13 @@ from mezzanine.accounts import get_profile_model
 from mezzanine.accounts.forms import ProfileForm as ProfileFormMezzanine
 from django.utils.translation import ugettext as _
 from mezzanine.core.forms import Html5Mixin
+import re
 from ecommerce.website.utils import limpa_cnpj
 
 User = get_user_model()
 Profile = get_profile_model()
+
+cnpj_pattern = re.compile(r'\d{2}(\.\d{3}){2}/\d{4}-\d{2}')
 
 
 class LoginForm(Html5Mixin, Form):
@@ -24,7 +27,9 @@ class LoginForm(Html5Mixin, Form):
         are valid, store the authenticated user for returning via save().
         """
         username = self.cleaned_data.get("username")
-        username = limpa_cnpj(username)
+
+        if re.match(cnpj_pattern, username):
+            username = limpa_cnpj(username)
         password = self.cleaned_data.get("password")
         self._user = authenticate(username=username, password=password)
         if self._user is None:
