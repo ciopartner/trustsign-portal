@@ -19,7 +19,7 @@ log = logging.getLogger('libs.akatus.gateway')
 
 pattern_safe_data_carrinho = re.compile(r'<transacao>(.*)<numero>(\d{10,})(\d{4})</numero>(.*)'
                                         r'<codigo_de_seguranca>(\d+)</codigo_de_seguranca>(.*)</transacao>',
-                                        flags=re.DOTALL | re.MULTILINE)
+                                        flags=re.DOTALL | re.MULTILINE | re.UNICODE)
 
 
 class Akatus(object):

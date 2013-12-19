@@ -42,11 +42,7 @@
                                 {% if not emissao %}
                                     {% if voucher.has_emissao_url %}
                                         {% if voucher.customer_cnpj == user.username or perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
-                                            {% if voucher.ssl_product == 'ssl-san' %}
-                                                <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="/portal/suporte-trustsign/emissao-de-certificado-tipo-san/">EMITIR</a>
-                                            {% else %}
-                                                <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
-                                            {% endif %}
+                                            <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
                                         {% else %}
                                             Sem Autorização
                                         {% endif %}
