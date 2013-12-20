@@ -23,7 +23,9 @@
                 {% for voucher in vouchers %}
                     <tr data-product-code="{{ voucher.ssl_product }}" data-status="{% if voucher.emissao.is_complemento_disponivel %}disponivel{% else %}utilizado{% endif %}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
                         <td>{{ voucher.get_ssl_product_display }}</td>
-                        <td>{{ voucher.customer_cnpj|format_cnpj }}</td>
+                        <td>
+                            <div title="{{ voucher.customer_companyname }}">{{ voucher.customer_cnpj|format_cnpj }}</div>
+                        </td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
                         <td class="saldo">1</td>
@@ -63,7 +65,7 @@
                                     {% if voucher.customer_cnpj == user.username or perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
 
                                         <div class="btn-group btn-block">
-                                            <button class="btn dropdown-toggle span2 btn-success no-uppercase" style="margin: 0" data-toggle="dropdown">Ação <span class="caret"></span></button>
+                                            <button class="btn dropdown-toggle span1 btn-success no-uppercase" style="margin: 0" data-toggle="dropdown">Ação <span class="caret"></span></button>
                                             <ul class="dropdown-menu">
                                                 <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
                                                 <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>
