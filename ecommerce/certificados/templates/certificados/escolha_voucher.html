@@ -53,7 +53,7 @@
                                 {% if not emissao %}
                                     {% if voucher.has_emissao_url %}
                                         {% if voucher.customer_cnpj == user.username or perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
-                                            <a class="btn btn-success span1 no-uppercase" style="margin: 0" href="{{ voucher.get_emissao_url }}">EMITIR</a>
+                                            <a class="btn btn-success span1 no-uppercase" style="margin: 0; width: 60px" href="{{ voucher.get_emissao_url }}">EMITIR</a>
                                         {% else %}
                                             Sem Autorização
                                         {% endif %}
@@ -65,7 +65,7 @@
                                     {% if voucher.customer_cnpj == user.username or perms.certificados.issue_all_vouchers or perms.certificados.issue_client_vouchers and voucher.is_my_client %}
 
                                         <div class="btn-group btn-block">
-                                            <button class="btn dropdown-toggle span1 btn-success no-uppercase" style="margin: 0" data-toggle="dropdown">Ação <span class="caret"></span></button>
+                                            <button class="btn dropdown-toggle span1 btn-success no-uppercase" style="margin: 0; width: 60px" data-toggle="dropdown">Ação <span class="caret"></span></button>
                                             <ul class="dropdown-menu">
                                                 <li><a href="{{ voucher.get_reemissao_url }}">Reemitir</a></li>
                                                 <li><a href="{{ voucher.get_revogacao_url }}">Revogar</a></li>
