@@ -186,15 +186,22 @@ class Voucher(Model):
 
     @property
     def sla_estourado(self):
-        return self.order_date + timedelta(hours=self.tempo_em_espera) < timezone.now()
+        try:
+            if not self.emissao:
+                return False
+        except Emissao.DoesNotExists:
+            return False
+        return self.emissao.requestor_timestamp + timedelta(hours=self.tempo_em_espera) < timezone.now()
 
     @property
     def sla_since(self):
         try:
-            diff = timezone.now() - self.order_date
-            return int(diff.total_seconds() / 3600)  # quantidade de horas passadas
-        except Emissao.DoesNotExist:
+            if not self.emissao:
+                return 0
+        except Emissao.DoesNotExists:
             return 0
+        diff = timezone.now() - self.emissao.requestor_timestamp
+        return int(diff.total_seconds() / 3600)  # quantidade de horas passadas
 
     def has_emissao_url(self):
         return self.ssl_product in(
@@ -594,3 +601,4 @@ def pedido_consulta_knu(sender, instance, **kwargs):
             instance.cliente_pais = 'BR'
         else:
             raise Exception('Ocorreu um erro ao consultar seu CNPJ: %s' % r.desc_erro)
+
