@@ -210,12 +210,14 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
 
     def _valida_emission_dcv_emails(self, valor, fields):
         dominios = fields.get('emission_urls')
-
         if dominios:
             dominios = dominios.split(' ')
         else:
-            csr = self.get_csr_decoded(valor)
+            csr = self.get_csr_decoded(fields.get('emission_csr'))
             dominios = csr.get('dnsNames', [])
+
+            if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC and 'emission_url' in fields:
+                dominios.insert(0, fields['emission_url'])
 
         emails = valor.split(' ')
 

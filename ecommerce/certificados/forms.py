@@ -148,13 +148,19 @@ class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, Valid
 
     def get_dict_domains_email(self):
         if not hasattr(self, '_dict_domains_email'):
-            d = OrderedDict()
-            for dominio in self.get_domains_csr():
+
+            if self.instance and self.instance.emission_urls:
+                dominios = self.instance.emission_urls.split(' ')
+            else:
+                dominios = self.get_domains_csr()
+
+            self._dict_domains_email = OrderedDict()
+            for dominio in dominios:
                 if is_nome_interno(dominio):
-                    d[dominio] = []
+                    self._dict_domains_email[dominio] = []
                 else:
-                    d[dominio] = get_emails_validacao(dominio)
-            self._dict_domains_email = d
+                    self._dict_domains_email[dominio] = get_emails_validacao(dominio)
+
         return self._dict_domains_email
 
 
