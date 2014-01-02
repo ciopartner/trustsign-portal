@@ -132,7 +132,7 @@ class CheckEmailJob(CronJobBase):
                     emissao.save()
 
                 except (IndexError, AttributeError):
-                    log.error('Recebeu e-mail fora do padrão (#{})'.format(subject))
+                    log.error('Recebeu e-mail fora do padrão (#{})'.format(subject), exc_info=1)
                 except Emissao.DoesNotExist:
                     log.error('Recebeu e-mail com comodo order inexistente no banco (#{}) '.format(subject))
         finally:
