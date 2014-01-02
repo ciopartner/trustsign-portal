@@ -6,6 +6,20 @@
 
     <p class="as-text1 bm20 tm30" style="text-align: center;">JÁ SÃO QUASE 1.000 CLIENTES ATIVOS E SATISFEITOS, FAÇA COMO ELES!</p>
 
+    {% if testimonials %}
+    <section id="testimonials">
+        <ul>
+            {% for testimonial in testimonials %}
+                <li data-seconds="{{ testimonial.time }}">
+                    <div class="text">{{ testimonial.testimonial }}</div>
+                    <div class="name">{{ testimonial.name }}</div>
+                    <div class="designation">{{ testimonial.designation }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
     <section style=" width:100%; display:inline-block;">
         <ul class="principais-clientes" style="display: inline-block; width:100%;">
             <li>

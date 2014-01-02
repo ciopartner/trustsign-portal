@@ -2275,3 +2275,32 @@ h3.title{
 #id_csr{
     font-size: 12px;
 }
+#testimonials{
+    height: 100px;
+}
+#testimonials li {
+    color: #9A9A9A;
+    font-size: 105%;
+    list-style: none outside none;
+    margin: 0 auto;
+    padding: 20px 0;
+    width: 600px;
+    margin-left: 110px;
+}
+
+#testimonials li:before {
+    content: "“";
+    font-family: Times New Roman,serif;
+    font-size: 230px;
+    margin-left: -110px;
+    margin-top: 60px;
+    position: absolute;
+}
+
+#testimonials li .name{
+    margin-top: 10px;
+    font-weight: bold;
+}
+#testimonials li .designation{
+    font-style: italic;
+}

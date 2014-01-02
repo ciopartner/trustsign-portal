@@ -8,6 +8,7 @@ from mezzanine.utils.views import render
 from django.utils.translation import ugettext as _
 from .forms import LoginForm
 from portal.banners.models import Banners
+from portal.testimonials.models import Testimonial
 
 
 def login(request, template="accounts/login.html"):
@@ -36,5 +37,6 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['banners'] = Banners.objects.get_in_date()
+        context['testimonials'] = Testimonial.objects.all()
 
         return context

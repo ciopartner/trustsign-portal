@@ -358,3 +358,36 @@ $login_cnpj.on('keydown keyup keypress', function(){
         $(this).val($(this).val().replace("_.___.___/____-__",""));
     }
 });
+
+
+
+$testimonials = $("#testimonials li");
+count = 0;
+interval = null;
+
+max_height = 0;
+
+$testimonials.each(function(){
+    if($(this).outerHeight() > max_height)
+        max_height = $(this).outerHeight();
+});
+
+$testimonials.hide()
+
+$("#testimonials").height(max_height);
+
+function change_testimonial(){
+    clearInterval(interval);
+    $testimonial = $testimonials.eq(count % $testimonials.length);
+
+    count++;
+
+    $testimonials.not($testimonial).fadeOut(200,function(){
+        $testimonial.fadeIn(200, function(){
+            interval = setTimeout(change_testimonial, parseInt($testimonial.data('seconds')) * 1000);
+        })
+
+    });
+}
+
+change_testimonial()
