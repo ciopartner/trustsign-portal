@@ -8,6 +8,10 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         """
         existia uma app chamada ferramentas que passou para o suporte, se migrar do zero essa migration não vai funcionar
+        Para corrigir o problema, ir no psql e digitar:
+        # CREATE TABLE "ferramentas_ferramentaspage" ("page_ptr_id" integer NOT NULL PRIMARY KEY);
+        # ALTER TABLE ferramentas_ferramentaspage OWNER TO website;
+        onde website é o owner do banco de dados
         """
         db.rename_table('ferramentas_ferramentaspage', 'suporte_ferramentaspage')
 
