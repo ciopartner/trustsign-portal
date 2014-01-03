@@ -32,7 +32,7 @@ def product_processor(request, page):
 
            inner join partner_stockrecord s  on s.product_id = cp.id
            left join offer_fixedpriceofferitem ooi on ooi.product_id=cp.id
-           left join offer_fixedpriceoffer oo on oo.id=ooi.offer_id and oo.status='Open' and oo.start_datetime < DATETIME('now') and oo.end_datetime > DATETIME('now')
+           left join offer_fixedpriceoffer oo on oo.id=ooi.offer_id and oo.status='Open' and oo.start_datetime < NOW() and oo.end_datetime > NOW()
         where cpa.code='ssl_code' and cpa_line.code='ssl_line' and cpa_term.code='ssl_term' and cao.option=%s
     '''
 
