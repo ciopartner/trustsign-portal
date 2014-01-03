@@ -113,6 +113,9 @@ class TrustSignProfile(Model):
 
 
 def create_profile(sender, **kwargs):
+    # Cai fora se for uma carga via loaddata:
+    if kwargs.get('raw'):
+        return
     if kwargs["created"]:
         profile = TrustSignProfile(user=kwargs['instance'])
         profile.save()
