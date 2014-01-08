@@ -169,8 +169,7 @@ class CheckEmailJob(CronJobBase):
 
     def extract_certificate(self, mail):
         text_content = str(list(mail.get_payload()[0].walk())[1])
-        return re.match('.*(-----BEGIN (CERTIFICATE|PKCS7)-----.*-----END \2-----).*',
-                        text_content, re.S).groups(0)[0]
+        return re.match(r'.*(-----BEGIN (CERTIFICATE|PKCS7)-----.*-----END \2-----).*', text_content, re.S).groups()[0]
 
     def extract_attachment(self, part, counter):
         filename = part.get_filename()
