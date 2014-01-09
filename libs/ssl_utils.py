@@ -2,7 +2,11 @@
 from __future__ import unicode_literals
 
 from dateutil import parser
+from django.core.files.temp import NamedTemporaryFile
+from subprocess import Popen, PIPE
 import re
+import os
+
 
 pattern_serial_number = r'(?=.*?Serial Number: (.*?$))?'
 pattern_subject = r'(?=.*?Subject: (?=.*?C=(.*?)(?:,|$|/))?(?=.*?ST?=(.*?)(?:,|$|/))?(?=.*?L=(.*?)(?:,|$|/))?(?=.*?O=(.*?)(?:,|$|/))?(?=.*?OU=(.*?)(?:,|$|/))?(?=.*?CN=(.*?)(?:,|$|/))?)?'
@@ -21,7 +25,34 @@ class SSLCertificateDecodeError(Exception):
     pass
 
 
-def certificate_decode(certificado):
+def cria_arquivo_temporario(conteudo, delete=False):
+    file_in = NamedTemporaryFile(delete=delete)
+    file_in.write(conteudo)
+    path_in = file_in.name
+    file_in.close()
+
+    return path_in
+
+
+def run_command(comando):
+    p = Popen(comando, shell=True, stdin=PIPE, stdout=PIPE, close_fds=True)
+    (write, read) = (p.stdin, p.stdout)
+    write.close()
+
+    return read.read()
+
+
+def certificate_decode(raw_certificado):
+
+    path_in = cria_arquivo_temporario(raw_certificado)
+
+    if 'PKCS7' in raw_certificado:
+        certificado = run_command('openssl pkcs7 -in {} -print_certs -text -noout'.format(path_in))
+    else:
+        certificado = run_command('openssl x509 -in {} -text -noout'.format(path_in))
+
+    os.remove(path_in)
+
     m = re.match(pattern_completa, certificado)
     if m:
         g = m.groups()
