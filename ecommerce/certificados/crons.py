@@ -66,7 +66,7 @@ class EnviaComodoJob(CronJobBase):
                             emissao.emission_status = emissao.STATUS_REEMISSAO_ENVIADO_COMODO
                     else:
                         try:
-                            comodo.revoga_certificado(emissao.revogacao)
+                            comodo.revoga_certificado(Revogacao.objects.get(crm_hash=emissao.crm_hash))
                             emissao.status = Emissao.STATUS_REVOGACAO_ENVIADO_COMODO
 
                         except Revogacao.DoesNotExist:
