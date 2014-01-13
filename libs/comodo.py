@@ -41,6 +41,16 @@ CODIGOS_PRODUTOS = {
 }
 
 
+def log_safe_dict(original_dict, keys):
+    d = original_dict.copy()
+    for key in keys:
+        if key in d:
+            d[key] = '******'
+    return d
+
+EXCLUDE_KEYS = ['loginName', 'loginPassword']
+
+
 class ComodoError(Exception):
     code = None
     comodo_message = None
@@ -113,7 +123,7 @@ def envia_email_erro(tipo, voucher, erro_codigo, erro_mensagem):
         },
     }
 
-    send_template_email(settings.TRUSTSIGN_SISTEMA_EMAIL, subject, template, context)
+    send_template_email([settings.TRUSTSIGN_SISTEMA_EMAIL], subject, template, context)
 
 
 def emite_certificado(emissao):
@@ -176,7 +186,7 @@ def emite_certificado(emissao):
         r = url_parse(response.text)
 
         if r['errorCode'] != '0':
-            log.error('ERRO EMISSAO > params: %s | response: %s' % (params, r))
+            log.error('ERRO EMISSAO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('emissão', voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
@@ -206,11 +216,11 @@ def revoga_certificado(revogacao):
         r = url_parse(response.text)
 
         if r['errorCode'] != '0':
-            log.error('ERRO REVOGAÇÃO > params: %s | response: %s' % (params, r))
+            log.error('ERRO REVOGAÇÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('revogação', revogacao.emission.voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
-            log.info('REVOGAÇÃO > params: %s | response: %s' % (params, r))
+            log.info('REVOGAÇÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
 
@@ -239,11 +249,11 @@ def reemite_certificado(emissao):
         r = url_parse(response.text)
 
         if r['errorCode'] != '0':
-            log.error('ERRO REEMISSÃO > params: %s | response: %s' % (params, r))
+            log.error('ERRO REEMISSÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('reemissão', emissao.voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
-            log.info('REEMISSÃO > params: %s | response: %s' % (params, r))
+            log.info('REEMISSÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
     except Exception as e:
@@ -286,11 +296,11 @@ def emite_jre_cs(emissao):
         r = url_parse(response.text)
 
         if r['errorCode'] != '0':
-            log.error('ERRO EMISSÃO JRE/CS > params: {} | response: {}'.format(params, r))
+            log.error('ERRO EMISSÃO JRE/CS > params: {} | response: {}'.format(log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('emissão', emissao.voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
 
-        log.info('EMISSÂO JRE/CS > params: {} | response: {}'.format(params, r))
+        log.info('EMISSÂO JRE/CS > params: {} | response: {}'.format(log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
     except Exception as e:

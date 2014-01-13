@@ -11,6 +11,7 @@ import requests
 from unicodedata import normalize
 from nltk import metrics
 from logging import getLogger
+from ecommerce.certificados.crons import chunks
 
 
 log = getLogger('portal.suporte.utils')
@@ -41,6 +42,9 @@ regex_ou = re.compile(r'OU=(.+?)([,/]|$)')
 regex_cn = re.compile(r'CN=(.+?)([,/]|$)')
 regex_email = re.compile(r'emailAddress=(.+?)([,/]|$)')
 
+pattern_csr = r'-----BEGIN CERTIFICATE REQUEST-----(.*)-----END CERTIFICATE REQUEST-----'
+regex_csr = re.compile(pattern_csr, flags=re.DOTALL | re.MULTILINE)
+
 
 def decode_csr(csr):
 
@@ -57,7 +61,16 @@ def decode_csr(csr):
 
     }
 
-    path_in = cria_arquivo_temporario(csr)
+    m = re.match(regex_csr, csr)  # retira ---- begin/end certificate request ----
+    if not m:
+        return {
+            'ok': False
+        }
+    clean_csr = re.sub(r'\s', '', m.groups()[0])  # retira espaços e quebras de linha
+    clean_csr = '\n'.join(chunks(clean_csr, 64))  # quebra em linhas de 64 chars
+    clean_csr = '-----BEGIN CERTIFICATE REQUEST-----\n{}\n-----END CERTIFICATE REQUEST-----'.format(clean_csr)
+
+    path_in = cria_arquivo_temporario(clean_csr)
 
     resposta = run_command('openssl req -in %s -noout -text | grep "DNS\|Subject:\|Key:"' % path_in)
 

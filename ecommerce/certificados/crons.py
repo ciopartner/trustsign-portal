@@ -66,7 +66,7 @@ class EnviaComodoJob(CronJobBase):
                             emissao.emission_status = emissao.STATUS_REEMISSAO_ENVIADO_COMODO
                     else:
                         try:
-                            comodo.revoga_certificado(emissao.revogacao)
+                            comodo.revoga_certificado(Revogacao.objects.get(crm_hash=emissao.crm_hash))
                             emissao.status = Emissao.STATUS_REVOGACAO_ENVIADO_COMODO
 
                         except Revogacao.DoesNotExist:
@@ -169,8 +169,7 @@ class CheckEmailJob(CronJobBase):
 
     def extract_certificate(self, mail):
         text_content = str(list(mail.get_payload()[0].walk())[1])
-        return re.match('.*(-----BEGIN (CERTIFICATE|PKCS7)-----.*-----END \2-----).*',
-                        text_content, re.S).groups(0)[0]
+        return re.match(r'.*(-----BEGIN (CERTIFICATE|PKCS7)-----.*-----END \2-----).*', text_content, re.S).groups()[0]
 
     def extract_attachment(self, part, counter):
         filename = part.get_filename()

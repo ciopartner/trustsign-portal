@@ -1,5 +1,5 @@
 {% extends 'customer/emails/base.html' %}
-{% load cnpj_filter %}
+{% load cnpj_filter i18n %}
 
 {% block body %}
     <p style="font-size: 12px; color: #666666"><font face="Tahoma"><b>Usuário:</b> {{ user|format_cnpj }}</font></p>
