@@ -216,9 +216,11 @@ class ValidateEmissaoValidacaoEmailMultiplo(object):
             csr = self.get_csr_decoded(fields.get('emission_csr'))
             dominios = csr.get('dnsNames', [])
 
-            url = fields['emission_url']
+            voucher = self.get_voucher()
 
-            if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC and 'emission_url' in fields and url not in dominios:
+            url = csr['CN'] if voucher.ssl_product == Voucher.PRODUTO_MDC else fields['emission_url']
+
+            if url and url not in dominios:
                 dominios.insert(0, url)
 
         emails = valor.split(' ')
