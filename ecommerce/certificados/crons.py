@@ -142,6 +142,7 @@ class CheckEmailJob(CronJobBase):
         from ecommerce.certificados.models import Emissao
 
         comodo_order = self.extract_comodo_order(subject)
+        log.debug('Comodo order: {}'.format(comodo_order))
         emissao = Emissao.objects.select_related('voucher').get(comodo_order=comodo_order)
 
         if emissao:
