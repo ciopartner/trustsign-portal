@@ -1,8 +1,8 @@
 {% extends 'customer/emails/base.html' %}
-{% load cnpj_filter i18n %}
+{% load cnpj_filter i18n currency_filters %}
 
 {% block body %}
-    <p style="font-size: 12px; color: #666666"><font face="Tahoma"><b>Usuário:</b> {{ user|format_cnpj }}</font></p>
+    <p style="font-size: 12px; color: #666666"><font face="Tahoma"><b>Usuário:</b> {{ user.username|format_cnpj }}</font></p>
     <p style="font-size: 12px; color: #666666"><font face="Tahoma"><b>Pedido:</b> {{ order }}</font></p>
     <p style="font-size: 12px; color: #666666"><font face="Tahoma"><b>Site:</b> {{ site }}</font></p>
     <p style="font-size: 12px; color: #666666"><font face="Tahoma"><b>Todas as linhas:</b></font></p>
