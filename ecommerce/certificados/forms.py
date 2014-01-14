@@ -138,9 +138,11 @@ class EmissaoTela2MultiplosDominios(EmissaoModelForm, EmissaoCallbackForm, Valid
         instance = kwargs.get('instance')
 
         if not instance or not instance.pk:
-            if self.get_voucher().ssl_product == Voucher.PRODUTO_SAN_UCC:
-                url = self.initial['emission_url']
-                if url not in dominios:
+            voucher = self.get_voucher()
+            if voucher.ssl_product in (Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC):
+                csr = self.get_csr_decoded(self.initial['emission_csr'])
+                url = csr['CN'] if voucher.ssl_product == Voucher.PRODUTO_MDC else self.initial['emission_url']
+                if url and url not in dominios:
                     dominios.insert(0, url)
             self.initial['emission_dcv_emails'] = ' '.join('none' if is_nome_interno(dominio) else '' for dominio in dominios)
 
