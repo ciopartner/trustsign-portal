@@ -136,6 +136,8 @@ class CheckEmailJob(CronJobBase):
 
                     emissao.emission_mail_attachment_path = self.get_attachment_path(mail)
                     emissao.emission_status = Emissao.STATUS_EMITIDO_SELO_PENDENTE
+
+                    emissao.voucher.save()
                     emissao.save()
 
                 except (IndexError, AttributeError):
