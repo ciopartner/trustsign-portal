@@ -299,7 +299,9 @@ class AtivaSelosJob(CronJobBase):
     def atualiza_contrato(self, voucher, status):
         try:
             client = CRMClient()
-            with open(voucher.emissao.emission_mail_attachment_path, 'rb') as certificate_file:
+            certificate_path = os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS,
+                                            voucher.emissao.emission_mail_attachment_path)
+            with open(certificate_path, 'rb') as certificate_file:
                 dominio = voucher.emissao.emission_url
                 start_date = voucher.ssl_valid_from
                 end_date = voucher.ssl_valid_to
