@@ -61,6 +61,22 @@ class ComodoError(Exception):
         super(ComodoError, self).__init__(*args, **kwargs)
 
 
+class EmissaoComodoError(ComodoError):
+    pass
+
+
+class ReemissaoComodoError(ComodoError):
+    pass
+
+
+class RevogacaoComodoError(ComodoError):
+    pass
+
+
+class EmissaoJRECSComodoError(ComodoError):
+    pass
+
+
 def limpa_dominio(dominio):
 
     if dominio.startswith('www.'):
@@ -190,13 +206,13 @@ def emite_certificado(emissao):
             envia_email_erro('emissão', voucher, r['errorCode'], r['errorMessage'])
             raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
-            log.info('EMISSAO > params: %s \nResponse: %s' % (params, r))
+            log.info('EMISSAO > params: %s \nResponse: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
 
     except Exception as e:
         log.error('ERRO EMISSAO > erro desconhecido: %s' % e)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
+        raise EmissaoComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
 
 def revoga_certificado(revogacao):
@@ -226,7 +242,7 @@ def revoga_certificado(revogacao):
 
     except Exception as e:
         log.error('ERRO REVOGAÇÃO > erro desconhecido: %s' % e)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
+        raise RevogacaoComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
 
 def reemite_certificado(emissao):
@@ -258,7 +274,7 @@ def reemite_certificado(emissao):
         return r
     except Exception as e:
         log.error('ERRO REEMISSÃO > erro desconhecido: %s' % e)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
+        raise ReemissaoComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
 
 def emite_jre_cs(emissao):
@@ -305,4 +321,4 @@ def emite_jre_cs(emissao):
         return r
     except Exception as e:
         log.error('ERRO EMISSÃO JRE/CS > erro desconhecido: %s' % e)
-        raise ComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
+        raise EmissaoJRECSComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')

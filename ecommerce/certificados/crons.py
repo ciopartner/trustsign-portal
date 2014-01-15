@@ -73,7 +73,14 @@ class EnviaComodoJob(CronJobBase):
                             log.error('Tentando revogar uma emissão sem criar a revogação no banco')
 
                 except comodo.ComodoError as e:
-                    log.error('Ocorreu um erro(%s) na chamada da comodo da emissao: %s' % (e.code, emissao))
+                    if isinstance(e, comodo.EmissaoComodoError) or isinstance(e, comodo.EmissaoJRECSComodoError):
+                        log.error('Ocorreu um erro(%s) na chamada da comodo da emissao: %s' % (e.code, emissao))
+                    elif isinstance(e, comodo.ReemissaoComodoError):
+                        log.error('Ocorreu um erro(%s) na chamada da comodo da reemissão: %s' % (e.code, emissao))
+                    elif isinstance(e, comodo.RevogacaoComodoError):
+                        log.error('Ocorreu um erro(%s) na chamada da comodo da revogação: %s' % (e.code, emissao))
+                    else:
+                        log.error('Ocorreu um erro(%s) na chamada da comodo: %s' % (e.code, emissao))
 
                     emissao.set_erro_comodo('%s (%s)' % (e.comodo_message, e.code))
 
