@@ -411,13 +411,16 @@ class CRMClient(object):
         """
         Anexa um arquivo à um note
         """
-        response = self.call_crm('set_note_attachment', [{
-            'id': note_id,
-            'filename': 'certificado.zip',
-            'file': base64.encodestring(arquivo.read()),
-            'related_module_id': crm_hash,
-            'related_module_name': 'Contracts'
-        }])
+        response = self.call_crm('set_note_attachment', [
+            self.session_id,
+            {
+                'id': note_id,
+                'filename': 'certificado.zip',
+                'file': base64.encodestring(arquivo.read()),
+                'related_module_id': crm_hash,
+                'related_module_name': 'Contracts'
+            }
+        ])
 
         return response['id']
 
