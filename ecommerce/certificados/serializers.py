@@ -190,7 +190,7 @@ class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin,
 
 
 class EmissaoNvASerializer(EmissaoModelSerializer, ValidateEmissaoAddressProof, ValidateEmissaoPhoneProof):
-    REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof')
+    REQUIRED_FIELDS = ('emission_phone_proof',)
 
     class Meta:
         model = Emissao
