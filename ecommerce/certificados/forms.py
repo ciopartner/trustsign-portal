@@ -283,10 +283,10 @@ class EmissaoNv4Tela2Form(EmissaoTela2MultiplosDominios, ValidateEmissaoAssignme
 class EmissaoNvATela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoPhoneProof):
     validacao_manual = True
 
-    REQUIRED_FIELDS = ('emission_csr', 'emission_phone_proof',)
+    REQUIRED_FIELDS = ('emission_phone_proof',)
 
     class Meta(EmissaoModelForm.Meta):
-        fields = ['emission_csr', 'emission_phone_proof']
+        fields = ['emission_phone_proof']
 
 
 class EmissaoNvBTela1Form(EmissaoModelForm, EmissaoCallbackForm, ValidateEmissaoID):

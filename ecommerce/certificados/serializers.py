@@ -189,12 +189,12 @@ class EmissaoNv4Serializer(EmissaoModelSerializer, ValidateEmissaoCSRMixin,
                   'emission_ccsa', 'emission_evcr')
 
 
-class EmissaoNvASerializer(EmissaoModelSerializer, ValidateEmissaoAddressProof, ValidateEmissaoPhoneProof):
+class EmissaoNvASerializer(EmissaoModelSerializer, ValidateEmissaoPhoneProof):
     REQUIRED_FIELDS = ('emission_phone_proof',)
 
     class Meta:
         model = Emissao
-        fields = ('crm_hash', 'emission_csr', 'emission_phone_proof')
+        fields = ('crm_hash', 'emission_phone_proof')
 
 
 class EmissaoNvBSerializer(EmissaoModelSerializer, ValidateEmissaoID):
