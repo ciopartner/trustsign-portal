@@ -340,11 +340,11 @@ class VoucherCreateAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIVi
         #cnpj do CRM vem com máscara:
         obj.customer_cnpj = limpa_cnpj(obj.customer_cnpj)
 
-        if obj.order_number:
+        if obj.order_number and obj.order_channel == Voucher.ORDERCHANNEL_WEB:
             try:
                 obj.order = Order.objects.get(number=obj.order_number)
             except Order.DoesNotExist:
-                self.log.error('Não existe order o order_number informado.')
+                self.log.error('Não existe order para o order_number informado.')
                 raise
 
     def post(self, request, *args, **kwargs):
