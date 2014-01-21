@@ -56,6 +56,7 @@ class EnviaComodoJob(CronJobBase):
                             resposta = comodo.emite_certificado(emissao)
 
                             emissao.comodo_order = resposta['orderNumber']
+                            emissao.voucher.comodo_order = emissao.comodo_order
                             emissao.emission_cost = resposta['totalCost']
                             emissao.emission_status = Emissao.STATUS_EMISSAO_ENVIADO_COMODO
 
@@ -85,6 +86,7 @@ class EnviaComodoJob(CronJobBase):
                     emissao.set_erro_comodo('%s (%s)' % (e.comodo_message, e.code))
 
                 emissao.save()
+                emissao.voucher.save()
         finally:
             translation.activate(cur_language)
 
@@ -315,8 +317,8 @@ class AtivaSelosJob(CronJobBase):
                 start_date = voucher.ssl_valid_from
                 end_date = voucher.ssl_valid_to
                 seal_html = voucher.get_seal_html
-                client.atualizar_contrato(voucher.crm_hash, status, voucher.comodo_order, dominio, start_date, end_date,
-                                          seal_html, certificate_file)
+                client.atualizar_contrato(voucher.crm_hash, status, voucher.emissao.comodo_order, dominio, start_date,
+                                          end_date, seal_html, certificate_file)
         except Exception as e:
             log.exception('Ocorreu um erro ao atualizar o contrato do voucher #%s para o status <%s>' % (voucher.crm_hash, status))
             self.envia_email_suporte(voucher, status)
