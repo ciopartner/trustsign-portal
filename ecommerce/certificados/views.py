@@ -587,7 +587,8 @@ class VouchersPendentesListView(ListView):
     def get_queryset(self):
         user = self.request.user
         profile = user.get_profile()
-        if profile.perfil != profile.PERFIL_TRUSTSIGN and not user.is_superuser:
+        if (profile.perfil != profile.PERFIL_TRUSTSIGN or user.has_perm('certificados.view_pending_emission')) and \
+                not user.is_superuser:
             raise PermissionDenied
         return Voucher.objects.select_related('emissao').filter(
             emissao__emission_status__in=(
