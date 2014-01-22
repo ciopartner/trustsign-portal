@@ -34,7 +34,7 @@
                                 {{ voucher.order_number }}
                             {% endif %}
                         </td>
-                        {% if perms.certificados.issue_client_vouchers %}
+                        {% if perms.certificados.issue_client_vouchers or perms.certificados.issue_all_vouchers or perms.certificados.view_all_vouchers %}
                             <td>
 {#                                {% if voucher.is_my_cliente %}#}
 {#                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>#}
