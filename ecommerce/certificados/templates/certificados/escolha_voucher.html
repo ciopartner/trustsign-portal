@@ -22,10 +22,10 @@
 
                 {% for voucher in vouchers %}
                     <tr data-product-code="{{ voucher.ssl_product }}" data-status="{% if voucher.emissao.is_complemento_disponivel %}disponivel{% else %}utilizado{% endif %}" data-line="{{ voucher.get_ssl_line_display }}" data-term="{{ voucher.get_ssl_term_display }}">
-                        <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>
                             <div title="{{ voucher.customer_companyname }}">{{ voucher.customer_cnpj|format_cnpj }}</div>
                         </td>
+                        <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
                         <td>{{ voucher.get_ssl_term_display }}</td>
                         <td class="saldo">1</td>
