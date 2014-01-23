@@ -42,7 +42,7 @@ regex_ou = re.compile(r'OU=(.+?)([,/]|$)')
 regex_cn = re.compile(r'CN=(.+?)([,/]|$)')
 regex_email = re.compile(r'emailAddress=(.+?)([,/]|$)')
 
-pattern_csr = r'-----BEGIN CERTIFICATE REQUEST-----(.*)-----END CERTIFICATE REQUEST-----'
+pattern_csr = r'-----BEGIN .*?CERTIFICATE REQUEST-----(.*)-----END .*?CERTIFICATE REQUEST-----'
 regex_csr = re.compile(pattern_csr, flags=re.DOTALL | re.MULTILINE)
 
 
@@ -63,6 +63,7 @@ def decode_csr(csr):
 
     m = re.match(regex_csr, csr)  # retira ---- begin/end certificate request ----
     if not m:
+        print 222
         return {
             'ok': False
         }
@@ -73,6 +74,8 @@ def decode_csr(csr):
     path_in = cria_arquivo_temporario(clean_csr)
 
     resposta = run_command('openssl req -in %s -noout -text | grep "DNS\|Subject:\|Key:"' % path_in)
+
+    print 111, resposta
 
     os.remove(path_in)
 
