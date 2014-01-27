@@ -274,7 +274,7 @@ def remove_acentos(txt, codif='utf-8'):
         return normalize('NFKD', txt.decode('iso-8859-1')).encode('ASCII', 'ignore')
 
 
-def comparacao_fuzzy(string1, string2, max_dist=5):
+def comparacao_fuzzy(string1, string2, max_dist=10):
     """
     Faz a comparação de duas strings usando o parâmetro max_dist como distância máxima (número de caracteres que
     precisam ser substituidos, removidos ou adicionados de string1 para chegar em string2)
