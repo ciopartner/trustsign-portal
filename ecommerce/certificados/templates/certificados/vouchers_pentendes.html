@@ -1,12 +1,12 @@
 {% extends 'certificados/wizard_base.html' %}
-{% load static %}
+{% load static cnpj_filter %}
 
 {% block content %}
     <div class="escolha-voucher fix-row-margin">
         <h2>Certificados pendentes de envio à Comodo</h2>
         <table class="table">
             <tr>
-                <th>Cliente</th>
+                <th>CNPJ</th>
                 <th>Produto</th>
                 <th>Linha</th>
                 <th>Validade</th>
@@ -18,7 +18,7 @@
             {% for voucher in vouchers %}
                 {% with emissao=voucher.emissao %}
                 <tr>
-                    <td>{{ voucher.customer_companyname }}</td>
+                    <td><div title="{{ voucher.customer_companyname }}">{{ voucher.customer_cnpj|format_cnpj }}</div></td>
                     <td>{{ voucher.get_ssl_product_display }}</td>
                     <td>{{ voucher.get_ssl_line_display }}</td>
                     <td>{{ voucher.get_ssl_term_display }}</td>
