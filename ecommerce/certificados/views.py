@@ -171,7 +171,10 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
                     dominios = ' '.join(serializer.get_csr_decoded(emissao.emission_csr).get('dnsNames', []))
                     emissao.emission_urls = dominios
 
-            dominios_adicionais = max(0, len(emissao.emission_urls.split(' ')) - 5)
+            if emissao.emission_urls:
+                dominios_adicionais = max(0, len(emissao.emission_urls.split(' ')) - 5)
+            else:
+                dominios_adicionais = 0
 
             if dominios_adicionais:
                 # Emite N vouchers não emitidos do tipo dominio/fqdn adicional
