@@ -162,6 +162,13 @@ def emite_certificado(emissao):
         else:
             product = CODIGOS_PRODUTOS[voucher.ssl_product]
 
+        if voucher.ssl_product in (Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC):
+            ca_certificate_id = 389
+        elif voucher.ssl_product in (Voucher.PRODUTO_EV, Voucher.PRODUTO_EV_MDC):
+            ca_certificate_id = 391
+        else:
+            ca_certificate_id = None
+
         params = {
             'loginName': settings.COMODO_LOGIN_NAME,
             'loginPassword': settings.COMODO_LOGIN_PASSWORD,
@@ -185,6 +192,9 @@ def emite_certificado(emissao):
             'isCallbackCompleted': 'Y'
 
         }
+
+        if ca_certificate_id:
+            params['caCertificateID'] = ca_certificate_id
 
         if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
             params['domainNames'] = emissao.emission_urls
