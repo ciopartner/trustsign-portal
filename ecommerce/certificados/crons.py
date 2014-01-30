@@ -95,7 +95,7 @@ class CheckEmailJob(CronJobBase):
     """
     Verifica se existem novos certificados no email configurado na comodo.
     """
-    RUN_EVERY_MINS = 1
+    RUN_EVERY_MINS = 5
 
     code = 'certificados.check_email'
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
