@@ -326,20 +326,26 @@ class AtivaSelosJob(CronJobBase):
     def envia_email_cliente(self, voucher):
         User = get_user_model()
         emissao = voucher.emissao
-        try:
-            user = User.objects.get(username=voucher.customer_cnpj)
-            subject = '[TrustSign] Seu Novo Certificado'
-            template = 'customer/emails/envio_certificado.html'
-            context = {
-                'voucher': voucher,
-                'site': get_current_site(None),
-            }
-            email_cliente = emissao.emission_publickey_sendto if emissao.emission_publickey_sendto else user.email
-            msg = get_template_email([email_cliente], subject, template, context)
-            msg.attach_file(os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, emissao.emission_mail_attachment_path))
-            msg.send()
-        except User.DoesNotExist:
-            log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
+        subject = '[TrustSign] Seu Novo Certificado'
+        if emissao.emission_publickey_sendto:
+            email_cliente = emissao.emission_publickey_sendto
+        else:
+            try:
+                user = User.objects.get(username=voucher.customer_cnpj)
+                email_cliente = user.email
+            except User.DoesNotExist:
+                log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
+                email_cliente = settings.TRUSTSIGN_SISTEMA_EMAIL
+                subject = '[TrustSign] Seu Novo Certificado (email cliente não informado)'
+        template = 'customer/emails/envio_certificado.html'
+        context = {
+            'voucher': voucher,
+            'site': get_current_site(None),
+        }
+        msg = get_template_email([email_cliente], subject, template, context)
+        msg.attach_file(os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, emissao.emission_mail_attachment_path))
+        msg.send()
+
 
     def envia_email_suporte(self, voucher, status):
         message = 'Ocorreu um erro ao atualizar o contrato no CRM do voucher #%s para o status <%s>\ncliente: %s' % (voucher.crm_hash,
