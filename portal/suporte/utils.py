@@ -63,7 +63,6 @@ def decode_csr(csr):
 
     m = re.match(regex_csr, csr)  # retira ---- begin/end certificate request ----
     if not m:
-        print 222
         return {
             'ok': False
         }
@@ -74,8 +73,6 @@ def decode_csr(csr):
     path_in = cria_arquivo_temporario(clean_csr)
 
     resposta = run_command('openssl req -in %s -noout -text | grep "DNS\|Subject:\|Key:"' % path_in)
-
-    print 111, resposta
 
     os.remove(path_in)
 
