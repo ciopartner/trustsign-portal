@@ -28,6 +28,9 @@ class LoginForm(Html5Mixin, Form):
         """
         username = self.cleaned_data.get("username")
 
+        if not username:
+            return username
+
         if re.match(cnpj_pattern, username):
             username = limpa_cnpj(username)
         password = self.cleaned_data.get("password")
