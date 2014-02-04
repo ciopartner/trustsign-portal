@@ -123,7 +123,8 @@ class ValidateEmissaoCSRMixin(object):
                                                                 Voucher.PRODUTO_CODE_SIGNING, Voucher.PRODUTO_JRE):
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_INVALIDA_CN_DEVE_CONTER_DOMINIO))
 
-        if csr.get('O').upper() not in (voucher.customer_companyname.upper(), voucher.customer_tradename.upper()):
+        if comparacao_fuzzy(csr.get('O'), voucher.customer_companyname) or \
+                comparacao_fuzzy(csr.get('O'), voucher.customer_tradename.upper()):
             log.info('CSR: {} != Voucher: {}'.format(csr.get('O'), voucher.customer_companyname))
             raise self.ValidationError(get_erro_message(e.ERRO_CSR_ORGANIZATION_DIFERENTE_CNPJ))
 
