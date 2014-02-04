@@ -371,8 +371,8 @@ class CRMClient(object):
             'account_id': produto.account_id,
             'opportunities_id': produto.opportunity_id,
             'vendor_part_num': produto.codigo,
-            'discount_price': produto.preco_unitario,
-            'discount_amount': produto.preco_total,
+            'discount_price': str(produto.preco_unitario).replace(',', '').replace('.', ','),
+            'discount_amount': str(produto.preco_total).replace(',', '').replace('.', ','),
             'quantity': produto.quantidade,
         })
 
