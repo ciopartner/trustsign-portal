@@ -33,14 +33,13 @@ def run_command(comando):
 
     return read.read()
 
-
-regex_c = re.compile(r'C=(.+?)([,/]|$)')
-regex_st = re.compile(r'ST=(.+?)([,/]|$)')
-regex_l = re.compile(r'L=(.+?)([,/]|$)')
-regex_o = re.compile(r'O=(.+?)([,/]|$)')
-regex_ou = re.compile(r'OU=(.+?)([,/]|$)')
-regex_cn = re.compile(r'CN=(.+?)([,/]|$)')
-regex_email = re.compile(r'emailAddress=(.+?)([,/]|$)')
+regex_c = re.compile(r'C=(.+?)([,/] (.+?=)|$)')
+regex_st = re.compile(r'ST=(.+?)([,/] (.+?=)|$)')
+regex_l = re.compile(r'L=(.+?)([,/] (.+?=)|$)')
+regex_o = re.compile(r'O=(.+?)([,/] (.+?=)|$)')
+regex_ou = re.compile(r'OU=(.+?)([,/] (.+?=)|$)')
+regex_cn = re.compile(r'CN=(.+?)([,/] (.+?=)|$)')
+regex_email = re.compile(r'emailAddress=(.+?)([,/] (.+?=)|$)')
 
 pattern_csr = r'-----BEGIN .*?CERTIFICATE REQUEST-----(.*)-----END .*?CERTIFICATE REQUEST-----'
 regex_csr = re.compile(pattern_csr, flags=re.DOTALL | re.MULTILINE)
