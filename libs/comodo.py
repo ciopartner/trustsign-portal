@@ -103,10 +103,10 @@ def get_emails_validacao_whois(dominio):
 
     dominio = limpa_dominio(dominio)
 
-    if dominio.endswith('.br'):
-        emails = get_emails_dominio(dominio)
-    else:
-        emails = []
+    # if dominio.endswith('.br'):
+    #     emails = get_emails_dominio(dominio)
+    # else:
+    #     emails = []
 
     response = requests.post(settings.COMODO_API_GET_DCV_EMAILS_URL, data={
         'loginName': settings.COMODO_LOGIN_NAME,
@@ -114,10 +114,10 @@ def get_emails_validacao_whois(dominio):
         'domainName': dominio
     })
 
-    emails_comodo = [r[12:] for r in response.text.splitlines()
-                     if r.startswith('whois email\t') and r[12:] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+    emails = [r[12:] for r in response.text.splitlines()
+              if r.startswith('whois email\t') and r[12:] not in ('cert@cert.br', 'mail-abuse@cert.br')]
 
-    emails.extend(email for email in emails_comodo if email not in emails)
+    #emails.extend(email for email in emails_comodo if email not in emails)
 
     cache.set('emails_validacao-{}'.format(dominio), emails, 86400)  # cache de 1 dia
 
