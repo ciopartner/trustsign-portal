@@ -327,7 +327,9 @@ class CRMClient(object):
             'tipo_pagamento_c': oportunidade.tipo_pagamento,
             'sales_stage': 'Closed Won',
             'opportunity_type': 'New Business',
-            'data_pgto_c': oportunidade.data_pagto,
+            #'data_pgto_c': oportunidade.data_pagto,
+            # Para pagamento a vista o código é 1
+            'data_pgto_c': '1',
             'nota_fiscal_c': oportunidade.email_nfe,
         }
 
@@ -356,7 +358,6 @@ class CRMClient(object):
                 #'data_pgto_c': oportunidade.data_pagamento_boleto
                 'parcelas_c': oportunidade.parcelas,
                 'email_nf_boleto_c': oportunidade.email_boleto,
-                'data_pgto_c': oportunidade.data_pagamento_boleto
             })
 
         response = self.set_entry('Opportunities', data)
