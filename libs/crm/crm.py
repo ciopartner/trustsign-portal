@@ -153,7 +153,6 @@ class CRMClient(object):
         """
         response = None
 
-
         log.info('\n\n')
         log.info('Metodo: {}'.format(method))
         log.info('Request ao Sugar: {}'.format(rest_data))
