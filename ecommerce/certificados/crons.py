@@ -295,13 +295,16 @@ class AtivaSelosJob(CronJobBase):
 
     def processa(self, line, website):
         url, cnpj, razaosocial = website
-        requests.post('%s/api/v1/ativar/%s/' % (settings.SEALS_SERVER_URL, line), {
+        log.info('Ativando selo: {} - {} -{}'.format(url, cnpj, razaosocial))
+        response = requests.post('%s/api/v1/ativar/%s/' % (settings.SEALS_SERVER_URL, line), {
             'username': settings.SEALS_USERNAME,
             'password': settings.SEALS_PASSWORD,
             'websites': url,
             'cnpj': cnpj,
             'razaosocial': razaosocial,
         })
+        if response.status_code != 200:
+            log.error('Erro ao ativar o selo: {}'.format(response.text))
 
     def processa_ativado(self, voucher):
         self.atualiza_contrato(voucher, 'valido')
@@ -370,13 +373,16 @@ class DesativaSelosRevogadosJob(AtivaSelosJob):
 
     def processa(self, line, website):
         url, cnpj, razaosocial = website
-        requests.post('%s/api/v1/desativar/%s/' % (settings.SEALS_SERVER_URL, line), {
+        log.info('Desativando selo: {} - {} -{}'.format(url, cnpj, razaosocial))
+        response = requests.post('%s/api/v1/desativar/%s/' % (settings.SEALS_SERVER_URL, line), {
             'username': settings.SEALS_USERNAME,
             'password': settings.SEALS_PASSWORD,
             'websites': url,
             'cnpj': cnpj,
             'razaosocial': razaosocial,
         })
+        if response.status_code != 200:
+            log.error('Erro ao ativar o selo: {}'.format(response.text))
 
     def post_do(self):
         from ecommerce.certificados.models import Emissao
