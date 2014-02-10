@@ -590,8 +590,7 @@ class VouchersPendentesListView(ListView):
     def get_queryset(self):
         user = self.request.user
         profile = user.get_profile()
-        if (profile.perfil != profile.PERFIL_TRUSTSIGN or user.has_perm('certificados.view_pending_emission')) and \
-                not user.is_superuser:
+        if profile.perfil != profile.PERFIL_TRUSTSIGN or not user.has_perm('certificados.view_pending_emission'):
             raise PermissionDenied
         return Voucher.objects.select_related('emissao').filter(
             emissao__emission_status__in=(
@@ -760,7 +759,10 @@ class EmissaoWizardView(SessionWizardView):
                 emissao.emission_reviewer = self.request.user
             else:
                 message = 'Existe uma nova solicitação pendente de revisão na caixa de validação manual.'
-                send_mail('[Alerta-Ecommerce] Solicitação pendente #%s' % voucher.crm_hash, message, settings.DEFAULT_FROM_EMAIL, [settings.TRUSTSIGN_VALIDACAO_EMAIL])
+                send_mail('[Alerta-Ecommerce] Solicitação pendente #%s' % voucher.crm_hash,
+                          message,
+                          settings.DEFAULT_FROM_EMAIL,
+                          [settings.TRUSTSIGN_VALIDACAO_EMAIL])
         else:
             emissao.emission_status = emissao.STATUS_EMISSAO_ENVIO_COMODO_PENDENTE
 
