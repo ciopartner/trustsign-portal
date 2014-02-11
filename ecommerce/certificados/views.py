@@ -21,7 +21,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 from rest_framework.renderers import UnicodeJSONRenderer
 from rest_framework.response import Response
 from ecommerce.certificados import erros
-from ecommerce.website.utils import limpa_cnpj, send_template_email
+from ecommerce.website.utils import limpa_cnpj, send_template_email, atualiza_dados_cliente
 from libs import comodo
 from ecommerce.certificados.authentication import UserPasswordAuthentication
 from ecommerce.certificados.forms import RevogacaoForm, ReemissaoForm
@@ -634,6 +634,11 @@ class EmissaoWizardView(SessionWizardView):
                 and not (user.has_perm('certificados.issue_client_vouchers') and (not voucher.crm_user
                                                                                   or voucher.crm_user == user.get_profile().crm_user)):
             raise PermissionDenied()
+
+        atualiza_dados_cliente(user)
+
+        if user.get_profile().cliente_situacao_cadastral.lower() != 'ativa':
+            raise PermissionDenied('A situação cadastral do seu CNPJ não consta como ativa')
 
         return super(EmissaoWizardView, self).dispatch(request, *args, **kwargs)
 

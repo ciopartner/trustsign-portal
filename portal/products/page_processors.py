@@ -76,7 +76,6 @@ def product_processor(request, page):
     }
 
     for upc, product_line, product_term, price, offer_id, offer_label, price_discount in cursor.fetchall():
-        print upc, product_line, product_term, price, offer_id, offer_label, price_discount
         if price is None:
             price = Decimal(0)
 

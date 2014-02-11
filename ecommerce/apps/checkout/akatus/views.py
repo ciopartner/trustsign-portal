@@ -9,7 +9,7 @@ from django.http import Http404
 from django.views.generic import TemplateView
 from oscar.core.loading import get_class
 from ecommerce.apps.payment.forms import DebitcardForm
-from ecommerce.website.utils import remove_message, send_template_email
+from ecommerce.website.utils import remove_message, send_template_email, get_dados_empresa, atualiza_dados_cliente
 from libs.akatus import facade as akatus
 
 from oscar.apps.payment.exceptions import UnableToTakePayment, InvalidGatewayRequestError
@@ -222,6 +222,11 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
         if not self.valida_contrato_ssl() or not self.valida_contrato_sitemonitorado() or \
                 not self.valida_contrato_siteseguro() or not self.valida_contrato_pki():
             raise UnableToTakePayment('Você precisa aceitar os termos de uso dos produtos selecionados')
+
+        atualiza_dados_cliente(self.request.user)
+
+        if self.request.user.get_profile().cliente_situacao_cadastral.lower() != 'ativa':
+            raise UnableToTakePayment('A situação cadastral do seu CNPJ não consta como ativa')
 
         payment_source = self.request.POST.get('source-type')
 

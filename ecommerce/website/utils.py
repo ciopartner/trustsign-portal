@@ -12,6 +12,7 @@ from libs import knu
 import re
 
 import logging
+from libs.crm import crm
 
 log = logging.getLogger('ecommerce.website.utils')
 
@@ -92,8 +93,79 @@ def get_dados_empresa(cnpj):
                 'situacao_cadastral': 'ativa',
                 'knu_html': '<html></html>'
             }
-        cache.set('cnpj-%s' % cnpj, data, 2592000)  # cache de 30 dias
+        cache.set('cnpj-%s' % cnpj, data, 604800)  # cache de 7 dias
     return data
+
+
+def atualiza_dados_cliente(user):
+    profile = user.get_profile()
+    d = get_dados_empresa(profile.cliente_cnpj)
+    mudou = False
+
+    if profile.cliente_razaosocial != d['razao_social']:
+        profile.cliente_razaosocial = d['razao_social']
+        mudou = True
+
+    if profile.cliente_nomefantasia != d['nome_fantasia']:
+        profile.cliente_nomefantasia = d['nome_fantasia']
+        mudou = True
+
+    if profile.cliente_logradouro != d['logradouro']:
+        profile.cliente_logradouro = d['logradouro']
+        mudou = True
+
+    if profile.cliente_numero != d['numero']:
+        profile.cliente_numero = d['numero']
+        mudou = True
+
+    if profile.cliente_complemento != d['complemento']:
+        profile.cliente_complemento = d['complemento']
+        mudou = True
+
+    if profile.cliente_cep != d['cliente_cep']:
+        profile.cliente_cep = d['cliente_cep']
+        mudou = True
+
+    if profile.cliente_bairro != d['bairro']:
+        profile.cliente_bairro = d['bairro']
+        mudou = True
+
+    if profile.cliente_cidade != d['cidade']:
+        profile.cliente_cidade = d['cidade']
+        mudou = True
+
+    if profile.cliente_uf != d['uf']:
+        profile.cliente_uf = d['uf']
+        mudou = True
+
+    if profile.cliente_situacao_cadastral != d['situacao_cadastral']:
+        profile.cliente_situacao_cadastral = d['situacao_cadastral']
+        mudou = True
+
+    if mudou:
+        c = crm.ClienteCRM()
+        c.cnpj = formata_cnpj(profile.cliente_cnpj) if len(profile.cliente_cnpj) < 18 else profile.cliente_cnpj
+        c.razaosocial = profile.cliente_razaosocial
+        c.nomefantasia = profile.cliente_nomefantasia
+        c.logradouro = profile.cliente_logradouro
+        c.numero = profile.cliente_numero
+        c.complemento = profile.cliente_complemento
+        c.bairro = profile.cliente_bairro
+        c.cidade = profile.cliente_cidade
+        c.estado = profile.cliente_uf
+        c.pais = 'BR'
+        c.cep = profile.cliente_cep
+        c.sem_atividade = profile.cliente_situacao_cadastral.strip().lower() == 'ativa'
+
+        c.tipo_negocio = profile.cliente_tipo_negocio
+        c.is_ecommerce = profile.cliente_ecommerce
+        c.fonte_do_potencial = profile.cliente_fonte_potencial
+
+        client = crm.CRMClient()
+        client.login()
+        account_id = client.get_account(c.cnpj)['entry_list']
+        client.set_entry_account(c, update_id=account_id)
+        client.logout()
 
 
 def xml_to_dict(xml):
