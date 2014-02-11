@@ -493,7 +493,7 @@ class Emissao(Model):
         verbose_name = 'emissão'
         verbose_name_plural = 'emissões'
         permissions = (
-            ("do_emission_process", "Can do emission precess"),
+            ("do_emission_process", "Can do emission process"),
             ("view_pending_emission", "Can view pending emission"),
         )
 

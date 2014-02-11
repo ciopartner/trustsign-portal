@@ -153,7 +153,6 @@ class CRMClient(object):
         """
         response = None
 
-
         log.info('\n\n')
         log.info('Metodo: {}'.format(method))
         log.info('Request ao Sugar: {}'.format(rest_data))
@@ -327,7 +326,9 @@ class CRMClient(object):
             'tipo_pagamento_c': oportunidade.tipo_pagamento,
             'sales_stage': 'Closed Won',
             'opportunity_type': 'New Business',
-            'data_pgto_c': oportunidade.data_pagto,
+            #'data_pgto_c': oportunidade.data_pagto,
+            # Para pagamento a vista o código é 1
+            'data_pgto_c': '1',
             'nota_fiscal_c': oportunidade.email_nfe,
         }
 
@@ -356,7 +357,6 @@ class CRMClient(object):
                 #'data_pgto_c': oportunidade.data_pagamento_boleto
                 'parcelas_c': oportunidade.parcelas,
                 'email_nf_boleto_c': oportunidade.email_boleto,
-                'data_pgto_c': oportunidade.data_pagamento_boleto
             })
 
         response = self.set_entry('Opportunities', data)
@@ -371,8 +371,8 @@ class CRMClient(object):
             'account_id': produto.account_id,
             'opportunities_id': produto.opportunity_id,
             'vendor_part_num': produto.codigo,
-            'discount_price': produto.preco_unitario,
-            'discount_amount': produto.preco_total,
+            'discount_price': str(produto.preco_unitario).replace(',', '').replace('.', ','),
+            'discount_amount': str(produto.preco_total).replace(',', '').replace('.', ','),
             'quantity': produto.quantidade,
         })
 

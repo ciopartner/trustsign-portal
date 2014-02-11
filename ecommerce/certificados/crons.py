@@ -95,7 +95,7 @@ class CheckEmailJob(CronJobBase):
     """
     Verifica se existem novos certificados no email configurado na comodo.
     """
-    RUN_EVERY_MINS = 1
+    RUN_EVERY_MINS = 5
 
     code = 'certificados.check_email'
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
@@ -295,13 +295,16 @@ class AtivaSelosJob(CronJobBase):
 
     def processa(self, line, website):
         url, cnpj, razaosocial = website
-        requests.post('%s/api/v1/ativar/%s/' % (settings.SEALS_SERVER_URL, line), {
+        log.info('Ativando selo: {} - {} -{}'.format(url, cnpj, razaosocial))
+        response = requests.post('%s/api/v1/ativar/%s/' % (settings.SEALS_SERVER_URL, line), {
             'username': settings.SEALS_USERNAME,
             'password': settings.SEALS_PASSWORD,
             'websites': url,
             'cnpj': cnpj,
             'razaosocial': razaosocial,
         })
+        if response.status_code != 200:
+            log.error('Erro ao ativar o selo: {}'.format(response.text))
 
     def processa_ativado(self, voucher):
         self.atualiza_contrato(voucher, 'valido')
@@ -326,20 +329,26 @@ class AtivaSelosJob(CronJobBase):
     def envia_email_cliente(self, voucher):
         User = get_user_model()
         emissao = voucher.emissao
-        try:
-            user = User.objects.get(username=voucher.customer_cnpj)
-            subject = '[TrustSign] Seu Novo Certificado'
-            template = 'customer/emails/envio_certificado.html'
-            context = {
-                'voucher': voucher,
-                'site': get_current_site(None),
-            }
-            email_cliente = emissao.emission_publickey_sendto if emissao.emission_publickey_sendto else user.email
-            msg = get_template_email([email_cliente], subject, template, context)
-            msg.attach_file(os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, emissao.emission_mail_attachment_path))
-            msg.send()
-        except User.DoesNotExist:
-            log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
+        subject = '[TrustSign] Seu Novo Certificado'
+        if emissao.emission_publickey_sendto:
+            email_cliente = emissao.emission_publickey_sendto
+        else:
+            try:
+                user = User.objects.get(username=voucher.customer_cnpj)
+                email_cliente = user.email
+            except User.DoesNotExist:
+                log.warning('Emissão concluída de um CNPJ sem usuário cadastrado: {}'.format(voucher.customer_cnpj))
+                email_cliente = settings.TRUSTSIGN_SISTEMA_EMAIL
+                subject = '[TrustSign] Seu Novo Certificado (email cliente não informado)'
+        template = 'customer/emails/envio_certificado.html'
+        context = {
+            'voucher': voucher,
+            'site': get_current_site(None),
+        }
+        msg = get_template_email([email_cliente], subject, template, context)
+        msg.attach_file(os.path.join(settings.CERTIFICADOS_EMAIL_PATH_ATTACHMENTS, emissao.emission_mail_attachment_path))
+        msg.send()
+
 
     def envia_email_suporte(self, voucher, status):
         message = 'Ocorreu um erro ao atualizar o contrato no CRM do voucher #%s para o status <%s>\ncliente: %s' % (voucher.crm_hash,
@@ -364,13 +373,16 @@ class DesativaSelosRevogadosJob(AtivaSelosJob):
 
     def processa(self, line, website):
         url, cnpj, razaosocial = website
-        requests.post('%s/api/v1/desativar/%s/' % (settings.SEALS_SERVER_URL, line), {
+        log.info('Desativando selo: {} - {} -{}'.format(url, cnpj, razaosocial))
+        response = requests.post('%s/api/v1/desativar/%s/' % (settings.SEALS_SERVER_URL, line), {
             'username': settings.SEALS_USERNAME,
             'password': settings.SEALS_PASSWORD,
             'websites': url,
             'cnpj': cnpj,
             'razaosocial': razaosocial,
         })
+        if response.status_code != 200:
+            log.error('Erro ao ativar o selo: {}'.format(response.text))
 
     def post_do(self):
         from ecommerce.certificados.models import Emissao

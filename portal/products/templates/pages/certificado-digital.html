@@ -33,6 +33,7 @@
 {% block one_row %}
     <section class="container productbgw certificado-digital">
         <section class="featurette">
+
             <section class="row-fluid">
                 <aside class="span6 all-body-text1">
                     <article class="tblrp510">
@@ -41,26 +42,115 @@
                                 Mostre aos seus clientes mais segurança. Gere confiabilidade e aumento de
                                 receita
                             </h2>
-                            {% for p in page.children.all.order_by %}
-                                {% if forloop.counter < 7 and p.product %}
-                                    {# Hardcoded Product Separator #}
-                                    {% if p.title == 'S/MIME' %}
-                                        <h2>e-Mails assinados digitalmente</h2>
-                                    {% endif %}
-                                    {% if p.title == 'JRE' %}
-                                        <h2>Maior segurança em downloads com assinatura de códigos</h2>
-                                    {% endif %}
-                                    {% editable p.title %}
-                                        <a href="{{ p.get_absolute_url }}">
-                                            <h3>{{ p.title }}</h3></a>
-                                    {% endeditable %}
-                                    {% editable p.product.youtube_title %}
+
+
+
+
+
+
+                                        <a href="/portal/certificado-digital/ssl/">
+                                            <h3>SSL</h3></a>
+
+
                                         <p class="all-body-text5 borderp bp10">
-                                            {{ p.product.youtube_title }}
+                                            Mostre que seu site é autêntico, confiável e possui criptografia de dados
                                         </p>
-                                    {% endeditable %}
-                                {% endif %}
-                            {% endfor %}
+
+
+
+
+
+
+
+
+                                        <a href="/portal/certificado-digital/ssl-ev/">
+                                            <h3>EV (Extended Validation) SSL</h3></a>
+
+
+                                        <p class="all-body-text5 borderp bp10">
+                                            Obtenha os benefícios do SSL e exiba a barra verde no navegador com o maior nível de segurança e validação
+                                        </p>
+
+
+
+
+
+
+
+
+                                        <a href="/portal/certificado-digital/ssl-ev-mdc/">
+                                            <h3>EV MDC SSL</h3></a>
+
+
+                                        <p class="all-body-text5 borderp bp10">
+                                            Obtenha os benefícios do SSL, exiba a barra verde e certifique até 210 domínios com um único certificado
+                                        </p>
+
+
+
+
+
+
+
+
+                                        <a href="/portal/certificado-digital/ssl-san/">
+                                            <h3>SAN SSL</h3></a>
+
+
+                                        <p class="all-body-text5 borderp bp10">
+                                            Obtenha os benefícios do SSL para vários FQDNs em ambiente Microsoft (inclusive Exchange) com um único certificado
+                                        </p>
+
+
+
+
+
+
+
+
+                                        <a href="/portal/certificado-digital/ssl-mdc/">
+                                            <h3>MDC SSL</h3></a>
+
+
+                                        <p class="all-body-text5 borderp bp10">
+                                            Obtenha os benefícios do SSL e certifique até 210 domínios com um único certificado
+                                        </p>
+
+
+
+
+
+
+
+
+                                        <a href="/portal/certificado-digital/ssl-wildcard/">
+                                            <h3>WildCard SSL</h3></a>
+
+
+                                        <p class="all-body-text5 borderp bp10">
+                                            Obtenha os benefícios do SSL e certifique infinitos sub-domínios com um único certificado WildCard
+                                        </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </div>
                     </article>
                 </aside>
@@ -68,28 +158,82 @@
                 <aside class="span6 all-body-text1">
                     <article class="tblrp510">
                         <div>
-                            {% for p in page.children.all.order_by %}
-                                {% if forloop.counter >= 7 and p.product %}
-                                    {# Hardcoded Product Separator #}
-                                    {% if p.title == 'S/MIME' %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                         <h2>e-Mails assinados digitalmente</h2>
-                                    {% endif %}
-                                    {% if p.title == 'JRE' %}
-                                        <h2>Maior segurança em downloads com assinatura de códigos</h2>
-                                    {% endif %}
-                                    {% editable p.title %}
-                                        <a href="{{ p.get_absolute_url }}">
-                                            <h3>{{ p.title }}</h3></a>
-                                    {% endeditable %}
-                                    {% editable p.product.youtube_title %}
+
+
+
+                                        <a href="/portal/certificado-digital/ssl-smime/">
+                                            <h3>S/MIME</h3></a>
+
+
                                         <p class="all-body-text5 borderp bp10">
-                                            {{ p.product.youtube_title }}
+                                            Garanta a identidade do remetente e a integridade das informações
                                         </p>
-                                    {% endeditable %}
-                                {% endif %}
-                            {% endfor %}
+
+
+
+
+
+
+
+                                        <h2>Maior segurança em downloads com assinatura de códigos</h2>
+
+
+                                        <a href="/portal/certificado-digital/ssl-jre/">
+                                            <h3>JRE</h3></a>
+
+
+                                        <p class="all-body-text5 borderp bp10">
+                                            Confiabilidade em downloads de códigos JAVA
+                                        </p>
+
+
+
+
+
+
+
+
+                                        <a href="/portal/certificado-digital/ssl-cs/">
+                                            <h3>Code Signing</h3></a>
+
+
+                                        <p class="all-body-text5 borderp bp10">
+                                            Confiabilidade em downloads de diversos códigos
+                                        </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                             <div class="buttons">
-                                <a href="{% url 'page' 'certificado-digital/comparar-certificados-digitais' %}" class="btn btn-large btn-orange btn-block">Veja as diferenças
+                                <a class="btn btn-large btn-orange btn-block" href="/portal/certificado-digital/comparar-certificados-digitais/">Veja as diferenças
                                     entre os certificados
                                 </a>
                             </div>
@@ -97,7 +241,72 @@
                     </article>
                 </aside>
             </section>
-        </section>
+
+{#            <section class="row-fluid">#}
+{#                <aside class="span6 all-body-text1">#}
+{#                    <article class="tblrp510">#}
+{#                        <div>#}
+{#                            <h2>#}
+{#                                Mostre aos seus clientes mais segurança. Gere confiabilidade e aumento de#}
+{#                                receita#}
+{#                            </h2>#}
+{#                            {% for p in page.children.all.order_by %}#}
+{#                                {% if forloop.counter < 7 and p.product %}#}
+                                    {# Hardcoded Product Separator #}
+{#                                    {% if p.title == 'S/MIME' %}#}
+{#                                        <h2>e-Mails assinados digitalmente</h2>#}
+{#                                    {% endif %}#}
+{#                                    {% if p.title == 'JRE' %}#}
+{#                                        <h2>Maior segurança em downloads com assinatura de códigos</h2>#}
+{#                                    {% endif %}#}
+{#                                    {% editable p.title %}#}
+{#                                        <a href="{{ p.get_absolute_url }}">#}
+{#                                            <h3>{{ p.title }}</h3></a>#}
+{#                                    {% endeditable %}#}
+{#                                    {% editable p.product.youtube_title %}#}
+{#                                        <p class="all-body-text5 borderp bp10">#}
+{#                                            {{ p.product.youtube_title }}#}
+{#                                        </p>#}
+{#                                    {% endeditable %}#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+{#                    </article>#}
+{#                </aside>#}
+{##}
+{#                <aside class="span6 all-body-text1">#}
+{#                    <article class="tblrp510">#}
+{#                        <div>#}
+{#                            {% for p in page.children.all.order_by %}#}
+{#                                {% if forloop.counter >= 7 and p.product %}#}
+                                    {# Hardcoded Product Separator #}
+{#                                    {% if p.title == 'S/MIME' %}#}
+{#                                        <h2>e-Mails assinados digitalmente</h2>#}
+{#                                    {% endif %}#}
+{#                                    {% if p.title == 'JRE' %}#}
+{#                                        <h2>Maior segurança em downloads com assinatura de códigos</h2>#}
+{#                                    {% endif %}#}
+{#                                    {% editable p.title %}#}
+{#                                        <a href="{{ p.get_absolute_url }}">#}
+{#                                            <h3>{{ p.title }}</h3></a>#}
+{#                                    {% endeditable %}#}
+{#                                    {% editable p.product.youtube_title %}#}
+{#                                        <p class="all-body-text5 borderp bp10">#}
+{#                                            {{ p.product.youtube_title }}#}
+{#                                        </p>#}
+{#                                    {% endeditable %}#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{#                            <div class="buttons">#}
+{#                                <a href="{% url 'page' 'certificado-digital/comparar-certificados-digitais' %}" class="btn btn-large btn-orange btn-block">Veja as diferenças#}
+{#                                    entre os certificados#}
+{#                                </a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </article>#}
+{#                </aside>#}
+{#            </section>#}
+{#        </section>#}
     </section>
 
 

@@ -96,15 +96,17 @@ def get_emails_validacao_padrao(dominio):
 
 
 def get_emails_validacao_whois(dominio):
-    emails = cache.get('whois-{}'.format(dominio))
+    emails = cache.get('emails_validacao-{}'.format(dominio))
 
     if emails is not None:
         return emails
 
     dominio = limpa_dominio(dominio)
 
-    if dominio.endswith('.br'):
-        return get_emails_dominio(dominio)
+    # if dominio.endswith('.br'):
+    #     emails = get_emails_dominio(dominio)
+    # else:
+    #     emails = []
 
     response = requests.post(settings.COMODO_API_GET_DCV_EMAILS_URL, data={
         'loginName': settings.COMODO_LOGIN_NAME,
@@ -113,9 +115,11 @@ def get_emails_validacao_whois(dominio):
     })
 
     emails = [r[12:] for r in response.text.splitlines()
-              if r.startswith('whois email\t') and r[:12] not in ('cert@cert.br', 'mail-abuse@cert.br')]
+              if r.startswith('whois email\t') and r[12:] not in ('cert@cert.br', 'mail-abuse@cert.br')]
 
-    cache.set('whois-{}'.format(dominio), emails, 86400)  # cache de 1 dia
+    #emails.extend(email for email in emails_comodo if email not in emails)
+
+    cache.set('emails_validacao-{}'.format(dominio), emails, 86400)  # cache de 1 dia
 
     return emails
 
@@ -162,6 +166,13 @@ def emite_certificado(emissao):
         else:
             product = CODIGOS_PRODUTOS[voucher.ssl_product]
 
+        if voucher.ssl_product in (Voucher.PRODUTO_SSL, Voucher.PRODUTO_SSL_WILDCARD, Voucher.PRODUTO_SAN_UCC, Voucher.PRODUTO_MDC):
+            ca_certificate_id = 389
+        elif voucher.ssl_product in (Voucher.PRODUTO_EV, Voucher.PRODUTO_EV_MDC):
+            ca_certificate_id = 391
+        else:
+            ca_certificate_id = None
+
         params = {
             'loginName': settings.COMODO_LOGIN_NAME,
             'loginPassword': settings.COMODO_LOGIN_PASSWORD,
@@ -186,6 +197,9 @@ def emite_certificado(emissao):
 
         }
 
+        if ca_certificate_id:
+            params['caCertificateID'] = ca_certificate_id
+
         if voucher.ssl_product in (voucher.PRODUTO_MDC, voucher.PRODUTO_SAN_UCC, voucher.PRODUTO_EV_MDC):
             params['domainNames'] = emissao.emission_urls
             params['dcvEmailAddresses'] = emissao.emission_dcv_emails
@@ -204,13 +218,15 @@ def emite_certificado(emissao):
         if r['errorCode'] != '0':
             log.error('ERRO EMISSAO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('emissão', voucher, r['errorCode'], r['errorMessage'])
-            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+            raise EmissaoComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
             log.info('EMISSAO > params: %s \nResponse: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
 
     except Exception as e:
+        if isinstance(e, ComodoError):
+            raise e
         log.error('ERRO EMISSAO > erro desconhecido: %s' % e)
         raise EmissaoComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
@@ -234,13 +250,15 @@ def revoga_certificado(revogacao):
         if r['errorCode'] != '0':
             log.error('ERRO REVOGAÇÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('revogação', revogacao.emission.voucher, r['errorCode'], r['errorMessage'])
-            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+            raise RevogacaoComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
             log.info('REVOGAÇÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
 
     except Exception as e:
+        if isinstance(e, ComodoError):
+            raise e
         log.error('ERRO REVOGAÇÃO > erro desconhecido: %s' % e)
         raise RevogacaoComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
@@ -267,12 +285,14 @@ def reemite_certificado(emissao):
         if r['errorCode'] != '0':
             log.error('ERRO REEMISSÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('reemissão', emissao.voucher, r['errorCode'], r['errorMessage'])
-            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+            raise ReemissaoComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
         else:
             log.info('REEMISSÃO > params: %s | response: %s' % (log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
     except Exception as e:
+        if isinstance(e, ComodoError):
+            raise e
         log.error('ERRO REEMISSÃO > erro desconhecido: %s' % e)
         raise ReemissaoComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
 
@@ -314,11 +334,13 @@ def emite_jre_cs(emissao):
         if r['errorCode'] != '0':
             log.error('ERRO EMISSÃO JRE/CS > params: {} | response: {}'.format(log_safe_dict(params, EXCLUDE_KEYS), r))
             envia_email_erro('emissão', emissao.voucher, r['errorCode'], r['errorMessage'])
-            raise ComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
+            raise EmissaoJRECSComodoError('Ocorreu um erro na chamada da COMODO', code=r['errorCode'], comodo_message=r['errorMessage'])
 
         log.info('EMISSÂO JRE/CS > params: {} | response: {}'.format(log_safe_dict(params, EXCLUDE_KEYS), r))
 
         return r
     except Exception as e:
+        if isinstance(e, ComodoError):
+            raise e
         log.error('ERRO EMISSÃO JRE/CS > erro desconhecido: %s' % e)
         raise EmissaoJRECSComodoError('Ocorreu um erro na chamada da COMODO', code='-500', comodo_message='Erro interno do servidor')
