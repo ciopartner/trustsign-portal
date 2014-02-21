@@ -52,6 +52,10 @@ def formata_cep(cep):
     return cep
 
 
+class KNUError(Exception):
+    pass
+
+
 def get_dados_empresa(cnpj):
     # Se não colocar o str() dá pau em produção
     cnpj = str(limpa_cnpj(cnpj))
@@ -60,8 +64,8 @@ def get_dados_empresa(cnpj):
         if settings.USAR_KNU:
             r = knu.receitaCNPJ(cnpj)
             if r.cod_erro != 0:
-                log.warning('Erro na requisição da knu: (%d) %s' % (r.cod_erro, r.desc_erro))
-                return {'erro': 'Erro interno'}
+                log.warning('Erro na requisição usando CNPJ: {} da knu: ({}) {}'.format(cnpj, r.cod_erro, r.desc_erro))
+                raise KNUError('Erro interno')
 
             data = {
                 'cnpj': cnpj,
