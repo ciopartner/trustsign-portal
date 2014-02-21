@@ -638,7 +638,8 @@ class EmissaoWizardView(SessionWizardView):
             raise PermissionDenied()
 
         if voucher.customer_cnpj != user.username:
-            atualiza_dados_cliente(user)
+            pass
+            #atualiza_dados_cliente(user)
 
             if user.get_profile().cliente_situacao_cadastral.lower() != 'ativa':
                 raise PermissionDenied('A situação cadastral do seu CNPJ não consta como ativa')
