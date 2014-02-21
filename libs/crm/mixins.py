@@ -124,7 +124,8 @@ class OscarToCRMMixin(object):
         oportunidade.numero_pedido = order.number
         oportunidade.data_pedido = now().strftime('%Y-%m-%d')
         oportunidade.data_pagto = now().strftime('%Y-%m-%d')
-        oportunidade.valor_total = str(order.total_incl_tax)
+        # Para enviar os dados no formato correto para o CRM, colocamos os replaces abaixo.
+        oportunidade.valor_total = str(order.total_incl_tax).replace(',', '').replace('.', ',')
         oportunidade.parcelas = '1'
         oportunidade.email_nfe = order.user.get_profile().email_nfe
 
@@ -175,8 +176,9 @@ class OscarToCRMMixin(object):
             produto = crm.ProdutoCRM()
             produto.codigo = line.partner_sku
             produto.quantidade = line.quantity
-            produto.preco_unitario = str(line.unit_price_incl_tax)
-            produto.preco_total = str(line.line_price_excl_tax)
+            # Para enviar os dados no formato correto para o CRM, colocamos os replaces abaixo.
+            produto.preco_unitario = str(line.unit_price_incl_tax).replace(',', '').replace('.', ',')
+            produto.preco_total = str(line.line_price_excl_tax).replace(',', '').replace('.', ',')
             produtos.append(produto)
 
         return produtos
