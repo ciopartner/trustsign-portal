@@ -93,13 +93,13 @@ def decode_csr(csr):
                 match_email = regex_email.findall(linha)
 
                 d.update({
-                    'CN': match_cn[0][0] if match_cn else '',
-                    'OU': match_ou[0][0] if match_ou else '',
-                    'O': match_o[0][0] if match_o else '',
-                    'L': match_l[0][0] if match_l else '',
-                    'S': match_st[0][0] if match_st else '',
-                    'C': match_c[0][0] if match_c else '',
-                    'Email': match_email[0][0] if match_email else '',
+                    'CN': match_cn[0][0].replace('\\x00', '') if match_cn else '',
+                    'OU': match_ou[0][0].replace('\\x00', '') if match_ou else '',
+                    'O': match_o[0][0].replace('\\x00', '') if match_o else '',
+                    'L': match_l[0][0].replace('\\x00', '') if match_l else '',
+                    'S': match_st[0][0].replace('\\x00', '') if match_st else '',
+                    'C': match_c[0][0].replace('\\x00', '') if match_c else '',
+                    'Email': match_email[0][0].replace('\\x00', '') if match_email else '',
                     'ok': True,
                 })
 
@@ -123,7 +123,7 @@ def decode_csr(csr):
         elif 'DNS' in linha:
             try:
 
-                d['dnsNames'] = [s[4:] for s in map(str.strip, linha.split(','))]
+                d['dnsNames'] = [s[4:].replace('\\x00', '') for s in map(str.strip, linha.split(','))]
 
             except:
                 log.warning('Erro na decodificação da CSR (DNS): %s\n' % csr)
