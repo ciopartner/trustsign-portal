@@ -223,7 +223,8 @@ class PaymentDetailsView(PaymentEventMixin, views.PaymentDetailsView, OscarToCRM
                 not self.valida_contrato_siteseguro() or not self.valida_contrato_pki():
             raise UnableToTakePayment('Você precisa aceitar os termos de uso dos produtos selecionados')
 
-        atualiza_dados_cliente(self.request.user)
+        # Suspenso por problemas no checkout
+        #atualiza_dados_cliente(self.request.user)
 
         if self.request.user.get_profile().cliente_situacao_cadastral.lower() != 'ativa':
             raise UnableToTakePayment('A situação cadastral do seu CNPJ não consta como ativa')
