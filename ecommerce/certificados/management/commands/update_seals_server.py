@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
         for emissao in Emissao.objects.select_related('voucher').filter(
             emission_status__in=(Emissao.STATUS_EMITIDO,Emissao.STATUS_REEMITIDO),
-            emission__voucher__ssl_valid_to__gte=now()
+            voucher__ssl_valid_to__gte=now()
         ):
             if emissao.voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
                 voucher = emissao.voucher
