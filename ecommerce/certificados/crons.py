@@ -14,6 +14,7 @@ from django.utils import translation
 from django_cron import CronJobBase, Schedule
 import requests
 from django.utils.timezone import now
+from ecommerce.certificados.validations import is_nome_interno
 from ecommerce.website.utils import get_template_email
 from libs.crm.crm import CRMClient
 from libs.ssl_utils import certificate_decode
@@ -284,16 +285,19 @@ class AtivaSelosJob(CronJobBase):
             if voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
                 if voucher.emissao.emission_urls:
                     websites[voucher.ssl_line].update((d, voucher.customer_cnpj, voucher.customer_companyname)
-                                                      for d in voucher.emissao.get_lista_dominios())
+                                                      for d in voucher.emissao.get_lista_dominios()
+                                                      if not is_nome_interno(d))
                 else:
                     log.warning('voucher multi-dominio sem urls #%s' % voucher.pk)
 
                 if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC:
-                    websites[voucher.ssl_line].add((voucher.emissao.emission_url, voucher.customer_cnpj, voucher.customer_companyname))
+                    if not is_nome_interno(voucher.emissao.emission_url):
+                        websites[voucher.ssl_line].add((voucher.emissao.emission_url, voucher.customer_cnpj, voucher.customer_companyname))
             else:
-                websites[voucher.ssl_line].add((voucher.emissao.emission_url,
-                                                voucher.customer_cnpj,
-                                                voucher.customer_companyname))
+                if not is_nome_interno(voucher.emissao.emission_url):
+                    websites[voucher.ssl_line].add((voucher.emissao.emission_url,
+                                                    voucher.customer_cnpj,
+                                                    voucher.customer_companyname))
 
         return websites
 

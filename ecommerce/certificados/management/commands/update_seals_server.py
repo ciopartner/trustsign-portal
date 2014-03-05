@@ -6,6 +6,7 @@ from django.core.management import BaseCommand
 from django.utils.timezone import now
 import requests
 from ecommerce.certificados.models import Emissao, Voucher
+from ecommerce.certificados.validations import is_nome_interno
 
 log = getLogger('ecommerce.certificados.commands')
 
@@ -27,19 +28,22 @@ class Command(BaseCommand):
             if emissao.voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
                 if emissao.emission_urls:
                     websites[voucher.ssl_line].update((d, voucher.customer_cnpj, voucher.customer_companyname)
-                                                      for d in emissao.get_lista_dominios())
+                                                      for d in emissao.get_lista_dominios()
+                                                      if not is_nome_interno(d))
                 else:
                     log.warning('voucher multi-dominio sem urls #%s' % voucher.pk)
 
                 if emissao.voucher.ssl_product == Voucher.PRODUTO_SAN_UCC:
-                    websites[voucher.ssl_line].add((voucher.emissao.emission_url,
-                                                    voucher.customer_cnpj,
-                                                    voucher.customer_companyname))
+                    if not is_nome_interno(voucher.emissao.emission_url):
+                        websites[voucher.ssl_line].add((voucher.emissao.emission_url,
+                                                        voucher.customer_cnpj,
+                                                        voucher.customer_companyname))
 
             else:
-                websites[voucher.ssl_line].add((emissao.emission_url,
-                                                voucher.customer_cnpj,
-                                                voucher.customer_companyname))
+                if not is_nome_interno(voucher.emissao.emission_url):
+                    websites[voucher.ssl_line].add((emissao.emission_url,
+                                                    voucher.customer_cnpj,
+                                                    voucher.customer_companyname))
 
         for line in ('basic', 'pro', 'prime'):
             for website in websites[line]:
