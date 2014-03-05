@@ -288,8 +288,12 @@ class AtivaSelosJob(CronJobBase):
                 else:
                     log.warning('voucher multi-dominio sem urls #%s' % voucher.pk)
 
-            if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC:
-                websites[voucher.ssl_line].add((voucher.emissao.emission_url, voucher.customer_cnpj, voucher.customer_companyname))
+                if voucher.ssl_product == Voucher.PRODUTO_SAN_UCC:
+                    websites[voucher.ssl_line].add((voucher.emissao.emission_url, voucher.customer_cnpj, voucher.customer_companyname))
+            else:
+                websites[voucher.ssl_line].add((voucher.emissao.emission_url,
+                                                voucher.customer_cnpj,
+                                                voucher.customer_companyname))
 
         return websites
 

@@ -23,8 +23,8 @@ class Command(BaseCommand):
             emission_status__in=(Emissao.STATUS_EMITIDO,Emissao.STATUS_REEMITIDO),
             voucher__ssl_valid_to__gte=now()
         ):
+            voucher = emissao.voucher
             if emissao.voucher.ssl_product in (Voucher.PRODUTO_MDC, Voucher.PRODUTO_EV_MDC, Voucher.PRODUTO_SAN_UCC):
-                voucher = emissao.voucher
                 if emissao.emission_urls:
                     websites[voucher.ssl_line].update((d, voucher.customer_cnpj, voucher.customer_companyname)
                                                       for d in emissao.get_lista_dominios())
@@ -35,6 +35,11 @@ class Command(BaseCommand):
                     websites[voucher.ssl_line].add((voucher.emissao.emission_url,
                                                     voucher.customer_cnpj,
                                                     voucher.customer_companyname))
+
+            else:
+                websites[voucher.ssl_line].add((emissao.emission_url,
+                                                voucher.customer_cnpj,
+                                                voucher.customer_companyname))
 
         for line in ('basic', 'pro', 'prime'):
             for website in websites[line]:
