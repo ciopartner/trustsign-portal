@@ -50,7 +50,7 @@ class Command(BaseCommand):
             'websites': url,
             'cnpj': cnpj,
             'razaosocial': razaosocial,
-        })
+        }, verify=False)
 
         if response.status_code != 200:
             log.error('Erro ao ativar o selo: {}'.format(response.text))
