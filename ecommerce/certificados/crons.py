@@ -14,7 +14,6 @@ from django.utils import translation
 from django_cron import CronJobBase, Schedule
 import requests
 from django.utils.timezone import now
-from ecommerce.certificados.validations import is_nome_interno
 from ecommerce.website.utils import get_template_email
 from libs.crm.crm import CRMClient
 from libs.ssl_utils import certificate_decode
@@ -274,6 +273,7 @@ class AtivaSelosJob(CronJobBase):
         Retorna um dict separando as urls pela linha, para envio ao servidor de selos
         """
         from ecommerce.certificados.models import Voucher
+        from ecommerce.certificados.validations import is_nome_interno
 
         websites = {
             'basic': set(),
