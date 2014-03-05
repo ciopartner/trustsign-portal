@@ -58,7 +58,7 @@ class Command(BaseCommand):
             'password': settings.SEALS_PASSWORD,
             'websites': url,
             'cnpj': cnpj,
-            'razaosocial': razaosocial,
+            'company_name': razaosocial,
         }, verify=False)
 
         if response.status_code != 200:

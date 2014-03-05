@@ -309,7 +309,7 @@ class AtivaSelosJob(CronJobBase):
             'password': settings.SEALS_PASSWORD,
             'websites': url,
             'cnpj': cnpj,
-            'razaosocial': razaosocial,
+            'company_name': razaosocial,
         }, verify=False)
         if response.status_code != 200:
             log.error('Erro ao ativar o selo: {}'.format(response.text))
@@ -387,7 +387,7 @@ class DesativaSelosRevogadosJob(AtivaSelosJob):
             'password': settings.SEALS_PASSWORD,
             'websites': url,
             'cnpj': cnpj,
-            'razaosocial': razaosocial,
+            'company_name': razaosocial,
         }, verify=False)
         if response.status_code != 200:
             log.error('Erro ao ativar o selo: {}'.format(response.text))
