@@ -291,7 +291,7 @@ class Voucher(Model):
             return ''
 
         hash_url = md5(emissao.emission_url).hexdigest()
-        url_imagem_selo = '%s/static/selos-clientes/selo-%s-%s-pt.png' % (seals_server_url, tipo, hash_url)
+        url_imagem_selo = '%s/static/seals/selo-%s-%s-pt.png' % (seals_server_url, tipo, hash_url)
 
         return '''<a href="%s" target="_blank">
 <img name="trustseal" alt="Site Autêntico" src="%s" border="0" title="Clique para Validar" />
