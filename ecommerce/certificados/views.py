@@ -193,8 +193,8 @@ class EmissaoAPIView(CreateModelMixin, AddErrorResponseMixin, GenericAPIView):
                 for voucher_adicional in vouchers_adicionais[:dominios_adicionais]:
                     Emissao.objects.create(
                         voucher=voucher_adicional,
-                        crm_hash=voucher.crm_hash,
-                        requestor_user_id = self.request.user.pk,
+                        crm_hash=voucher_adicional.crm_hash,
+                        requestor_user_id=self.request.user.pk,
                         emission_status=Emissao.STATUS_ADICIONAL_USADO,
                     )
 
