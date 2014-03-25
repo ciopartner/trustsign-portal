@@ -43,6 +43,7 @@
 
 {% block one_row %}
     <div class="span12 left">
+
         {% editable page.product.youtube_title %}
             <h2>{{ page.product.youtube_title }}</h2>
         {% endeditable %}
@@ -94,11 +95,9 @@
         {% block linhas_ssl %}
             {# Inclusão da tabela de comparação de certificados #}
             <div style="margin-top:20px;">
-                {% include "includes/linhas-ssl.html" with precos=precos product_code=product_code %}
+                {% include "includes/linhas-ssl.html" with precos=precos product_code=product_code hide_3year=True %}
             </div>
         {% endblock %}
-
-        {% include "includes/confirmar-compra.html" %}
 
         {# Inclusão da área 'você sabia' #}
         <div style="margin-top:20px;">
