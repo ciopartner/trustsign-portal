@@ -13,4 +13,5 @@ class VoucherAdmin(admin.ModelAdmin):
     list_display = ('crm_hash', 'order_number', 'order_date', 'customer_cnpj', 'ssl_product', 'ssl_line', 'ssl_term',
                     'comodo_order')
     ordering = ['-order_number']
+    search_fields = ['customer_cnpj', 'order_number', 'crm_hash', 'customer_companyname']
 admin.site.register(Voucher, VoucherAdmin)
