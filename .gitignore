@@ -13,3 +13,4 @@ local_settings.py
 /portal/static-portal
 /ecommerce/static_root
 /ecommerce/media
+CACHE
