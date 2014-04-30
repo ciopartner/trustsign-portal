@@ -471,13 +471,13 @@ class Emissao(Model):
 
     emission_primary_dn = CharField(max_length=256, null=True, blank=True)
 
-    emission_assignment_letter = FileField(upload_to='uploads/cartas/', blank=True, null=True)
-    emission_articles_of_incorporation = FileField(upload_to='uploads/contratos_sociais/', blank=True, null=True)
-    emission_address_proof = FileField(upload_to='uploads/comprovantes_endereco/', blank=True, null=True)
-    emission_ccsa = FileField(upload_to='uploads/ccsas/', blank=True, null=True)  # comodo cert. subscriber agreement
-    emission_evcr = FileField(upload_to='uploads/evcrs/', blank=True, null=True)  # ev certificate request
-    emission_phone_proof = FileField(upload_to='uploads/conta-telefone/', blank=True, null=True)
-    emission_id = FileField(upload_to='uploads/docs/', blank=True, null=True)
+    emission_assignment_letter = FileField(upload_to='uploads/cartas/', blank=True, null=True, max_length=256)
+    emission_articles_of_incorporation = FileField(upload_to='uploads/contratos_sociais/', blank=True, null=True, max_length=256)
+    emission_address_proof = FileField(upload_to='uploads/comprovantes_endereco/', blank=True, null=True, max_length=256)
+    emission_ccsa = FileField(upload_to='uploads/ccsas/', blank=True, null=True, max_length=256)  # comodo cert. subscriber agreement
+    emission_evcr = FileField(upload_to='uploads/evcrs/', blank=True, null=True, max_length=256)  # ev certificate request
+    emission_phone_proof = FileField(upload_to='uploads/conta-telefone/', blank=True, null=True, max_length=256)
+    emission_id = FileField(upload_to='uploads/docs/', blank=True, null=True, max_length=256)
 
     emission_cost = DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
 
