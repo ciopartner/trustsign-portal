@@ -3,7 +3,7 @@ from apps.app import application
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-from portal.utils import CollectStaticView
+from portal.portal.utils import CollectStaticView
 
 admin.autodiscover()
 
