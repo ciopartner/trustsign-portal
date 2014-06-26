@@ -102,165 +102,189 @@
                         <td class="tdbls tdbrs">Para grandes empresas ou e-commerces. Link a partir de 20MB</td>
                     </tr>
                 </thead>
-                <tbody>
+				<tbody>
+					<tr class="all-body-text5  price">
+						<td style="background: #FFF"></td>
+						<td class="tdbls bbs td-price">
+							{% if precos.basic.termsubscription_1m.price_regular %}
+								<div class="promotion-line">
+									<span class="old-price">de R$ {{ precos.basic.termsubscription_1m.price_regular }}</span> <span class="new-price">por</span>
+								</div>
+							{% endif %}
+							<h3 class="textac">Mensalidade</h3>
+							<h2 class="textac price-color">R$ {{ precos.basic.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.basic.termsubscription_1m.price_tpl.1 }}</sub></h2>
+							<a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="basic" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Comprar
+								{% if precos.basic.termsubscription_1m.label %}
+									<img src="/media/{{ precos.basic.termsubscription_1m.label }}" />
+								{% endif %}
+							</a>
+						</td>
+						<td class="tdbls bbs td-price">
+							{% if precos.pro.termsubscription_1m.price_regular %}
+								<div class="promotion-line">
+									<span class="old-price">de R$ {{ precos.pro.termsubscription_1m.price_regular }}</span> <span class="new-price">por</span>
+								</div>
+							{% endif %}
+							<h3 class="textac">Mensalidade</h3>
+							<h2 class="textac price-color">R$ {{ precos.pro.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.pro.termsubscription_1m.price_tpl.1 }}</sub></h2>
+							<a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="pro" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Comprar
+								{% if precos.pro.termsubscription_1m.label %}
+									<img src="/media/{{ precos.pro.termsubscription_1m.label }}" />
+								{% endif %}
+							</a>
+						</td>
+						<td class="tdbls bbs tdbrs" style="vertical-align: middle">
+							<a href="/portal/suporte-trustsign/atendimento-por-e-mail/" class="textac price-color display-inlineblock">Consulte nossa equipe</a>
+						</td>
+					</tr>
+					<tr class="all-body-text5  dica">
+						<td style="background: #FFF"></td>
+						<td>
+							<p class="dica">Ligue e consulte valores diferenciados</p>
+						</td>
+						<td>
+							<p class="dica">Ligue e consulte valores diferenciados</p>
+						</td>
+						<td>
+							<p class="dica">Ligue e consulte valores diferenciados</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>	
+			<div class="ssltab-wrap comprimir">
+				<table class="table ssltab">
+					<tbody>
+						<thead>
+							<th colspan="4" class="title">
+								<h2>
+									BENEFÍCIOS E DIFERENCIAIS 
+									<span class="aviso">* Promoção válida por tempo indeterminado</span>
+								</h2>														
+							</th>
+						</thead>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>SaaS (zero impacto na implantação)</b></td>
+							<td class="tdbls sslright" width="141"></td>
+							<td class="tdbls sslright" width="141"></td>
+							<td class="tdbls sslright tdbrs" width="141"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>SaaS (zero impacto na implantação)</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>CDN Global</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>CDN Global</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Proteção contra backdoors em aplicações</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Proteção contra backdoors em aplicações</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Proteção de SQL Injection e Cross Site Scripting (XSS)</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Proteção de SQL Injection e Cross Site Scripting (XSS)</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Proteção do TOP 10 de ameaças OWASP</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Proteção do TOP 10 de ameaças OWASP</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Proteção DoS nível de aplicação</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Proteção DoS nível de aplicação</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Possibilidade de contratação adicional DDoS nível de rede <span title="Contratação não disponível online. Para contratação de DDoS, entre em contato com a equipe comercial para que seja verificada em qual plano se adequa à sua necessidade." data-toggle="tooltip"><a
+									href="#">*</a></span></b></td>
+							<td class="tdbls sslwrong"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Possibilidade de contratação adicional DDoS nível de rede <span title="Contratação não disponível online. Para contratação de DDoS, entre em contato com a equipe comercial para que seja verificada em qual plano se adequa à sua necessidade." data-toggle="tooltip"><a
-                                href="#">*</a></span></b></td>
-                        <td class="tdbls sslwrong"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Bloqueio de bots maliciosos</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Bloqueio de bots maliciosos</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Bloqueio de ataques do tipo Illegal Resource Acess e RFI</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Bloqueio de ataques do tipo Illegal Resource Acess e RFI</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Bloqueio de comentários SPAM</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Bloqueio de comentários SPAM</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Blacklist por país e IP de origem</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Blacklist por país e IP de origem</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Verificação de segurança (CAPTCHA)</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Verificação de segurança (CAPTCHA)</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Cache de conteúdo estático, avançado e dinâmico</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Cache de conteúdo estático, avançado e dinâmico</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Estatísticas do tráfego do site e de updates</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Estatísticas do tráfego do site e de updates</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Link dedicado</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Link dedicado</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Suporte 8x5</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>
 
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Suporte 8x5</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
-
-                    <tr class="all-body-text5 bbs">
-                        <td class="tdbls"><b>Selo de Segurança</b></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright"></td>
-                        <td class="tdbls sslright tdbrs"></td>
-                    </tr>
-
-                    <tr class="all-body-text5  price">
-                        <td style="background: #FFF"></td>
-                        <td class="tdbls bbs td-price">
-                            {% if precos.basic.termsubscription_1m.price_regular %}
-                                <div class="promotion-line">
-                                    <span class="old-price">de R$ {{ precos.basic.termsubscription_1m.price_regular }}</span> <span class="new-price">por</span>
-                                </div>
-                            {% endif %}
-                            <h3 class="textac">Mensalidade</h3>
-                            <h2 class="textac price-color">R$ {{ precos.basic.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.basic.termsubscription_1m.price_tpl.1 }}</sub></h2>
-                            <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="basic" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
-                                {% if precos.basic.termsubscription_1m.label %}
-                                    <img src="/media/{{ precos.basic.termsubscription_1m.label }}" />
-                                {% endif %}
-                            </a>
-                        </td>
-                        <td class="tdbls bbs td-price">
-                            {% if precos.pro.termsubscription_1m.price_regular %}
-                                <div class="promotion-line">
-                                    <span class="old-price">de R$ {{ precos.pro.termsubscription_1m.price_regular }}</span> <span class="new-price">por</span>
-                                </div>
-                            {% endif %}
-                            <h3 class="textac">Mensalidade</h3>
-                            <h2 class="textac price-color">R$ {{ precos.pro.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.pro.termsubscription_1m.price_tpl.1 }}</sub></h2>
-                            <a class="btn btn-orange btn-block" data-term="subscription_1m" data-line="pro" data-comprar-produto="site-monitorado" href=""><img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
-                                {% if precos.pro.termsubscription_1m.label %}
-                                    <img src="/media/{{ precos.pro.termsubscription_1m.label }}" />
-                                {% endif %}
-                            </a>
-                        </td>
-                        <td class="tdbls bbs tdbrs" style="vertical-align: middle">
-                            <a href="/portal/suporte-trustsign/atendimento-por-e-mail/" class="textac price-color display-inlineblock">Consulte nossa equipe</a>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
+						<tr class="all-body-text5 bbs">
+							<td class="tdbls"><b>Selo de Segurança</b></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright"></td>
+							<td class="tdbls sslright tdbrs"></td>
+						</tr>                    
+					</tbody>
+				</table>
+				<a href='javascript:void(0)' class='expandir-tabela'>Clique aqui para visualizar a tabela completa</a>
+			</div>	
 
 
             <div id="comprar-message"></div>

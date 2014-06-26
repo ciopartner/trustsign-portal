@@ -86,7 +86,7 @@
         </div>
 
         <div id="product-price">
-            <div class="pull-right">
+            <div class="pull-right" style="width: 133px;">
 
                 <div class="box-price tblrp10" style="margin-top: 40px; width: 133px; border: 1px solid #ddd">
 
@@ -99,12 +99,22 @@
                     <h3>R$ {{ precos.na.termsubscription_1m.price_tpl.0 }},<sub>{{ precos.na.termsubscription_1m.price_tpl.1 }}</sub></h3>
                     Mensalidade
                     <a href="" data-comprar-produto="{{ product_code }}" data-line="na" data-term="subscription_1m" class="btn btn-orange">
-                        <img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Adicionar
+                        <img style="margin-top: -4px;" alt="" src="{% static "home/img/icons/cart-white.png" %}" class="custom-icon" width="14"> Comprar
                         {% if precos.na.termsubscription_1m.label %}
                             <img src="/media/{{ precos.na.termsubscription_1m.label }}" />
                         {% endif %}
                     </a>
                 </div>
+				<table class="table" style="position: relative; width: 134px; top: -3px; left: -1px;">
+					<tbody>
+						<tr class="all-body-text5  dica">
+							<td style="background: #FFF; padding: 0;"></td>			
+							<td>
+								<p class="dica">Ligue e consulte valores diferenciados</p>
+							</td>
+						</tr>
+					</tbody>	
+				</table>	
             </div>
         </div>
 

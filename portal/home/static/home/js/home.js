@@ -21,3 +21,7 @@
 function abreVideo(link){
     $('#modal-video').find('.youtube-player').attr('src', link);
 }
+
+$('.modal').on('hide', function () {
+	$('.youtube-player').attr('src', '');		
+});

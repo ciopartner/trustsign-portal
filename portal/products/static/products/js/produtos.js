@@ -107,5 +107,31 @@ $(document).ready(function () {
         add_product(product_code, line, term, qtd, additional, additional_code, additional_price);
 
     });
-
+	
+	// ssltab max-height 10 tr
+	
+	$.each($('.ssltab-wrap').find('.ssltab'), function() {
+		var head_height = $(this).find('thead').height();
+			max_height = head_height;
+			
+			$.each($(this).find('tbody tr'), function() {
+				if ($(this).index() < 10) {		
+					max_height += $(this).outerHeight();					
+				} else {
+					return false;
+				}
+			});
+			
+			$(this).parent().css('max-height', max_height + 'px')
+			
+	})
+	
+	// collapse table
+	$('.ssltab-wrap').find('.expandir-tabela').click(function() {
+		var tgt = $(this).parent();
+		tgt.removeClass('comprimir');
+		tgt.css('max-height', '9999px')
+		$(this).hide();
+	});
+	
 });

@@ -1,1 +1,141 @@
-../../../portal/home/templates/includes/5-footer.html
+{% load staticfiles %}
+
+<footer class="tbm250" style="background-color:#EEEEEE; display:block; padding:20px 0px; margin-bottom: 0px;">
+    <section class="container ">
+
+        <section class="featurette tbm5">
+            <section class="row footer-title ">
+
+                <aside style="float: left;width: 420px;margin-left: 18px;">
+                    <div class="row-fluid">
+                    <aside class="span6 footer-item-icon footer-info-links">
+                        <p class="footer-item-text">SOLUÇÕES</p>
+                        <ul class="unstyled">
+                            <li><a href="{{ url_portal }}certificado-digital" class="carsol"><b>&rsaquo;</b> Certicado Digital</a></li>
+                            <li><a href="{{ url_portal }}pki" class="carsol"><b>&rsaquo;</b> PKI</a></li>
+                            <li><a href="{{ url_portal }}site-mais-seguro" class="carsol"><b>&rsaquo;</b> Site + Seguro</a></li>
+                            <li><a href="{{ url_portal }}site-monitorado" class="carsol"><b>&rsaquo;</b> Site Protegido</a></li>
+                        </ul>
+                    </aside>
+
+                    <aside class="span6 footer-item-icon">
+                        <p class="footer-item-text">FORMAS DE PAGAMENTO</p>
+
+                        <p class="footer-text">Cartões de crédito</p>
+                        <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_visa.gif" %}"/></a>
+                        <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_master.gif" %}"/></a>
+                        <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_amex.gif" %}"/></a>
+
+                        <div class="row-fluid">
+                            <div class="span3">
+                                <p class="footer-text">Boleto</p>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_boleto.gif" %}"/></a>
+                            </div>
+                            <div class="span9">
+                                <p class="footer-text">Cartão de débito/Bankline</p>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_bb.gif" %}"/></a>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_itau.gif" %}"/></a>
+                                <a href="#" class="payment-icon"><img src="{% static "home/img/payment/thumb_bradesco.gif" %}"/></a>
+                            </div>
+                        </div>
+
+                    </aside>
+                    </div>
+                </aside>
+
+
+
+
+{#                <aside class="footer-item-icon" style="float: right;">#}
+{#                    <p class="footer-item-text">SEGURANÇA</p>#}
+{#                    <a onclick="window.open('http://security.trustsign.com.br/?url=www.trustsign.com.br','','toolbar=no,width=630,height=' + screen.height + ',resize=no,scrollbars=yes'); return false;" href="http://security.trustsign.com.br/?url=www.trustsign.com.br"#}
+{#                       target="_blank">#}
+{#                        <img name="trustseal" alt="Site Autêntico"#}
+{#                             src="http://security.trustsign.com.br/static/seals/selo-prime-39a0aac0dd28cb52aaffb9ad5db552da-pt.png"#}
+{#                             border="0" title="Clique para Validar"/>#}
+{#                    </a>#}
+{##}
+{#                    <a onclick="window.open('http://security.trustsign.com.br/?url=www.trustsign.com.br','','toolbar=no,width=630,height=' + screen.height + ',resize=no,scrollbars=yes'); return false;" href="http://security.trustsign.com.br/?url=www.trustsign.com.br"#}
+{#                       target="_blank">#}
+{#                        <img name="trustseal" alt="Security Scanned Seal"#}
+{#                             src="http://security.trustsign.com.br/static/seals/selo-site-seguro-39a0aac0dd28cb52aaffb9ad5db552da-pt.png" border="0"#}
+{#                             title="Clique para Validar"/>#}
+{#                    </a>#}
+{##}
+{#                    <a onclick="window.open('http://security.trustsign.com.br/?url=www.trustsign.com.br','','toolbar=no,width=630,height=' + screen.height + ',resize=no,scrollbars=yes'); return false;" href="http://security.trustsign.com.br/?url=www.trustsign.com.br"#}
+{#                       target="_blank">#}
+{#                        <img name="trustseal" alt="Site Protegido"#}
+{#                             src="http://security.trustsign.com.br/static/seals/selo-site-monitorado-39a0aac0dd28cb52aaffb9ad5db552da-pt.png"#}
+{#                             border="0" title="Clique para Validar"/>#}
+{#                    </a>#}
+{#                    </p>#}
+{#                </aside>#}
+                <aside class="footer-item-icon" style="float: right;">
+                    <p class="footer-item-text">SEGURANÇA</p>
+                    <a href="https://seals.trustsign.com.br/?url=www.trustsign.com.br" target="_blank">
+                        <img name="trustseal" alt="Site Autêntico"
+                             src="//security.trustsign.com.br/static/seals/selo-prime-39a0aac0dd28cb52aaffb9ad5db552da-pt.png"
+                             border="0" title="Clique para Validar"/>
+                    </a>
+
+                    <a href="https://seals.trustsign.com.br/?url=www.trustsign.com.br" target="_blank">
+                        <img name="trustseal" alt="Security Scanned Seal"
+                             src="//security.trustsign.com.br/static/seals/selo-site-mais-seguro-39a0aac0dd28cb52aaffb9ad5db552da-pt.png"
+                             border="0" title="Clique para Validar"/>
+                    </a>
+
+                    <a href="https://seals.trustsign.com.br/?url=www.trustsign.com.br" target="_blank">
+                        <img name="trustseal" alt="Site Protegido"
+                             src="//security.trustsign.com.br/static/seals/selo-site-monitorado-39a0aac0dd28cb52aaffb9ad5db552da-pt.png"
+                             border="0" title="Clique para Validar"/>
+                    </a>
+                </aside>
+
+
+                </section>
+                <section class="footer-title tm10 footer-social">
+
+                    <aside class="footer-item-icon">
+                        
+                        <div class="footer-info">
+                            <p> TrustSign Certificadora Digital e Soluções de Segurança da Informação Ltda - CNPJ: 08.365.434/0001-05<br>
+                                Av. Cassiano Ricardo, 601, sala 46, Jd. Aquarius<br>São José dos Campos - SP - CEP: 12246-870
+                            </p>
+                        </div>
+                        <script src="//platform.linkedin.com/in.js" type="text/javascript">
+                         lang: pt_BR
+                        </script>
+                        <script type="IN/FollowCompany" data-id="1010622" data-counter="right"></script>
+
+                        <div class="fb-like" data-href="http://www.facebook.com/trustsign" {#  data-send="true"  #} data-layout="button_count" data-width="213" data-show-faces="false" data-colorscheme="light" data-action="like"></div>
+                        <a href="https://twitter.com/TrustSign" class="twitter-follow-button" data-show-count="false">Follow @TrustSign</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </aside>
+
+
+                </section>
+        </section>
+
+
+    </section>
+</footer>
+<section id="powered-by" style="text-align: center; padding: 10px;">
+    Desenvolvido por <a href="http://www.ciopartner.com.br" target="_blank">CIO Partner</a>
+</section>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=379676282132311";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+{# Para que o analytics funcione: #}
+<script>
+    var _gaq=[['_setAccount','UA-24297273-1'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src='//www.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
