@@ -16,23 +16,31 @@
     {{ page.description }}
 {% endmetablock %}{% endblock %}
 
-{% block breadcrumb_menu %}
-    {#    {{ block.super }}#}
-    {% include 'includes/4-breadcrumb.html' %}
-    {% if tag or category or year or month or author %}
-        <li>{% spaceless %}
-            {% if tag %}
-                {% trans "Tag:" %} {{ tag }}
-                {% else %}{% if category %}
-                    {% trans "Categoria:" %} {{ category }}
-                    {% else %}{% if year or month %}
-                        {% if month %}{{ month }}, {% endif %}{{ year }}
-                        {% else %}{% if author %}
-                            {% trans "Autor:" %} {{ author.get_full_name|default:author.username }}
-                        {% endif %}{% endif %}{% endif %}{% endif %}
-        {% endspaceless %}
-        </li>
-    {% endif %}
+ {% block breadcrumb %}
+	<ul class="breadcrumb">
+		{% include 'includes/4-breadcrumb.html' %}
+		<li><a href="/portal/blog">Blog</a><span class="divider">/</span></li>		
+		<li>            
+			{% if tag %}
+				{{ tag }}
+			{% else %}
+				{% if category %}
+					{{ category }}
+				{% else %}
+					{% if year or month %}
+						{% if month %}
+							{{ month }}, 
+						{% endif %}
+						{{ year }}						
+					{% else %}
+						{% if author %}							
+							{{ author.get_full_name|default:author.username }}
+						{% endif %}
+				{% endif %}
+			{% endif %}
+			{% endif %}
+		</li>
+	</ul>
 {% endblock %}
 
 {% block one_row %}
@@ -42,15 +50,15 @@
             {% block blog_post_list_filterinfo %}
                 <p>
                 {% if tag %}
-                    {% trans "Mostrando os posts para o tag " %} {{ tag }}
+                    {% trans "Mostrando os posts para o tag " %} <strong>{{ tag }}</strong>
                     {% else %}{% if category %}
-                        {% trans "Mostrando os posts para a categoria" %} {{ category }}
+                        {% trans "Mostrando os posts para a categoria" %} <strong>{{ category }}</strong>
                         {% else %}{% if year or month %}
                             {% trans "Mostrando os posts de" %} {% if month %}{{ month }}, {% endif %}
                             {{ year }}
                             {% else %}{% if author %}
                                 {% trans "Mostrando os posts por" %}
-                                {{ author.get_full_name|default:author.username }}
+                                <strong>{{ author.get_full_name|default:author.username }}</strong>
                             {% endif %}{% endif %}{% endif %}{% endif %}
             {% endblock %}
         </p>

@@ -14,17 +14,17 @@
 {#    {% endif %}#}
 {#{% endblock %}#}
 
-        <div>
+        <div>		
 {% block blog_categories %}
     {% blog_categories as categories %}
     {% if categories %}
         <ul class="nav nav-list">
             <li class="nav-header">Categorias</li>
             <li class="divider"></li>
-            {% for category in categories %}
-                <li>
-                    <a href="{% url "blog_post_list_category" category.slug %}">
-                        {{ category }} ({{ category.post_count }})
+            {% for categoria in categories %}
+                <li class="{% if categoria == category %}active{% endif %}">
+                    <a href="{% url "blog_post_list_category" categoria.slug %}">
+                        {{ categoria }} ({{ categoria.post_count }})						
                     </a>
                 </li>
             {% endfor %}
@@ -49,22 +49,35 @@
             <li class="divider"></li>
         <li class="nav-header">Arquivos do Blog</li>
             <li class="divider"></li>
-        <select class=span2 onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}">
-            {% for month in months %}
-                <option value="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}">
-                    {{ month.date.year }} / {{ month.date|date:"F" }}
-                    ({{ month.post_count }})
-                </option>
-                {#                {% ifchanged month.date.year %}#}
-                {#                    {% if not forloop.first %}</ul>{% endif %}#}
-                {#                    <h6>{{ month.date.year }}</h6>#}
-                {#                    <ul class="unstyled">#}
-                {#                {% endifchanged %}#}
-                {#                <li><a href="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}"#}
-                {#                        >{{ month.date|date:"F" }}</a> ({{ month.post_count }})#}
-                {#                </li>#}
+        <select class="arquivos" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}">
+            {% for mes in months %}
+                <option value="{% url "blog_post_list_month" year=mes.date.year month=mes.date.month %}">
+                    {{ mes.date.year }} / {{ mes.date|date:"F" }}
+                    ({{ mes.post_count }})
+                </option>   				
             {% endfor %}
         </select>
+		{% if month and year %}
+			<script type="text/javascript">
+				// Mantem a data selecionada
+				$(document).ready(function(){
+					var url_arr = window.location.pathname.split('/'),
+						mes_act = url_arr[5],
+						ano_act = url_arr[4];
+						
+					$.each($('select.arquivos option'), function() {
+						var href_arr = $(this).attr('value').split('/'),
+							mes = href_arr[5],
+							ano = href_arr[4];
+							
+							if (mes_act == mes && ano_act == ano) {
+								$(this).attr('selected', 'selected');
+								return false;
+							}							
+					});							
+				});
+			</script>		
+		{% endif %}
         </ul>
     {% endif %}
 {% endblock %}
