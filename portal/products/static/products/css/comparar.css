@@ -141,7 +141,6 @@ aside.videoas2 > ul > li{
 .ssltab-wrap {
 	position: relative;	
 	overflow: hidden;
-	margin-bottom: 20px;
 }
 
 .ssltab-wrap.comprimir {
@@ -152,16 +151,18 @@ aside.videoas2 > ul > li{
 	margin-bottom: 0;
 }
 
-.ssltab-wrap .expandir-tabela {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	background-color: #fff;
-	background: url(../img/green-arrow-down.png) no-repeat 233px center rgba(255,255,255,.9);
+.expandir-tabela {
+	float: right;
+	clear: both; 
+	background: url(../img/green-arrow-down.png) no-repeat 233px center #fff;
 	color: #000;
 	text-decoration: none;
 	padding: 10px 40px 10px 10px;
 }	
+
+.info {
+	margin-top: 10px;
+}
 
 table.ssltab .subtitle, table.ssltab .subtitle td{
     background: #F5F5F5;

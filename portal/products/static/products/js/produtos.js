@@ -127,8 +127,8 @@ $(document).ready(function () {
 	})
 	
 	// collapse table
-	$('.ssltab-wrap').find('.expandir-tabela').click(function() {
-		var tgt = $(this).parent();
+	$('.expandir-tabela').click(function() {
+		var tgt = $('.ssltab-wrap');
 		tgt.removeClass('comprimir');
 		tgt.css('max-height', '9999px')
 		$(this).hide();
