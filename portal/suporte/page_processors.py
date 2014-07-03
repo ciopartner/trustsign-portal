@@ -4,7 +4,8 @@ from StringIO import StringIO
 from django.http import HttpResponse
 from mezzanine.pages.page_processors import processor_for
 from portal.suporte.forms import SSLCheckerForm, CSRDecoderForm, CertificateKeyMatcherForm, SSLConverterForm
-from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage, VideoTutorialPage
+from portal.suporte.models import FerramentasPage, FAQPage, ManualPage, GlossarioPage, Tag, TutorialPage, VideoTutorialPage, \
+    SSLCheckerPage, CSRDecoderPage, CertificateKeyMatcherPage, SSLConverterPage
 from logging import getLogger
 
 log = getLogger('portal.suporte.page_processors')
@@ -126,4 +127,96 @@ def ferramentas_processor(request, page):
         'form_csr_decoder': csr_decoder_form,
         'form_certificate_key_matcher': certificate_key_matcher_form,
         'form_ssl_converter': ssl_converter_form,
+    }
+
+
+@processor_for(SSLCheckerPage)
+def ferramentas_processor(request, page):
+    resultado = ''
+    form = SSLCheckerForm()
+
+    if request.method == 'POST':
+        try:
+            form = SSLCheckerForm(request.POST)
+            if form.is_valid():
+                resultado = form.processa()
+        except:
+            log.exception('Ocorreu uma exceção nas ferramentas')
+
+    return {
+        'resultado': resultado,
+        'form': form,
+    }
+
+
+@processor_for(CSRDecoderPage)
+def ferramentas_processor(request, page):
+    resultado = ''
+    form = CSRDecoderForm()
+
+    if request.method == 'POST':
+        form = CSRDecoderForm(request.POST)
+        if form.is_valid():
+            try:
+                resultado = form.processa()
+            except:
+                resultado = {
+                    'ok': False
+                }
+
+    return {
+        'resultado': resultado,
+        'form': form,
+    }
+
+
+@processor_for(CertificateKeyMatcherPage)
+def ferramentas_processor(request, page):
+    resultado = ''
+    form = CertificateKeyMatcherForm()
+
+    if request.method == 'POST':
+        form = CertificateKeyMatcherForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                resultado = form.processa()
+            except Exception:
+                resultado = {
+                    'ok': False
+                }
+
+    return {
+        'resultado': resultado,
+        'form': form,
+    }
+
+
+@processor_for(SSLConverterPage)
+def ferramentas_processor(request, page):
+    resultado = ''
+    form = SSLConverterForm()
+
+    if request.method == 'POST':
+        nomes = {
+            SSLConverterForm.STANDARD_PEM: ('%s.cer', 'application/octet-stream'),
+            SSLConverterForm.DER_BINARY: ('%s.der', 'application/octet-stream'),
+            SSLConverterForm.P7B_PKCS_7: ('%s.p7b', 'application/x-pkcs7-certificates'),
+            SSLConverterForm.PFX_PKCS_12: ('%s.p12', 'application/x-pkcs12'),
+        }
+
+        form = SSLConverterForm(request.POST, request.FILES)
+        if form.is_valid():
+            certificado = form.processa()
+            tipo = int(form.cleaned_data['tipo_para_converter'])
+
+            nome = '.'.join(form.cleaned_data['certificado'].name.split('.')[:-1])
+
+            response = HttpResponse(StringIO(certificado), content_type=nomes[tipo][1])
+            response['Content-Disposition'] = 'attachment; filename=%s' % nomes[tipo][0] % nome
+
+            return response
+
+    return {
+        'resultado': resultado,
+        'form': form,
     }

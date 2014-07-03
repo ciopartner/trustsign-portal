@@ -4,7 +4,8 @@ from mezzanine.core.admin import TabularDynamicInlineAdmin
 from mezzanine.core.forms import DynamicInlineAdminForm
 from mezzanine.pages.admin import PageAdmin
 from portal.suporte.models import Manual, ManualPage, Item, GlossarioPage, FAQPage, Question, FerramentasPage, \
-    TaggedItem, Tag, TutorialPage, Tutorial, VideoTutorialPage, VideoTutorial
+    TaggedItem, Tag, TutorialPage, Tutorial, VideoTutorialPage, VideoTutorial, SSLCheckerPage, CSRDecoderPage, \
+    CertificateKeyMatcherPage, SSLConverterPage
 
 
 class TaggedItemForm(DynamicInlineAdminForm):
@@ -110,6 +111,10 @@ admin.site.register(TutorialPage, TutorialPageAdmin)
 admin.site.register(ManualPage, ManualPageAdmin)
 admin.site.register(GlossarioPage, GlossarioPageAdmin)
 admin.site.register(FerramentasPage, PageAdmin)
+admin.site.register(SSLCheckerPage, PageAdmin)
+admin.site.register(CSRDecoderPage, PageAdmin)
+admin.site.register(CertificateKeyMatcherPage, PageAdmin)
+admin.site.register(SSLConverterPage, PageAdmin)
 admin.site.register(VideoTutorialPage, VideoTutorialPageAdmin)
 admin.site.register(Tag)
 admin.site.register(TaggedItem)

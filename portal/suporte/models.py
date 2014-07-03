@@ -111,3 +111,19 @@ class VideoTutorial(Model):
     page = ForeignKey(VideoTutorialPage, related_name='videos')
     video_url = CharField(max_length=256)
     video_thumb = ImageField(upload_to='uploads/video-thumbs/')
+
+
+class SSLCheckerPage(Page):
+    pass
+
+
+class CSRDecoderPage(Page):
+    pass
+
+
+class CertificateKeyMatcherPage(Page):
+    pass
+
+
+class SSLConverterPage(Page):
+    pass
