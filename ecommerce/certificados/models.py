@@ -8,6 +8,7 @@ from django.db.models import Model, CharField, ForeignKey, DateTimeField, TextFi
     OneToOneField, FileField, BooleanField, IntegerField, permalink, Manager, Q
 from hashlib import md5
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from oscar.core.loading import get_class
 
 knu = None
@@ -500,6 +501,33 @@ class Emissao(Model):
     def __unicode__(self):
         return '#%s (%s)' % (self.crm_hash, self.comodo_order)
 
+    def get_file_link(self, field_name):
+        field = getattr(self, field_name, None)
+        if field:
+            return mark_safe('<a href="{}">download</a>'.format(field.url))
+        return ''
+
+    def emission_assignment_letter_link(self):
+        return self.get_file_link('emission_assignment_letter')
+
+    def emission_articles_of_incorporation_link(self):
+        return self.get_file_link('emission_articles_of_incorporation')
+
+    def emission_address_proof_link(self):
+        return self.get_file_link('emission_address_proof')
+
+    def emission_ccsa_link(self):
+        return self.get_file_link('emission_ccsa')
+
+    def emission_evcr_link(self):
+        return self.get_file_link('emission_evcr')
+
+    def emission_phone_proof_link(self):
+        return self.get_file_link('emission_phone_proof')
+
+    def emission_id_link(self):
+        return self.get_file_link('emission_id')
+
     def get_dominios_x_emails(self):
         return zip(self.get_lista_dominios(), self.get_lista_emails())
 
@@ -584,6 +612,12 @@ class Revogacao(Model):
 
     def __unicode__(self):
         return '#%s' % self.crm_hash
+
+
+class VoucherAuditoria(Voucher):
+
+    class Meta:
+        proxy = True
 
 
 def pedido_consulta_knu(sender, instance, **kwargs):
