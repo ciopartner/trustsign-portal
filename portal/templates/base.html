@@ -139,14 +139,14 @@
 </div>
 
 {% include "includes/5-footer.html" %}
-{% editable_loader %}
 
 {#{% compress js %}#}
-<script src="{% static "home/js/jquery.maskedinput.js" %}"></script>
-<script src="{% static "home/js/home.js" %}"></script>
-<script src="{% static "home/js/custom.js" %}"></script>
+<script src="{% static 'home/js/jquery.maskedinput.js' %}"></script>
+<script src="{% static 'home/js/home.js' %}"></script>
+<script src="{% static 'home/js/custom.js' %}"></script>
 {#{% endcompress %}#}
 {% block extra-js-body %}{% endblock %}
+{% editable_loader %}
 </body>
 
 </html>

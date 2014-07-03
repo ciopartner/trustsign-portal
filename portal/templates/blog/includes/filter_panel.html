@@ -1,122 +1,62 @@
 {% load blog_tags keyword_tags i18n future %}
+<div>		
 
-{#{% block blog_recent_posts %}#}
-{#    {% blog_recent_posts 5 as recent_posts %}#}
-{##}
-{#    {% if recent_posts %}#}
-{#        <h3>{% trans "Recent Posts" %}</h3>#}
-{#        <ul class="unstyled recent-posts">#}
-{#            {% for recent_post in recent_posts %}#}
-{#                <li><a href="{{ recent_post.get_absolute_url }}"#}
-{#                        >{{ recent_post.title }}</a></li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
-
-        <div>
 {% block blog_categories %}
-    {% blog_categories as categories %}
-    {% if categories %}
-        <ul class="nav nav-list">
-            <li class="nav-header">Categorias</li>
-            <li class="divider"></li>
-            {% for category in categories %}
-                <li>
-                    <a href="{% url "blog_post_list_category" category.slug %}">
-                        {{ category }} ({{ category.post_count }})
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-
-        {#        <h3>{% trans "Categories" %}</h3>#}
-        {#        <ul class="unstyled">#}
-        {#            {% for category in categories %}#}
-        {#                <li><a href="{% url "blog_post_list_category" category.slug %}"#}
-        {#                        >{{ category }}</a> ({{ category.post_count }})#}
-        {#                </li>#}
-        {#            {% endfor %}#}
-        {#        </ul>#}
-    {% endif %}
+	{% blog_categories as categories %}
+	{% if categories %}
+	<ul class="nav nav-list">
+		<li class="nav-header">Categorias</li>
+		<li class="divider"></li>
+		{% for categoria in categories %}
+			<li class="{% if categoria == category %}active{% endif %}">
+				<a href="{% url 'blog_post_list_category' categoria.slug %}">
+					{{ categoria }} ({{ categoria.post_count }})						
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
 {% endblock %}
 
 {% block blog_months %}
-    {% blog_months as months %}
-    {% if months %}
-{#        <h3>{% trans "Blog Archive" %}</h3>#}
-        <ul class="nav nav-list">
-            <li class="divider"></li>
-        <li class="nav-header">Arquivos do Blog</li>
-            <li class="divider"></li>
-        <select class=span2 onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}">
-            {% for month in months %}
-                <option value="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}">
-                    {{ month.date.year }} / {{ month.date|date:"F" }}
-                    ({{ month.post_count }})
-                </option>
-                {#                {% ifchanged month.date.year %}#}
-                {#                    {% if not forloop.first %}</ul>{% endif %}#}
-                {#                    <h6>{{ month.date.year }}</h6>#}
-                {#                    <ul class="unstyled">#}
-                {#                {% endifchanged %}#}
-                {#                <li><a href="{% url "blog_post_list_month" year=month.date.year month=month.date.month %}"#}
-                {#                        >{{ month.date|date:"F" }}</a> ({{ month.post_count }})#}
-                {#                </li>#}
-            {% endfor %}
-        </select>
-        </ul>
-    {% endif %}
+	{% blog_months as months %}
+	{% if months %}
+	<ul class="nav nav-list">
+		<li class="divider"></li>
+		<li class="nav-header">Arquivos do Blog</li>
+		<li class="divider"></li>
+		<li>
+			<select class="arquivos" onchange="if(this.options[this.selectedIndex].value != ''){window.top.location.href=this.options[this.selectedIndex].value}">
+				{% for mes in months %}
+				<option value="{% url "blog_post_list_month" year=mes.date.year month=mes.date.month %}">
+					{{ mes.date.year }} / {{ mes.date|date:"F" }}
+					({{ mes.post_count }})
+				</option>   				
+				{% endfor %}
+			</select>
+		</li>
+		{% if month and year %}
+		<script type="text/javascript">
+			// Mantem a data selecionada
+			$(document).ready(function(){
+				var url_arr = window.location.pathname.split('/'),
+					mes_act = url_arr[5],
+					ano_act = url_arr[4];
+					
+				$.each($('select.arquivos option'), function() {
+					var href_arr = $(this).attr('value').split('/'),
+						mes = href_arr[5],
+						ano = href_arr[4];
+						
+					if (mes_act == mes && ano_act == ano) {
+						$(this).attr('selected', 'selected');
+						return false;
+					}							
+				});							
+			});
+		</script>		
+		{% endif %}
+	</ul>
+	{% endif %}
 {% endblock %}
-        </div>
-
-{#{% block blog_keywords %}#}
-{#    {% keywords_for blog.blogpost as tags %}#}
-{#    {% if tags %}#}
-{#        <h3>{% trans "Tags" %}</h3>#}
-{#        <ul class="unstyled tags">#}
-{#            {% for tag in tags %}#}
-{#                <li>#}
-{#                    <a href="{% url "blog_post_list_tag" tag.slug %}"#}
-{#                       class="tag-weight-{{ tag.weight }}">{{ tag }}</a>#}
-{#                    ({{ tag.item_count }})#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
-
-{#{% block blog_authors %}#}
-{#    {% blog_authors as authors %}#}
-{#    {% if authors %}#}
-{#        <h3>{% trans "Authors" %}</h3>#}
-{#        <ul class="unstyled">#}
-{#            {% for author in authors %}#}
-{#                <li><a href="{% url "blog_post_list_author" author.username %}"#}
-{#                        >{{ author.get_full_name|default:author.username }}</a>#}
-{#                    ({{ author.post_count }})#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
-
-{#{% block blog_feeds %}#}
-{#    <h3>{% trans "Feeds" %}</h3>#}
-{#    {% if tag %}#}
-{#        <a href="{% url "blog_post_feed_tag" tag.slug "rss" %}">{% trans "RSS" %}</a> /#}
-{#        <a href="{% url "blog_post_feed_tag" tag.slug "atom" %}">{% trans "Atom" %}</a>#}
-{#    {% endif %}#}
-{#    {% if category %}#}
-{#        <a href="{% url "blog_post_feed_category" category.slug "rss" %}">{% trans "RSS" %}</a> /#}
-{#        <a href="{% url "blog_post_feed_category" category.slug "atom" %}">{% trans "Atom" %}</a>#}
-{#    {% endif %}#}
-{#    {% if author %}#}
-{#        <a href="{% url "blog_post_feed_author" author.username "rss" %}">{% trans "RSS" %}</a> /#}
-{#        <a href="{% url "blog_post_feed_author" author.username "atom" %}">{% trans "Atom" %}</a>#}
-{#    {% endif %}#}
-{#    {% if not tag and not category and not author %}#}
-{#        <a href="{% url "blog_post_feed" "rss" %}">{% trans "RSS" %}</a> /#}
-{#        <a href="{% url "blog_post_feed" "atom" %}">{% trans "Atom" %}</a>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
+</div>

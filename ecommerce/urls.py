@@ -3,12 +3,16 @@ from apps.app import application
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from portal.portal.utils import CollectStaticView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'ecommerce.views.home', name='home'),
     # url(r'^ecommerce/', include('ecommerce.foo.urls')),
+
+    url(r'^ecommerce/collect-static/', CollectStaticView.as_view()),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^ecommerce/admin/doc/', include('django.contrib.admindocs.urls')),

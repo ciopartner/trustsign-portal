@@ -1,1 +1,63 @@
-../../../portal/home/templates/includes/3-header-produtos.html
+{% load staticfiles %}
+
+<section class="featurette">
+    <section class="textac tbm5 fiximh">
+        <section class="row">
+            <aside class="span2">
+                <a href="{{ url_portal }}site-mais-seguro" >
+                    <div class="tbm2"><div class="icon-green-lock"></div></div>
+                    <div class="tbm2 header3-title-text">SITE+SEGURO</div>
+                </a>
+
+                <div class="tbm2 header3-body-text">ANÁLISES DE VULNERABILIDADES</div>
+            </aside>
+
+            <aside class="span2">
+                <a href="{{ url_portal }}site-monitorado" >
+                    <div class="tbm2"><div class="icon-h-3-2nd"></div></div>
+                    <div class="tbm2 header3-title-text">SITE PROTEGIDO</div>
+                </a>
+
+                <div class="tbm2 header3-body-text">MONITORAMENTO E BLOQUEIO DE ATAQUES</div>
+            </aside>
+
+            <aside class="span2">
+                <a href="{{ url_portal }}pki">
+                    <div class="tbm2"><div class="icon-pki"></div></div>
+                    <div class="tbm2 header3-title-text">PKI</div>
+                </a>
+
+                <div class="tbm2 header3-body-text">GERENCIAMENTO DE CERTIFICADOS</div>
+            </aside>
+
+            <aside class="span2 terg-hdmgmenu">
+                <a href="{{ url_portal }}certificado-digital" >
+                    <div class="tbm2"><div class="icon-digital" style="height: 30px"></div></div>
+                    <div class="tbm2 header3-title-text">CERTIFICADO DIGITAL</div>
+                </a>
+
+                <div class="tbm2 header3-body-text">TRANSAÇÕES MAIS SEGURAS</div>
+            </aside>
+
+            <aside class="span2">
+                <a href="{{ url_portal }}melhor-solucao" >
+                    <div class="tbm2"><div class="icon-h-3-5th" style="height: 30px"></div></div>
+                    <div class="tbm2 header3-title-text {# coloroff #}">
+                        MELHOR SOLUÇÃO
+                    </div>
+                </a>
+
+                <div class="tbm2 header3-body-text">DESCUBRA A SOLUÇÃO IDEAL</div>
+            </aside>
+
+            <aside class="span2 sort-menu-parent">
+                <a href="{{ url_portal }}suporte-trustsign" >
+                    <div class="tbm2"><div class="icon-h-3-6th" style="height: 30px"></div></div>
+                    <div class="tbm2 header3-title-text">SUPORTE</div>
+                </a>
+
+                <div class="tbm2 header3-body-text">TUTORIAIS, FAQ E FERRAMENTAS</div>
+            </aside>
+        </section>
+    </section>
+</section>

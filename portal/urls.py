@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 from home.views import login, HomeView
+from portal.utils import CollectStaticView
 
 
 admin.autodiscover()
@@ -84,6 +85,8 @@ urlpatterns = patterns(
     # of this file as well.
     # Note that for any of the various homepage patterns above, you'll
     # need to use the ``SITE_PREFIX`` setting as well.
+
+    url(r'^portal/collect-static/', CollectStaticView.as_view()),
 
     ('^%s/' % settings.SITE_PREFIX, include('mezzanine.urls'))
 

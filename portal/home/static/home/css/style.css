@@ -321,6 +321,10 @@ img.size-thumbnail{
 .shortbio{
 }
 
+.arquivos {
+	width: 154px;
+}
+
 /* END BLOG CONFIG */
 
 /*padding and margin started*/
@@ -845,6 +849,17 @@ img.size-thumbnail{
     float: left;
     margin-top:0;
     padding: 6px;
+}
+
+/* banner home */
+
+.home .carousel-indicators li {
+  cursor: pointer;
+  background-color: #c2c2c2;
+}
+
+.home .carousel-indicators .active {
+  background-color: #076646;
 }
 
 /*    youtube home   */
@@ -2084,6 +2099,7 @@ h3.title{
 #product-price .nav-tabs{
     margin-right: 0;
     border-right: 0;
+	margin-bottom: 0;
 }
 
 #product-price .as-text1{
@@ -2128,6 +2144,11 @@ h3.title{
 #product-price .tabbable{
     width: 638px;
     float: right;
+}
+
+#product-price .tabbable .table{
+	position: relative;
+	top: -3px;
 }
 
 #product-price.tabs-3 .tabbable{
@@ -2191,7 +2212,7 @@ h3.title{
     left: 10px;
     padding: 2px 5px;
     position: absolute;
-    top: -10px;
+    top: -7px;
 }
 
 .price-color sub, #product-price .box-price sup{

@@ -1,4 +1,6 @@
+from cStringIO import StringIO
 import json
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.views.generic import TemplateView, CreateView, FormView
 
@@ -42,3 +44,17 @@ class JSONFormView(JSONResponseMixin, FormView):
 class JSONCreateView(JSONResponseMixin, CreateView):
     def render_to_response(self, context, **response_kwargs):
         return self.render_to_json_response(context, **response_kwargs)
+
+
+class CollectStaticView(TemplateView):
+    template_name = 'collect_static.html'
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_superuser:
+            raise PermissionDenied
+        context = super(CollectStaticView, self).get_context_data(**kwargs)
+        from django.core import management
+        f = StringIO()
+        management.call_command('collectstatic', noinput=True, stdout=f, interactive=False)
+        context['stdout'] = f.getvalue()
+        return context
