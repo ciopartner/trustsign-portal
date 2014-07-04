@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.forms import ModelForm
 from oscar.apps.offer.admin import *
 from oscar.core.loading import get_class
