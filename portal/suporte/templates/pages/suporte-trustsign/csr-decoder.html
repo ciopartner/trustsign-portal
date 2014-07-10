@@ -1,0 +1,162 @@
+{% extends "ferramentas_base.html" %}
+{% load static %}
+
+{% block one_row %}
+
+<div id="tab-csr-decoder" class="ferramentas">
+    <form action="" method="POST" >
+        <div class="well">
+            <p>Com o CSR Decoder é possível decodificar o CSR e conferir informações necessárias para a
+            emissão, tais como organização, URL, tamanho de chave, entre outros. Evite o retrabalho e valide as informações
+            antes de encaminhar seu CSR para emissão.</p>
+            <table>
+                {{ form }}
+                <tr><td colspan="2"><input type="submit" class="btn btn-primary span2 pull-right" value="Decoder"/></td></tr>
+            </table>
+
+            <script>
+                $(function(){
+                  $("#id_csr").bind('input propertychange', function(){
+                      var p = /^-----BEGIN (NEW )?CERTIFICATE REQUEST-----[\s\S]*-----END (NEW )?CERTIFICATE REQUEST-----$/m;
+                      if (p.test($(this).val())){
+                          $(this).parents('form').submit();
+                      }
+                  });
+                })
+            </script>
+            {% csrf_token %}
+        </div>
+        {% if resultado %}
+            <div class="well">
+                {% if resultado.ok %}
+
+                    <table class="table">
+                        <tr>
+                            <th>Signature</th>
+                            <td class="text-success">
+                                <img src="{% static "home/img/table-yes.png" %}" alt=""/> Válida
+                            </td>
+                        </tr>
+                        {% if resultado.KeySize %}
+                        <tr>
+                            <th>Key Size</th>
+                            <td>
+                                {% if resultado.KeySize < 2048 %}
+                                    <img src="{% static "home/img/table-warning.png" %}" alt=""/>|
+                                {% else %}
+                                    <img src="{% static "home/img/table-yes.png" %}" alt=""/>
+                                {% endif %}
+
+                                    {{ resultado.KeySize }}
+
+                                {% if resultado.KeySize < 2048 %}
+                                    - A TrustSign não trabalha com chaves inferiores a 2048 bits porque as mesmas não são consideradas seguras
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+{#                        <tr>#}
+{#                            <th>Subject</th>#}
+{#                            <td>{% if resultado.subject_ok %}Ok, não possui campos em branco.{% else %}Possui campos em branco.{% endif %}</td>#}
+{#                        </tr>#}
+                        {% if resultado.CN %}
+                        <tr>
+                            <th>Common Name</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.CN }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.O %}
+                        <tr>
+                            <th>Organization Name</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.O }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.OU %}
+                        <tr>
+                            <th>Organizational Unit Name</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.OU }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.POBox %}
+                        <tr>
+                            <th>Post Office Box</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.POBox }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.STREET1 %}
+                        <tr>
+                            <th>Street Address 1</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.STREET1 }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.STREET2 %}
+                        <tr>
+                            <th>Street Address 2</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.STREET2 }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.STREET3 %}
+                        <tr>
+                            <th>Street Address 3</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.STREET3 }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.L %}
+                        <tr>
+                            <th>Locality Name</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.L }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.S %}
+                        <tr>
+                            <th>State or Province Name</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.S }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.PostalCode %}
+                        <tr>
+                            <th>Postal Code</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.PostalCode }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.C %}
+                        <tr>
+                            <th>Country Name</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.C }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.Email %}
+                        <tr>
+                            <th>Email Address</th>
+                            <td><img src="{% static "home/img/table-yes.png" %}" alt=""/> {{ resultado.Email }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if resultado.Phone %}
+                        <tr>
+                            <th>Telephone Number</th>
+                            <td>{{ resultado.Phone }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>DNS:</th>
+                            <td>
+                                <ul>
+                                {% for dominio in resultado.dnsNames  %}
+                                    <li>
+                                        {{ dominio }}
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+
+                    </table>
+                {% else %}
+                    <p class="text-error"><img src="{% static "home/img/table-no.png" %}" alt=""/> O CSR possui uma assinatura inválida.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}

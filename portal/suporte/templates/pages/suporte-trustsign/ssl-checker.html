@@ -1,0 +1,39 @@
+{% extends "ferramentas_base.html" %}
+{% load mezzanine_tags keyword_tags static %}
+
+{% block one_row %}
+
+<div id="tab-ssl-checker" class="ferramentas">
+    <form action="" method="POST">
+        <div class="well">
+            <p>Com o SSL Checker (Verificador de SSL),  é possível identificar a presença de um certificado e
+            se ele está corretamente instalado.  Verifique cadeias intermediárias, entidades emissoras e validade do certificado.</p>
+            <table>
+                {{ form }}
+                <tr><td colspan="2"><input type="submit" class="btn btn-primary span2 pull-right" value="Checker"></td></tr>
+            </table>
+            {% csrf_token %}
+        </div>
+        {% if resultado %}
+            <div class="well">
+                {% if resultado.ok %}
+                    <table class="table">
+                        <tr><th width="200">Valid To:</th><td>{{ resultado.cert_validity_notAfter}}</td></tr>
+                        <tr><th>Key Size:</th><td>{{ resultado.cert_key_size }}</td></tr>
+                        <tr><th>Signature Algorithm:</th><td>{{ resultado.cert_signature_hash_algorithm }} / {{ resultado.cert_signature_key_algorithm }}</td></tr>
+                        <tr><th>Site Listed:</th><td>{{ resultado.site_listed }}</td></tr>
+                        <tr><th>Trusted:</th><td>{% if resultado.chain_isTrusted_mozilla == 'Y' and resultado.chain_isTrusted_microsoft == 'Y' %}Yes{% else %}No{% endif %}</td></tr>
+                        <tr><th>Subject DN:</th><td><br> {{ resultado.cert_subject_DN|linebreaksbr }}</td></tr>
+                        <tr><th>Issuer Company:</th><td>{{ resultado.cert_issuer_O }}</td></tr>
+                        <tr><th>Issuer DN:</th><td><br> {{ resultado.cert_issuer_DN|linebreaksbr }}</td></tr>
+                        <tr><th>SANS:</th><td>{{ resultado.cert_sans }}</td></tr>
+                    </table>
+                {% else %}
+                    <p>Não foi encontrado certificado SSL em {{ form_ssl_checker.url.value }}. Tenha certeza que a url está correta e que a porta SSL está aberta no firewall.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock %}

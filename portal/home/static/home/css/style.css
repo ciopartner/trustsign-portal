@@ -1808,7 +1808,7 @@ img.size-thumbnail{
 /*   FERRAMENTAS   */
 
 div.ferramentas ul.nav-tabs{
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     border-bottom: 0;
 
 }
@@ -1820,15 +1820,14 @@ div.ferramentas ul.nav-tabs li{
     width: calc(25% - 2px);
     margin-right: 2px;
     text-align: center;
+}
+
+div.ferramentas ul.nav-tabs.images li{
     height: 155px;
 }
 
 div.ferramentas.small ul.nav-tabs li{
     height: 105px;
-}
-
-div.ferramentas ul.nav-tabs li img{
-    width: 100%;
 }
 
 div.ferramentas ul.nav-tabs li:nth-child(even){
@@ -2149,6 +2148,7 @@ h3.title{
 #product-price .tabbable .table{
 	position: relative;
 	top: -3px;
+	z-index: -1;
 }
 
 #product-price.tabs-3 .tabbable{
@@ -2200,6 +2200,11 @@ h3.title{
     margin-left: -60px;
     left: 50%;
     top: 60;
+}
+
+#product-price .box-price .btn img + img {
+	position: relative;
+	top: -11px;
 }
 
 #product-price .box-price small{

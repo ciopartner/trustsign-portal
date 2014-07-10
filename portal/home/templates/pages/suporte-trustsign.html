@@ -43,30 +43,30 @@
         <div class="clearfix"></div>
 
         <div class="tabbable ferramentas tm20">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs images">
                 <li>
-                    <img src="{% static 'home/img/suporte/faq.jpg' %}" alt=""/>
+                    <img src="{% static 'home/img/suporte/faq.jpg' %}" alt="FAQ" height="74" width="198"/>
                     <h2 class="tm10"><a href="{% url 'page' 'suporte-trustsign/faq' %}" class="">FAQ</a></h2>
                     <div class="all-body-text5 tblrp10" style="margin-top: -15px">
                         Diversas respostas segmentadas por solução, para auxílio nas dúvidas mais frequentes.
                     </div>
                 </li>
                 <li>
-                    <img src="{% static 'home/img/suporte/video.jpg' %}" alt=""/>
+                    <img src="{% static 'home/img/suporte/video.jpg' %}" alt="Tutoriais em vídeo" height="74" width="198"/>
                     <h2 class="tm10"><a href="{% url 'page' 'suporte-trustsign/tutoriais-em-video' %}" class="">Tutoriais em Vídeo</a></h2>
                     <div class="all-body-text5 tblrp10" style="margin-top: -15px">
                         Tutoriais rápidos e práticos para auxilio em instalações de certificados e principais dúvidas.
                     </div>
                 </li>
                 <li>
-                    <img src="{% static 'home/img/suporte/tutoriais.jpg' %}" alt=""/>
+                    <img src="{% static 'home/img/suporte/tutoriais.jpg' %}" alt="Tutoriais" height="74" width="198"/>
                     <h2 class="tm10"><a href="{% url 'page' 'suporte-trustsign/tutoriais' %}" class="">Tutoriais</a></h2>
                     <div class="all-body-text5 tblrp10" style="margin-top: -15px">
                         Tutoriais em PDF para auxílio às instalações de certificados e principais dúvidas.
                     </div>
                 </li>
 {#                <li>#}
-{#                    <img src="{% static 'home/img/suporte/manuais.jpg' %}" alt=""/>#}
+{#                    <img src="{% static 'home/img/suporte/manuais.jpg' %}" alt="Manuais" height="74" width="198"/>#}
 {#                    <h2 class="tm10"><a href="{% url 'page' 'suporte-trustsign/manuais' %}" class="">Manuais</a></h2>#}
 {#                    <div class="all-body-text5 tblrp10" style="margin-top: -15px">#}
 {#                        Diversos documentos segmentados por solução, para auxílio às principais dúvidas.#}
@@ -74,24 +74,46 @@
 {#                </li>#}
 
                 <li>
-                    <img src="{% static 'home/img/suporte/glossario.jpg' %}" alt=""/>
+                    <img src="{% static 'home/img/suporte/glossario.jpg' %}" alt="Glossário" height="74" width="198"/>
                     <h2 class="tm10"><a href="{% url 'page' 'suporte-trustsign/glossario' %}" class="">Glossário</a></h2>
                     <div class="all-body-text5 tblrp10" style="margin-top: -15px">
                         Entenda os termos técnicos mais importantes sobre segurança na internet.
                     </div>
                 </li>
             </ul>
-            <ul class="nav nav-tabs tm10" style="margin-bottom: 30px;">
+     	    <ul class="nav nav-tabs">
+				<li>
+					<h2 class="tm10"><a href="/portal/suporte-trustsign/ssl-checker" class="title">SSL Checker</a></h2>
+					<a href="/portal/suporte-trustsign/ssl-checker" class="descr"><h4>Identifique se seu certificado está corretamente instalado</h4></a>
+				</li>
+				<li>
+					<h2 class="tm10"><a href="/portal/suporte-trustsign/csr-decoder" class="title">CSR Decoder</a></h2>
+					<a href="/portal/suporte-trustsign/csr-decoder" class="descr"><h4>Decodifique seu CSR</h4></a>
+				</li>
+				<li>
+					<h2 class="tm10"><a href="/portal/suporte-trustsign/certificate-key-matcher" class="title">Certificate Key Matcher</a></h2>
+					<a href="/portal/suporte-trustsign/certificate-key-matcher" class="descr"><h4>Valide a combinação entre um certificado e a chave privada</h4></a>
+				</li>
+				<li>
+					<h2 class="tm10"><a href="/portal/suporte-trustsign/ssl-converter" class="title">SSL Converter</a></h2>
+					<a href="/portal/suporte-trustsign/ssl-converter" class="descr"><h4>Altere o formato do seu certificado</h4></a>
+				</li>
+			</ul>
+        
+			{% comment %}
+			<ul class="nav nav-tabs tm10" style="margin-bottom: 30px;">
 
                 <li>
-                    <img src="{% static 'home/img/suporte/ferramentas.jpg' %}" alt=""/>
-                    <h2 class="tm10"><a href="{% url 'page' 'suporte-trustsign/ferramentas' %}" class="">Ferramentas</a></h2>
+                    <img src="{% static 'home/img/suporte.jpg' %}" alt=""/>
+                    <h2 class="tm10"><a href="{% url 'page' 'suporte-trustsign' %}" class="">Ferramentas</a></h2>
                     <div class="all-body-text5 tblrp10" style="margin-top: -15px">
                         SSL Checker, SSL decoder, Certificate Key Matcher e SSL converter.
                     </div>
                 </li>
             </ul>
-        </div>
+			{% endcomment %}
+        
+		</div>
 
 
 {#        <section class="featurette tblrp10" style="display: inline-block;">#}
