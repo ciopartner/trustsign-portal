@@ -425,6 +425,8 @@ class Emissao(Model):
 
     STATUS_ADICIONAL_USADO = 12
 
+    STATUS_EMISSAO_MANUAL = 99999
+
     STATUS_CHOICES = (
         (STATUS_NAO_EMITIDO, 'Não Emitido'),
 
@@ -450,6 +452,8 @@ class Emissao(Model):
         (STATUS_EXPIRADO, 'Certificado Expirado'),
 
         (STATUS_ADICIONAL_USADO, 'Adicional usado'),
+
+        (STATUS_EMISSAO_MANUAL, 'Emissão Manual')
     )
 
     voucher = OneToOneField(Voucher, related_name='emissao')
@@ -459,35 +463,49 @@ class Emissao(Model):
     requestor_user = ForeignKey(User, related_name='emissoes')
     requestor_timestamp = DateTimeField(auto_now_add=True)
 
-    emission_url = CharField(max_length=256, blank=True, null=True, validators=[DominioValidator()])
-    emission_urls = TextField(blank=True, null=True)
-    emission_csr = TextField(blank=True, null=True)
+    emission_url = CharField('Domínio', max_length=256, blank=True, null=True, validators=[DominioValidator()],
+                             help_text='Preencher este campo com a URL do certificado '
+                                       'ou com a URL principal no caso de certificado SAN/MDC')
+    emission_urls = TextField('Domínios', blank=True, null=True,
+                              help_text='Preencher este campo separados por espaço para os certificados SAN/MDC')
+    emission_csr = TextField('CSR', blank=True, null=True)
 
-    emission_dcv_emails = TextField(blank=True, null=True)
-    emission_publickey_sendto = EmailField(blank=True, null=True)
-    emission_server_type = IntegerField(choices=SERVIDOR_TIPO_CHOICES, blank=True, null=True)
+    emission_dcv_emails = TextField('e-Mails de Validação do Domínio', blank=True, null=True,
+                                    help_text='colocar o e-mail de validação do domínio ou o método de validação '
+                                              'no caso de não ter sido validado por e-mail, '
+                                              'separados por espaço para certificados SAN/MDC')
+    emission_publickey_sendto = EmailField('e-Mail que receberá o certificado', blank=True, null=True)
+    emission_server_type = IntegerField('Tipo de Servidor', choices=SERVIDOR_TIPO_CHOICES, blank=True, null=True)
 
     emission_reviewer = ForeignKey(User, related_name='emissoes_revisadas', null=True, blank=True)
     emission_approver = ForeignKey(User, related_name='emissoes_aprovadas', null=True, blank=True)
 
     emission_primary_dn = CharField(max_length=256, null=True, blank=True)
 
-    emission_assignment_letter = FileField(upload_to='uploads/cartas/', blank=True, null=True, max_length=256)
-    emission_articles_of_incorporation = FileField(upload_to='uploads/contratos_sociais/', blank=True, null=True, max_length=256)
-    emission_address_proof = FileField(upload_to='uploads/comprovantes_endereco/', blank=True, null=True, max_length=256)
-    emission_ccsa = FileField(upload_to='uploads/ccsas/', blank=True, null=True, max_length=256)  # comodo cert. subscriber agreement
-    emission_evcr = FileField(upload_to='uploads/evcrs/', blank=True, null=True, max_length=256)  # ev certificate request
-    emission_phone_proof = FileField(upload_to='uploads/conta-telefone/', blank=True, null=True, max_length=256)
-    emission_id = FileField(upload_to='uploads/docs/', blank=True, null=True, max_length=256)
+    emission_assignment_letter = FileField('Carta de Cessão', upload_to='uploads/cartas/',
+                                           blank=True, null=True, max_length=256)
+    emission_articles_of_incorporation = FileField('Contrato Social', upload_to='uploads/contratos_sociais/',
+                                                   blank=True, null=True, max_length=256)
+    emission_address_proof = FileField('Comprovante de Endereço',
+                                       upload_to='uploads/comprovantes_endereco/',
+                                       blank=True, null=True, max_length=256)
+    emission_ccsa = FileField('CCSA', upload_to='uploads/ccsas/',
+                              blank=True, null=True, max_length=256)  # comodo cert. subscriber agreement
+    emission_evcr = FileField('EVCR', upload_to='uploads/evcrs/',
+                              blank=True, null=True, max_length=256)  # ev certificate request
+    emission_phone_proof = FileField('Comprovante de Telefone',
+                                     upload_to='uploads/conta-telefone/', blank=True, null=True, max_length=256)
+    emission_id = FileField('Identidade (para S/MIME)', upload_to='uploads/docs/',
+                            blank=True, null=True, max_length=256)
 
     emission_cost = DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
 
     emission_revoke_password = CharField(max_length=128, blank=True, null=True)
 
-    emission_status = IntegerField(choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
+    emission_status = IntegerField('Status', choices=STATUS_CHOICES, default=STATUS_NAO_EMITIDO)
     emission_error_message = CharField(max_length=256, blank=True, null=True)
 
-    emission_certificate = TextField(blank=True, null=True)
+    emission_certificate = TextField('Certificado', blank=True, null=True)
     emission_mail_attachment_path = CharField(blank=True, null=True, max_length=256)
 
     class Meta:
@@ -599,6 +617,24 @@ class Emissao(Model):
         else:
             return
         self.emission_error_message = mensagem
+
+
+class EmissaoManualManager(Manager):
+
+    def get_query_set(self):
+        return super(EmissaoManualManager, self).get_query_set().filter(
+            emission_status=Emissao.STATUS_EMISSAO_MANUAL
+        )
+
+
+class EmissaoManual(Emissao):
+
+    objects = EmissaoManualManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Emissão Manual'
+        verbose_name_plural = 'Emissões Manuais'
 
 
 class Revogacao(Model):
