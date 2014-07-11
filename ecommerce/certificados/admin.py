@@ -66,7 +66,6 @@ class VoucherAuditoriaAdmin(admin.ModelAdmin):
     inlines = [EmissaoInline]
     search_fields = ['crm_hash', 'customer_cnpj', 'customer_companyname', 'customer_callback_email',
                      'comodo_order', 'order_number']
-    list_filter = ['emissao__emission_status']
     list_select_related = True
     fields = [
         'crm_user', 'comodo_order', 'order_number', 'customer_cnpj', 'customer_companyname',

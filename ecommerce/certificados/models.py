@@ -654,6 +654,8 @@ class VoucherAuditoria(Voucher):
 
     class Meta:
         proxy = True
+        verbose_name = 'Auditoria de Emissão'
+        verbose_name_plural = 'Auditorias de Emissões'
 
 
 def pedido_consulta_knu(sender, instance, **kwargs):
