@@ -1,0 +1,26 @@
+{% extends "ferramentas_base.html" %}
+{% load mezzanine_tags keyword_tags static %}
+
+{% block one_row %}
+
+<div id="tab-ssl-converter" class="ferramentas">
+    <form action="" method="POST" enctype='multipart/form-data'>
+        <div class="well">
+            <p>Com o SSL Converter é possível alterar o tipo de arquivo do certificado. Faça exportações de
+            forma rápida e simples e em todos os ambientes desejados.</p>
+
+            {% if resultado == 'erro' %}
+                <ul class="errorlist"><li>Ocorreu um problema ao converter o certificado.
+                    Ele pode estar corrompido ou pode estar em um formado diferente do especificado.
+                    A chave privada também pode não corresponder ao certificado enviado.</li></ul>
+            {% endif %}
+
+            <table>
+                {{ form }}
+                <tr><td colspan="2"><input type="submit" class="btn btn-primary span2 pull-right" value="Converter"/></td></tr>
+            </table>
+            {% csrf_token %}
+        </div>
+    </form>
+</div>
+{% endblock %}
