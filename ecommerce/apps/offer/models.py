@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.core.exceptions import ValidationError
-from django.db.models import Model, CharField, DateTimeField, ForeignKey, DecimalField, ImageField
+from django.db.models import Model, CharField, DateTimeField, ForeignKey, DecimalField, ImageField, BooleanField
 from django.utils.translation import ugettext as _
 
 
@@ -23,12 +23,13 @@ class FixedPriceOffer(Model):
 
     label = ImageField(upload_to='offers/labels', blank=True, null=True)
 
+    show_old_price = BooleanField('Exibir preço antigo', default=False)
+
     def __unicode__(self):
         return self.title
 
     def clean(self):
-        if (self.start_datetime and self.end_datetime and
-            self.start_datetime > self.end_datetime):
+        if self.start_datetime and self.end_datetime and self.start_datetime > self.end_datetime:
             raise ValidationError(_('End date should be later than start date'))
 
     @property

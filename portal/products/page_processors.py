@@ -17,7 +17,8 @@ def split_ponto(price):
 def product_processor(request, page):
 
     sql = '''
-        select cp.upc, cao_line.option, cao_term.option, s.price_excl_tax, oo.id, oo.label, ooi.price_discount from catalogue_product as cp
+        select cp.upc, cao_line.option, cao_term.option, s.price_excl_tax, oo.id, oo.label, oo.show_old_price, ooi.price_discount
+        from catalogue_product as cp
            inner join catalogue_productattribute as cpa on cp.product_class_id =  cpa.product_class_id
            inner join catalogue_productattributevalue as cpav on cpa.id = cpav.attribute_id and cp.id = cpav.product_id
            inner join catalogue_attributeoption as cao on cao.id = cpav.value_option_id
@@ -75,16 +76,15 @@ def product_processor(request, page):
         }
     }
 
-    for upc, product_line, product_term, price, offer_id, offer_label, price_discount in cursor.fetchall():
+    for upc, product_line, product_term, price, offer_id, offer_label, show_old_price, price_discount in cursor.fetchall():
         if price is None:
             price = Decimal(0)
 
+        price_regular = None
         if offer_id is not None and price_discount is not None:
-            price_regular = price
-            price_regular = price_regular.quantize(Decimal('0.01'))
+            if show_old_price:
+                price_regular = price.quantize(Decimal('0.01'))
             price = price_discount
-        else:
-            price_regular = None
 
         price = price.quantize(Decimal('0.01'))
 
@@ -115,16 +115,16 @@ def product_processor(request, page):
     cursor = connection.cursor()
     cursor.execute(sql, [page.product.additional_product_code])
 
-    for upc, product_line, product_term, price, offer_id, offer_label, price_discount in cursor.fetchall():
+    for upc, product_line, product_term, price, offer_id, offer_label, show_old_price, price_discount in cursor.fetchall():
         if price is None:
             price = Decimal(0)
 
+        price_regular = None
+
         if offer_id is not None and price_discount is not None:
-            price_regular = price
-            price_regular = price_regular.quantize(Decimal('0.01'))
             price = price_discount
-        else:
-            price_regular = None
+            if show_old_price:
+                price_regular = price.quantize(Decimal('0.01'))
 
         price = price.quantize(Decimal('0.01'))
 
