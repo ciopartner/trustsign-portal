@@ -161,6 +161,8 @@ def emite_certificado(emissao):
         else:
             raise ComodoError('Validade inválida para emissão de certificados', code=-1)
 
+        validade += voucher.extra_days
+
         if voucher.ssl_product == 'ssl' and voucher.ssl_term == voucher.VALIDADE_DEGUSTACAO:
             product = CODIGO_TRIAL
         else:
