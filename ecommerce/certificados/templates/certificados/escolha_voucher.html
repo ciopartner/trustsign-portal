@@ -27,7 +27,7 @@
                         </td>
                         <td>{{ voucher.get_ssl_product_display }}</td>
                         <td>{{ voucher.get_ssl_line_display }}</td>
-                        <td>{{ voucher.get_ssl_term_display }}</td>
+                        <td>{{ voucher.get_ssl_term_display }} {% if voucher.extra_days %} + {{ voucher.extra_days }} dias{% endif %}</td>
                         <td class="saldo">1</td>
                         <td>
                             {% if not voucher.emissao.is_complemento_certificado %}
